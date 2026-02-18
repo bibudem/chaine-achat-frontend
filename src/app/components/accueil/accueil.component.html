@@ -1,0 +1,209 @@
+<div class="dashboard-container">
+  <div class="row mb-4 mt-5">
+  <div class="col-md-12 mt-3">
+    <div class="d-flex justify-content-between align-items-center">
+      
+      <!-- Titre à gauche -->
+      <div>
+        <h1 class="h3 mb-1">Tableau de Bord</h1>
+        <p class="text-muted mb-0">
+          Vue d'ensemble des demandes et statistiques
+        </p>
+      </div>
+
+      <!-- Actions à droite -->
+      <div class="d-flex align-items-center gap-2">
+        <select
+          class="form-select form-select-sm"
+          style="width: auto"
+          [(ngModel)]="selectedPeriod"
+        >
+          <option value="7days">7 derniers jours</option>
+          <option value="30days">30 derniers jours</option>
+          <option value="90days">90 derniers jours</option>
+        </select>
+
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="refreshData()"
+          [disabled]="isLoadingDashboard || isLoadingGraphs"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="16" height="16"
+               viewBox="0 0 256 256">
+            <path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+    <hr>
+  </div>
+</div>
+
+
+  <!-- Message d'erreur -->
+  <div *ngIf="hasError" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="hasError = false"></button>
+  </div>
+
+  <!-- Cartes de statistiques -->
+  <div class="stats-grid">
+    <!-- Total -->
+    <div class="stat-card bg-primary text-white">
+      <div class="stat-icon">
+        <i class="bi bi-file-earmark-break icon-lg"></i>
+      </div>
+      <div class="stat-content">
+        <h1 class="stat-value text-white">
+          {{ isLoadingDashboard ? '...' : formatNumber(totals.total_items) }}
+        </h1>
+        <p class="stat-label">Total des demandes</p>
+        <div class="stat-trend">
+          <i class="bi bi-arrow-up me-1"></i>
+          <span *ngIf="!isLoadingDashboard">
+            +{{ totals.items_last_7_days }} 7 derniers jours
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demandeurs uniques -->
+    <div class="stat-card bg-success text-white">
+      <div class="stat-icon">
+        <i class="bi bi-people icon-lg"></i>
+      </div>
+      <div class="stat-content">
+        <h1 class="stat-value text-white ml-1">
+          {{ isLoadingDashboard ? '...' : formatNumber(totals.unique_demandeurs) }}
+        </h1>
+        <p class="stat-label">Demandeurs uniques</p>
+        <div class="stat-trend">
+          <i class="bi bi-person-plus me-1"></i>
+          <span>Utilisateurs actifs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- En traitement -->
+    <div class="stat-card bg-warning text-dark">
+      <div class="stat-icon">
+        <i class="bi bi-gear icon-lg"></i>
+      </div>
+      <div class="stat-content">
+        <h1 class="stat-value text-white ml-1">
+          {{ isLoadingDashboard ? '...' : formatNumber(totals.en_traitement) }}
+        </h1>
+        <p class="stat-label">En traitement</p>
+        <div class="stat-trend">
+          <i class="bi bi-clock-history me-1"></i>
+          <span>En cours de traitement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminés -->
+    <div class="stat-card bg-info text-white ml-1">
+      <div class="stat-icon">
+        <i class="bi bi-check-circle-fill icon-lg"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value text-white">
+          {{ isLoadingDashboard ? '...' : formatNumber(totals.termines) }}
+        </h3>
+        <p class="stat-label">Terminées</p>
+        <div class="stat-trend">
+          <i class="bi bi-graph-up-arrow me-1"></i>
+          <span *ngIf="!isLoadingDashboard">
+            {{ calculatePercentage(totals.termines, totals.total_items) }}% Taux de réussite
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques -->
+  <div class="charts-grid mt-4">
+    <!-- Répartition par type -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h4><i class="fas fa-chart-pie me-2"></i> Répartition par type</h4>
+        <button class="btn btn-link btn-sm" (click)="navigateTo('/items')">
+          Voir tout <i class="fas fa-arrow-right ms-1"></i>
+        </button>
+      </div>
+      <div class="chart-body">
+        <div *ngIf="isLoadingDashboard" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        
+        <!-- CORRECTION APPLIQUÉE ICI : utilisation du getter -->
+        <div *ngIf="!isLoadingDashboard" class="type-distribution">
+          <div *ngFor="let type of byType" class="type-item">
+            <div class="type-header">
+              <i [ngClass]="getTypeIcon(type.formulaire_type)"></i>
+              <span class="type-name ml-2">{{ type.formulaire_type }}</span>
+              <span class="type-count">{{ formatNumber(type.count) }}</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar" 
+                   [ngStyle]="{'width.%': type.percentage}"
+                   [style.background-color]="chartColors.primary">
+              </div>
+            </div>
+            <div class="type-percentage">{{ type.percentage }}%</div>
+          </div>
+          
+          <div *ngIf="byType.length === 0" class="text-center py-4">
+            <p class="text-muted">Aucune donnée disponible</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top demandeurs -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h4><i class="fas fa-trophy me-2"></i> Top demandeurs</h4>
+      </div>
+      <div class="chart-body">
+        <div *ngIf="isLoadingDashboard" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        
+        <!-- CORRECTION APPLIQUÉE ICI : utilisation du getter -->
+        <div *ngIf="!isLoadingDashboard" class="top-demanders">
+          <div *ngFor="let demandeur of topDemandeurs" class="demander-item">
+            <div class="demander-rank">
+              <span class="rank-badge text-white" [class.top-3]="demandeur.rank <= 3">
+                {{ demandeur.rank }}
+              </span>
+            </div>
+            <div class="demander-info">
+              <strong>{{ demandeur.demandeur }}</strong>
+              <small class="text-muted">{{ demandeur.count }} demandes</small>
+            </div>
+            <div class="demander-bar">
+              <div class="bar-bg">
+                <!-- CORRECTION APPLIQUÉE ICI : utilisation du getter -->
+                <div class="bar-fill" 
+                     [style.width.%]="calculatePercentage(demandeur.count, totals.total_items)">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="topDemandeurs.length === 0" class="text-center py-4">
+            <p class="text-muted">Aucun demandeur disponible</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

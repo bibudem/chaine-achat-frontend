@@ -1,0 +1,26 @@
+export interface Revue {
+  idRevue:number;
+  ISBN:string;
+  EISBN:string;
+  titre:string;
+  fournisseur:string;
+  publicationEnPapier:string;
+  publicationEnLigne:string;
+  type:string;
+  categorie:string;
+  programme:string;
+  secteur:string;
+  fond:string;
+  noteFond:string;
+  prix:string;
+  bibliotheque:string;
+  periodeBudgetaire:string;
+  selectionDate:string;
+  auteur:string;
+  editeur:string;
+  edition:string;
+  sujet:string;
+  DOI:string;
+  nbrUsagers:string;
+  nbrExemplaire:string;
+}

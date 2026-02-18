@@ -1,0 +1,53 @@
+<!-- dialog.component.html -->
+<div class="modal fade" id="appDialog" tabindex="-1" aria-labelledby="dialogTitle" aria-hidden="true" 
+     [class.show]="isVisible" [style.display]="isVisible ? 'block' : 'none'">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" [ngClass]="{
+        'bg-success text-white': config?.type === 'success',
+        'bg-danger text-white': config?.type === 'error',
+        'bg-warning text-dark': config?.type === 'warning',
+        'bg-info text-white': config?.type === 'info',
+        'bg-primary text-white': config?.type === 'confirm'
+      }">
+        <h5 class="modal-title" id="dialogTitle">
+          <i class="bi me-2" [ngClass]="{
+            'bi-check-circle': config?.type === 'success',
+            'bi-x-circle': config?.type === 'error',
+            'bi-exclamation-triangle': config?.type === 'warning',
+            'bi-info-circle': config?.type === 'info',
+            'bi-question-circle': config?.type === 'confirm'
+          }"></i>
+          {{ config?.title }}
+        </h5>
+        <button type="button" class="btn-close" 
+                [class.btn-close-white]="config?.type !== 'warning'"
+                (click)="onCancel()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">{{ config?.message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" 
+                *ngIf="config?.type === 'confirm'" 
+                (click)="onCancel()">
+          {{ config?.cancelText || 'Annuler' }}
+        </button>
+        <button type="button" class="btn" 
+                [ngClass]="{
+                  'btn-success': config?.type === 'success',
+                  'btn-danger': config?.type === 'error',
+                  'btn-warning': config?.type === 'warning',
+                  'btn-info': config?.type === 'info',
+                  'btn-primary': config?.type === 'confirm'
+                }"
+                (click)="onConfirm()">
+          {{ config?.confirmText || 'OK' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="modal-backdrop fade" [class.show]="isVisible" *ngIf="isVisible"></div>

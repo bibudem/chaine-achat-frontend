@@ -1,0 +1,15 @@
+<!-- Integrer structure de base de l'interface -->
+<div class="container-scroller">
+  <app-header></app-header>
+  <div class="container-fluid page-body-wrapper">
+  <app-menu></app-menu>
+    <div class="main-panel">
+      <div class="content-wrapper">
+          <!-- Integrer le contenu de la route-->
+           <app-dialog></app-dialog>
+          <router-outlet></router-outlet>
+      </div> 
+      <app-footer></app-footer> 
+    </div>
+  </div>
+</div>

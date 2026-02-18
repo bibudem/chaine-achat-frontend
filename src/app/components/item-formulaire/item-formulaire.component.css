@@ -1,0 +1,187 @@
+/* Style pour les champs désactivés */
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--light-gray);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-control:disabled + small.text-muted,
+.form-select:disabled + small.text-muted {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-gray);
+}
+
+/* Style pour les onglets */
+.nav-tabs {
+  border-bottom: 2px solid var(--light-gray);
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-gray);
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--secondary-blue);
+  border-bottom-color: var(--secondary-blue);
+  background-color: var(--extra-light-blue);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary-blue);
+  border-bottom-color: var(--primary-blue);
+  background-color: transparent;
+}
+
+/* Animation pour le contenu des onglets */
+.tab-pane {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Style pour les champs obligatoires */
+.form-label .text-danger {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--danger-red);
+}
+
+/* Style pour les sections de formulaire */
+.border-bottom {
+  border-color: var(--primary-blue) !important;
+}
+
+/* Style pour les messages d'erreur */
+.invalid-feedback {
+  font-size: 0.875rem;
+  color: var(--danger-red);
+}
+
+.is-invalid {
+  border-color: var(--danger-red) !important;
+}
+
+/* Style pour les boutons d'action */
+.btn-success {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-success:hover {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--medium-gray);
+  color: var(--white);
+}
+
+/* Style pour les alertes */
+.alert-info {
+  background-color: var(--extra-light-blue);
+  border-color: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+/* Amélioration de l'espacement */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mb-5 {
+  margin-bottom: 2rem !important;
+}
+
+/* Style pour les checkboxes */
+.form-check-input:checked {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+
+/* Style responsive pour les petits écrans */
+@media (max-width: 768px) {
+  .nav-tabs .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .nav-tabs .nav-link i {
+    display: none;
+  }
+}
+
+/* Style pour les textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Style pour les selects */
+.form-select {
+  cursor: pointer;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 0.25rem rgba(35, 128, 209, 0.25);
+}
+
+/* Amélioration du spinner de chargement */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  border-width: 0.25rem;
+  color: var(--primary-blue);
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.2rem;
+}
+
+/* Style pour les icônes dans les titres */
+h5 i.bi {
+  color: var(--primary-blue);
+}
+
+/* Style pour le formulaire désactivé pendant la soumission */
+form.submitting {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Style pour les badges de statut */
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Amélioration de l'accessibilité */
+.form-label {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+  font-size: 0.95rem;
+}
+
+/* Style pour les groupes de boutons */
+.d-flex.gap-2 {
+  gap: 0.5rem !important;
+}
