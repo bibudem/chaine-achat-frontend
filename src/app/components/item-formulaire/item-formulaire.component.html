@@ -429,7 +429,7 @@
                 <input type="text" class="form-control" formControlName="projets_speciaux">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label ">Type de monographie</label>
                 <select class="form-select form-control" formControlName="type_monographie">
@@ -439,7 +439,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label ">Format électronique</label>
                 <select class="form-select form-control" formControlName="format_electronique">
@@ -450,17 +450,23 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label ">Bordereau imprimé</label>
                 <input type="text" class="form-control" formControlName="bordereau_imprime">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label ">Catégorie de dépense</label>
+                <input type="text" class="form-control" formControlName="categorie_depense">
               </div>
             </div>
           </div>
           
           <div class="row">
             <div class="col-md-12">
-              <div class="mb-3">
+              <div class="mb-3 ml-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" formControlName="reserve_cours" 
                          id="reserveCours">
@@ -490,22 +496,16 @@
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Enseignant</label>
-                <textarea class="form-control" formControlName="reserve_cours_enseignant" rows="2"></textarea>
+                <input type="text" class="form-control" formControlName="reserve_cours_enseignant" rows="2">
               </div>
             </div>
           </div>
           
           <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label ">Catégorie de dépense</label>
-                <input type="text" class="form-control" formControlName="categorie_depense">
-              </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="mb-3">
                 <label class="form-label ">Note catalogueur droit</label>
-                <textarea class="form-control" formControlName="note_catalogueur_droit" rows="3"></textarea>
+                <textarea class="form-control" formControlName="note_catalogueur_droit" rows="2"></textarea>
               </div>
             </div>
           </div>
