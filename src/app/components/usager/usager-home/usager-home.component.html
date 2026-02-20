@@ -1,0 +1,44 @@
+<div class="container py-5">
+  <h2 class="mb-4">Bienvenue</h2>
+  <p class="text-muted mb-5">Que souhaitez-vous faire ?</p>
+
+  <div class="row g-4">
+
+    <!-- Card Demande d'achat -->
+    <div class="col-12 col-md-6">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body d-flex flex-column p-4">
+          <div class="mb-3">
+            <i class="bi bi-cart-plus fs-1 text-primary"></i>
+          </div>
+          <h5 class="card-title">Demande d'achat</h5>
+          <p class="card-text text-muted flex-grow-1">
+            Soumettez une demande d'acquisition d'un document pour les collections des bibliothèques.
+          </p>
+          <a routerLink="/usager/demande" class="btn btn-primary mt-3 align-self-start">
+            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Suggestion d'achat -->
+    <div class="col-12 col-md-6">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body d-flex flex-column p-4">
+          <div class="mb-3">
+            <i class="bi bi-lightbulb fs-1 text-warning"></i>
+          </div>
+          <h5 class="card-title">Suggestion d'achat</h5>
+          <p class="card-text text-muted flex-grow-1">
+            Proposez l'ajout d'un document à nos collections. Votre suggestion sera analysée avec soin.
+          </p>
+          <a routerLink="/usager/suggestion-public" class="btn btn-warning mt-3 align-self-start">
+            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

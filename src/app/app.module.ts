@@ -25,7 +25,7 @@ import { NgbNavModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
-import { AccueilComponent } from './components/accueil/accueil.component';
+import { AccueilComponent } from './components/admin/accueil/accueil.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { LoginRoutingModule } from './components/login/login-routing.module';
@@ -40,18 +40,22 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
-import { ListeProcessusComponent } from './components/processus/liste-processus/liste-processus.component';
-import {ListeProcessusDelailsComponent} from "./components/processus/liste-processus-details/liste-processus-details.component";
-import {MiseAjourMonographieComponent} from "./components/processus/mise-a-jour-monografies/mise-a-jour-monografies.component";
+import { ListeProcessusComponent } from './components/admin/processus/liste-processus/liste-processus.component';
+import {ListeProcessusDelailsComponent} from "./components/admin/processus/liste-processus-details/liste-processus-details.component";
+import {MiseAjourMonographieComponent} from "./components/admin/processus/mise-a-jour-monografies/mise-a-jour-monografies.component";
 import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
 import {ListFournisseursComponent} from "./components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component";
 import {ListBoxModule} from "@syncfusion/ej2-angular-dropdowns";
 import { RouterModule } from '@angular/router';
-import { ItemsListComponent } from './components/items-list/items-list.component';
-import { ItemFormulaireComponent } from './components/item-formulaire/item-formulaire.component';
+import { ItemsListComponent } from './components/admin/items-list/items-list.component';
+import { ItemFormulaireComponent } from './components/admin/item-formulaire/item-formulaire.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DialogService } from './services/dialog.service';
-import { RapportsComponent } from './components/rapports/rapports.component';
+import { RapportsComponent } from './components/admin/rapports/rapports.component';
+import { UserLayoutComponent } from './components/usager/user-layout/user-layout.component';
+import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
+import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
+import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +76,11 @@ import { RapportsComponent } from './components/rapports/rapports.component';
     ItemsListComponent,
     ItemFormulaireComponent,
     DialogComponent,
-    RapportsComponent
+    RapportsComponent,
+    UserLayoutComponent,
+    UsagerFormulaireComponent,
+    SuggestionPublicComponent,
+    UsagerHomeComponent
   ],
     imports: [
         RouterModule,

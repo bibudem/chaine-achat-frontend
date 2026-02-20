@@ -4,7 +4,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { Router } from "@angular/router";
-import { RapportsService, FiltresRapport, ApiResponse } from '../../services/rapports.service';
+import { RapportsService, FiltresRapport, ApiResponse } from '../../../services/rapports.service';
 
 interface TypeRapport {
   id: 'detaille' | 'par-type' | 'par-bibliotheque' | 'par-demandeur' | 'mensuel' | 'par-statut';

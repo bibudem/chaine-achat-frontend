@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Item, ItemFormulaireService, ApiResponse } from '../../services/items-formulaire.service';
-import { ListeChoixOptions } from '../../lib/ListeChoixOptions';
-import { DialogService } from '../../services/dialog.service';
+import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
+import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 
 @Component({

@@ -1,0 +1,30 @@
+<!-- usager-formulaire.component.html -->
+<div class="card shadow-sm p-4">
+  <h2 class="mb-4">Nouvelle demande</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="mb-3">
+      <label class="form-label">Titre <span class="text-danger">*</span></label>
+      <input class="form-control" formControlName="titre"
+             [class.is-invalid]="submitted && form.get('titre')?.invalid" />
+      <div class="invalid-feedback">Le titre est requis.</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description <span class="text-danger">*</span></label>
+      <textarea class="form-control" formControlName="description" rows="4"
+                [class.is-invalid]="submitted && form.get('description')?.invalid"></textarea>
+      <div class="invalid-feedback">La description est requise.</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Quantité <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" formControlName="quantite"
+             [class.is-invalid]="submitted && form.get('quantite')?.invalid" />
+      <div class="invalid-feedback">La quantité doit être au moins 1.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+
+  </form>
+</div>

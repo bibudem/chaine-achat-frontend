@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HomeService, DashboardStats, GraphData } from "../../services/home.service";
+import { HomeService, DashboardStats, GraphData } from "../../../services/home.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Router } from "@angular/router";
 import { Subscription } from 'rxjs';

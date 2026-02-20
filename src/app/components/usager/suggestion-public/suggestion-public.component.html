@@ -1,0 +1,208 @@
+<!-- suggestion-public.component.html -->
+<div class="container py-4">
+  <div class="card shadow-sm p-4">
+  <h2>Suggestion d'achat</h2>
+
+  <!-- Notice -->
+  <div class="alert alert-info mt-3">
+    <strong>À noter</strong>
+    <ol class="mb-0 mt-2">
+      <li>Avant de compléter ce formulaire, vérifiez dans
+        <a href="https://umontreal.on.worldcat.org/discovery?lang=fr" target="_blank">Sofia</a>
+        que nous ne le possédons pas déjà.
+      </li>
+      <li>Faire une seule demande par formulaire.</li>
+      <li>Nous analyserons votre suggestion avec soin. La décision d'achat dépend de plusieurs facteurs,
+        dont la politique de développement de la collection et du budget disponible.</li>
+      <li>À moins d'indication contraire, l'édition acquise sera la plus récente.</li>
+    </ol>
+  </div>
+
+  <!-- Alertes résultat -->
+  <div *ngIf="success" class="alert alert-success mt-3">
+    ✅ Votre suggestion a bien été envoyée. Merci !
+  </div>
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    ❌ Une erreur s'est produite. Veuillez réessayer.
+  </div>
+
+  <p class="mt-3"><em>* Champ obligatoire</em></p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- ── Identification ── -->
+    <fieldset class="border rounded p-3 mb-4">
+      <legend class="float-none w-auto px-2 fs-6 fw-bold">Identification</legend>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Nom</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="nom" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Catégorie d'usager</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="statut" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Faculté / Département</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="faculteDepartement" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Courriel</label>
+        <div class="col-sm-8">
+          <input type="email" class="form-control" formControlName="courriel"
+                 [class.is-invalid]="submitted && f['courriel'].invalid" />
+          <div class="invalid-feedback">Courriel invalide.</div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" formControlName="copieCourriel"
+                   id="copieCourriel" />
+            <label class="form-check-label small" for="copieCourriel">
+              M'envoyer une copie de la demande
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </fieldset>
+
+    <!-- ── Description ── -->
+    <fieldset class="border rounded p-3 mb-4">
+      <legend class="float-none w-auto px-2 fs-6 fw-bold">Description de la suggestion</legend>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">
+          Type de document <span class="text-danger">*</span>
+        </label>
+        <div class="col-sm-8">
+          <select class="form-select" formControlName="typeDocument"
+                  [class.is-invalid]="submitted && f['typeDocument'].invalid">
+            <option value="">Faites un choix</option>
+            <option>Livre</option>
+            <option>Périodique</option>
+            <option>Document audiovisuel</option>
+            <option>Base de données</option>
+            <option>Autre</option>
+          </select>
+          <div class="invalid-feedback">Ce champ est obligatoire.</div>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">
+          Titre <span class="text-danger">*</span>
+        </label>
+        <div class="col-sm-8">
+          <textarea class="form-control" formControlName="titre" rows="2"
+                    [class.is-invalid]="submitted && f['titre'].invalid"></textarea>
+          <div class="invalid-feedback">Ce champ est obligatoire.</div>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">
+          Auteur ou autrice <span class="text-danger">*</span>
+        </label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="auteur"
+                 [class.is-invalid]="submitted && f['auteur'].invalid" />
+          <div class="invalid-feedback">Ce champ est obligatoire.</div>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">
+          Année de publication ou URL
+        </label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="annee" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">ISBN / ISSN</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="isbnIssn" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Édition</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="edition" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-4 col-form-label">Notes et commentaires</label>
+        <div class="col-sm-8">
+          <textarea class="form-control" formControlName="notes" rows="4"></textarea>
+        </div>
+      </div>
+
+      <!-- Réserver -->
+      <div class="mt-2">
+        <span class="me-3">Voulez-vous réserver le document à son arrivée ?</span>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" formControlName="reserver"
+                 id="reserver-oui" value="oui" />
+          <label class="form-check-label" for="reserver-oui">Oui</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" formControlName="reserver"
+                 id="reserver-non" value="non" />
+          <label class="form-check-label" for="reserver-non">Non</label>
+        </div>
+      </div>
+
+    </fieldset>
+
+    <!-- ── Section enseignant ── -->
+    <fieldset class="border rounded p-3 mb-4">
+      <legend class="float-none w-auto px-2 fs-6 fw-bold">Section réservée au corps enseignant</legend>
+
+      <div class="mb-3 row">
+        <label class="col-sm-5 col-form-label">Document requis pour un cours en date du...</label>
+        <div class="col-sm-7">
+          <input type="date" class="form-control" formControlName="dateRequis" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-sm-5 col-form-label">Mettre le document à la réserve de cours ?</label>
+        <div class="col-sm-7 d-flex align-items-center">
+          <input class="form-check-input" type="checkbox" formControlName="mettreReserve"
+                 id="mettreReserve" />
+        </div>
+      </div>
+
+      <div class="mb-3 row" *ngIf="showSigleCours">
+        <label class="col-sm-5 col-form-label">Sigle et nom du cours</label>
+        <div class="col-sm-7">
+          <input class="form-control" formControlName="sigleCours" />
+        </div>
+      </div>
+
+    </fieldset>
+
+    <!-- Boutons -->
+    <div class="d-flex gap-3">
+      <button type="submit" class="btn btn-primary px-4" [disabled]="isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        {{ isLoading ? 'Envoi...' : 'Envoyer' }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="onReset()">
+        Recommencer
+      </button>
+    </div>
+
+  </form>
+</div>
+</div>

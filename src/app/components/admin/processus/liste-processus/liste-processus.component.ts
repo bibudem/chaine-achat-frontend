@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
-import {MethodesGlobal} from "../../../lib/MethodesGlobal";
-import {ProcessusService} from "../../../services/processus.service";
+import {MethodesGlobal} from "../../../../lib/MethodesGlobal";
 import {TranslateService} from "@ngx-translate/core";
 import {tap} from "rxjs/operators";
 import {Router} from "@angular/router";
@@ -37,8 +36,7 @@ export class ListeProcessusComponent implements OnInit {
 
   routerChek :string = ''
 
-  constructor(private processusService: ProcessusService,
-              private translate:TranslateService,
+  constructor(private translate:TranslateService,
               private router: Router) { }
 
   //appliquer filtre
@@ -55,38 +53,10 @@ export class ListeProcessusComponent implements OnInit {
   }
 
   async getAllProcessus() {
-    try {
-      this.listeProcessus=[]
-      this.processus$ = this.processusService.fetchAll();
-      // @ts-ignore
-      await this.processus$.toPromise().then(res => {
-        if(res!== undefined){
-          for (let i = 0; i < res.length; i++) {
-            this.listeProcessus[i]={
-              "id_processus":res[i].id_processus,
-              "titre":res[i].titre,
-              "admin":res[i].admin,
-              "h_debut":res[i].h_debut,
-              "h_fin":res[i].h_fin,
-              "statut":res[i].statut,
-              "note":res[i].note
-            }
-          }
-        }
-        //console.log(res);
 
-        //console.log(this.dataSource);
-      });
-    } catch(err) {
-      console.error(`Error : ${err.Message}`);
-    }
   }
 
   async deleteProcessus(id:string){
-    let idP=Number(id)
-    this.processus$ = this.processusService
-      .delete(idP)
-      .pipe(tap(() => (this.getAllProcessus())));
   }
 
   linkCreerProcessus(routeLink:string):void{

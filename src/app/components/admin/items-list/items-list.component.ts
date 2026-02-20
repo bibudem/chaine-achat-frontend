@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Item, ItemFormulaireService } from '../../services/items-formulaire.service';
-import { ListeChoixOptions } from '../../lib/ListeChoixOptions';
-import { DialogService } from '../../services/dialog.service';
+import { Item, ItemFormulaireService } from '../../../services/items-formulaire.service';
+import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
   selector: 'app-items-list',

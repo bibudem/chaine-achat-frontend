@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
-import {MethodesGlobal} from "../../../lib/MethodesGlobal";
-import {ProcessusService} from "../../../services/processus.service";
+import {MethodesGlobal} from "../../../../lib/MethodesGlobal";
 import {TranslateService} from "@ngx-translate/core";
 
 import {ActivatedRoute, Router} from "@angular/router";
@@ -39,7 +38,7 @@ export class ListeProcessusDelailsComponent implements OnInit {
 
   idProcessus: string = '';
 
-  constructor(private processusService: ProcessusService,
+  constructor(
               private translate:TranslateService,
               private route: ActivatedRoute,
               private router: Router) { }

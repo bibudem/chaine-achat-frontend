@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
-import {MethodesGlobal} from "../../../lib/MethodesGlobal";
+import {MethodesGlobal} from "../../../../lib/MethodesGlobal";
 import {Router} from "@angular/router";
 import {TranslateService} from "@ngx-translate/core";
 import {tap} from "rxjs/operators";
-import {ProcessusService} from "../../../services/processus.service";
-import {ListeChoixOptions} from "../../../lib/ListeChoixOptions";
+import {ProcessusService} from "../../../../services/processus.service";
+import {ListeChoixOptions} from "../../../../lib/ListeChoixOptions";
 
 @Component({
   selector: 'app-mise-a-jour-monografies',
