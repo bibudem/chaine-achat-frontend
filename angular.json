@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/app-gestion-achats",
+            "outputPath": "dist/chaine-achat-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -85,10 +85,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "app-gestion-achats:build:production"
+              "browserTarget": "chaine-achat-frontend:build:production"
             },
             "development": {
-              "browserTarget": "app-gestion-achats:build:development"
+              "browserTarget": "chaine-achat-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -97,7 +97,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app-gestion-achats:build"
+            "browserTarget": "chaine-achat-frontend:build"
           }
         },
         "test": {

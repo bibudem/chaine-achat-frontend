@@ -22,6 +22,8 @@ export class ItemFormulaireComponent implements OnInit {
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
 
+  
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,

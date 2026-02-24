@@ -1,19 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <title>chaineAchat</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
-  <!-- Bootstrap Icons - IMPORTANT pour les icônes du dialogue -->
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- ✅ Masque le shell admin AVANT Angular sur les routes /usager -->
+  <script>
+    if (window.location.pathname.startsWith('/usager')) {
+      document.documentElement.classList.add('usager-route');
+    }
+  </script>
 </head>
 <body class="mat-typography">
-<app-root></app-root>
+  <app-root></app-root>
 </body>
 </html>

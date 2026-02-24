@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface ReponsePayload {
-  type_formulaire: 'demande' | 'suggestion';
+  type_formulaire: 'demande' | "Suggestion d\'achat";
   usager_nom:      string;
   usager_courriel: string;
   usager_statut:   string;
@@ -17,7 +17,7 @@ export class ReponsesService {
 
   constructor(private http: HttpClient) {}
 
-  private buildPayload(type: 'demande' | 'suggestion', reponses: Record<string, any>): ReponsePayload {
+  private buildPayload(type: 'demande' | "Suggestion d\'achat", reponses: Record<string, any>): ReponsePayload {
     return {
       type_formulaire: type,
       usager_nom:      `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
@@ -32,7 +32,7 @@ export class ReponsesService {
   }
 
   envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
-    return this.http.post(this.url, this.buildPayload('suggestion', reponses));
+    return this.http.post(this.url, this.buildPayload("Suggestion d\'achat", reponses));
   }
 
   lister(type?: string, page = 1, limit = 20): Observable<any> {

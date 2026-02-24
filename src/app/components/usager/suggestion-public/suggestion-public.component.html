@@ -19,9 +19,14 @@
   </div>
 
   <!-- Alertes résultat -->
-  <div *ngIf="success" class="alert alert-success mt-3">
-    ✅ Votre suggestion a bien été envoyée. Merci !
-  </div>
+  <div *ngIf="success" class="text-center py-4">
+  <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+  <h5 class="mt-3">Votre suggestion a bien été envoyée !</h5>
+  <p class="text-muted">Nous analyserons votre suggestion avec soin.</p>
+  <button class="btn btn-outline-primary mt-2" (click)="onReset()">
+    <i class="bi bi-plus-circle me-2"></i>Faire une autre suggestion
+  </button>
+</div>
   <div *ngIf="error" class="alert alert-danger mt-3">
     ❌ Une erreur s'est produite. Veuillez réessayer.
   </div>

@@ -66,7 +66,26 @@ export class SuggestionPublicComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isLoading = true;
-    this.reponsesService.envoyerSuggestion(this.form.getRawValue()).subscribe({
+
+    // Construire le payload manuellement pour contrôler les champs
+    const formVal = this.form.getRawValue();
+    const reponses = {
+      typeDocument:       formVal.typeDocument,
+      titre:              formVal.titre,
+      auteur:             formVal.auteur,
+      annee:              formVal.annee,
+      isbnIssn:           formVal.isbnIssn,
+      edition:            formVal.edition,
+      notes:              formVal.notes,
+      reserver:           formVal.reserver,
+      faculteDepartement: formVal.faculteDepartement,
+      copieCourriel:      formVal.copieCourriel,
+      dateRequis:         formVal.dateRequis,
+      mettreReserve:      formVal.mettreReserve,
+      sigleCours:         formVal.sigleCours,
+    };
+
+    this.reponsesService.envoyerSuggestion(reponses).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;

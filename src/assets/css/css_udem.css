@@ -33,7 +33,25 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
+/* =============================================
+   ANTI-FLASH SHELL ADMIN SUR ROUTES USAGER
+   ============================================= */
 
+/* Appliqué immédiatement par le script index.html
+   avant qu'Angular ne soit initialisé             */
+html.usager-route app-header,
+html.usager-route app-menu,
+html.usager-route app-footer,
+html.usager-route app-dialog {
+  display: none !important;
+}
+
+/* Supprime aussi les wrappers pour éviter
+   les espaces et marges résiduels            */
+html.usager-route .navbar,
+html.usager-route .sidebar {
+  display: none !important;
+}
 /* =============================================
    STYLES DE BASE
    ============================================= */
@@ -744,4 +762,149 @@ select.tt-hint {
   .stat-value {
     font-size: 1.8rem;
   }
+}
+/* =============================================
+   PAGINATION
+   ============================================= */
+
+.pagination-wrapper {
+  background: var(--white);
+  border-radius: 0 0 12px 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--light-gray);
+  box-shadow: var(--shadow-sm);
+}
+
+.pagination-wrapper .text-muted {
+  color: var(--text-gray) !important;
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.75rem;
+}
+
+.pagination-wrapper .text-muted strong {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+/* Conteneur pagination Bootstrap */
+.pagination {
+  gap: 4px;
+  margin: 0;
+}
+
+.page-item .page-link {
+  border: 1px solid var(--light-gray);
+  border-radius: 8px !important;
+  color: var(--secondary-blue);
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  min-width: 36px;
+  text-align: center;
+  background: var(--white);
+  transition: all 0.2s ease;
+  line-height: 1.5;
+}
+
+.page-item .page-link:hover {
+  background: var(--dark-gray);
+  border-color: var(--medium-gray);
+  color: var(--secondary-blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Page active */
+.page-item.active .page-link {
+  background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray)) !important;
+  border-color: var(--medium-gray) !important;
+  color: var(--white) !important;
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+}
+
+/* Page désactivée */
+.page-item.disabled .page-link {
+  background: var(--light-gray);
+  border-color: var(--light-gray);
+  color: var(--border-gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ellipses */
+.page-item.disabled .page-link:not([title]) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-gray);
+}
+
+/* Boutons navigation (chevrons) */
+.page-item:first-child .page-link,
+.page-item:last-child .page-link,
+.page-item:nth-child(2) .page-link,
+.page-item:nth-last-child(2) .page-link {
+  background: var(--extra-light-blue);
+  border-color: var(--light-gray);
+  color: var(--secondary-blue);
+  font-weight: 600;
+}
+
+.page-item:first-child .page-link:hover,
+.page-item:last-child .page-link:hover,
+.page-item:nth-child(2) .page-link:hover,
+.page-item:nth-last-child(2) .page-link:hover {
+  background: var(--secondary-blue) !important;
+  border-color: var(--secondary-blue) !important;
+  color: var(--white) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagination-wrapper {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .page-item .page-link {
+    padding: 5px 10px;
+    min-width: 32px;
+    font-size: 0.8rem;
+  }
+}
+/* =============================================
+   TRI DES COLONNES
+   ============================================= */
+
+.sortable-col {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.sortable-col:hover {
+  background-color: var(--extra-light-blue) !important;
+  color: var(--secondary-blue);
+}
+
+.sortable-col i {
+  font-size: 0.75rem;
+  vertical-align: middle;
+  transition: color 0.15s ease;
+}
+
+.sortable-col:hover i {
+  color: var(--secondary-blue);
+}
+
+/* Colonne active (triée) */
+.sortable-col:has(i.bi-arrow-up),
+.sortable-col:has(i.bi-arrow-down) {
+  background-color: var(--extra-light-blue) !important;
+  color: var(--secondary-blue);
+  font-weight: 600;
 }

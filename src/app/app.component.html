@@ -1,26 +1,21 @@
-<!-- app.component.html -->
-<div class="container-scroller">
-  
-  <ng-container *ngIf="!isUsagerRoute">
+<!-- ── Shell USAGER : header/menu/footer absents ── -->
+<ng-container *ngIf="isUsagerRoute">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<!-- ── Shell ADMIN : structure complète ── -->
+<ng-container *ngIf="!isUsagerRoute">
+  <div class="container-scroller">
     <app-header></app-header>
-  </ng-container>
-
-  <div class="container-fluid page-body-wrapper">
-    
-    <ng-container *ngIf="!isUsagerRoute">
+    <div class="container-fluid page-body-wrapper">
       <app-menu></app-menu>
-    </ng-container>
-
-    <div class="main-panel">
-      <div class="content-wrapper">
-        <app-dialog></app-dialog>
-        <router-outlet></router-outlet>
-      </div>
-      
-      <ng-container *ngIf="!isUsagerRoute">
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <app-dialog></app-dialog>
+          <router-outlet></router-outlet>
+        </div>
         <app-footer></app-footer>
-      </ng-container>
-
+      </div>
     </div>
   </div>
-</div>
+</ng-container>

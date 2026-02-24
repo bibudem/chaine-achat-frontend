@@ -16,6 +16,10 @@ export class UsagerFormulaireComponent implements OnInit {
   constructor(private fb: FormBuilder, private reponsesService: ReponsesService) {}
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  private initForm(): void {
     this.form = this.fb.group({
       titre:       ['', Validators.required],
       description: ['', Validators.required],
@@ -25,7 +29,14 @@ export class UsagerFormulaireComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  onSubmit() {
+  nouvelleDemandeD(): void {
+    this.success   = false;
+    this.error     = false;
+    this.submitted = false;
+    this.initForm();
+  }
+
+  onSubmit(): void {
     this.submitted = true;
     if (this.form.invalid) return;
 
@@ -34,8 +45,6 @@ export class UsagerFormulaireComponent implements OnInit {
       next: () => {
         this.success   = true;
         this.isLoading = false;
-        this.submitted = false;
-        this.form.reset({ quantite: 1 });
       },
       error: () => {
         this.error     = true;
