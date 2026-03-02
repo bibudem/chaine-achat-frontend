@@ -257,5 +257,11 @@
     "mise-a-jour-prets": "Mise à jour « Prêts Numériques »",
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
-  }
+  },
+  "lst-fournisseurs": {
+  "titre":    "Liste des fournisseurs",
+  "format":   "Format offert",
+  "affichage":"Affichage des prix",
+  "type-doc": "Types de documents"
+}
 }

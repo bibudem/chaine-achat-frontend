@@ -185,3 +185,152 @@ form.submitting {
 .d-flex.gap-2 {
   gap: 0.5rem !important;
 }
+/* =====================================================
+   NG-SELECT Bootstrap-like (fix placeholder + clear)
+   ===================================================== */
+
+/* ========= ng-select : contrôle façon form-control Bootstrap ========= */
+ng-select.ngs-control {
+  display: block;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  .ng-select-container {
+    height: 2.75rem; 
+    min-height: 2.75rem;
+    border: 1px solid #9dabb9;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    box-shadow: none;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    padding: 0 2.25rem 0 0.75rem;  /* espace pour caret */
+    align-items: center;
+    position: relative;
+
+    .ng-value-container {
+      padding: 0;
+      align-items: center;
+    }
+
+    /* Masquer le placeholder dès qu'une valeur est présente */
+    &.ng-has-value .ng-placeholder { display: none; }
+
+    .ng-placeholder { color: #6c757d; }
+  }
+
+  /* Focus Bootstrap */
+  &.ng-select-focused .ng-select-container,
+  .ng-select-container:focus-within {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+  }
+
+  /* Disabled */
+  &.ng-select-disabled .ng-select-container { background-color: #e9ecef; }
+
+  /* Invalid */
+  &.is-invalid .ng-select-container,
+  &.ng-invalid.ng-touched .ng-select-container { border-color: #dc3545; }
+
+  /* Remplacer les icônes natives par un caret ▼ sobre */
+  .ng-arrow-wrapper, .ng-clear-wrapper { display: none !important; }
+  .ng-select-container::after {
+    content: "";
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid #6c757d; pointer-events: none;
+  }
+}
+
+/* Variante compacte (~ .form-control-sm) */
+ng-select.ngs-control.ngs-sm .ng-select-container {
+  height: 31px; min-height: 31px; border-radius: 0.25rem;
+}
+
+/* ========= PANEL / OPTIONS : visuel propre et lisible ========= */
+.ngs-panel.ng-dropdown-panel {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  margin-top: .125rem;
+  background: #fff;
+
+  /* Hauteur max + scroll doux */
+  max-height: 280px;
+  overflow: auto;
+
+  /* largeur = gérée par ng-select (égale à l'anchor). Si besoin :
+     width: auto; min-width: 240px;  */
+
+  /* Zone liste d'options */
+  .ng-dropdown-panel-items {
+    /* Option par défaut */
+    .ng-option {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .375rem .75rem;
+      line-height: 1.5;
+      color: #212529;
+      background: #fff;
+      border-bottom: 1px solid #f1f3f5;
+
+      /* Éviter le wrapping moche et couper proprement */
+      .ng-option-label {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Icône/chevron éventuels à droite */
+      .ng-option-icon {
+        flex: 0 0 auto;
+        color: #adb5bd;
+      }
+    }
+
+    /* Dernière option sans trait */
+    .ng-option:last-child { border-bottom: 0; }
+
+    /* Survol */
+    .ng-option.ng-option-marked:not(.ng-option-disabled) {
+      background-color: #f8f9fa;
+    }
+
+    /* Sélectionnée */
+    .ng-option.ng-option-selected {
+      background-color: #e9f3ff;
+      color: #0d6efd;
+      font-weight: 600;
+    }
+
+    /* Désactivée */
+    .ng-option.ng-option-disabled {
+      color: #adb5bd;
+      background: #fff;
+      cursor: not-allowed;
+    }
+
+    /* Groupes (si tu utilises groupBy) */
+    .ng-optgroup {
+      position: sticky; top: 0;
+      z-index: 1;
+      background: #fff;
+      padding: .25rem .75rem;
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 1px solid #e9ecef;
+    }
+  }
+
+  /* Input de recherche interne (si activé dans le panel via templates) */
+  .ng-input input {
+    padding: .25rem .5rem;
+    font-size: 0.95rem;
+  }
+}
+

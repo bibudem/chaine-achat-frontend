@@ -1,0 +1,287 @@
+<div class="container-fluid bg-white p-2">
+
+  <!-- ── En-tête ───────────────────────────────────────────── -->
+  <div class="row mb-3 mt-5 pl-2 pr-2">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-1 mt-2">Liste des fournisseurs</h1>
+          <p class="text-muted mb-0 small">Gestion des fournisseurs et fonds documentaires</p>
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="ouvrirFormulaire()" *ngIf="!showForm">
+          <i class="bi bi-plus-circle me-2"></i>Ajouter
+        </button>
+      </div>
+      <hr class="mt-2">
+
+      <!-- Message de décision -->
+      <ng-container *ngIf="decisionMessage as msg">
+        <div class="alert alert-{{ msg.type }} alert-dismissible fade show d-flex align-items-center py-2"
+             role="alert">
+          <span class="small">{{ msg.texte }}</span>
+          <button type="button" class="btn-close ms-auto btn-sm"
+                  (click)="decisionMessage = null" aria-label="Fermer"></button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- ── Formulaire ────────────────────────────────────────── -->
+  <div *ngIf="showForm" class="card mb-3 pl-2 pr-2">
+    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">
+        {{ isEditMode ? 'Modifier le fournisseur' : 'Nouveau fournisseur' }}
+      </span>
+      <button class="btn btn-sm py-0" (click)="annulerFormulaire()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="card-body py-3">
+
+      <!-- Rangée 1 devient : Titre (5) + Format (2) + Affichage (2) = 9 cols -->
+    <div class="row g-2 mb-2">
+      <div class="col-md-5"> <!-- ← était col-md-4 -->
+        <label class="form-label small mb-1">Titre <span class="text-danger">*</span></label>
+        <input type="text" class="form-control form-control-sm"
+              [(ngModel)]="titre"
+              [class.is-invalid]="titre.trim().length === 0"
+              placeholder="Nom du fournisseur">
+        <div class="invalid-feedback small">Obligatoire</div>
+      </div>
+      <div class="col-md-3"> <!-- ← était col-md-2 -->
+        <label class="form-label small mb-1">Format offert</label>
+        <select class="form-select form-select-sm" [(ngModel)]="format_offert">
+          <option value="">--</option>
+          <option *ngFor="let f of formatsDisponibles" [value]="f">{{ f }}</option>
+        </select>
+      </div>
+      <div class="col-md-4"> <!-- ← était col-md-2 -->
+        <label class="form-label small mb-1">Affichage prix</label>
+        <select class="form-select form-select-sm" [(ngModel)]="affichage_prix">
+          <option value="">--</option>
+          <option *ngFor="let a of affichagesDisponibles" [value]="a">{{ a }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5">
+        <!-- Rangée 3 : Description -->
+      <div class="mb-2">
+        <label class="form-label small mb-1">Description</label>
+        <textarea class="form-control form-control-sm" rows="2"
+                  [(ngModel)]="description"
+                  placeholder="Notes supplémentaires..."></textarea>
+      </div>
+      </div>
+      <div class="col-md-7">
+        <!-- ✅ Toggle pills -->
+        <div class="mb-2">
+          <label class="form-label small mb-1">Types de documents</label>
+          <div class="d-flex flex-wrap gap-2">
+            <button *ngFor="let type of typesDisponibles"
+                    type="button"
+                    class="btn btn-sm"
+                    [ngClass]="isTypeSelected(type) ? 'btn-primary' : 'btn-outline-secondary'"
+                    (click)="toggleTypeDocument(type)">
+              <i class="bi bi-check me-1" *ngIf="isTypeSelected(type)"></i>{{ type }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+      <button type="button" class="btn btn-outline-secondary btn-sm"
+              (click)="annulerFormulaire()">
+        Annuler
+      </button>
+      <button type="button" class="btn btn-success btn-sm"
+              (click)="onSubmit()" [disabled]="submitting || !isFormValid()">
+        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+        {{ isEditMode ? 'Modifier' : 'Créer' }}
+      </button>
+    </div>
+    </div>
+  </div>
+
+  <!-- ── Filtres ────────────────────────────────────────────── -->
+  <div class="row g-2 mb-3 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label small mb-1">Recherche par titre</label>
+      <input type="text"
+            class="form-control form-control-sm"
+            placeholder="Rechercher..."
+            [(ngModel)]="searchTitre"
+            (input)="applyFilters()">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label small mb-1">Format offert</label>
+      <select class="form-select form-select-sm form-control" [(ngModel)]="selectedFormatOffert"
+              (change)="applyFilters()">
+        <option value="">Tous les formats</option>
+        <option *ngFor="let f of formatsDisponibles" [value]="f">{{ f }}</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label small mb-1">Type de document</label>
+      <select class="form-select form-select-sm form-control" [(ngModel)]="selectedTypeDocument"
+              (change)="applyFilters()">
+        <option value="">Tous les types</option>
+        <option *ngFor="let t of typesDisponibles" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+    <div class="col-md-5 text-end">
+      <span class="text-muted small">
+        {{ filteredFournisseurs.length }} fournisseur(s)
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Loading ────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-2 small text-muted">Chargement des données...</p>
+  </div>
+
+  <!-- ── Tableau ────────────────────────────────────────────── -->
+  <div *ngIf="!loading" class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body p-1">
+          <div class="table-responsive">
+            <table class="table table-hover table-sm mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="small">#</th>
+                  <th class="small">Titre</th>
+                  <th class="small">Format</th>
+                  <th class="small">Prix affiché</th>
+                  <th class="small">Types de documents</th>
+                  <th class="small">Dernière modification</th>
+                  <th class="small">Modifié par</th>
+                  <th class="text-center small">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let f of pagedFournisseurs; trackBy: trackByFournisseurId; let i = index"
+                    class="align-middle">
+
+                  <td class="text-muted small">{{ i+1 }}</td>
+                  <td class="fw-semibold small">{{ f.titre }}</td>
+                  <td>{{ f.format_offert || '—' }}</td>
+                  <td >{{ f.affichage_prix || '—' }}</td>
+                  <td>
+                    <span *ngFor="let type of getTypeBadges(f.type_document)"
+                          class="badge bg-light text-dark border me-1 mb-1"
+                          style="font-size: 0.7rem;">
+                      {{ type }}
+                    </span>
+                    <span *ngIf="!f.type_document" class="text-muted small">—</span>
+                  </td>
+                  <!-- datem si disponible, sinon datea -->
+                  <td class="text-muted small">
+                    {{ getDateAffichage(f) }}
+                    <span *ngIf="!f.datem && f.datea"
+                          class="badge bg-light text-secondary border ms-1"
+                          style="font-size: 0.65rem;" title="Date de création">
+                      création
+                    </span>
+                  </td>
+                  <td class="text-muted small">{{ f.modifie_par || '—' }}</td>
+
+                  <td class="text-center">
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button class="btn btn-outline-dark btn-sm"
+                              (click)="apliquerModifier(f.id_fournisseur ?? 0)"
+                              title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-outline-danger btn-sm ms-1"
+                              (click)="deleteFournisseur(f.id_fournisseur ?? 0, f.titre)"
+                              title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aucun résultat -->
+      <div *ngIf="filteredFournisseurs.length === 0" class="text-center py-4">
+        <i class="bi bi-inbox display-4 text-muted"></i>
+        <h6 class="mt-2">Aucun fournisseur trouvé</h6>
+        <p class="text-muted small">Modifiez les filtres ou ajoutez un nouveau fournisseur</p>
+        <button class="btn btn-primary btn-sm" (click)="ouvrirFormulaire()">
+          <i class="bi bi-plus-circle me-2"></i>Ajouter un fournisseur
+        </button>
+      </div>
+
+      <!-- ── Pagination ──────────────────────────────────────── -->
+      <div *ngIf="filteredFournisseurs.length > 0"
+           class="d-flex justify-content-between align-items-center mt-2 mb-3 px-1">
+
+        <div class="text-muted small">
+          Affichage de <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
+          à <strong>{{ getLastItemIndex() }}</strong>
+          sur <strong>{{ filteredFournisseurs.length }}</strong>
+        </div>
+
+        <nav *ngIf="totalPages > 1" aria-label="Pagination">
+          <ul class="pagination pagination-sm mb-0">
+
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="goToPage(1)" title="Première page">
+                <i class="bi bi-chevron-double-left"></i>
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="goToPage(currentPage - 1)">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+
+            <ng-container *ngFor="let page of pages">
+              <li class="page-item disabled" *ngIf="page === currentPage - 3 && page > 1">
+                <span class="page-link">…</span>
+              </li>
+              <li class="page-item"
+                  *ngIf="page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)"
+                  [class.active]="page === currentPage">
+                <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+              </li>
+              <li class="page-item disabled" *ngIf="page === currentPage + 3 && page < totalPages">
+                <span class="page-link">…</span>
+              </li>
+            </ng-container>
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="goToPage(currentPage + 1)">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="goToPage(totalPages)" title="Dernière page">
+                <i class="bi bi-chevron-double-right"></i>
+              </button>
+            </li>
+
+          </ul>
+        </nav>
+
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
+import { environment } from 'src/environments/environment';
 
 import { ErrorHandlerService } from "./error-handler.service";
 
@@ -31,6 +32,7 @@ export interface Item {
   format_support?: string;
   
   // Informations financières communes
+  fournisseur?: string;
   fonds_budgetaire?: string;
   fonds_sn_projet?: string;
   
@@ -123,7 +125,7 @@ export interface ApiResponse<T> {
   providedIn: "root",
 })
 export class ItemFormulaireService {
-  private url = "http://localhost:3000/items";
+  private url = `${environment.apiUrl}/items`;
 
   httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ 
@@ -176,9 +178,20 @@ export class ItemFormulaireService {
       return throwError(() => new Error("ID de l'item manquant pour la mise à jour"));
     }
 
+    // Formater les données avant envoi
+    const formattedItem = this.formatForApi(item);
+    
+    console.log('Données de mise à jour envoyées:', formattedItem);
+    
     return this.http
-      .put<ApiResponse<Item>>(`${this.url}/save/${item.item_id}`, item, this.httpOptions)
-      .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item>>("update")));
+      .put<ApiResponse<Item>>(`${this.url}/save/${item.item_id}`, formattedItem, this.httpOptions)
+      .pipe(
+        map(response => {
+          console.log('Réponse de mise à jour:', response);
+          return response;
+        }),
+        catchError(this.errorHandlerService.handleError<ApiResponse<Item>>("update"))
+      );
   }
 
   // DELETE - Supprimer un item (cascade sur tables spécifiques)
@@ -227,6 +240,12 @@ export class ItemFormulaireService {
     return this.http
       .post<ApiResponse<Item[]>>(`${this.url}/batch`, items, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("createBatch")));
+  }
+
+  // GET FOURNISSEURS - Récupérer la liste des fournisseurs
+  getFournisseurs(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.url}/fournisseurs`, this.httpOptions)
+      .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>("getFournisseurs")));
   }
 
   // ==================== TEST ROUTE ====================
@@ -289,18 +308,40 @@ export class ItemFormulaireService {
   }
 
   // Formater les données pour l'API
-  formatForApi(item: Item): Item {
-    console.log(item);
-    return {
-      ...item,
-      // Assurer que les booléens sont convertis correctement
-      creation_notice_dtdm: item.creation_notice_dtdm || false,
-      // Nettoyer les chaînes vides
-      titre_document: item.titre_document?.trim() || '',
-      demandeur: item.demandeur?.trim() || '',
-      fonds_budgetaire: item.fonds_budgetaire?.trim() || '',
-      // Ajouter la date de modification si c'est une mise à jour
-      ...(item.item_id && { date_modification: new Date().toISOString() })
-    };
+  formatForApi(item: any): any {
+    // Créer une copie pour ne pas modifier l'original
+    const formattedItem = { ...item };
+    
+    // Assurer que les booléens sont convertis correctement
+    if (formattedItem.creation_notice_dtdm !== undefined) {
+      formattedItem.creation_notice_dtdm = Boolean(formattedItem.creation_notice_dtdm);
+    }
+    
+    // Nettoyer les chaînes vides (les convertir en null pour l'API)
+    Object.keys(formattedItem).forEach(key => {
+      if (formattedItem[key] === '') {
+        formattedItem[key] = null;
+      }
+    });
+    
+    // S'assurer que les champs obligatoires ne sont pas vides
+    formattedItem.titre_document = formattedItem.titre_document?.trim() || null;
+    formattedItem.demandeur = formattedItem.demandeur?.trim() || null;
+    formattedItem.fonds_budgetaire = formattedItem.fonds_budgetaire?.trim() || null;
+    
+    // Ajouter la date de modification si c'est une mise à jour
+    if (formattedItem.item_id) {
+      formattedItem.date_modification = new Date().toISOString();
+    }
+    
+    return formattedItem;
+  }
+
+  // Vérifier si un item existe déjà
+  checkExisting(id: number): Observable<boolean> {
+    return this.getById(id).pipe(
+      map(response => response.success && !!response.data),
+      catchError(() => [false])
+    );
   }
 }

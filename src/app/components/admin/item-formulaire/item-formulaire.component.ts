@@ -21,6 +21,9 @@ export class ItemFormulaireComponent implements OnInit {
 
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
+  fournisseursOptions: string[] = [];
+  fournisseurSearch = '';
+  fournisseursFiltered: string[] = [];
 
   
 
@@ -47,7 +50,33 @@ export class ItemFormulaireComponent implements OnInit {
     this.itemForm.get('formulaire_type')?.valueChanges.subscribe(value => {
       this.onFormulaireTypeChange(value);
     });
+
+    this.loadFournisseurs();
   }
+
+  loadFournisseurs(): void {
+  this.itemService.getFournisseurs().subscribe({
+    next: (response: any) => {
+      const raw = response?.data ?? response;
+      const arr = Array.isArray(raw) ? raw : [];
+      
+      this.fournisseursOptions = arr
+        .map((f: any) => f?.titre ?? f)
+        .filter((titre: any) => typeof titre === 'string' && titre.trim().length > 0)
+        .sort((a: string, b: string) => a.localeCompare(b, 'fr'));
+
+      this.fournisseursFiltered = [...this.fournisseursOptions]; // ← copie initiale
+    },
+    error: (error) => console.error('❌ Erreur chargement fournisseurs:', error)
+  });
+}
+
+filterFournisseurs(search: string): void {
+  const term = search.toLowerCase().trim();
+  this.fournisseursFiltered = term
+    ? this.fournisseursOptions.filter(f => f.toLowerCase().includes(term))
+    : [...this.fournisseursOptions];
+}
 
   createForm(): FormGroup {
     return this.fb.group({
@@ -97,6 +126,7 @@ export class ItemFormulaireComponent implements OnInit {
       // Statuts
       statut_bibliotheque: ['En attente en bibliothèque'],
       statut_acq: [''],
+      fournisseur: ['', Validators.maxLength(255)], 
       
       // Métadonnées (lecture seule)
       date_modification: [{ value: '', disabled: true }],
@@ -353,7 +383,8 @@ export class ItemFormulaireComponent implements OnInit {
       source_information: formData.source_information,
       note_commentaire: formData.note_commentaire,
       id_ressource: formData.id_ressource,
-      catalogue: formData.catalogue
+      catalogue: formData.catalogue,
+      fournisseur: formData.fournisseur,
     };
   }
 

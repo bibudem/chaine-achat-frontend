@@ -1,7 +1,7 @@
-<div class="container-fluid bg-white p-4">
+<div class="container-fluid bg-white p-2">
   <!-- En-tête -->
-  <div class="row mb-4 mt-5">
-    <div class="col-md-12 mt-3">
+  <div class="row mt-5">
+    <div class="col-md-12">
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h1 class="h3 mb-1">{{ isEditMode ? 'Modifier l\'item' : 'Ajouter un nouvel item' }}</h1>
@@ -17,9 +17,8 @@
           </button>
         </div>
       </div>
-      <hr>
-     
     </div>
+    <hr>
   </div>
 
   <!-- Loading -->
@@ -31,10 +30,10 @@
   </div>
 
   <!-- Formulaire -->
-  <form [formGroup]="itemForm" *ngIf="!loading" class="needs-validation" novalidate>
+  <form [formGroup]="itemForm" *ngIf="!loading" class="needs-validation pl-2 pr-2" novalidate>
     
     <!-- Navigation par onglets -->
-    <ul class="nav nav-tabs mb-4" role="tablist">
+    <ul class="nav nav-tabs mb-2" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link" [class.active]="activeTab === 'base'" 
                 type="button" (click)="setActiveTab('base')">
@@ -53,15 +52,9 @@
     <div class="tab-content">
       
       <!-- ========== ONGLET 1: INFORMATIONS DE BASE ========== -->
-      <div class="tab-pane fade" [class.show]="activeTab === 'base'" [class.active]="activeTab === 'base'">
-        <div class="row mb-4">
-          <div class="col-12">
-            <h5 class="mb-3 pb-2 border-bottom">Informations de base</h5>
-          </div>
-        </div>
-
+      <div class="tab-pane" [class.show]="activeTab === 'base'" [class.active]="activeTab === 'base'">
         <!-- Rangée 1 : Informations obligatoires -->
-        <div class="row">
+        <div class="row mt-3">
           <div class="col-md-4">
             <div class="mb-3">
               <label class="form-label">
@@ -212,6 +205,32 @@
         <!-- Rangée 5 : Statuts -->
         <div class="row">
           <div class="col-md-3">
+          <div class="mb-3">
+            <label class="form-label">Fournisseur</label>
+
+              <ng-select
+                class="ngs-control"
+                [items]="fournisseursOptions"
+                [searchable]="true"
+                [clearable]="true"
+                [closeOnSelect]="true"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                appendTo="body"
+                placeholder="Sélectionnez un fournisseur"
+                formControlName="fournisseur">
+              </ng-select>
+
+            <div class="invalid-feedback d-block" *ngIf="hasError('fournisseur', 'required')">
+              Le fournisseur est obligatoire
+            </div>
+
+            <small class="text-muted" *ngIf="fournisseursOptions && fournisseursOptions.length > 0">
+              {{ fournisseursOptions.length }} fournisseurs
+            </small>
+          </div>
+        </div>
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label ">Fonds budgétaire <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="fonds_budgetaire"
@@ -221,13 +240,13 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label ">Fonds SN - No de projet</label>
               <input type="text" class="form-control" formControlName="fonds_sn_projet">
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label ">Statut bibliothèque</label>
               <select class="form-select form-control" formControlName="statut_bibliotheque">
@@ -304,7 +323,7 @@
       </div>
 
       <!-- ========== ONGLET 2: CHAMPS SPÉCIFIQUES ========== -->
-      <div class="tab-pane fade" [class.show]="activeTab === 'specifique'" [class.active]="activeTab === 'specifique'">
+      <div class="tab-pane" [class.show]="activeTab === 'specifique'" [class.active]="activeTab === 'specifique'">
         
         <!-- Message si aucun type sélectionné -->
         <div *ngIf="!selectedFormulaireType" class="alert alert-info">

@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "app-gestion-achats": {
+    "chaine-achat-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {

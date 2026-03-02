@@ -38,6 +38,7 @@ registerLocaleData(localeFr, 'fr');
 import { LOCALE_ID } from '@angular/core';
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
+import { NgSelectModule } from '@ng-select/ng-select';
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import { ListeProcessusComponent } from './components/admin/processus/liste-processus/liste-processus.component';
@@ -56,6 +57,7 @@ import { UserLayoutComponent } from './components/usager/user-layout/user-layout
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
 import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
+import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,8 @@ import { UsagerHomeComponent } from './components/usager/usager-home/usager-home
     UserLayoutComponent,
     UsagerFormulaireComponent,
     SuggestionPublicComponent,
-    UsagerHomeComponent
+    UsagerHomeComponent,
+    LstFournisseursComponent
   ],
     imports: [
         RouterModule,
@@ -88,6 +91,7 @@ import { UsagerHomeComponent } from './components/usager/usager-home/usager-home
         LoginRoutingModule,
         AppRoutingModule,
         FormsModule,
+        NgSelectModule,
         NgbModule,
         NgbNavModule,
         HttpClientModule,
