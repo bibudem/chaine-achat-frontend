@@ -1,86 +1,140 @@
-/* ===== Sections ===== */
+/* =======================================================
+   SECTIONS
+======================================================= */
+
 .detail-section {
-  border: 1px solid var(--light-gray);
-  border-radius: 8px;
-  padding: 1rem 1.25rem 0.25rem;
-  margin-bottom: 0.75rem;
-  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  padding: 1rem 1.25rem 0.5rem;
+  margin-bottom: 1rem;
+  background: #ffffff;
 }
 
 .detail-section-title {
-  font-family: 'Lora', Georgia, serif;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--secondary-blue);
-  border-bottom: 1px solid var(--light-gray);
-  padding-bottom: 0.4rem;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
+  color: #2c3e50;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-/* ===== Champs ===== */
+/* =======================================================
+   CHAMPS
+======================================================= */
+
 .detail-field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .detail-label {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-gray);
-  margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
 }
 
 .detail-value {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.9rem;
-  color: var(--medium-gray);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #212529;
   word-break: break-word;
 }
 
 .detail-note {
-  font-family: 'Figtree', sans-serif;
-  background: var(--extra-light-blue);
-  border-left: 3px solid var(--light-blue);
-  border-radius: 4px;
-  padding: 0.4rem 0.65rem;
+  background: #f8f9fa;
+  border-left: 3px solid #ced4da;
+  border-radius: 2px;
+  padding: 0.6rem 0.75rem;
   font-size: 0.88rem;
-  color: var(--medium-gray);
+  color: #343a40;
   white-space: pre-line;
   display: block;
 }
 
-/* ===== Badges statut ===== */
-.badge-statut {
-  display: inline-block;
-  padding: 0.25em 0.65em;
-  border-radius: 2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: 'Figtree', sans-serif;
-}
+/* =======================================================
+   BADGES – STATUT & PRIORITÉ
+   !important nécessaire pour surcharger Bootstrap .badge
+======================================================= */
 
-.badge-soumis    { background: #d1e7dd; color: #0a3622; }
-.badge-en-cours  { background: #fff3cd; color: #664d03; }
-.badge-complete  { background: #cfe2ff; color: #084298; }
-.badge-annule    { background: #f8d7da; color: #58151c; }
-.badge-attente   { background: var(--light-gray); color: var(--text-gray); }
-
-/* ===== Badges priorité ===== */
+.badge-statut,
 .badge-priorite {
-  display: inline-block;
-  padding: 0.25em 0.65em;
-  border-radius: 2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: 'Figtree', sans-serif;
+  display: inline-block !important;
+  padding: 0.25em 0.6em !important;
+  border-radius: 3px !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
 }
 
-.badge-urgent      { background: #f8d7da; color: #58151c; }
-.badge-prioritaire { background: #fff3cd; color: #664d03; }
-.badge-regulier    { background: var(--light-gray); color: var(--text-gray); }
+/* ===== Statut ===== */
+
+.badge-soumis    { background: #e9f5ec !important; color: #1e5631 !important; }
+.badge-en-cours  { background: #fff8e1 !important; color: #8a6d1f !important; }
+.badge-complete  { background: #e7f1ff !important; color: #1b4f9c !important; }
+.badge-annule    { background: #fdecea !important; color: #8b1c1c !important; }
+.badge-attente   { background: #f1f3f5 !important; color: #495057 !important; }
+
+/* ===== Priorité ===== */
+
+.badge-urgent      { background: #fdecea !important; color: #8b1c1c !important; }
+.badge-prioritaire { background: #fff8e1 !important; color: #8a6d1f !important; }
+.badge-regulier    { background: #f1f3f5 !important; color: #495057 !important; }
+
+/* =======================================================
+   TYPOGRAPHIE GÉNÉRALE
+======================================================= */
+
+h1 {
+  color: #1f2d3d;
+  font-weight: 600;
+}
+
+/* =======================================================
+   LIENS
+======================================================= */
+
+a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =======================================================
+   SPINNER / LOADING
+======================================================= */
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* =======================================================
+   MÉTADONNÉES BAS DE PAGE
+======================================================= */
+
+small.text-muted {
+  font-size: 0.75rem;
+  color: #6c757d !important;
+}
+
+/* =======================================================
+   SÉPARATEURS & GROUPES
+======================================================= */
+
+.detail-divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 0.25rem 0 0.75rem;
+}

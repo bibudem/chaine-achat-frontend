@@ -76,19 +76,21 @@ export class ItemDetailComponent implements OnInit {
   }
 
   getStatutBadgeClass(statut: string | undefined): string {
-    if (!statut) return 'badge-statut badge-attente';
-    if (statut.toLowerCase().includes('soumis'))  return 'badge-statut badge-soumis';
-    if (statut.toLowerCase().includes('cours'))   return 'badge-statut badge-en-cours';
-    if (statut.toLowerCase().includes('complét')) return 'badge-statut badge-complete';
-    if (statut.toLowerCase().includes('annul'))   return 'badge-statut badge-annule';
-    return 'badge-statut badge-attente';
+    if (!statut) return 'badge bg-light text-dark';
+    if (statut.toLowerCase().includes('soumis'))  return 'badge bg-success';
+    if (statut.toLowerCase().includes('cours'))   return 'badge bg-primary';
+    if (statut.toLowerCase().includes('complét')) return 'badge bg-success';
+    if (statut.toLowerCase().includes('annul'))   return 'badge bg-danger';
+    if (statut.toLowerCase().includes('attente')) return 'badge bg-info';
+    if (statut.toLowerCase().includes('budget'))  return 'badge bg-secondary';
+    return 'badge bg-light text-dark';
   }
 
   getPrioriteBadgeClass(priorite: string | undefined): string {
-    if (!priorite) return 'badge-priorite badge-regulier';
-    if (priorite.toLowerCase().includes('urgent'))      return 'badge-priorite badge-urgent';
-    if (priorite.toLowerCase().includes('prioritaire')) return 'badge-priorite badge-prioritaire';
-    return 'badge-priorite badge-regulier';
+    if (!priorite) return 'badge bg-light text-dark';
+    if (priorite.toLowerCase().includes('urgent'))      return 'badge bg-danger';
+    if (priorite.toLowerCase().includes('prioritaire')) return 'badge bg-warning text-dark';
+    return 'badge bg-light text-dark';
   }
 
   val(v: any): string {
