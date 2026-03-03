@@ -1,0 +1,86 @@
+/* ===== Sections ===== */
+.detail-section {
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  padding: 1rem 1.25rem 0.25rem;
+  margin-bottom: 0.75rem;
+  background: #fff;
+}
+
+.detail-section-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--secondary-blue);
+  border-bottom: 1px solid var(--light-gray);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ===== Champs ===== */
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.detail-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-gray);
+  margin-bottom: 0.15rem;
+}
+
+.detail-value {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  color: var(--medium-gray);
+  word-break: break-word;
+}
+
+.detail-note {
+  font-family: 'Figtree', sans-serif;
+  background: var(--extra-light-blue);
+  border-left: 3px solid var(--light-blue);
+  border-radius: 4px;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.88rem;
+  color: var(--medium-gray);
+  white-space: pre-line;
+  display: block;
+}
+
+/* ===== Badges statut ===== */
+.badge-statut {
+  display: inline-block;
+  padding: 0.25em 0.65em;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Figtree', sans-serif;
+}
+
+.badge-soumis    { background: #d1e7dd; color: #0a3622; }
+.badge-en-cours  { background: #fff3cd; color: #664d03; }
+.badge-complete  { background: #cfe2ff; color: #084298; }
+.badge-annule    { background: #f8d7da; color: #58151c; }
+.badge-attente   { background: var(--light-gray); color: var(--text-gray); }
+
+/* ===== Badges priorité ===== */
+.badge-priorite {
+  display: inline-block;
+  padding: 0.25em 0.65em;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Figtree', sans-serif;
+}
+
+.badge-urgent      { background: #f8d7da; color: #58151c; }
+.badge-prioritaire { background: #fff3cd; color: #664d03; }
+.badge-regulier    { background: var(--light-gray); color: var(--text-gray); }

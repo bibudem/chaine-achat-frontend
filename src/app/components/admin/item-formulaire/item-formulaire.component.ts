@@ -96,6 +96,16 @@ filterFournisseurs(search: string): void {
       // Catalogage
       creation_notice_dtdm: [false],
       note_dtdm: [''],
+
+      // Prix et commande
+      prix_cad: [null],
+      devise_originale: [''],
+      prix_devise_originale: [null],
+      periode_couverte: [''],
+      nombre_titres_inclus: [null],
+      nombre_utilisateurs: [''],
+      lien_plateforme: [''],
+      format_pret_numerique: [''],
       
       // Catégorisation
       categorie_document: [''],
@@ -384,6 +394,14 @@ filterFournisseurs(search: string): void {
       note_commentaire: formData.note_commentaire,
       id_ressource: formData.id_ressource,
       catalogue: formData.catalogue,
+      prix_cad:              formData.prix_cad,
+      devise_originale:      formData.devise_originale,
+      prix_devise_originale: formData.prix_devise_originale,
+      periode_couverte:      formData.periode_couverte,
+      nombre_titres_inclus:  formData.nombre_titres_inclus,
+      nombre_utilisateurs:   formData.nombre_utilisateurs,
+      lien_plateforme:       formData.lien_plateforme,
+      format_pret_numerique: formData.format_pret_numerique,
       fournisseur: formData.fournisseur,
     };
   }

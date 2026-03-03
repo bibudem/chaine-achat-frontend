@@ -8,12 +8,12 @@
           <p class="text-muted mb-0" *ngIf="itemId">ID: {{ itemId }}</p>
         </div>
         <div>
-          <button class="btn btn-outline-secondary me-2" (click)="onReturn()">
+          <button class="btn btn-outline-secondary me-2 btn-sm" (click)="onReturn()">
             <i class="bi bi-arrow-left"></i> Retour
           </button>
-          <button class="btn btn-success" (click)="onSubmit()" [disabled]="submitting || itemForm.invalid">
+          <button class="btn btn-success btn-sm" (click)="onSubmit()" [disabled]="submitting || itemForm.invalid">
             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEditMode ? 'Modifier' : 'Créer' }}
+            {{ isEditMode ? 'Enregistrer' : 'Créer' }}
           </button>
         </div>
       </div>
@@ -61,7 +61,8 @@
                 <span class="text-danger">*</span> Type de formulaire
               </label>
               <select class="form-select form-control" formControlName="formulaire_type"
-                      [class.is-invalid]="hasError('formulaire_type', 'required')">
+                      [class.is-invalid]="hasError('formulaire_type', 'required')"
+                      [ngClass]="{'fw-bold': itemForm.get('formulaire_type')?.value}">
                 <option value="">Sélectionnez</option>
                 <option *ngFor="let type of options.formulaireTypeOptions" [value]="type">{{ type }}</option>
               </select>
@@ -291,7 +292,95 @@
           </div>
         </div>
 
-        <!-- Rangée 7 : Notes -->
+        <!-- Rangée 7 : Prix et commande -->
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Prix total (CAD)</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" formControlName="prix_cad"
+                      min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Devise originale</label>
+              <select class="form-select form-control" formControlName="devise_originale">
+                <option value="">--</option>
+                <option value="CAD">CAD</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CHF">CHF</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Prix (devise originale)</label>
+              <input type="number" class="form-control" formControlName="prix_devise_originale"
+                    min="0" step="0.01" placeholder="0.00">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Période couverte</label>
+              <input type="text" class="form-control" formControlName="periode_couverte"
+                    placeholder="Ex: 1996-2000">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Nombre de titres inclus</label>
+              <input type="number" class="form-control" formControlName="nombre_titres_inclus"
+                    min="1" placeholder="Ex: 25">
+            </div>
+          </div>
+        </div>
+
+        <!-- Rangée 8 : Ressource électronique (visible si Électronique) -->
+        <div class="row mb-3" *ngIf="itemForm.get('format_support')?.value === 'Électronique'">
+          <div class="col-12">
+            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+              <i class="bi bi-globe me-1"></i>Ressource électronique
+            </h6>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Nombre d'utilisateurs</label>
+              <select class="form-select form-control" formControlName="nombre_utilisateurs">
+                <option value="">Sélectionnez</option>
+                <option value="Un seul usager">Un seul usager</option>
+                <option value="Trois usagers simultanés">Trois usagers simultanés</option>
+                <option value="Accès illimité">Accès illimité</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Lien vers la plateforme</label>
+              <input type="url" class="form-control" formControlName="lien_plateforme"
+                    placeholder="https://...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Format PrêtNumérique</label>
+              <select class="form-select form-control" formControlName="format_pret_numerique">
+                <option value="">Sélectionnez</option>
+                <option value="PDF">PDF</option>
+                <option value="EPUB">EPUB</option>
+                <option value="Ne s'applique pas">Ne s'applique pas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rangée 9 : Notes -->
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="mb-3">

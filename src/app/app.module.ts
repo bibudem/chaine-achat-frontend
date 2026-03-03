@@ -58,6 +58,7 @@ import { UsagerFormulaireComponent } from './components/usager/usager-formulaire
 import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
+import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-four
     UsagerFormulaireComponent,
     SuggestionPublicComponent,
     UsagerHomeComponent,
-    LstFournisseursComponent
+    LstFournisseursComponent,
+    ItemDetailComponent
   ],
     imports: [
         RouterModule,

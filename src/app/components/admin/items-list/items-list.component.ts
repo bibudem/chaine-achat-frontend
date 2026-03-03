@@ -225,6 +225,11 @@ export class ItemsListComponent implements OnInit {
 
   viewItem(id?: number): void {
     if (!id) return;
+    this.router.navigate(['/items/details', id]);
+  }
+
+  editItem(id?: number): void {
+    if (!id) return;
     this.router.navigate(['/items', id]);
   }
 

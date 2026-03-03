@@ -100,6 +100,16 @@ export interface Item {
   justification?: string;
   public_cible?: string;
   recommandation?: boolean;
+
+  // Prix et commande
+  prix_cad?: number;
+  devise_originale?: string;
+  prix_devise_originale?: number;
+  periode_couverte?: string;
+  nombre_titres_inclus?: number;
+  nombre_utilisateurs?: string;
+  lien_plateforme?: string;
+  format_pret_numerique?: string;
 }
 
 export interface ApiResponse<T> {

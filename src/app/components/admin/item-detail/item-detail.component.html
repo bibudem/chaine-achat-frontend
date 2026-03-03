@@ -1,0 +1,520 @@
+<div class="container-fluid bg-white p-3">
+
+  <!-- En-tête -->
+  <div class="row mt-4 mb-2 mt-5">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="h4 mb-1" *ngIf="item">{{ item.titre_document }}</h1>
+        <div class="d-flex align-items-center gap-2 flex-wrap" *ngIf="item">
+          <span class="text-muted small">#{{ item.item_id }}</span>
+          <span class="vr"></span>
+          <span class="badge bg-light text-dark border small">{{ item.formulaire_type }}</span>
+          <span [class]="getPrioriteBadgeClass(item.priorite_demande)">{{ item.priorite_demande }}</span>
+          <span [class]="getStatutBadgeClass(item.statut_bibliotheque)">{{ item.statut_bibliotheque }}</span>
+        </div>
+      </div>
+      <div *ngIf="item">
+        <button class="btn btn-primary btn-sm" (click)="onEdit()">
+          <i class="bi bi-pencil"></i> Modifier
+        </button>
+        <button class="btn btn-outline-secondary btn-sm ml-1" (click)="onReturn()">
+            <i class="bi bi-arrow-left"></i> Retour
+        </button>
+      </div>
+    </div>
+    <div class="col-12"><hr class="mt-2 mb-0"></div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2 text-muted">Chargement...</p>
+  </div>
+
+  <!-- Contenu -->
+  <div *ngIf="!loading && item">
+
+    <!-- DOCUMENT -->
+    <div class="detail-section">
+      <div class="detail-section-title">Document</div>
+      <div class="row">
+        <div class="col-md-5">
+          <div class="detail-field">
+            <span class="detail-label">Titre</span>
+            <span class="detail-value fw-semibold">{{ val(item.titre_document) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Sous-titre</span>
+            <span class="detail-value">{{ val(item.sous_titre) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Éditeur</span>
+            <span class="detail-value">{{ val(item.editeur) }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">ISBN / ISSN</span>
+            <span class="detail-value font-monospace small">{{ val(item.isbn_issn) }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">ID Ressource</span>
+            <span class="detail-value font-monospace small">{{ val(item.id_ressource) }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">Date de publication</span>
+            <span class="detail-value">{{ val(item.date_publication) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Catégorie</span>
+            <span class="detail-value">{{ val(item.categorie_document) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Format / Support</span>
+            <span class="detail-value">
+              <span class="badge" [ngClass]="isElectronique() ? 'bg-info text-dark' : 'bg-secondary'">
+                {{ val(item.format_support) }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIBLIOTHÈQUE & LOCALISATION -->
+    <div class="detail-section">
+      <div class="detail-section-title">Bibliothèque</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Bibliothèque</span>
+            <span class="detail-value">{{ val(item.bibliotheque) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Localisation</span>
+            <span class="detail-value">{{ val(item.localisation_emplacement) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Projet spécial</span>
+            <span class="detail-value">{{ val(item.projet_special) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Création notice DTDM</span>
+            <span class="detail-value">{{ val(item.creation_notice_dtdm) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCES & FOURNISSEUR -->
+    <div class="detail-section">
+      <div class="detail-section-title">Finances & Fournisseur</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Fonds budgétaire</span>
+            <span class="detail-value fw-semibold" style="color:var(--secondary-blue)">
+              {{ val(item.fonds_budgetaire) }}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Fonds SN – No projet</span>
+            <span class="detail-value">{{ val(item.fonds_sn_projet) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Fournisseur</span>
+            <span class="detail-value">{{ val(item.fournisseur) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Source d'information</span>
+            <span class="detail-value">
+              <a *ngIf="item.source_information; else noLink"
+                 [href]="item.source_information" target="_blank">
+                Voir le lien
+              </a>
+              <ng-template #noLink>—</ng-template>
+            </span>
+          </div>
+        </div>
+
+        <!-- Prix (conditionnel) -->
+        <ng-container *ngIf="hasFinancialData()">
+          <div class="col-12"><hr class="my-2"></div>
+          <div class="col-md-3">
+            <div class="detail-field">
+              <span class="detail-label">Prix total (CAD)</span>
+              <span class="detail-value fw-semibold" style="color:var(--primary-green)">
+                {{ item.prix_cad ? '$' + item.prix_cad : '—' }}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="detail-field">
+              <span class="detail-label">Devise originale</span>
+              <span class="detail-value">{{ val(item.devise_originale) }}</span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="detail-field">
+              <span class="detail-label">Prix (devise orig.)</span>
+              <span class="detail-value">{{ val(item.prix_devise_originale) }}</span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="detail-field">
+              <span class="detail-label">Période couverte</span>
+              <span class="detail-value">{{ val(item.periode_couverte) }}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="detail-field">
+              <span class="detail-label">Nombre de titres</span>
+              <span class="detail-value">{{ val(item.nombre_titres_inclus) }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- ÉLECTRONIQUE (conditionnel) -->
+    <div class="detail-section" *ngIf="isElectronique()">
+      <div class="detail-section-title">Ressource électronique</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Nombre d'utilisateurs</span>
+            <span class="detail-value">{{ val(item.nombre_utilisateurs) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Format PrêtNumérique</span>
+            <span class="detail-value">{{ val(item.format_pret_numerique) }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="detail-field">
+            <span class="detail-label">Lien plateforme</span>
+            <span class="detail-value">
+              <a *ngIf="item.lien_plateforme; else noLinkE"
+                 [href]="item.lien_plateforme" target="_blank">
+                {{ item.lien_plateforme }}
+              </a>
+              <ng-template #noLinkE>—</ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERSONNES & STATUTS -->
+    <div class="detail-section">
+      <div class="detail-section-title">Personnes & Statuts</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Demandeur</span>
+            <span class="detail-value">{{ val(item.demandeur) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Personne à aviser</span>
+            <span class="detail-value">{{ val(item.personne_a_aviser_activation) }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">Statut bibliothèque</span>
+            <span class="detail-value">
+              <span [class]="getStatutBadgeClass(item.statut_bibliotheque)">
+                {{ val(item.statut_bibliotheque) }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">Statut ACQ</span>
+            <span class="detail-value">{{ val(item.statut_acq) }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="detail-field">
+            <span class="detail-label">Priorité</span>
+            <span class="detail-value">
+              <span [class]="getPrioriteBadgeClass(item.priorite_demande)">
+                {{ val(item.priorite_demande) }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAMPS SPÉCIFIQUES -->
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Modification CCOL'">
+      <div class="detail-section-title">Modification CCOL</div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Numéro OCLC</span>
+            <span class="detail-value font-monospace">{{ val(item.numero_oclc) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Collection</span>
+            <span class="detail-value">{{ val(item.collection) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Catalogage</span>
+            <span class="detail-value">{{ val(item.catalogage) }}</span>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="item.precision_demande">
+          <div class="detail-field">
+            <span class="detail-label">Précision de la demande</span>
+            <span class="detail-note">{{ item.precision_demande }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Nouvel abonnement'">
+      <div class="detail-section-title">Nouvel Abonnement</div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Date début abonnement</span>
+            <span class="detail-value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Type de monographie</span>
+            <span class="detail-value">{{ val(item.type_monographie) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Collection</span>
+            <span class="detail-value">{{ val(item.collection) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Nouvel achat unique'">
+      <div class="detail-section-title">Nouvel Achat Unique</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Type monographie</span>
+            <span class="detail-value">{{ val(item.type_monographie) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Format électronique</span>
+            <span class="detail-value">{{ val(item.format_electronique) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Bordereau imprimé</span>
+            <span class="detail-value">{{ val(item.bordereau_imprime) }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Catégorie de dépense</span>
+            <span class="detail-value">{{ val(item.categorie_depense) }}</span>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="item.reserve_cours">
+          <div class="alert alert-light border-start border-3 py-2 mt-1" style="border-color:var(--secondary-blue)!important">
+            <strong class="small">Réserve de cours</strong>
+            <div class="row mt-1">
+              <div class="col-md-4">
+                <small class="text-muted d-block">Sigle</small>{{ val(item.reserve_cours_sigle) }}
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted d-block">Session</small>{{ val(item.reserve_cours_session) }}
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted d-block">Enseignant</small>{{ val(item.reserve_cours_enseignant) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="item.note_catalogueur_droit">
+          <div class="detail-field mt-2">
+            <span class="detail-label">Note catalogueur droit</span>
+            <span class="detail-note">{{ item.note_catalogueur_droit }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'PEB Tipasa numérique'">
+      <div class="detail-section-title">PEB Tipasa Numérique</div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Type de demande</span>
+            <span class="detail-value">{{ val(item.type_demande_peb) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Référence Tipasa</span>
+            <span class="detail-value font-monospace">{{ val(item.reference_tipasa) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Urgence</span>
+            <span class="detail-value">
+              <span class="badge" [ngClass]="item.urgence ? 'bg-danger' : 'bg-secondary'">
+                {{ item.urgence ? 'Oui' : 'Non' }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Requête ACQ'">
+      <div class="detail-section-title">Requête ACQ</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Type de requête</span>
+            <span class="detail-value">{{ val(item.type_requete) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Description</span>
+            <span class="detail-note">{{ val(item.description_requete) }}</span>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="detail-field">
+            <span class="detail-label">Action demandée</span>
+            <span class="detail-note">{{ val(item.action_demandee) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Springer'">
+      <div class="detail-section-title">Springer</div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="detail-field">
+            <span class="detail-label">Quantité</span>
+            <span class="detail-value fw-semibold">{{ val(item.quantite) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="item.formulaire_type === 'Suggestion d\'achat'">
+      <div class="detail-section-title">Suggestion d'Achat</div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Public cible</span>
+            <span class="detail-value">{{ val(item.public_cible) }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="detail-field">
+            <span class="detail-label">Recommandation</span>
+            <span class="detail-value">
+              <span class="badge" [ngClass]="item.recommandation ? 'bg-success' : 'bg-secondary'">
+                {{ item.recommandation ? 'Oui' : 'Non' }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="item.justification">
+          <div class="detail-field">
+            <span class="detail-label">Justification</span>
+            <span class="detail-note">{{ item.justification }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="detail-section" *ngIf="item.note_dtdm || item.note_commentaire">
+      <div class="detail-section-title">Notes</div>
+      <div class="row">
+        <div class="col-md-6" *ngIf="item.note_dtdm">
+          <div class="detail-field">
+            <span class="detail-label">Note DTDM (Catalogage)</span>
+            {{ item.note_dtdm }}
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="item.note_commentaire">
+          <div class="detail-field">
+            <span class="detail-label">Note / Commentaire Bibliothèque</span>
+            {{ item.note_commentaire }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métadonnées -->
+    <div class="row mb-4 mt-2">
+      <div class="col-md-6">
+        <small class="text-muted">
+          Créé le : {{ item.date_creation | date:'yyyy-MM-dd HH:mm' }}
+        </small>
+      </div>
+      <div class="col-md-6 text-end">
+        <small class="text-muted">
+          Modifié le : {{ item.date_modification | date:'yyyy-MM-dd HH:mm' }}
+          <span *ngIf="item.utilisateur_modification"> · {{ item.utilisateur_modification }}</span>
+        </small>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Item introuvable -->
+  <div *ngIf="!loading && !item" class="text-center py-5">
+    <p class="text-muted">Item introuvable.</p>
+    <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">Retour</button>
+  </div>
+
+</div>
