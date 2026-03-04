@@ -109,7 +109,7 @@
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label ">Éditeur</label>
+              <label class="form-label ">Éditeur <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="editeur" 
                      placeholder="Nom de l'éditeur">
             </div>
@@ -209,18 +209,38 @@
           <div class="mb-3">
             <label class="form-label">Fournisseur</label>
 
-              <ng-select
-                class="ngs-control"
-                [items]="fournisseursOptions"
-                [searchable]="true"
-                [clearable]="true"
-                [closeOnSelect]="true"
-                [virtualScroll]="true"
-                dropdownPosition="bottom"
-                appendTo="body"
-                placeholder="Sélectionnez un fournisseur"
-                formControlName="fournisseur">
-              </ng-select>
+             <div class="ms-dropdown" [class.ms-open]="dropdowns['fournisseur']" (click)="$event.stopPropagation()">
+            <button type="button" class="ms-trigger" (click)="toggleDropdown('fournisseur')">
+            <span *ngIf="selectedFournisseurs.length > 0; else phFournisseur">
+              {{ selectedFournisseurs.length }} sélectionné(s)
+            </span>
+            <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
+              <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
+              <i class="bi bi-chevron-down ms-arrow"></i>
+            </button>
+            <div class="ms-menu ms-menu-fournisseur" *ngIf="dropdowns['fournisseur']">
+              <div class="ms-search">
+                <input type="text" class="ms-search-input" placeholder="Rechercher..."
+                      [(ngModel)]="fournisseurSearch"
+                      [ngModelOptions]="{standalone: true}"
+                      (input)="filterFournisseurs(fournisseurSearch)"
+                      (click)="$event.stopPropagation()">
+              </div>
+              <div class="ms-divider"></div>
+              <label class="ms-option ms-option-check"
+                    *ngFor="let f of fournisseursFiltered"
+                    (click)="$event.stopPropagation()">
+                <input type="checkbox"
+                      [value]="f"
+                      [checked]="isFournisseurSelected(f)"
+                      (change)="toggleFournisseur(f)">
+                {{ f }}
+              </label>
+              <div *ngIf="fournisseursFiltered.length === 0" class="ms-empty">
+                Aucun résultat
+              </div>
+            </div>
+          </div>
 
             <div class="invalid-feedback d-block" *ngIf="hasError('fournisseur', 'required')">
               Le fournisseur est obligatoire
@@ -299,7 +319,7 @@
               <label class="form-label">Prix total (CAD)</label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input type="number" class="form-control" formControlName="prix_cad"
+                <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
                       min="0" step="0.01" placeholder="0.00">
               </div>
             </div>
@@ -385,13 +405,13 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label ">Note DTDM (Catalogage)</label>
-              <textarea class="form-control" formControlName="note_dtdm" rows="3"></textarea>
+              <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label ">Note/Commentaire (Bibliothèque)</label>
-              <textarea class="form-control" formControlName="note_commentaire" rows="3"></textarea>
+              <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
             </div>
           </div>
         </div>

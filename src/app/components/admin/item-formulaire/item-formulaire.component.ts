@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
   templateUrl: './item-formulaire.component.html',
   styleUrls: ['./item-formulaire.component.css']
 })
-export class ItemFormulaireComponent implements OnInit {
+export class ItemFormulaireComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
   itemId: number | null = null;
   isEditMode = false;
@@ -24,8 +24,10 @@ export class ItemFormulaireComponent implements OnInit {
   fournisseursOptions: string[] = [];
   fournisseurSearch = '';
   fournisseursFiltered: string[] = [];
+  selectedFournisseurs: string[] = [];        // ← AJOUT : tableau multi-sélection
 
-  
+  dropdowns: Record<string, boolean> = {};
+  private clickOutsideListener!: () => void;  // ← AJOUT : référence pour cleanup
 
   constructor(
     private fb: FormBuilder,
@@ -52,52 +54,80 @@ export class ItemFormulaireComponent implements OnInit {
     });
 
     this.loadFournisseurs();
+
+    // ← MODIFIÉ : stocker la référence pour pouvoir la retirer dans ngOnDestroy
+    this.clickOutsideListener = () => this.closeAllDropdowns();
+    document.addEventListener('click', this.clickOutsideListener);
+  }
+
+  // ← AJOUT : cleanup du listener
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.clickOutsideListener);
   }
 
   loadFournisseurs(): void {
-  this.itemService.getFournisseurs().subscribe({
-    next: (response: any) => {
-      const raw = response?.data ?? response;
-      const arr = Array.isArray(raw) ? raw : [];
-      
-      this.fournisseursOptions = arr
-        .map((f: any) => f?.titre ?? f)
-        .filter((titre: any) => typeof titre === 'string' && titre.trim().length > 0)
-        .sort((a: string, b: string) => a.localeCompare(b, 'fr'));
+    this.itemService.getFournisseurs().subscribe({
+      next: (response: any) => {
+        const raw = response?.data ?? response;
+        const arr = Array.isArray(raw) ? raw : [];
 
-      this.fournisseursFiltered = [...this.fournisseursOptions]; // ← copie initiale
-    },
-    error: (error) => console.error('❌ Erreur chargement fournisseurs:', error)
-  });
-}
+        this.fournisseursOptions = arr
+          .map((f: any) => f?.titre ?? f)
+          .filter((titre: any) => typeof titre === 'string' && titre.trim().length > 0)
+          .sort((a: string, b: string) => a.localeCompare(b, 'fr'));
 
-filterFournisseurs(search: string): void {
-  const term = search.toLowerCase().trim();
-  this.fournisseursFiltered = term
-    ? this.fournisseursOptions.filter(f => f.toLowerCase().includes(term))
-    : [...this.fournisseursOptions];
-}
+        this.fournisseursFiltered = [...this.fournisseursOptions];
+      },
+      error: (error) => console.error('❌ Erreur chargement fournisseurs:', error)
+    });
+  }
+
+  filterFournisseurs(search: string): void {
+    const term = search.toLowerCase().trim();
+    this.fournisseursFiltered = term
+      ? this.fournisseursOptions.filter(f => f.toLowerCase().includes(term))
+      : [...this.fournisseursOptions];
+  }
+
+  // ← AJOUT : remplace selectFournisseur() — multi-sélection par checkbox
+  isFournisseurSelected(value: string): boolean {
+    return this.selectedFournisseurs.includes(value);
+  }
+
+  toggleFournisseur(value: string): void {
+    if (this.isFournisseurSelected(value)) {
+      this.selectedFournisseurs = this.selectedFournisseurs.filter(f => f !== value);
+    } else {
+      this.selectedFournisseurs = [...this.selectedFournisseurs, value];
+    }
+    this.itemForm.get('fournisseur')?.setValue(
+      this.selectedFournisseurs.join(', ')
+    );
+  }
+
+  toggleDropdown(id: string): void {
+    const current = this.dropdowns[id];
+    this.closeAllDropdowns();
+    this.dropdowns[id] = !current;
+  }
+
+  closeAllDropdowns(): void {
+    Object.keys(this.dropdowns).forEach(k => this.dropdowns[k] = false);
+  }
 
   createForm(): FormGroup {
     return this.fb.group({
-      // Informations de base
       formulaire_type: [null, Validators.required],
       date_creation: [''],
       priorite_demande: ['Régulier'],
       projet_special: ['Ne s\'applique pas'],
-      
-      // Informations du document
       titre_document: ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre: ['', Validators.maxLength(500)],
       isbn_issn: ['', Validators.maxLength(50)],
       editeur: ['', Validators.maxLength(300)],
       date_publication: ['', Validators.maxLength(50)],
-      
-      // Catalogage
       creation_notice_dtdm: [false],
       note_dtdm: [''],
-
-      // Prix et commande
       prix_cad: [null],
       devise_originale: [''],
       prix_devise_originale: [null],
@@ -106,55 +136,29 @@ filterFournisseurs(search: string): void {
       nombre_utilisateurs: [''],
       lien_plateforme: [''],
       format_pret_numerique: [''],
-      
-      // Catégorisation
       categorie_document: [''],
       format_support: [''],
-      
-      // Informations financières
       fonds_budgetaire: ['', [Validators.required, Validators.maxLength(200)]],
       fonds_sn_projet: ['', Validators.maxLength(100)],
-      
-      // Bibliothèque
       bibliotheque: [''],
       localisation_emplacement: ['', Validators.maxLength(200)],
-      
-      // Personnes concernées
       demandeur: ['', [Validators.required, Validators.maxLength(200)]],
       personne_a_aviser_activation: ['', Validators.maxLength(200)],
-      
-      // Source d'information
       source_information: ['', Validators.maxLength(500)],
-      
-      // Notes et commentaires
       note_commentaire: [''],
-      
-      // Identifiants
       id_ressource: ['', Validators.maxLength(100)],
       catalogue: ['', Validators.maxLength(200)],
-      
-      // Statuts
       statut_bibliotheque: ['En attente en bibliothèque'],
       statut_acq: [''],
-      fournisseur: ['', Validators.maxLength(255)], 
-      
-      // Métadonnées (lecture seule)
+      fournisseur: ['', Validators.maxLength(255)],
       date_modification: [{ value: '', disabled: true }],
       utilisateur_modification: [{ value: '', disabled: true }],
-
-      // ===== CHAMPS SPÉCIFIQUES PAR TYPE =====
-      
-      // Modification CCOL
       precision_demande: [''],
       numero_oclc: [''],
       collection: [''],
       catalogage: [''],
-      
-      // Nouvel Abonnement
       date_debut_abonnement: [''],
       type_monographie: [''],
-      
-      // Nouvel Achat Unique
       projets_speciaux: [''],
       format_electronique: [''],
       reserve_cours: [false],
@@ -164,21 +168,13 @@ filterFournisseurs(search: string): void {
       bordereau_imprime: [''],
       categorie_depense: [''],
       note_catalogueur_droit: [''],
-      
-      // PEB Tipasa Numérique
       type_demande_peb: [''],
       reference_tipasa: [''],
       urgence: [false],
-      
-      // Requête ACQ
       type_requete: [''],
       description_requete: [''],
       action_demandee: [''],
-      
-      // Springer
       quantite: [null],
-      
-      // Suggestion d'Achat
       justification: [''],
       public_cible: [''],
       recommandation: [false]
@@ -187,40 +183,30 @@ filterFournisseurs(search: string): void {
 
   onFormulaireTypeChange(type: string): void {
     this.selectedFormulaireType = type;
-
-    // Réinitialiser tous les champs spécifiques
     this.resetSpecificFields();
 
-    // Ajouter les validators selon le type de formulaire
     switch(type) {
       case 'Modification CCOL':
         this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
         break;
-
       case 'Nouvel abonnement':
         this.itemForm.get('date_debut_abonnement')?.setValidators([Validators.required]);
         break;
-
       case 'Nouvel achat unique':
         this.itemForm.get('type_monographie')?.setValidators([Validators.required]);
         break;
-
       case 'Springer':
         this.itemForm.get('quantite')?.setValidators([Validators.required, Validators.min(1)]);
         break;
-
       case 'PEB Tipasa numérique':
         this.itemForm.get('type_demande_peb')?.setValidators([Validators.required]);
         break;
-
       case 'Requête ACQ':
         this.itemForm.get('type_requete')?.setValidators([Validators.required]);
         break;
-
       case 'Suggestion d\'achat':
         this.itemForm.get('justification')?.setValidators([Validators.required]);
         break;
-
       default:
         break;
     }
@@ -246,7 +232,7 @@ filterFournisseurs(search: string): void {
       'reference_tipasa', 'urgence', 'type_requete', 'description_requete',
       'action_demandee', 'quantite', 'justification', 'public_cible', 'recommandation'
     ];
-    
+
     specificFields.forEach(field => {
       const control = this.itemForm.get(field);
       if (control) {
@@ -257,33 +243,13 @@ filterFournisseurs(search: string): void {
     });
   }
 
-  isModificationCCOL(): boolean {
-    return this.selectedFormulaireType === 'Modification CCOL';
-  }
-
-  isNouvelAbonnement(): boolean {
-    return this.selectedFormulaireType === 'Nouvel abonnement';
-  }
-
-  isNouvelAchatUnique(): boolean {
-    return this.selectedFormulaireType === 'Nouvel achat unique';
-  }
-
-  isPEBTipasaNumerique(): boolean {
-    return this.selectedFormulaireType === 'PEB Tipasa numérique';
-  }
-
-  isRequeteACQ(): boolean {
-    return this.selectedFormulaireType === 'Requête ACQ';
-  }
-
-  isSpringer(): boolean {
-    return this.selectedFormulaireType === 'Springer';
-  }
-
-  isSuggestionAchat(): boolean {
-    return this.selectedFormulaireType === 'Suggestion d\'achat';
-  }
+  isModificationCCOL(): boolean { return this.selectedFormulaireType === 'Modification CCOL'; }
+  isNouvelAbonnement(): boolean { return this.selectedFormulaireType === 'Nouvel abonnement'; }
+  isNouvelAchatUnique(): boolean { return this.selectedFormulaireType === 'Nouvel achat unique'; }
+  isPEBTipasaNumerique(): boolean { return this.selectedFormulaireType === 'PEB Tipasa numérique'; }
+  isRequeteACQ(): boolean { return this.selectedFormulaireType === 'Requête ACQ'; }
+  isSpringer(): boolean { return this.selectedFormulaireType === 'Springer'; }
+  isSuggestionAchat(): boolean { return this.selectedFormulaireType === 'Suggestion d\'achat'; }
 
   loadItem(): void {
     if (!this.itemId) return;
@@ -295,6 +261,14 @@ filterFournisseurs(search: string): void {
           this.selectedFormulaireType = response.data.formulaire_type || null;
           this.itemForm.patchValue(response.data, { emitEvent: false });
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
+
+          // ← AJOUT : reconstruire le tableau depuis la valeur chargée en base
+          const fournisseurVal = response.data.fournisseur;
+          if (fournisseurVal) {
+            this.selectedFournisseurs = fournisseurVal
+              .split(', ')
+              .filter((f: string) => f.trim().length > 0);
+          }
         } else {
           this.dialogService.showError(response.error || 'Impossible de charger l\'item');
         }
@@ -317,7 +291,6 @@ filterFournisseurs(search: string): void {
 
     this.submitting = true;
     const formData = this.itemForm.getRawValue();
-
     const baseData = this.extractBaseData(formData);
     const specificData = this.extractSpecificData(formData);
 
@@ -394,13 +367,13 @@ filterFournisseurs(search: string): void {
       note_commentaire: formData.note_commentaire,
       id_ressource: formData.id_ressource,
       catalogue: formData.catalogue,
-      prix_cad:              formData.prix_cad,
-      devise_originale:      formData.devise_originale,
+      prix_cad: formData.prix_cad,
+      devise_originale: formData.devise_originale,
       prix_devise_originale: formData.prix_devise_originale,
-      periode_couverte:      formData.periode_couverte,
-      nombre_titres_inclus:  formData.nombre_titres_inclus,
-      nombre_utilisateurs:   formData.nombre_utilisateurs,
-      lien_plateforme:       formData.lien_plateforme,
+      periode_couverte: formData.periode_couverte,
+      nombre_titres_inclus: formData.nombre_titres_inclus,
+      nombre_utilisateurs: formData.nombre_utilisateurs,
+      lien_plateforme: formData.lien_plateforme,
       format_pret_numerique: formData.format_pret_numerique,
       fournisseur: formData.fournisseur,
     };
@@ -408,7 +381,7 @@ filterFournisseurs(search: string): void {
 
   private extractSpecificData(formData: any): any {
     const type = this.selectedFormulaireType;
-    
+
     switch(type) {
       case 'Modification CCOL':
         return {
@@ -418,7 +391,6 @@ filterFournisseurs(search: string): void {
           collection: formData.collection,
           catalogage: formData.catalogage
         };
-        
       case 'Nouvel abonnement':
         return {
           date_debut_abonnement: formData.date_debut_abonnement,
@@ -426,7 +398,6 @@ filterFournisseurs(search: string): void {
           collection: formData.collection,
           catalogage: formData.catalogage
         };
-        
       case 'Nouvel achat unique':
         return {
           priorite_demande: formData.priorite_demande,
@@ -441,33 +412,26 @@ filterFournisseurs(search: string): void {
           categorie_depense: formData.categorie_depense,
           note_catalogueur_droit: formData.note_catalogueur_droit
         };
-        
       case 'PEB Tipasa numérique':
         return {
           type_demande_peb: formData.type_demande_peb,
           reference_tipasa: formData.reference_tipasa,
           urgence: formData.urgence
         };
-        
       case 'Requête ACQ':
         return {
           type_requete: formData.type_requete,
           description_requete: formData.description_requete,
           action_demandee: formData.action_demandee
         };
-        
       case 'Springer':
-        return {
-          quantite: formData.quantite
-        };
-        
+        return { quantite: formData.quantite };
       case 'Suggestion d\'achat':
         return {
           justification: formData.justification,
           public_cible: formData.public_cible,
           recommandation: formData.recommandation
         };
-        
       default:
         return {};
     }
@@ -478,7 +442,6 @@ filterFournisseurs(search: string): void {
       'Voulez-vous vraiment annuler ? Les modifications non sauvegardées seront perdues.',
       'Confirmer l\'annulation'
     );
-    
     if (confirmed) {
       this.router.navigate(['/items']);
     }
@@ -486,12 +449,11 @@ filterFournisseurs(search: string): void {
 
   onReturn(): void {
     this.location.back();
- }
+  }
 
   private markFormGroupTouched(): void {
     Object.keys(this.itemForm.controls).forEach(key => {
-      const control = this.itemForm.get(key);
-      control?.markAsTouched();
+      this.itemForm.get(key)?.markAsTouched();
     });
   }
 

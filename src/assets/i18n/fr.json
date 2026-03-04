@@ -171,26 +171,79 @@
   "labels-rapport": {
     "item_id": "ID de l'item",
     "formulaire_type": "Type de formulaire",
+
     "titre_document": "Titre",
     "sous_titre": "Sous-titre",
     "isbn_issn": "ISBN / ISSN",
-    "identifiant": "Identifiant",
+    "id_ressource": "ID Ressource",
     "editeur": "Éditeur",
-    "auteur": "Auteur",
+    "date_publication": "Date de publication",
     "categorie_document": "Catégorie du document",
+    "format_support": "Format / Support",
+
     "bibliotheque": "Bibliothèque",
-    "statut_bibliotheque": "Statut de la bibliothèque",
-    "statut_acq": "Statut ACQ",
-    "priorite": "Priorité",
     "localisation_emplacement": "Localisation / Emplacement",
+    "projet_special": "Projet spécial",
+    "creation_notice_dtdm": "Création notice DTDM",
+
+    "fonds_budgetaire": "Fonds budgétaire",
+    "fonds_sn_projet": "Fonds SN – No projet",
+    "fournisseur": "Fournisseur",
+    "source_information": "Source d'information",
+    "prix_cad": "Prix total (CAD)",
+    "devise_originale": "Devise originale",
+    "prix_devise_originale": "Prix (devise orig.)",
+    "periode_couverte": "Période couverte",
+    "nombre_titres_inclus": "Nombre de titres inclus",
+
+    "nombre_utilisateurs": "Nombre d'utilisateurs",
+    "format_pret_numerique": "Format PrêtNumérique",
+    "lien_plateforme": "Lien plateforme",
+
     "demandeur": "Demandeur",
+    "personne_a_aviser_activation": "Personne à aviser",
+    "statut_bibliotheque": "Statut bibliothèque",
+    "statut_acq": "Statut ACQ",
+    "priorite_demande": "Priorité",
+
+    "numero_oclc": "Numéro OCLC",
+    "collection": "Collection",
+    "catalogage": "Catalogage",
+    "precision_demande": "Précision de la demande",
+
+    "date_debut_abonnement": "Date début abonnement",
+    "type_monographie": "Type de monographie",
+
+    "format_electronique": "Format électronique",
+    "bordereau_imprime": "Bordereau imprimé",
+    "categorie_depense": "Catégorie de dépense",
+    "reserve_cours": "Réserve de cours",
+    "reserve_cours_sigle": "Sigle du cours",
+    "reserve_cours_session": "Session",
+    "reserve_cours_enseignant": "Enseignant",
+    "note_catalogueur_droit": "Note catalogueur droit",
+
+    "type_demande_peb": "Type de demande PEB",
+    "reference_tipasa": "Référence Tipasa",
+    "urgence": "Urgence",
+
+    "type_requete": "Type de requête",
+    "description_requete": "Description de la requête",
+    "action_demandee": "Action demandée",
+
+    "quantite": "Quantité",
+
+    "public_cible": "Public cible",
+    "recommandation": "Recommandation",
+    "justification": "Justification",
+
+    "note_dtdm": "Note DTDM (Catalogage)",
+    "note_commentaire": "Note / Commentaire bibliothèque",
+
+    "utilisateur_modification": "Modifié par",
     "date_creation": "Date de création",
-    "date_modification": "Date de modification",
-    "notes": "Notes",
-    "montant": "Montant",
-    "montant_cad": "Montant (CAD)",
-    "montant_usd": "Montant (USD)"
- },
+    "date_modification": "Date de modification"
+  },
   "home": {
     "cards-list": "Éditeurs ou fournisseurs",
     "placeholder": "Rechercher une monographie",

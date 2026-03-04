@@ -1,4 +1,5 @@
-<div class="container-fluid bg-white p-4">
+<div class="container-fluid bg-white p-4" (click)="closeAllDropdowns()">
+
   <!-- En-tête -->
   <div class="row mb-4 mt-2">
     <div class="col-md-12 mt-3">
@@ -8,15 +9,15 @@
           <p class="text-muted mb-0">{{ 'rapport.description' | translate }}</p>
         </div>
         <div>
-          <button type="button" 
+          <button type="button"
                   class="btn btn-outline-secondary me-2"
-                  (click)="reinitialiserFiltres()"
+                  (click)="reinitialiserFiltres(); $event.stopPropagation()"
                   [disabled]="isLoading">
             <i class="bi bi-arrow-clockwise"></i> {{ 'rapport.reinitialiser' | translate }}
           </button>
-          <button type="button" 
+          <button type="button"
                   class="btn btn-success"
-                  (click)="exporterRapport()"
+                  (click)="exporterRapport(); $event.stopPropagation()"
                   [disabled]="isLoading || !listeRapport.length">
             <i class="bi bi-file-earmark-excel"></i> {{ 'rapport.exporter' | translate }}
           </button>
@@ -26,7 +27,7 @@
     </div>
   </div>
 
-  <!-- Loading Indicator -->
+  <!-- Loading -->
   <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">{{ 'rapport.chargement' | translate }}</span>
@@ -34,342 +35,231 @@
     <p class="mt-3 text-muted">{{ 'rapport.chargement-en-cours' | translate }}</p>
   </div>
 
-  <!-- Main Content -->
-  <div id="page-rapport" [class.opacity-50]="isLoading">
-    
-    <!-- Filters Form -->
+  <div id="page-rapport" [class.opacity-50]="isLoading" (click)="$event.stopPropagation()">
+
     <form #rapportForm="ngForm">
-      
-      <!-- Row 1: Date and Basic Filters -->
-      <div class="row g-3 mb-3">
-        
+
+      <!-- Row 1 : Dates + Titre + Demandeur -->
+      <div class="row g-3 mb-2">
+
         <!-- Date Début -->
         <div class="col-md-2">
-          <div class="form-group">
-            <label for="dateDebut" class="form-label">
-              {{ 'rapport.date-debut' | translate }}
-            </label>
-            <input type="date" 
-                   id="dateDebut"
-                   class="form-control" 
-                   [(ngModel)]="filtres.dateDebut" 
-                   name="dateDebut"
-                   [disabled]="isLoading">
-          </div>
+          <label for="dateDebut" class="form-label">{{ 'rapport.date-debut' | translate }}</label>
+          <input type="date" id="dateDebut" class="form-control"
+                 [(ngModel)]="filtres.dateDebut" name="dateDebut" [disabled]="isLoading">
         </div>
 
         <!-- Date Fin -->
         <div class="col-md-2">
-          <div class="form-group">
-            <label for="dateFin" class="form-label">
-              {{ 'rapport.date-fin' | translate }}
-            </label>
-            <input type="date" 
-                   id="dateFin"
-                   class="form-control" 
-                   [(ngModel)]="filtres.dateFin" 
-                   name="dateFin"
-                   [disabled]="isLoading">
-          </div>
+          <label for="dateFin" class="form-label">{{ 'rapport.date-fin' | translate }}</label>
+          <input type="date" id="dateFin" class="form-control"
+                 [(ngModel)]="filtres.dateFin" name="dateFin" [disabled]="isLoading">
         </div>
 
-        <!-- Type Formulaire -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="formulaireType" class="form-label">
-              {{ 'rapport.type-formulaire' | translate }}
-            </label>
-            <select class="form-select form-select-multi"
-                    id="formulaire_type"
-                    name="formulaire_type"
-                    (change)="onMultiSelectChange('formulaire_type', $event)"
-                    [disabled]="isLoading"
-                    multiple
-                    size="1">
-              <option *ngFor="let type of typesFormulaires" [value]="type">
-                {{ type }}
-              </option>
-            </select>
-            <small class="form-text text-muted" *ngIf="getSelectedCount('formulaire_type') > 0">
-              {{ getSelectedCount('formulaire_type') }} sélectionné(s)
-            </small>
-          </div>
-        </div>
-
-        <!-- Bibliothèque -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="bibliotheque" class="form-label">
-              {{ 'rapport.bibliotheque' | translate }}
-            </label>
-            <select class="form-select form-select-multi"
-                    id="bibliotheque"
-                    name="bibliotheque"
-                    (change)="onMultiSelectChange('bibliotheque', $event)"
-                    [disabled]="isLoading"
-                    multiple
-                    size="1">
-              <option *ngFor="let bib of bibliotheques" [value]="bib">
-                {{ bib }}
-              </option>
-            </select>
-            <small class="form-text text-muted" *ngIf="getSelectedCount('bibliotheque') > 0">
-              {{ getSelectedCount('bibliotheque') }} sélectionné(s)
-            </small>
-          </div>
-        </div>
-
-        <!-- Statut Bibliothèque -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="statutBibliotheque" class="form-label">
-              {{ 'rapport.statut-bibliotheque' | translate }}
-            </label>
-            <select class="form-select form-select-multi"
-                    id="statutBibliotheque"
-                    name="statutBibliotheque"
-                    (change)="onMultiSelectChange('statutBibliotheque', $event)"
-                    [disabled]="isLoading"
-                    multiple
-                    size="1">
-              <option *ngFor="let statut of statutsBibliotheque" [value]="statut">
-                {{ statut }}
-              </option>
-            </select>
-            <small class="form-text text-muted" *ngIf="getSelectedCount('statutBibliotheque') > 0">
-              {{ getSelectedCount('statutBibliotheque') }} sélectionné(s)
-            </small>
-          </div>
-        </div>
-
-        <!-- Statut Acq -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="statutAcq" class="form-label">
-              {{ 'rapport.statut-acq' | translate }}
-            </label>
-            <select class="form-select form-select-multi"
-                    id="statutAcq"
-                    name="statutAcq"
-                    (change)="onMultiSelectChange('statutAcq', $event)"
-                    [disabled]="isLoading"
-                    multiple
-                    size="1">
-              <option *ngFor="let statut of statutsAcq" [value]="statut">
-                {{ statut }}
-              </option>
-            </select>
-            <small class="form-text text-muted" *ngIf="getSelectedCount('statutAcq') > 0">
-              {{ getSelectedCount('statutAcq') }} sélectionné(s)
-            </small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 2: Additional Filters -->
-      <div class="row g-3 mb-3">
+        <!-- Recherche par titre -->
+        <div class="col-md-4">
+          <label for="rechercheTitre" class="form-label">{{ 'titre' | translate }}</label>
         
-        <!-- Priorité -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="priorite" class="form-label">
-              {{ 'rapport.priorite' | translate }}
-            </label>
-            <select class="form-select form-select-multi"
-                    id="priorite"
-                    name="priorite"
-                    (change)="onMultiSelectChange('priorite', $event)"
-                    [disabled]="isLoading"
-                    multiple
-                    size="1">
-              <option *ngFor="let p of priorites" [value]="p">
-                {{ p }}
-              </option>
-            </select>
-            <small class="form-text text-muted" *ngIf="getSelectedCount('priorite') > 0">
-              {{ getSelectedCount('priorite') }} sélectionné(s)
-            </small>
-          </div>
+            <input type="text" id="rechercheTitre" class="form-control"
+                   [(ngModel)]="rechercheTitre" name="rechercheTitre"
+                   placeholder="Rechercher par titre..."
+                   [disabled]="isLoading"
+                   (ngModelChange)="appliquerEtAfficher()">
         </div>
 
         <!-- Demandeur -->
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="demandeur" class="form-label">
-              {{ 'rapport.demandeur' | translate }}
-            </label>
-            <input type="text" 
-                   id="demandeur"
-                   class="form-control" 
-                   [(ngModel)]="filtres.demandeur" 
-                   name="demandeur"
-                   [placeholder]="'rapport.recherche-partielle' | translate"
-                   [disabled]="isLoading">
-          </div>
+        <div class="col-md-4">
+          <label for="demandeur" class="form-label">{{ 'rapport.demandeur' | translate }}</label>
+          <input type="text" id="demandeur" class="form-control"
+                 [(ngModel)]="filtres.demandeur" name="demandeur"
+                 [placeholder]="'rapport.recherche-partielle' | translate"
+                 [disabled]="isLoading">
         </div>
 
-        <!-- Type Rapport -->
+      </div>
+
+      <!-- Row 2 : Filtres multi-select -->
+      <div class="row g-3 mb-3">
+
+        <!-- Type Formulaire -->
         <div class="col-md-3">
-          <div class="form-group">
-            <label for="typeRapport" class="form-label">
-              {{ 'rapport.type-rapport' | translate }}
-            </label>
-            <select class="form-select"
-                    id="typeRapport"
-                    name="typeRapport"
-                    [(ngModel)]="rapportSelectionneId"
-                    [disabled]="isLoading">
-              <option *ngFor="let rapport of rapportsDisponibles" 
-                      [value]="rapport.id"
-                      [title]="rapport.description">
-                {{ rapport.nom }}
-              </option>
-            </select>
+          <label class="form-label">{{ 'rapport.type-formulaire' | translate }}</label>
+          <div class="ms-dropdown" [class.ms-open]="dropdowns['formulaire_type']" (click)="$event.stopPropagation()">
+            <button type="button" class="ms-trigger" [disabled]="isLoading" (click)="toggleDropdown('formulaire_type')">
+              <span *ngIf="selectedMap['formulaire_type']?.length; else ph1">
+                {{ selectedMap['formulaire_type'].length }} sélectionné(s)
+              </span>
+              <ng-template #ph1>Sélectionner</ng-template>
+              <i class="bi bi-chevron-down ms-arrow"></i>
+            </button>
+            <div class="ms-menu" *ngIf="dropdowns['formulaire_type']">
+              <label class="ms-option" *ngFor="let type of typesFormulaires" (click)="$event.stopPropagation()">
+                <input type="checkbox" [checked]="isSelected('formulaire_type', type)"
+                       (change)="onCheckChange('formulaire_type', type, $event)"> {{ type }}
+              </label>
+            </div>
           </div>
+          <small class="form-text text-muted" *ngIf="selectedMap['formulaire_type']?.length">
+            {{ selectedMap['formulaire_type'].length }} sélectionné(s)
+          </small>
         </div>
 
-        <!-- Résultats par page -->
+        <!-- Bibliothèque -->
+        <div class="col-md-3">
+          <label class="form-label">{{ 'rapport.bibliotheque' | translate }}</label>
+          <div class="ms-dropdown" [class.ms-open]="dropdowns['bibliotheque']" (click)="$event.stopPropagation()">
+            <button type="button" class="ms-trigger" [disabled]="isLoading" (click)="toggleDropdown('bibliotheque')">
+              <span *ngIf="selectedMap['bibliotheque']?.length; else ph2">
+                {{ selectedMap['bibliotheque'].length }} sélectionné(s)
+              </span>
+              <ng-template #ph2>Sélectionner</ng-template>
+              <i class="bi bi-chevron-down ms-arrow"></i>
+            </button>
+            <div class="ms-menu" *ngIf="dropdowns['bibliotheque']">
+              <label class="ms-option" *ngFor="let bib of bibliotheques" (click)="$event.stopPropagation()">
+                <input type="checkbox" [checked]="isSelected('bibliotheque', bib)"
+                       (change)="onCheckChange('bibliotheque', bib, $event)"> {{ bib }}
+              </label>
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="selectedMap['bibliotheque']?.length">
+            {{ selectedMap['bibliotheque'].length }} sélectionné(s)
+          </small>
+        </div>
+
+        <!-- Statut (bibliothèque + ACQ fusionnés) -->
         <div class="col-md-2">
-          <div class="form-group">
-            <label for="limit" class="form-label">
-              {{ 'rapport.resultats-page' | translate }}
-            </label>
-            <select class="form-select"
-                    id="limit"
-                    name="limit"
-                    [(ngModel)]="limit"
-                    (change)="changerLimit(+limit)"
-                    [disabled]="isLoading">
-              <option [value]="25">25</option>
-              <option [value]="50">50</option>
-              <option [value]="100">100</option>
-              <option [value]="200">200</option>
-              <option [value]="500">500</option>
-            </select>
-          </div>
+          <label for="statutFusionne" class="form-label">{{ 'statut' | translate }}</label>
+          <select class="form-select" id="statutFusionne" name="statutFusionne"
+                  [disabled]="isLoading"
+                  (change)="onStatutChange($event)">
+            <option value="">Tous les statuts</option>
+            <optgroup label="Bibliothèque">
+              <option *ngFor="let s of statutsBibliotheque"
+                      [value]="'bib|' + s"
+                      [selected]="isStatutSelected('bib', s)">
+                {{ s }}
+              </option>
+            </optgroup>
+            <optgroup label="ACQ">
+              <option *ngFor="let s of statutsAcq"
+                      [value]="'acq|' + s"
+                      [selected]="isStatutSelected('acq', s)">
+                {{ s }}
+              </option>
+            </optgroup>
+          </select>
+          <small class="form-text text-muted" *ngIf="statutFiltreActif">
+            Filtré: {{ statutFiltreLabel }}
+          </small>
         </div>
 
-        <!-- Generate Button -->
-        <div class="col-md-2 d-flex align-items-end">
-          <button type="button" 
-                  class="btn btn-primary w-100" 
-                  (click)="chargerApercu()"
-                  [disabled]="isLoading">
-            <i class="bi bi-clipboard2-data-fill"></i> 
-            {{ 'rapport.btn-rapport' | translate }}
-          </button>
-        </div>
-      </div>
-    </form>
-
-    <!-- Column Selection -->
-    <div class="card mb-3">
-      <div class="card-header bg-light">
-        <h6 class="mb-0">
-          <i class="bi bi-columns-gap"></i> 
-          {{ 'rapport.selection-colonnes' | translate }}
-        </h6>
-      </div>
-      <div class="card-body">
-        <div class="row g-2">
-          <div class="col-md-2 col-sm-3 col-6" *ngFor="let champ of champsDisponibles">
-            <div class="form-check">
-              <input type="checkbox" 
-                     class="form-check-input" 
-                     [id]="'champ-' + champ" 
-                     [value]="champ" 
-                     [name]="champ"
-                     [checked]="colonnesSelectionnees.includes(champ)"
-                     (change)="toggleColonne($event)"
-                     [disabled]="isLoading">
-              <label class="form-check-label" [for]="'champ-' + champ">
-                {{ champsTitre[champ] }}
+        <!-- Priorité -->
+        <div class="col-md-2">
+          <label class="form-label">{{ 'rapport.priorite' | translate }}</label>
+          <div class="ms-dropdown" [class.ms-open]="dropdowns['priorite']" (click)="$event.stopPropagation()">
+            <button type="button" class="ms-trigger" [disabled]="isLoading" (click)="toggleDropdown('priorite')">
+              <span *ngIf="selectedMap['priorite']?.length; else ph4">
+                {{ selectedMap['priorite'].length }} sél.
+              </span>
+              <ng-template #ph4>Tous</ng-template>
+              <i class="bi bi-chevron-down ms-arrow"></i>
+            </button>
+            <div class="ms-menu" *ngIf="dropdowns['priorite']">
+              <label class="ms-option" *ngFor="let p of priorites" (click)="$event.stopPropagation()">
+                <input type="checkbox" [checked]="isSelected('priorite', p)"
+                       (change)="onCheckChange('priorite', p, $event)"> {{ p }}
               </label>
             </div>
           </div>
         </div>
+        <!-- Bouton générer -->
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="button" class="btn btn-primary w-100"
+                  (click)="chargerApercu()" [disabled]="isLoading">
+            <i class="bi bi-clipboard2-data-fill"></i>
+            {{ 'rapport.btn-rapport' | translate }}
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+    <!-- Sélection des colonnes -->
+    <div class="colonnes-bar mb-3 d-flex align-items-center gap-2 flex-wrap" (click)="$event.stopPropagation()">
+      <span class="colonnes-bar-label">
+        <i class="bi bi-columns-gap me-1"></i>
+        {{ 'rapport.selection-colonnes' | translate }}
+      </span>
+      <div class="ms-dropdown" [class.ms-open]="dropdowns['colonnes']">
+        <button type="button" class="ms-trigger" (click)="toggleDropdown('colonnes')">
+          <span>{{ colonnesSelectionnees.length }} / {{ champsDisponibles.length }} colonne(s)</span>
+          <i class="bi bi-chevron-down ms-arrow"></i>
+        </button>
+        <div class="ms-menu ms-menu-colonnes" *ngIf="dropdowns['colonnes']">
+          <div class="ms-search">
+            <input type="text" class="ms-search-input" placeholder="Rechercher..."
+                   [(ngModel)]="colonneSearch" name="colonneSearch"
+                   (click)="$event.stopPropagation()">
+          </div>
+          <div class="ms-actions">
+            <button type="button" class="ms-action-btn" (click)="selectAllColonnes()">Tout</button>
+            <button type="button" class="ms-action-btn" (click)="clearAllColonnes()">Aucun</button>
+          </div>
+          <div class="ms-divider"></div>
+          <label class="ms-option" *ngFor="let champ of champsDisponiblesFiltres"
+                 (click)="$event.stopPropagation()">
+            <input type="checkbox" [value]="champ"
+                   [checked]="colonnesSelectionnees.includes(champ)"
+                   (change)="toggleColonne($event)">
+            {{ champsTitre[champ] || champ }}
+          </label>
+        </div>
+      </div>
+      <!-- Pills colonnes actives -->
+      <div class="colonnes-pills">
+        <span class="colonne-pill" *ngFor="let col of colonnesSelectionnees"
+              (click)="retirerColonne(col)">
+          {{ champsTitre[col] || col }}<i class="bi bi-x"></i>
+        </span>
       </div>
     </div>
 
-    <!-- Results Table -->
+    <!-- Tableau -->
     <div class="row" *ngIf="!isLoading">
       <div class="col-12">
-        
-        <!-- Results Summary -->
+
         <div class="card" *ngIf="dataSource.data.length > 0">
-          <div class="card-header bg-dark text-white">
+          <div class="card-header bg-dark">
             <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-0 text-white">
-                <i class="bi bi-table"></i> 
-                {{ 'rapport.resultats' | translate }}
+              <h5 class="mb-0">
+                <i class="bi bi-table"></i> {{ 'rapport.resultats' | translate }}
               </h5>
               <span class="badge bg-light text-dark">
                 {{ 'rapport.total-rapport' | translate }}: {{ totalDonnees }}
               </span>
             </div>
           </div>
-
           <div class="card-body p-0">
             <div class="table-responsive">
-              
-              <!-- Material Table -->
-              <table mat-table
-                     [dataSource]="dataSource"
-                     class="w-100"
-                     matSort>
-
-                <!-- Dynamic Column Definitions -->
+              <table mat-table [dataSource]="dataSource" class="w-100" matSort>
                 <ng-container *ngFor="let col of colonnesSelectionnees" [matColumnDef]="col">
-                  
-                  <!-- Header -->
-                  <th mat-header-cell 
-                      *matHeaderCellDef 
-                      mat-sort-header 
-                      class="fw-bold bg-light">
-                    {{ champsTitre[col] }}
-                  </th>
-
-                  <!-- Cell -->
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ champsTitre[col] || col }}</th>
                   <td mat-cell *matCellDef="let row">
-                    
-                    <!-- Status Badge -->
-                    <span *ngIf="isStatusColumn(col)" 
-                          [ngClass]="getBadgeClass(row[col])"
-                          class="badge">
-                      {{ row[col] }}
-                    </span>
-
-                    <!-- Priority Badge -->
-                    <span *ngIf="isPriorityColumn(col)" 
-                          [ngClass]="getPriorityBadgeClass(row[col])"
-                          class="badge">
-                      {{ row[col] }}
-                    </span>
-
-                    <!-- ID Link -->
-                    <a *ngIf="col === 'id' || col === 'item_id'" 
-                       [routerLink]="['/items', row[col]]"
-                       class="text-primary text-decoration-none"
-                       [title]="'rapport.consulter-fiche' | translate">
+                    <span *ngIf="isStatusColumn(col)"   [ngClass]="getBadgeClass(row[col])">{{ row[col] }}</span>
+                    <span *ngIf="isPriorityColumn(col)" [ngClass]="getPriorityBadgeClass(row[col])">{{ row[col] }}</span>
+                    <a *ngIf="col === 'id' || col === 'item_id'"
+                       [routerLink]="['/items/details', row[col]]"
+                       class="text-primary text-decoration-none">
                       <i class="bi bi-link-45deg"></i> {{ row[col] }}
                     </a>
-
-                    <!-- Normal Value -->
                     <span *ngIf="!isStatusColumn(col) && !isPriorityColumn(col) && col !== 'id' && col !== 'item_id'">
                       {{ formatCell(col, row[col]) }}
                     </span>
                   </td>
                 </ng-container>
-
-                <!-- Header Row -->
                 <tr mat-header-row *matHeaderRowDef="colonnesSelectionnees; sticky: true"></tr>
-                
-                <!-- Data Rows -->
-                <tr mat-row 
-                    *matRowDef="let row; columns: colonnesSelectionnees;"
-                    class="hover-row"></tr>
-
-                <!-- No Data Row -->
+                <tr mat-row *matRowDef="let row; columns: colonnesSelectionnees;" class="hover-row"></tr>
                 <tr class="mat-row" *matNoDataRow>
                   <td class="mat-cell text-center py-4" [attr.colspan]="colonnesSelectionnees.length">
                     <i class="bi bi-inbox fs-1 text-muted"></i>
@@ -378,36 +268,32 @@
                 </tr>
               </table>
             </div>
-
-            <!-- Paginator -->
             <mat-paginator [pageSizeOptions]="[25, 50, 100, 200, 500]"
-                           [pageSize]="limit"
+                           [pageSize]="50"
                            showFirstLastButtons
                            class="border-top">
             </mat-paginator>
           </div>
         </div>
 
-        <!-- Empty State -->
+        <!-- État vide -->
         <div class="card text-center py-5" *ngIf="dataSource.data.length === 0 && !isLoading">
           <div class="card-body">
             <i class="bi bi-search fs-1 text-muted"></i>
             <h5 class="mt-3">{{ 'rapport.aucun-resultat' | translate }}</h5>
-            <p class="text-muted">
-              {{ 'rapport.aucun-resultat-description' | translate }}
-            </p>
+            <p class="text-muted">{{ 'rapport.aucun-resultat-description' | translate }}</p>
           </div>
         </div>
+
       </div>
     </div>
+
   </div>
 
-  <!-- Hidden Export Table -->
+  <!-- Table cachée export -->
   <table class="d-none" id="table-rapport-export">
     <thead>
-      <tr>
-        <th *ngFor="let col of colonnesSelectionnees">{{ champsTitre[col] }}</th>
-      </tr>
+      <tr><th *ngFor="let col of colonnesSelectionnees">{{ champsTitre[col] || col }}</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of listeRapport">
@@ -415,4 +301,5 @@
       </tr>
     </tbody>
   </table>
+
 </div>

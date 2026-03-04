@@ -312,4 +312,17 @@ toggleTypeDocument(type: string): void {
     this.decisionMessage = { type, texte };
     setTimeout(() => this.decisionMessage = null, 4000);
   }
+  dropdowns: { [key: string]: boolean } = {};
+
+toggleDropdown(key: string): void {
+  Object.keys(this.dropdowns).forEach(k => {
+    if (k !== key) this.dropdowns[k] = false;
+  });
+
+  this.dropdowns[key] = !this.dropdowns[key];
+}
+
+closeAllDropdowns(): void {
+  Object.keys(this.dropdowns).forEach(k => this.dropdowns[k] = false);
+}
 }

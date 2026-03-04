@@ -26,9 +26,9 @@ export interface ItemDetaille {
   identifiant?: string;
   montant?: number;
   notes?: string;
+  fournisseur?: string;
 }
 
-// Wrapper API
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
@@ -43,7 +43,6 @@ export interface ApiResponse<T> {
   };
 }
 
-// Filtres côté Angular
 export interface FiltresRapport {
   dateDebut?: string;
   dateFin?: string;
@@ -57,14 +56,8 @@ export interface FiltresRapport {
   offset?: number;
 }
 
-// Types de rapport
 export type RapportTypeId =
   | 'detaille'
-  | 'par-type'
-  | 'par-bibliotheque'
-  | 'par-demandeur'
-  | 'mensuel'
-  | 'par-statut';
 
 @Injectable({ providedIn: 'root' })
 export class RapportsService {
@@ -80,29 +73,56 @@ export class RapportsService {
     private http: HttpClient
   ) {}
 
-  // ----------- Méthodes API -----------
+  // ─── Endpoints API ───────────────────────────────────────
 
   getRapportDetaille(filtres?: FiltresRapport): Observable<ApiResponse<ItemDetaille[]>> {
     const params = this.buildHttpParams(filtres);
-    console.log('📡 Appel API:', `${this.url}/detaille`);
-    console.log('📋 Paramètres:', params.toString());
-    
     return this.http.get<any>(`${this.url}/detaille`, { ...this.httpOptions, params }).pipe(
       map(raw => this.normalizeDetailResponse(raw)),
-      tap(resp => {
-        if (resp.success) {
-          console.log('✅ Données reçues:', resp.data?.length || 0, 'items');
-          if (resp.pagination) {
-            console.log('📊 Pagination:', resp.pagination);
-          }
-        } else {
-          console.error('Échec de la requête');
-        }
-      }),
       catchError(err => {
-        console.error('Erreur HTTP:', err);
+        console.error('Erreur HTTP détaillé:', err);
         return this.errorHandlerService.handleError<ApiResponse<ItemDetaille[]>>('getRapportDetaille')(err);
       })
+    );
+  }
+
+  getRapportParType(filtres?: FiltresRapport): Observable<ApiResponse<any[]>> {
+    const params = this.buildHttpParams(filtres);
+    return this.http.get<any>(`${this.url}/par-type`, { ...this.httpOptions, params }).pipe(
+      map(raw => this.normalizeResponse<any[]>(raw)),
+      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapportParType'))
+    );
+  }
+
+  getRapportParBibliotheque(filtres?: FiltresRapport): Observable<ApiResponse<any[]>> {
+    const params = this.buildHttpParams(filtres);
+    return this.http.get<any>(`${this.url}/par-bibliotheque`, { ...this.httpOptions, params }).pipe(
+      map(raw => this.normalizeResponse<any[]>(raw)),
+      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapportParBibliotheque'))
+    );
+  }
+
+  getRapportParDemandeur(filtres?: FiltresRapport): Observable<ApiResponse<any[]>> {
+    const params = this.buildHttpParams(filtres);
+    return this.http.get<any>(`${this.url}/par-demandeur`, { ...this.httpOptions, params }).pipe(
+      map(raw => this.normalizeResponse<any[]>(raw)),
+      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapportParDemandeur'))
+    );
+  }
+
+  getRapportMensuel(filtres?: FiltresRapport): Observable<ApiResponse<any[]>> {
+    const params = this.buildHttpParams(filtres);
+    return this.http.get<any>(`${this.url}/mensuel`, { ...this.httpOptions, params }).pipe(
+      map(raw => this.normalizeResponse<any[]>(raw)),
+      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapportMensuel'))
+    );
+  }
+
+  getRapportParStatut(filtres?: FiltresRapport): Observable<ApiResponse<any[]>> {
+    const params = this.buildHttpParams(filtres);
+    return this.http.get<any>(`${this.url}/par-statut`, { ...this.httpOptions, params }).pipe(
+      map(raw => this.normalizeResponse<any[]>(raw)),
+      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapportParStatut'))
     );
   }
 
@@ -114,110 +134,43 @@ export class RapportsService {
     );
   }
 
-
-  // Méthode façade unique
-  getRapport(type: RapportTypeId, filtres: FiltresRapport, filtresMatSelect: Record<string, any[]> = {}): Observable<ApiResponse<any[]>> {
-    const request$ = type === 'detaille' ? this.getRapportDetaille(filtres) : of({ success: true, data: [] } as ApiResponse<any>);
-    return request$.pipe(
-      map(resp => {
-        let rows = Array.isArray(resp.data) ? resp.data : [];
-        // filtrage multi-select côté client
-        Object.entries(filtresMatSelect).forEach(([key, values]) => {
-          if (values?.length > 0) {
-            rows = rows.filter(row => values.includes(row[key] ?? row[this.mapKeyToRowKey(key)]));
-          }
-        });
-        return { ...resp, data: rows };
-      }),
-      catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>('getRapport'))
-    );
-  }
-
-  // ----------- Helpers -----------
+  // ─── Helpers ─────────────────────────────────────────────
 
   private normalizeDetailResponse(raw: any): ApiResponse<ItemDetaille[]> {
-    console.log('Réponse brute du backend:', raw);
-    
-    // Cas 1: Backend renvoie { success: true, data: [...], pagination: {...} }
     if (raw?.success && Array.isArray(raw.data)) {
-      console.log('Format avec success et data:', raw.data.length, 'éléments');
-      return {
-        success: true,
-        data: raw.data,
-        pagination: raw.pagination,
-        timestamp: raw.timestamp || new Date().toISOString()
-      };
+      return { success: true, data: raw.data, pagination: raw.pagination, timestamp: raw.timestamp || new Date().toISOString() };
     }
-
-    // Cas 2: Backend renvoie directement un tableau
     if (Array.isArray(raw)) {
-      console.log('Format tableau direct:', raw.length, 'éléments');
-      return {
-        success: true,
-        data: raw,
-        timestamp: new Date().toISOString()
-      };
+      return { success: true, data: raw, timestamp: new Date().toISOString() };
     }
-
-    // Cas 3: Backend renvoie { data: [...], total, limit, offset } (sans success)
     if (raw && Array.isArray(raw.data) && typeof raw.total === 'number') {
-      console.log('Format avec data et total:', raw.data.length, 'éléments');
       return {
         success: true,
         data: raw.data,
-        pagination: {
-          total: raw.total,
-          limit: raw.limit || 100,
-          offset: raw.offset || 0,
-          pages: raw.limit ? Math.ceil(raw.total / raw.limit) : 1
-        },
+        pagination: { total: raw.total, limit: raw.limit || 100, offset: raw.offset || 0 },
         timestamp: new Date().toISOString()
       };
     }
-
-    // Cas fallback : rien de valide reçu
-    console.warn('Réponse API inattendue :', raw);
-    return {
-      success: false,
-      data: [],
-      timestamp: new Date().toISOString()
-    };
+    console.warn('Réponse API inattendue:', raw);
+    return { success: false, data: [], timestamp: new Date().toISOString() };
   }
 
   private normalizeResponse<T>(raw: any): ApiResponse<T> {
-    // Si c'est déjà un wrapper
     if (raw && typeof raw === 'object' && 'success' in raw && 'data' in raw) {
       return raw as ApiResponse<T>;
     }
-
-    // Sinon, on wrappe
-    return {
-      success: true,
-      data: raw as T,
-      timestamp: new Date().toISOString()
-    };
+    return { success: true, data: raw as T, timestamp: new Date().toISOString() };
   }
 
   private buildHttpParams(filtres?: FiltresRapport): HttpParams {
     let params = new HttpParams();
     if (!filtres) return params;
-    
     Object.entries(filtres).forEach(([k, v]) => {
       if (v !== undefined && v !== null && v !== '') {
         params = params.set(k, String(v));
       }
     });
-    
     return params;
-  }
-
-  private mapKeyToRowKey(key: string): string {
-    const mapping: Record<string, string> = {
-      formulaireType: 'formulaire_type',
-      statutBibliotheque: 'statut_bibliotheque',
-      statutAcq: 'statut_acq'
-    };
-    return mapping[key] || key;
   }
 
   toPromise<T>(observable: Observable<T>): Promise<T> {
