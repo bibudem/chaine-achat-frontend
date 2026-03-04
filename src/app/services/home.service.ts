@@ -1,147 +1,151 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, forkJoin } from "rxjs";
-import { catchError, tap, map } from "rxjs/operators";
-import { ErrorHandlerService } from "./error-handler.service";
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { ErrorHandlerService } from './error-handler.service';
+import { environment } from 'src/environments/environment';
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TYPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+export type Period = '7days' | '30days' | '90days';
 
 export interface DashboardStats {
   totals: {
-    total_items: number;
+    total_items:       number;
     unique_demandeurs: number;
     items_last_7_days: number;
-    en_traitement: number;
-    termines: number;
-    en_attente: number;
+    en_traitement:     number;
+    termines:          number;
+    en_attente:        number;
   };
   byType: Array<{
     formulaire_type: string;
-    count: number;
-    percentage: number;
+    count:           number;
+    percentage:      number;
   }>;
   byMonth: Array<{
     month: string;
     count: number;
   }>;
   byPriority: Array<{
-    priorite: string;
-    count: number;
+    priorite:       string;
+    count:          number;
     order_priority: number;
   }>;
   topDemandeurs: Array<{
     demandeur: string;
-    count: number;
-    rank: number;
+    count:     number;
+    rank:      number;
   }>;
+  period?:     string;
+  periodDays?: number;
 }
 
 export interface GraphData {
   dailyStats: Array<{
-    date: string;
-    count: number;
-    completed: number;
+    date:           string;
+    count:          number;
+    completed:      number;
     achats_uniques: number;
-    abonnements: number;
+    abonnements:    number;
   }>;
   libraryStats: Array<{
     bibliotheque: string;
-    total: number;
-    percentage: number;
+    total:        number;
+    percentage:   number;
   }>;
   statusEvolution: Array<{
-    date: string;
+    date:                string;
     statut_bibliotheque: string;
-    count: number;
+    count:               number;
   }>;
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data: T;
-  error?: string;
+  success:   boolean;
+  message?:  string;
+  data:      T;
+  error?:    string;
   timestamp: string;
 }
 
-@Injectable({
-  providedIn: "root",
-})
-export class HomeService {
-  private url = "http://localhost:3000/home";
+export interface AllHomeData {
+  dashboard: ApiResponse<DashboardStats>;
+  graph:     ApiResponse<GraphData>;
+}
 
-  httpOptions: { headers: HttpHeaders } = {
-    headers: new HttpHeaders({ 
-      "Content-Type": "application/json",
-    }),
-  };
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@Injectable({ providedIn: 'root' })
+export class HomeService {
+
+  private readonly baseUrl = `${environment.apiUrl}/home`;
+
+  private readonly headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(
-    private errorHandlerService: ErrorHandlerService,
-    private http: HttpClient
+    private http: HttpClient,
+    private errorHandler: ErrorHandlerService
   ) {}
 
-  // Récupérer les statistiques du tableau de bord
-  getDashboardStats(): Observable<ApiResponse<DashboardStats>> {
-    console.log('📊 Récupération des statistiques dashboard');
-    
+  /* ─────────────────────────────────────────────
+     Construit les HttpParams avec la période
+  ───────────────────────────────────────────── */
+  private params(period: Period): { headers: HttpHeaders; params: HttpParams } {
+    return {
+      headers: this.headers,
+      params: new HttpParams().set('period', period)
+    };
+  }
+
+  /* ─────────────────────────────────────────────
+     GET /home/all?period=...
+     Appel principal — dashboard + graphiques
+  ───────────────────────────────────────────── */
+  getAllHomeData(period: Period = '7days'): Observable<ApiResponse<AllHomeData>> {
     return this.http
-      .get<ApiResponse<DashboardStats>>(`${this.url}/count`, this.httpOptions)
+      .get<ApiResponse<AllHomeData>>(`${this.baseUrl}/all`, this.params(period))
       .pipe(
-        tap((response) => {
-          if (response?.success) {
-            console.log('✅ Statistiques dashboard reçues', response.data.totals);
-          }
+        tap(res => {
+          if (res?.success) console.log(`✅ Données home reçues [${period}]`);
         }),
         catchError(
-          this.errorHandlerService.handleError<ApiResponse<DashboardStats>>("getDashboardStats")
+          this.errorHandler.handleError<ApiResponse<AllHomeData>>('getAllHomeData')
         )
       );
   }
 
-  // Récupérer les données graphiques
-  getGraphData(): Observable<ApiResponse<GraphData>> {
-    console.log('📈 Récupération des données graphiques');
-    
+  /* ─────────────────────────────────────────────
+     GET /home/dashboard?period=...
+  ───────────────────────────────────────────── */
+  getDashboardStats(period: Period = '7days'): Observable<ApiResponse<DashboardStats>> {
     return this.http
-      .get<ApiResponse<GraphData>>(`${this.url}/graphique`, this.httpOptions)
+      .get<ApiResponse<DashboardStats>>(`${this.baseUrl}/dashboard`, this.params(period))
       .pipe(
-        tap((response) => {
-          if (response?.success) {
-            console.log('✅ Données graphiques reçues');
-          }
+        tap(res => {
+          if (res?.success) console.log(`✅ Stats dashboard [${period}]`, res.data.totals);
         }),
         catchError(
-          this.errorHandlerService.handleError<ApiResponse<GraphData>>("getGraphData")
+          this.errorHandler.handleError<ApiResponse<DashboardStats>>('getDashboardStats')
         )
       );
   }
 
-  // Récupérer toutes les données en une seule fois
-  getAllHomeData(): Observable<{
-    dashboard: ApiResponse<DashboardStats>;
-    graph: ApiResponse<GraphData>;
-  }> {
-    console.log('🔄 Récupération de toutes les données home');
-    
-    return forkJoin({
-      dashboard: this.getDashboardStats(),
-      graph: this.getGraphData()
-    }).pipe(
-      tap((data) => {
-        console.log('✅ Toutes les données home récupérées');
-      }),
-      catchError(
-        this.errorHandlerService.handleError<any>("getAllHomeData")
-      )
-    );
-  }
-
-  // Méthode utilitaire pour les observables
-  toPromise<T>(observable: Observable<T>): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      observable.subscribe({
-        next: (value) => resolve(value),
-        error: (err) => reject(err)
-      });
-    });
+  /* ─────────────────────────────────────────────
+     GET /home/graph?period=...
+  ───────────────────────────────────────────── */
+  getGraphData(period: Period = '7days'): Observable<ApiResponse<GraphData>> {
+    return this.http
+      .get<ApiResponse<GraphData>>(`${this.baseUrl}/graph`, this.params(period))
+      .pipe(
+        tap(res => {
+          if (res?.success) console.log(`✅ Données graphiques [${period}]`);
+        }),
+        catchError(
+          this.errorHandler.handleError<ApiResponse<GraphData>>('getGraphData')
+        )
+      );
   }
 }
