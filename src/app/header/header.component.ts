@@ -20,7 +20,6 @@ export class HeaderComponent {
 
   currentDate = new Date();
 
-
   constructor(public authService: AuthService,
               private translate: TranslateService,
               public router: Router) { }

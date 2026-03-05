@@ -1,57 +1,79 @@
-<!-- Integrer le header -->
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+
+  <!-- ═══════════════════════════════════════════
+       BRAND WRAPPER
+  ═══════════════════════════════════════════ -->
   <div class="navbar-brand-wrapper d-flex justify-content-center">
     <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-      <a class="navbar-brand brand-logo" href="/accueil"><img src="assets/images/biblio-logo.png" alt="logo"/></a>
-      <a class="navbar-brand brand-logo-mini" href="/accueil"><img src="assets/images/favicon.ico" alt="logo"/></a>
+      <a class="navbar-brand brand-logo" href="/accueil">
+        <img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM" />
+      </a>
+      <a class="navbar-brand brand-logo-mini" href="/accueil">
+        <img src="assets/images/favicon.ico" alt="logo" />
+      </a>
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-        <span class="typcn typcn-th-menu"></span>
+        <span class="bi bi-list"></span>
       </button>
     </div>
   </div>
+
+  <!-- ═══════════════════════════════════════════
+       MENU WRAPPER
+  ═══════════════════════════════════════════ -->
   <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-    <ul class="navbar-nav mr-lg-2">
-      <li class="nav-item nav-profile dropdown">
-        <a class="nav-link" >
-          <img src="assets/images/logo-app.png" alt="profile"/>
+
+    <!-- LEFT quick links -->
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item d-none d-xl-flex align-items-center">
+        <a class="nav-link nav-quicklink" routerLink="/"  >
+          <img src="assets/images/logo-app.png" alt="logo" class="img-logo-app" />
+        </a>
+      </li>
+      <li class="nav-item d-none d-xl-flex align-items-center">
+        <a class="nav-link nav-quicklink" routerLink="/formulaires/usager" title="Formulaire usager">
+          <i class="bi bi-person-lines-fill"></i>
+          <span>Formulaire usager</span>
+        </a>
+      </li>
+      <li class="nav-item d-none d-xl-flex align-items-center">
+        <a class="nav-link nav-quicklink" routerLink="/formulaires/demande" title="Formulaire de demande">
+          <i class="bi bi-file-earmark-plus-fill"></i>
+          <span>Formulaire demande</span>
         </a>
       </li>
     </ul>
-    <ul class="navbar-nav navbar-nav-right">
-      <li class="nav-item nav-date dropdown">
-        <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
-          <i class="typcn typcn-calendar"></i>
-          <h6 class="date mb-0"> {{currentDate | date:'dd-MM-yyyy'}}</h6>
-        </a>
-      </li>
-      <li class="nav-item nav-profile dropdown">
-        <a class="nav-link" href="#" data-toggle="dropdown" id="profileDropdown">
-          <p class="mb-0"> {{prenomAdmin}} {{nomAdmin}}</p>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-          <a class="dropdown-item">
-            <i class="typcn typcn-cog-outline text-primary"></i>
-            Settings
+
+    <div class="top-navbar-right ms-3">
+      <ul class="navbar-nav align-items-center">
+
+        <!-- Date -->
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center gap-2" href="javascript:;">
+            <i class="bi bi-calendar3"></i>
+            <span class="date-text">{{ currentDate | date:'dd MMM yyyy' }}</span>
           </a>
-          <a class="dropdown-item">
-            <i class="typcn typcn-eject text-primary"></i>
-            Logout
+        </li>
+        <!-- User Profile -->
+        <li class="nav-item" ngbDropdown [autoClose]="'outside'">
+          <a class="nav-link d-flex align-items-center gap-2" ngbDropdownToggle>
+            <div class="user-setting">
+              <i class="bi bi-person-circle"></i>
+              <span class="user-name">Système Administrateur</span>
+            </div>
           </a>
-        </div>
-      </li>
-      <li class="nav-item ">
-        <a class="nav-link d-flex align-items-center justify-content-center"
-          href="https://bib.umontreal.ca/"
-          target="_blank"
-          title="Site des bibliothèques">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V88H40V56Zm0,144H40V104H216v96Z"></path></svg>
-        </a>
-      </li>
-    </ul>
+          <ul ngbDropdownMenu class="dropdown-menu dropdown-menu-end user-profile-dropdown mt-5">
+            <li>
+            <li><a (click)="logout()" routerLink="/auth/sign-in" class="dropdown-item item-logout"><div class="d-flex align-items-center"><div class="setting-icon"><i class="bi bi-box-arrow-right"></i></div><div class="setting-text ms-3"><span>Déconnexion</span></div></div></a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Mobile toggler -->
     <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-      <span class="typcn typcn-th-menu"></span>
+      <span class="bi bi-list"></span>
     </button>
+
   </div>
 </nav>
-
-

@@ -1,28 +1,47 @@
-.header-udem {
-  text-transform: uppercase!important;
+/* ==============================================
+   DROPDOWN PROFIL UTILISATEUR
+   ============================================== */
+.user-setting {
+  position: relative; /* nécessaire pour que le dropdown se positionne correctement */
 }
-.typing {
-  position: relative;
-  font-size: 1.2em;
-  font-weight: 600;
-  letter-spacing: 1px;
+
+.user-profile-dropdown {
+  position: absolute;      /* positionné par rapport à .user-setting */
+  top: 100%;               /* juste en dessous du bouton */
+  right: 0;                /* aligné à droite */
+  z-index: 1050;           /* au-dessus des autres éléments */
+  min-width: 240px;        /* largeur fixe */
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+  animation: dropIn 0.12s ease;
 }
-.typing::after {
-  content: "|";
-  position: absolute;
-  right: 0;
-  width: 100%;
-  color: white;
-  background: #fff;
-  animation: typing 3s steps(16) forwards, caret 1s infinite;
+
+/* icône à côté du nom utilisateur */
+.user-setting .user-name-icon {
+  margin-right: 8px;      /* espace entre l’icône et le nom */
+  vertical-align: middle; /* aligne avec le texte */
+  font-size: 1.2rem;      /* ajuste la taille de l’icône si nécessaire */
+  color: var(--primary-color); /* ou une autre couleur si besoin */
 }
-@keyframes typing {
-  to {
-    width: 0;
+
+.img-logo-app{
+    width: 160px!important;
+}
+
+/* Ajuster le dropdown pour mobile si nécessaire */
+@media (max-width: 575px) {
+  .user-profile-dropdown {
+    right: 5px;  /* évite que le dropdown dépasse l’écran */
+    min-width: 200px;
   }
 }
-@keyframes caret {
-  50% {
-    color: red;
-  }
+
+.navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand img
+ {
+    width: auto; 
+    max-width: 100%;
+    height: 60px;
 }
