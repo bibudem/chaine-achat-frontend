@@ -77,7 +77,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
     const sub = this.homeService.getAllHomeData(this._selectedPeriod).subscribe({
       next: (res: ApiResponse<AllHomeData>) => {
         // ── LOG DIAGNOSTIC ─────────────────────────────────────────────
-        console.group('📦 /home/all — réponse complète');
+        console.group('/home/all — réponse complète');
         console.log('res.success   :', res?.success);
         console.log('res.data      :', res?.data);
         console.log('dashboard     :', res?.data?.dashboard);
@@ -108,7 +108,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
         if (dashboard.data) {
           this.dashboardStats = dashboard.data;
-          console.log('✅ dashboardStats:', this.dashboardStats);
+          console.log('dashboardStats:', this.dashboardStats);
         }
 
         // ── Graph ──────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   }
 
   refreshData(): void {
-    this.loadAllData();
+    window.location.reload();
   }
 
   navigateTo(path: string): void {

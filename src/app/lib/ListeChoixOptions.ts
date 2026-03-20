@@ -110,13 +110,13 @@ statusOptions = [
     'Complété',
     'Demande annulée',
     'Budget atteint',
-    'En attente de traitement',
+    'En traitement',
     'En cours'
   ];
 
   // Options pour le suivi DIRCOL ACQ
   dircolAcqSuiviOptions = [
-    'En attente de traitement',
+    'En traitement',
     'Commande créée',
     'Ressource électronique activée',
     'Demande annulée (non traitée)',

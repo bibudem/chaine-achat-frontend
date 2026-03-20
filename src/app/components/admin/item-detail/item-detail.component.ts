@@ -35,7 +35,7 @@ export class ItemDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.item = response.data;
         } else {
-          this.dialogService.showError(response.error || 'Impossible de charger l\'item');
+          this.dialogService.showError(response.error || "Impossible de charger l'item");
         }
         this.loading = false;
       },
@@ -46,34 +46,10 @@ export class ItemDetailComponent implements OnInit {
     });
   }
 
-  async onDelete(): Promise<void> {
-    if (!this.itemId) return;
-    const confirmed = await this.dialogService.confirm(
-      'Voulez-vous vraiment supprimer cet item ? Cette action est irréversible.',
-      'Confirmer la suppression'
-    );
-    if (confirmed) {
-      this.itemService.delete(this.itemId).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.dialogService.showSuccess('Item supprimé avec succès');
-            setTimeout(() => this.router.navigate(['/items']), 1200);
-          } else {
-            this.dialogService.showError(response.error || 'Erreur suppression');
-          }
-        },
-        error: () => this.dialogService.showError('Erreur lors de la suppression')
-      });
-    }
-  }
+  onEdit(): void   { this.router.navigate(['/items', this.itemId]); }
+  onReturn(): void { this.location.back(); }
 
-  onEdit(): void {
-    this.router.navigate(['/items', this.itemId]);
-  }
-
-  onReturn(): void {
-    this.location.back();
-  }
+  /* ── Helpers visuels ── */
 
   getStatutBadgeClass(statut: string | undefined): string {
     if (!statut) return 'badge bg-light text-dark';
@@ -106,5 +82,14 @@ export class ItemDetailComponent implements OnInit {
   hasFinancialData(): boolean {
     return !!(this.item?.prix_cad || this.item?.devise_originale ||
               this.item?.nombre_titres_inclus || this.item?.periode_couverte);
+  }
+
+  /** Vrai si le formulaire_type a des champs spécifiques à afficher */
+  hasSpecificData(): boolean {
+    const types = [
+      'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
+      'PEB Tipasa numérique', 'Requête ACQ', 'Springer', "Suggestion d'achat"
+    ];
+    return types.includes(this.item?.formulaire_type ?? '');
   }
 }

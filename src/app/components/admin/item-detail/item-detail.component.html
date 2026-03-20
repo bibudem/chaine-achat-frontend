@@ -1,493 +1,563 @@
-<div class="container-fluid bg-white p-3">
+<div class="container-fluid min-vh-100 pb-4">
 
-  <!-- En-tête -->
-  <div class="row mt-4 mb-2 mt-5">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-      <div>
-        <h1 class="h4 mb-1" *ngIf="item">{{ item.titre_document }}</h1>
-        <div class="d-flex align-items-center gap-2 flex-wrap" *ngIf="item">
-          <span class="text-muted small">#{{ item.item_id }}</span>
-          <span class="vr"></span>
-          <span class="badge bg-light text-dark border small">{{ item.formulaire_type }}</span>
-          <span [class]="getPrioriteBadgeClass(item.priorite_demande)">{{ item.priorite_demande }}</span>
-          <span [class]="getStatutBadgeClass(item.statut_bibliotheque)">{{ item.statut_bibliotheque }}</span>
-        </div>
-      </div>
-      <div *ngIf="item">
-        <button class="btn btn-primary btn-sm" (click)="onEdit()">
-          <i class="bi bi-pencil"></i> Modifier
-        </button>
-        <button class="btn btn-outline-secondary btn-sm ml-1" (click)="onReturn()">
-          <i class="bi bi-arrow-left"></i> Retour
-        </button>
-      </div>
-    </div>
-    <div class="col-12"><hr class="mt-2 mb-0"></div>
-  </div>
-
-  <!-- Loading -->
+  <!-- ── LOADING ───────────────────────────────────────────── -->
   <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border" role="status"></div>
+    <div class="spinner-border text-primary" role="status"></div>
     <p class="mt-2 text-muted">Chargement...</p>
   </div>
 
-  <!-- Contenu -->
+  <!-- ── ITEM INTROUVABLE ──────────────────────────────────── -->
+  <div *ngIf="!loading && !item" class="text-center py-5">
+    <i class="bi bi-inbox display-1 text-muted"></i>
+    <p class="text-muted mt-3">Item introuvable.</p>
+  </div>
+
+  <!-- ── CONTENU PRINCIPAL ─────────────────────────────────── -->
   <div *ngIf="!loading && item">
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 1 — INFORMATIONS GÉNÉRALES
-         ═══════════════════════════════════════════════ -->
-    <div class="detail-section">
-      <div class="detail-section-title">Informations générales</div>
-      <div class="row">
-
-        <!-- Groupe : Document -->
-        <div class="col-md-5">
-          <div class="detail-field">
-            <span class="detail-label">Titre</span>
-            <span class="detail-value fw-semibold">{{ val(item.titre_document) }}</span>
-          </div>
+    <!-- ╔══════════════════════════════════════════════════════
+         BARRE DE TITRE
+    ══════════════════════════════════════════════════════════╗ -->
+    <div class="itd-topbar mt-5">
+      <div class="itd-topbar__left">
+        <div>
+          <div class="itd-topbar__id">#{{ item.item_id }}</div>
+          <h1 class="h3">{{ item.titre_document || 'Sans titre' }}</h1>
         </div>
-        <div class="col-md-4">
-          <div class="detail-field">
-            <span class="detail-label">Sous-titre</span>
-            <span class="detail-value">{{ val(item.sous_titre) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Éditeur</span>
-            <span class="detail-value">{{ val(item.editeur) }}</span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">ISBN / ISSN</span>
-            <span class="detail-value font-monospace small">{{ val(item.isbn_issn) }}</span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">ID Ressource</span>
-            <span class="detail-value font-monospace small">{{ val(item.id_ressource) }}</span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">Date de publication</span>
-            <span class="detail-value">{{ val(item.date_publication) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Catégorie</span>
-            <span class="detail-value">{{ val(item.categorie_document) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Format / Support</span>
-            <span class="detail-value">
-              <span class="badge" [ngClass]="isElectronique() ? 'bg-info text-dark' : 'bg-secondary'">
-                {{ val(item.format_support) }}
-              </span>
-            </span>
-          </div>
-        </div>
-
-        <div class="col-12"><hr class="detail-divider"></div>
-
-        <!-- Groupe : Localisation -->
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Bibliothèque</span>
-            <span class="detail-value">{{ val(item.bibliotheque) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Localisation</span>
-            <span class="detail-value">{{ val(item.localisation_emplacement) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Projet spécial</span>
-            <span class="detail-value">{{ val(item.projet_special) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Création notice DTDM</span>
-            <span class="detail-value">{{ val(item.creation_notice_dtdm) }}</span>
-          </div>
-        </div>
-
-        <div class="col-12"><hr class="detail-divider"></div>
-
-        <!-- Groupe : Finances & Fournisseur -->
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Fonds budgétaire</span>
-            <span class="detail-value fw-semibold" style="color:var(--secondary-blue)">
-              {{ val(item.fonds_budgetaire) }}
-            </span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Fonds SN – No projet</span>
-            <span class="detail-value">{{ val(item.fonds_sn_projet) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Fournisseur</span>
-            <span class="detail-value">{{ val(item.fournisseur) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Source d'information</span>
-            <span class="detail-value">
-              <a *ngIf="item.source_information; else noLink" [href]="item.source_information" target="_blank">Voir le lien</a>
-              <ng-template #noLink>—</ng-template>
-            </span>
-          </div>
-        </div>
-
-        <ng-container *ngIf="hasFinancialData()">
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Prix total (CAD)</span>
-              <span class="detail-value fw-semibold" style="color:var(--primary-green)">
-                {{ item.prix_cad ? '$' + item.prix_cad : '—' }}
-              </span>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="detail-field">
-              <span class="detail-label">Devise originale</span>
-              <span class="detail-value">{{ val(item.devise_originale) }}</span>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="detail-field">
-              <span class="detail-label">Prix (devise orig.)</span>
-              <span class="detail-value">{{ val(item.prix_devise_originale) }}</span>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="detail-field">
-              <span class="detail-label">Période couverte</span>
-              <span class="detail-value">{{ val(item.periode_couverte) }}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Nombre de titres</span>
-              <span class="detail-value">{{ val(item.nombre_titres_inclus) }}</span>
-            </div>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="isElectronique()">
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Nombre d'utilisateurs</span>
-              <span class="detail-value">{{ val(item.nombre_utilisateurs) }}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Format PrêtNumérique</span>
-              <span class="detail-value">{{ val(item.format_pret_numerique) }}</span>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="detail-field">
-              <span class="detail-label">Lien plateforme</span>
-              <span class="detail-value">
-                <a *ngIf="item.lien_plateforme; else noLinkE" [href]="item.lien_plateforme" target="_blank">{{ item.lien_plateforme }}</a>
-                <ng-template #noLinkE>—</ng-template>
-              </span>
-            </div>
-          </div>
-        </ng-container>
-
-        <div class="col-12"><hr class="detail-divider"></div>
-
-        <!-- Groupe : Personnes & Statuts -->
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Demandeur</span>
-            <span class="detail-value">{{ val(item.demandeur) }}</span>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="detail-field">
-            <span class="detail-label">Personne à aviser</span>
-            <span class="detail-value">{{ val(item.personne_a_aviser_activation) }}</span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">Statut bibliothèque</span>
-            <span class="detail-value">
-              <span [class]="getStatutBadgeClass(item.statut_bibliotheque)">{{ val(item.statut_bibliotheque) }}</span>
-            </span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">Statut ACQ</span>
-            <span class="detail-value">{{ val(item.statut_acq) }}</span>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="detail-field">
-            <span class="detail-label">Priorité</span>
-            <span class="detail-value">
-              <span [class]="getPrioriteBadgeClass(item.priorite_demande)">{{ val(item.priorite_demande) }}</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- Groupe : Notes -->
-        <ng-container *ngIf="item.note_dtdm || item.note_commentaire">
-          <div class="col-12"><hr class="detail-divider"></div>
-          <div class="col-md-6" *ngIf="item.note_dtdm">
-            <div class="detail-field">
-              <span class="detail-label">Note DTDM (Catalogage)</span>
-              <span class="detail-note">{{ item.note_dtdm }}</span>
-            </div>
-          </div>
-          <div class="col-md-6" *ngIf="item.note_commentaire">
-            <div class="detail-field">
-              <span class="detail-label">Note / Commentaire Bibliothèque</span>
-              <span class="detail-note">{{ item.note_commentaire }}</span>
-            </div>
-          </div>
-        </ng-container>
-
+      </div>
+      <div class="itd-topbar__actions">
+        <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
+          <i class="bi bi-arrow-left"></i> Retour
+        </button>
+        <button class="btn btn-primary btn-sm" (click)="onEdit()">
+          <i class="bi bi-pencil me-1"></i>Modifier
+        </button>
       </div>
     </div>
 
+    <!-- ╔══════════════════════════════════════════════════════
+         CORPS : sidebar + contenu
+    ══════════════════════════════════════════════════════════╗ -->
+    <div class="itd-layout">
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 2 — CHAMPS SPÉCIFIQUES AU FORMULAIRE
-         ═══════════════════════════════════════════════ -->
-    <div class="detail-section"
-         *ngIf="item.formulaire_type === 'Modification CCOL'
-              || item.formulaire_type === 'Nouvel abonnement'
-              || item.formulaire_type === 'Nouvel achat unique'
-              || item.formulaire_type === 'PEB Tipasa numérique'
-              || item.formulaire_type === 'Requête ACQ'
-              || item.formulaire_type === 'Springer'
-              || item.formulaire_type === 'Suggestion d\'achat'">
+      <!-- ── SIDEBAR GAUCHE ─────────────────────────────────── -->
+      <aside class="itd-sidebar">
 
-      <div class="detail-section-title">{{ item.formulaire_type }}</div>
-      <div class="row">
+        <!-- Type & Priorité -->
+        <div class="itd-sidebar__block">
+          <div class="itd-sidebar__label">Type de formulaire</div>
+          <span class="badge bg-dark text-white border w-100 text-start py-2 px-2">
+            {{ item.formulaire_type }}
+          </span>
+        </div>
 
-        <ng-container *ngIf="item.formulaire_type === 'Modification CCOL'">
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Numéro OCLC</span>
-              <span class="detail-value font-monospace">{{ val(item.numero_oclc) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Collection</span>
-              <span class="detail-value">{{ val(item.collection) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Catalogage</span>
-              <span class="detail-value">{{ val(item.catalogage) }}</span>
-            </div>
-          </div>
-          <div class="col-12" *ngIf="item.precision_demande">
-            <div class="detail-field">
-              <span class="detail-label">Précision de la demande</span>
-              <span class="detail-note">{{ item.precision_demande }}</span>
-            </div>
-          </div>
-        </ng-container>
+        <div class="itd-sidebar__block">
+          <div class="itd-sidebar__label">Priorité</div>
+          <span [class]="getPrioriteBadgeClass(item.priorite_demande) + ' itd-badge-lg'">
+            {{ val(item.priorite_demande) }}
+          </span>
+        </div>
 
-        <ng-container *ngIf="item.formulaire_type === 'Nouvel abonnement'">
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Date début abonnement</span>
-              <span class="detail-value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Type de monographie</span>
-              <span class="detail-value">{{ val(item.type_monographie) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Collection</span>
-              <span class="detail-value">{{ val(item.collection) }}</span>
-            </div>
-          </div>
-        </ng-container>
+        <div class="itd-sidebar__block">
+          <div class="itd-sidebar__label">Statut bibliothèque</div>
+          <span [class]="getStatutBadgeClass(item.statut_bibliotheque) + ' itd-badge-lg'">
+            {{ val(item.statut_bibliotheque) }}
+          </span>
+        </div>
 
-        <ng-container *ngIf="item.formulaire_type === 'Nouvel achat unique'">
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Type monographie</span>
-              <span class="detail-value">{{ val(item.type_monographie) }}</span>
+        <div class="itd-sidebar__block" *ngIf="item.statut_acq">
+          <div class="itd-sidebar__label">Statut ACQ</div>
+          <span class="badge bg-secondary itd-badge-lg">{{ item.statut_acq }}</span>
+        </div>
+
+        <hr class="itd-sidebar__divider">
+
+        <!-- Personnes -->
+        <div class="itd-sidebar__block">
+          <div class="itd-sidebar__label">Demandeur</div>
+          <div class="itd-sidebar__value">
+            <i class="bi bi-person me-1 text-muted"></i>{{ val(item.demandeur) }}
+          </div>
+        </div>
+
+        <div class="itd-sidebar__block" *ngIf="item.personne_a_aviser_activation">
+          <div class="itd-sidebar__label">Personne à aviser</div>
+          <div class="itd-sidebar__value">
+            <i class="bi bi-bell me-1 text-muted"></i>{{ item.personne_a_aviser_activation }}
+          </div>
+        </div>
+
+        <hr class="itd-sidebar__divider">
+
+        <!-- Localisation -->
+        <div class="itd-sidebar__block">
+          <div class="itd-sidebar__label">Bibliothèque</div>
+          <div class="itd-sidebar__value">
+            <i class="bi bi-building me-1 text-muted"></i>{{ val(item.bibliotheque) }}
+          </div>
+        </div>
+
+        <div class="itd-sidebar__block" *ngIf="item.localisation_emplacement">
+          <div class="itd-sidebar__label">Localisation</div>
+          <div class="itd-sidebar__value">{{ item.localisation_emplacement }}</div>
+        </div>
+
+        <div class="itd-sidebar__block" *ngIf="item.fonds_budgetaire">
+          <div class="itd-sidebar__label">Fonds budgétaire</div>
+          <div class="itd-sidebar__value itd-sidebar__value--accent">
+            <i class="bi bi-wallet2 me-1"></i>{{ item.fonds_budgetaire }}
+          </div>
+        </div>
+
+        <hr class="itd-sidebar__divider">
+
+        <!-- Métadonnées -->
+        <div class="itd-sidebar__meta">
+          <div class="itd-sidebar__label">Créé le</div>
+          <div class="itd-sidebar__value">{{ item.date_creation | date:'yyyy-MM-dd' }}</div>
+        </div>
+        <div class="itd-sidebar__meta" *ngIf="item.date_modification">
+          <div class="itd-sidebar__label">Modifié le</div>
+          <div class="itd-sidebar__value">{{ item.date_modification | date:'yyyy-MM-dd' }}</div>
+          <div class="itd-sidebar__value text-muted small" *ngIf="item.utilisateur_modification">
+            par {{ item.utilisateur_modification }}
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ── ZONE PRINCIPALE ────────────────────────────────── -->
+      <main class="itd-main">
+
+        <!-- ── Section : Document ───────────────────────────── -->
+        <div class="itd-card">
+          <div class="itd-card__header">
+            <i class="bi bi-book me-2"></i>Informations sur le document
+          </div>
+          <div class="itd-card__body">
+            <div class="row g-3">
+
+              <div class="col-md-8">
+                <div class="itd-field">
+                  <span class="itd-field__label">Titre</span>
+                  <span class="itd-field__value fw-semibold">{{ val(item.titre_document) }}</span>
+                </div>
+              </div>
+              <div class="col-md-4" *ngIf="item.sous_titre">
+                <div class="itd-field">
+                  <span class="itd-field__label">Sous-titre</span>
+                  <span class="itd-field__value">{{ item.sous_titre }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Éditeur</span>
+                  <span class="itd-field__value">{{ val(item.editeur) }}</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="itd-field">
+                  <span class="itd-field__label">ISBN / ISSN</span>
+                  <span class="itd-field__value font-monospace">{{ val(item.isbn_issn) }}</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="itd-field">
+                  <span class="itd-field__label">Date de publication</span>
+                  <span class="itd-field__value">{{ val(item.date_publication) }}</span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="itd-field">
+                  <span class="itd-field__label">ID Ressource</span>
+                  <span class="itd-field__value font-monospace small">{{ val(item.id_ressource) }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Catégorie</span>
+                  <span class="itd-field__value">{{ val(item.categorie_document) }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Format / Support</span>
+                  <span class="itd-field__value">
+                    <span class="badge" [ngClass]="isElectronique() ? 'bg-info text-dark' : 'bg-secondary'">
+                      {{ val(item.format_support) }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4" *ngIf="item.catalogue">
+                <div class="itd-field">
+                  <span class="itd-field__label">Catalogue</span>
+                  <span class="itd-field__value">{{ item.catalogue }}</span>
+                </div>
+              </div>
+
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Format électronique</span>
-              <span class="detail-value">{{ val(item.format_electronique) }}</span>
-            </div>
+        </div>
+
+        <!-- ── Section : Acquisition & Finances ─────────────── -->
+        <div class="itd-card">
+          <div class="itd-card__header">
+            <i class="bi bi-wallet2 me-2"></i>Acquisition &amp; Finances
           </div>
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Bordereau imprimé</span>
-              <span class="detail-value">{{ val(item.bordereau_imprime) }}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Catégorie de dépense</span>
-              <span class="detail-value">{{ val(item.categorie_depense) }}</span>
-            </div>
-          </div>
-          <div class="col-12" *ngIf="item.reserve_cours">
-            <div class="alert alert-light border-start border-3 py-2 mt-1" style="border-color:var(--secondary-blue)!important">
-              <strong class="small">Réserve de cours</strong>
-              <div class="row mt-1">
+          <div class="itd-card__body">
+            <div class="row g-3">
+
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Fonds budgétaire</span>
+                  <span class="itd-field__value itd-field__value--accent fw-semibold">
+                    {{ val(item.fonds_budgetaire) }}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Fonds SN – No projet</span>
+                  <span class="itd-field__value">{{ val(item.fonds_sn_projet) }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Projet spécial</span>
+                  <span class="itd-field__value">{{ val(item.projet_special) }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="itd-field">
+                  <span class="itd-field__label">Fournisseur</span>
+                  <span class="itd-field__value">{{ val(item.fournisseur) }}</span>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="itd-field">
+                  <span class="itd-field__label">Source d'information</span>
+                  <span class="itd-field__value">
+                    <a *ngIf="item.source_information; else noLink"
+                       [href]="item.source_information" target="_blank">
+                      <i class="bi bi-box-arrow-up-right me-1"></i>Voir le lien
+                    </a>
+                    <ng-template #noLink>—</ng-template>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Données financières optionnelles -->
+              <ng-container *ngIf="hasFinancialData()">
+                <div class="col-12">
+                  <div class="itd-infoband">
+                    <div class="row g-3">
+                      <div class="col-md-3">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Prix total (CAD)</span>
+                          <span class="itd-field__value fw-semibold" style="color:var(--primary-green)">
+                            {{ item.prix_cad ? '$' + item.prix_cad : '—' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Devise</span>
+                          <span class="itd-field__value">{{ val(item.devise_originale) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Prix devise orig.</span>
+                          <span class="itd-field__value">{{ val(item.prix_devise_originale) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Période couverte</span>
+                          <span class="itd-field__value">{{ val(item.periode_couverte) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Nb de titres inclus</span>
+                          <span class="itd-field__value">{{ val(item.nombre_titres_inclus) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Données électroniques optionnelles -->
+              <ng-container *ngIf="isElectronique()">
                 <div class="col-md-4">
-                  <small class="text-muted d-block">Sigle</small>{{ val(item.reserve_cours_sigle) }}
+                  <div class="itd-field">
+                    <span class="itd-field__label">Nombre d'utilisateurs</span>
+                    <span class="itd-field__value">{{ val(item.nombre_utilisateurs) }}</span>
+                  </div>
                 </div>
                 <div class="col-md-4">
-                  <small class="text-muted d-block">Session</small>{{ val(item.reserve_cours_session) }}
+                  <div class="itd-field">
+                    <span class="itd-field__label">Format PrêtNumérique</span>
+                    <span class="itd-field__value">{{ val(item.format_pret_numerique) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.lien_plateforme">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Lien plateforme</span>
+                    <a [href]="item.lien_plateforme" target="_blank" class="itd-field__value">
+                      <i class="bi bi-box-arrow-up-right me-1"></i>Accéder
+                    </a>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section : Champs spécifiques au formulaire ────── -->
+        <div class="itd-card" *ngIf="hasSpecificData()">
+          <div class="itd-card__header">
+            <i class="bi bi-list-check me-2"></i>{{ item.formulaire_type }}
+            <span class="itd-card__header-sub ms-2">— champs spécifiques</span>
+          </div>
+          <div class="itd-card__body">
+            <div class="row g-3">
+
+              <!-- Modification CCOL -->
+              <ng-container *ngIf="item.formulaire_type === 'Modification CCOL'">
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Numéro OCLC</span>
+                    <span class="itd-field__value font-monospace">{{ val(item.numero_oclc) }}</span>
+                  </div>
                 </div>
                 <div class="col-md-4">
-                  <small class="text-muted d-block">Enseignant</small>{{ val(item.reserve_cours_enseignant) }}
+                  <div class="itd-field">
+                    <span class="itd-field__label">Collection</span>
+                    <span class="itd-field__value">{{ val(item.collection) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Catalogage</span>
+                    <span class="itd-field__value">{{ val(item.catalogage) }}</span>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.precision_demande">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Précision de la demande</span>
+                    <span class="itd-note">{{ item.precision_demande }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Nouvel abonnement -->
+              <ng-container *ngIf="item.formulaire_type === 'Nouvel abonnement'">
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Date début abonnement</span>
+                    <span class="itd-field__value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Type de monographie</span>
+                    <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Collection</span>
+                    <span class="itd-field__value">{{ val(item.collection) }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Nouvel achat unique -->
+              <ng-container *ngIf="item.formulaire_type === 'Nouvel achat unique'">
+                <div class="col-md-3">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Type monographie</span>
+                    <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Format électronique</span>
+                    <span class="itd-field__value">{{ val(item.format_electronique) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Bordereau imprimé</span>
+                    <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Catégorie de dépense</span>
+                    <span class="itd-field__value">{{ val(item.categorie_depense) }}</span>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.reserve_cours">
+                  <div class="itd-infoband itd-infoband--gray">
+                    <div class="itd-infoband__title">
+                      <i class="bi bi-mortarboard me-2"></i>Réserve de cours
+                    </div>
+                    <div class="row mt-2 g-2">
+                      <div class="col-md-4">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Sigle</span>
+                          <span class="itd-field__value">{{ val(item.reserve_cours_sigle) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Session</span>
+                          <span class="itd-field__value">{{ val(item.reserve_cours_session) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="itd-field">
+                          <span class="itd-field__label">Enseignant</span>
+                          <span class="itd-field__value">{{ val(item.reserve_cours_enseignant) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.note_catalogueur_droit">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Note catalogueur droit</span>
+                    <span class="itd-note">{{ item.note_catalogueur_droit }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- PEB Tipasa -->
+              <ng-container *ngIf="item.formulaire_type === 'PEB Tipasa numérique'">
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Type de demande</span>
+                    <span class="itd-field__value">{{ val(item.type_demande_peb) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Référence Tipasa</span>
+                    <span class="itd-field__value font-monospace">{{ val(item.reference_tipasa) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Urgence</span>
+                    <span class="badge" [ngClass]="item.urgence ? 'bg-danger' : 'bg-secondary'">
+                      {{ item.urgence ? 'Oui' : 'Non' }}
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Requête ACQ -->
+              <ng-container *ngIf="item.formulaire_type === 'Requête ACQ'">
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Type de requête</span>
+                    <span class="itd-field__value">{{ val(item.type_requete) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Description</span>
+                    <span class="itd-note">{{ val(item.description_requete) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Action demandée</span>
+                    <span class="itd-note">{{ val(item.action_demandee) }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Springer -->
+              <ng-container *ngIf="item.formulaire_type === 'Springer'">
+                <div class="col-md-3">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Quantité</span>
+                    <span class="itd-field__value fw-semibold fs-5">{{ val(item.quantite) }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Suggestion d'achat -->
+              <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat'">
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Public cible</span>
+                    <span class="itd-field__value">{{ val(item.public_cible) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Recommandation</span>
+                    <span class="badge" [ngClass]="item.recommandation ? 'bg-success' : 'bg-secondary'">
+                      {{ item.recommandation ? 'Oui' : 'Non' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.justification">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Justification</span>
+                    <span class="itd-note">{{ item.justification }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section : Notes ───────────────────────────────── -->
+        <div class="itd-card"
+             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm">
+          <div class="itd-card__header">
+            <i class="bi bi-sticky me-2"></i>Notes &amp; Catalogage
+          </div>
+          <div class="itd-card__body">
+            <div class="row g-3">
+              <div class="col-md-3" *ngIf="item.creation_notice_dtdm !== undefined">
+                <div class="itd-field">
+                  <span class="itd-field__label">Création notice DTDM</span>
+                  <span class="badge" [ngClass]="item.creation_notice_dtdm ? 'bg-success' : 'bg-light text-dark border'">
+                    {{ item.creation_notice_dtdm ? 'Oui' : 'Non' }}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-9"></div>
+              <div class="col-md-6" *ngIf="item.note_dtdm">
+                <div class="itd-field">
+                  <span class="itd-field__label">Note DTDM (Catalogage)</span>
+                  <span class="itd-note">{{ item.note_dtdm }}</span>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="item.note_commentaire">
+                <div class="itd-field">
+                  <span class="itd-field__label">Note / Commentaire bibliothèque</span>
+                  <span class="itd-note">{{ item.note_commentaire }}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-12" *ngIf="item.note_catalogueur_droit">
-            <div class="detail-field mt-2">
-              <span class="detail-label">Note catalogueur droit</span>
-              <span class="detail-note">{{ item.note_catalogueur_droit }}</span>
-            </div>
-          </div>
-        </ng-container>
+        </div>
 
-        <ng-container *ngIf="item.formulaire_type === 'PEB Tipasa numérique'">
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Type de demande</span>
-              <span class="detail-value">{{ val(item.type_demande_peb) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Référence Tipasa</span>
-              <span class="detail-value font-monospace">{{ val(item.reference_tipasa) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Urgence</span>
-              <span class="detail-value">
-                <span class="badge" [ngClass]="item.urgence ? 'bg-danger' : 'bg-secondary'">
-                  {{ item.urgence ? 'Oui' : 'Non' }}
-                </span>
-              </span>
-            </div>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="item.formulaire_type === 'Requête ACQ'">
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Type de requête</span>
-              <span class="detail-value">{{ val(item.type_requete) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Description</span>
-              <span class="detail-note">{{ val(item.description_requete) }}</span>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="detail-field">
-              <span class="detail-label">Action demandée</span>
-              <span class="detail-note">{{ val(item.action_demandee) }}</span>
-            </div>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="item.formulaire_type === 'Springer'">
-          <div class="col-md-3">
-            <div class="detail-field">
-              <span class="detail-label">Quantité</span>
-              <span class="detail-value fw-semibold">{{ val(item.quantite) }}</span>
-            </div>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat'">
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Public cible</span>
-              <span class="detail-value">{{ val(item.public_cible) }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="detail-field">
-              <span class="detail-label">Recommandation</span>
-              <span class="detail-value">
-                <span class="badge" [ngClass]="item.recommandation ? 'bg-success' : 'bg-secondary'">
-                  {{ item.recommandation ? 'Oui' : 'Non' }}
-                </span>
-              </span>
-            </div>
-          </div>
-          <div class="col-12" *ngIf="item.justification">
-            <div class="detail-field">
-              <span class="detail-label">Justification</span>
-              <span class="detail-note">{{ item.justification }}</span>
-            </div>
-          </div>
-        </ng-container>
-
-      </div>
+      </main>
     </div>
-
-    <!-- Métadonnées -->
-    <div class="row mb-4 mt-2">
-      <div class="col-md-6">
-        <small class="text-muted">Créé le : {{ item.date_creation | date:'yyyy-MM-dd HH:mm' }}</small>
-      </div>
-      <div class="col-md-6 text-end">
-        <small class="text-muted">
-          Modifié le : {{ item.date_modification | date:'yyyy-MM-dd HH:mm' }}
-          <span *ngIf="item.utilisateur_modification"> · {{ item.utilisateur_modification }}</span>
-        </small>
-      </div>
-    </div>
-
   </div>
-
-  <!-- Item introuvable -->
-  <div *ngIf="!loading && !item" class="text-center py-5">
-    <p class="text-muted">Item introuvable.</p>
-    <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">Retour</button>
-  </div>
-
 </div>

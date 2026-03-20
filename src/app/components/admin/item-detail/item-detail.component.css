@@ -1,140 +1,326 @@
-/* =======================================================
-   SECTIONS
-======================================================= */
+/* item-detail.component.css
+   Layout sidebar + cartes — variables CSS du projet
+   ─────────────────────────────────────────────────────────────────────── */
 
-.detail-section {
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  padding: 1rem 1.25rem 0.5rem;
-  margin-bottom: 1rem;
-  background: #ffffff;
+/* ── Barre de titre ──────────────────────────────────────────────── */
+.itd-topbar {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         .85rem 1.5rem;
+  background:      var(--white, #fff);
+  border-bottom:   2px solid var(--light-gray, #E7EBEE);
+  position:        sticky;
+  top:             0;
+  z-index:         100;
+  gap:             .75rem;
+  flex-wrap:       wrap;
+  margin-top:      1rem;
 }
 
-.detail-section-title {
-  font-size: 0.85rem;
-  font-weight: 700;
+.itd-topbar__left {
+  display:     flex;
+  align-items: center;
+  gap:         .75rem;
+  min-width:   0;
+  flex:        1;
+}
+
+.itd-back-btn {
+  background:      none;
+  border:          1px solid var(--light-gray, #E7EBEE);
+  border-radius:   8px;
+  width:           34px;
+  height:          34px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           var(--text-gray, #607386);
+  cursor:          pointer;
+  flex-shrink:     0;
+  transition:      background .15s, color .15s;
+}
+.itd-back-btn:hover {
+  background: var(--extra-light-blue, #E5F0F8);
+  color:      var(--secondary-blue, #00407F);
+}
+
+.itd-topbar__meta { min-width: 0; flex: 1; }
+
+.itd-topbar__id {
+  font-size:      .72rem;
+  font-weight:    600;
+  color:          var(--text-gray, #607386);
+  letter-spacing: .04em;
+}
+
+.itd-topbar__title {
+  font-family:   'Lora', Georgia, serif;
+  font-size:     1.1rem;
+  font-weight:   600;
+  color:         var(--primary-blue, #0b113a);
+  margin:        0;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+}
+
+.itd-topbar__actions {
+  display:     flex;
+  gap:         .5rem;
+  flex-shrink: 0;
+}
+
+/* ── Layout principal ────────────────────────────────────────────── */
+.itd-layout {
+  display:             grid;
+  grid-template-columns: 240px 1fr;
+  gap:                 1.25rem;
+  margin-top:5px;
+  align-items:         start;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+.itd-sidebar {
+  background:    var(--white, #fff);
+  border:        1px solid var(--light-gray, #E7EBEE);
+  border-radius: 10px;
+  padding:       1rem;
+  position:      sticky;
+  top:           70px;
+}
+
+.itd-sidebar__block   { margin-bottom: .85rem; }
+.itd-sidebar__meta    { margin-bottom: .5rem; }
+
+.itd-sidebar__label {
+  font-size:      .65rem;
+  font-weight:    700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #2c3e50;
-  border-bottom: 1px solid #e5e5e5;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  letter-spacing: .05em;
+  color:          var(--text-gray, #607386);
+  margin-bottom:  .25rem;
 }
 
-/* =======================================================
-   CHAMPS
-======================================================= */
-
-.detail-field {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.detail-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-}
-
-.detail-value {
-  font-size: 0.92rem;
+.itd-sidebar__value {
+  font-size:  .87rem;
+  color:      var(--medium-gray, #37424D);
   font-weight: 500;
-  color: #212529;
   word-break: break-word;
 }
-
-.detail-note {
-  background: #f8f9fa;
-  border-left: 3px solid #ced4da;
-  border-radius: 2px;
-  padding: 0.6rem 0.75rem;
-  font-size: 0.88rem;
-  color: #343a40;
-  white-space: pre-line;
-  display: block;
-}
-
-/* =======================================================
-   BADGES – STATUT & PRIORITÉ
-   !important nécessaire pour surcharger Bootstrap .badge
-======================================================= */
-
-.badge-statut,
-.badge-priorite {
-  display: inline-block !important;
-  padding: 0.25em 0.6em !important;
-  border-radius: 3px !important;
-  font-size: 0.72rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
-}
-
-/* ===== Statut ===== */
-
-.badge-soumis    { background: #e9f5ec !important; color: #1e5631 !important; }
-.badge-en-cours  { background: #fff8e1 !important; color: #8a6d1f !important; }
-.badge-complete  { background: #e7f1ff !important; color: #1b4f9c !important; }
-.badge-annule    { background: #fdecea !important; color: #8b1c1c !important; }
-.badge-attente   { background: #f1f3f5 !important; color: #495057 !important; }
-
-/* ===== Priorité ===== */
-
-.badge-urgent      { background: #fdecea !important; color: #8b1c1c !important; }
-.badge-prioritaire { background: #fff8e1 !important; color: #8a6d1f !important; }
-.badge-regulier    { background: #f1f3f5 !important; color: #495057 !important; }
-
-/* =======================================================
-   TYPOGRAPHIE GÉNÉRALE
-======================================================= */
-
-h1 {
-  color: #1f2d3d;
+.itd-sidebar__value--accent {
+  color:       var(--secondary-blue, #00407F);
   font-weight: 600;
 }
 
-/* =======================================================
-   LIENS
-======================================================= */
-
-a {
-  color: #0d6efd;
-  text-decoration: none;
-  font-weight: 500;
+.itd-sidebar__divider {
+  border:     none;
+  border-top: 1px solid var(--light-gray, #E7EBEE);
+  margin:     .7rem 0;
 }
 
-a:hover {
-  text-decoration: underline;
+.itd-badge-lg {
+  display:    inline-block !important;
+  font-size:  .77rem !important;
+  padding:    .35em .7em !important;
+  min-width:  80px;
+  text-align: center;
 }
 
-/* =======================================================
-   SPINNER / LOADING
-======================================================= */
-
-.spinner-border {
-  width: 2rem;
-  height: 2rem;
+/* ── Zone principale ─────────────────────────────────────────────── */
+.itd-main {
+  display:        flex;
+  flex-direction: column;
+  gap:            1rem;
+  min-width:      0;   /* évite débordement en grid */
 }
 
-/* =======================================================
-   MÉTADONNÉES BAS DE PAGE
-======================================================= */
-
-small.text-muted {
-  font-size: 0.75rem;
-  color: #6c757d !important;
+/* ── Cartes ──────────────────────────────────────────────────────── */
+.itd-card {
+  background:    var(--white, #fff);
+  border:        1px solid var(--light-gray, #E7EBEE);
+  border-radius: 10px;
+  overflow:      hidden;
 }
 
-/* =======================================================
-   SÉPARATEURS & GROUPES
-======================================================= */
+.itd-card__header {
+  display:        flex;
+  align-items:    center;
+  padding:        .6rem 1rem;
+  background:     var(--extra-light-blue, #E5F0F8);
+  border-bottom:  1px solid var(--light-gray, #E7EBEE);
+  font-size:      .78rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color:          var(--secondary-blue, #00407F);
+  flex-wrap:      wrap;
+  gap:            .3rem;
+}
+.itd-card__header i { font-size: .92rem; }
 
-.detail-divider {
-  border: none;
-  border-top: 1px solid #e5e5e5;
-  margin: 0.25rem 0 0.75rem;
+.itd-card__header-sub {
+  font-weight:    400;
+  text-transform: none;
+  letter-spacing: 0;
+  color:          var(--text-gray, #607386);
+  font-size:      .76rem;
+}
+
+.itd-card__body { padding: 1rem 1rem .75rem; }
+
+/* ── Champs ──────────────────────────────────────────────────────── */
+.itd-field {
+  display:        flex;
+  flex-direction: column;
+  gap:            .18rem;
+}
+
+.itd-field__label {
+  font-size:      .65rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color:          var(--text-gray, #607386);
+}
+
+.itd-field__value {
+  font-size:  .88rem;
+  color:      var(--medium-gray, #37424D);
+  word-break: break-word;
+}
+.itd-field__value--accent { color: var(--secondary-blue, #00407F); font-weight: 600; }
+
+/* ── Note ────────────────────────────────────────────────────────── */
+.itd-note {
+  background:    var(--extra-light-blue, #E5F0F8);
+  border-left:   3px solid var(--light-blue, #2380D1);
+  border-radius: 0 6px 6px 0;
+  padding:       .5rem .75rem;
+  font-size:     .87rem;
+  color:         var(--medium-gray, #37424D);
+  white-space:   pre-line;
+  display:       block;
+  line-height:   1.55;
+}
+
+/* ── Bande d'info ────────────────────────────────────────────────── */
+.itd-infoband {
+  background:    var(--light-gray, #E7EBEE);
+  border-radius: 8px;
+  padding:       .8rem 1rem;
+}
+.itd-infoband--blue {
+  background:  var(--extra-light-blue, #E5F0F8);
+  border-left: 3px solid var(--secondary-blue, #00407F);
+}
+
+.itd-infoband--gray {
+  background:  var(--light-gray, #E7EBEE);
+  border-left: 3px solid var(--dark-gray, #343a40);
+}
+.itd-infoband__title {
+  font-size:      .78rem;
+  font-weight:    700;
+  color:          var(--secondary-blue, #00407F);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ── Liens ───────────────────────────────────────────────────────── */
+a { color: var(--secondary-blue, #00407F); text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; }
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════════ */
+
+/* ── Tablette (≤ 991px) : sidebar au-dessus en bandeau horizontal ── */
+@media (max-width: 991px) {
+  .itd-layout {
+    grid-template-columns: 1fr;
+    padding:               1rem;
+    gap:                   1rem;
+  }
+
+  /* Sidebar devient une rangée horizontale de badges/infos */
+  .itd-sidebar {
+    position:       static;
+    display:        flex;
+    flex-wrap:      wrap;
+    gap:            .6rem 1.25rem;
+    padding:        .75rem 1rem;
+    border-radius:  10px;
+  }
+
+  .itd-sidebar__block,
+  .itd-sidebar__meta { margin-bottom: 0; }
+
+  /* Masquer les séparateurs en mode horizontal */
+  .itd-sidebar__divider { display: none; }
+
+  /* Label + valeur en colonne compacte */
+  .itd-sidebar__block,
+  .itd-sidebar__meta {
+    display:        flex;
+    flex-direction: column;
+    min-width:      100px;
+  }
+}
+
+/* ── Mobile (≤ 767px) : tout en colonne, topbar simplifiée ──────── */
+@media (max-width: 767px) {
+  .itd-topbar {
+    padding:    .65rem .85rem;
+    margin-top: .5rem;
+    gap:        .5rem;
+  }
+
+  .itd-topbar__title {
+    font-size: .95rem;
+    /* Permet le retour à la ligne si le titre est très long */
+    white-space: normal;
+    overflow:    visible;
+    text-overflow: unset;
+  }
+
+  /* Actions passent sous le titre sur très petits écrans */
+  .itd-topbar__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .itd-layout {
+    padding: .75rem .85rem;
+    gap:     .75rem;
+  }
+
+  /* Sidebar : grille 2 colonnes */
+  .itd-sidebar {
+    display:               grid;
+    grid-template-columns: 1fr 1fr;
+    gap:                   .6rem 1rem;
+    padding:               .75rem;
+  }
+
+  .itd-sidebar__divider  { display: none; }
+
+  .itd-card__body { padding: .85rem .85rem .65rem; }
+
+  /* Champs : 1 colonne sur mobile — écraser les col-md-* Bootstrap */
+  .itd-card__body .row > [class*="col-md-"] {
+    flex:      0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* ── Très petit mobile (≤ 480px) ────────────────────────────────── */
+@media (max-width: 480px) {
+  .itd-topbar { margin-top: 0; }
+
+  .itd-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .itd-topbar__actions .btn { font-size: .78rem; padding: .3rem .6rem; }
 }
