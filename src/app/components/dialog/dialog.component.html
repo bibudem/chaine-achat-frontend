@@ -1,53 +1,61 @@
 <!-- dialog.component.html -->
-<div class="modal fade" id="appDialog" tabindex="-1" aria-labelledby="dialogTitle" aria-hidden="true" 
-     [class.show]="isVisible" [style.display]="isVisible ? 'block' : 'none'">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header" [ngClass]="{
-        'bg-success text-white': config?.type === 'success',
-        'bg-danger text-white': config?.type === 'error',
-        'bg-warning text-dark': config?.type === 'warning',
-        'bg-info text-white': config?.type === 'info',
-        'bg-primary text-white': config?.type === 'confirm'
+<div *ngIf="isVisible" class="dlg-backdrop" (click)="onCancel()">
+  <div class="dlg-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-labelledby]="'dlg-title'">
+
+    <!-- Barre colorée type -->
+    <div class="dlg-bar" [ngClass]="{
+      'dlg-bar--success': config?.type === 'success',
+      'dlg-bar--error':   config?.type === 'error',
+      'dlg-bar--warning': config?.type === 'warning',
+      'dlg-bar--info':    config?.type === 'info',
+      'dlg-bar--confirm': config?.type === 'confirm'
+    }"></div>
+
+    <!-- Header -->
+    <div class="dlg-header">
+      <div class="dlg-icon-wrap" [ngClass]="{
+        'dlg-icon-wrap--success': config?.type === 'success',
+        'dlg-icon-wrap--error':   config?.type === 'error',
+        'dlg-icon-wrap--warning': config?.type === 'warning',
+        'dlg-icon-wrap--info':    config?.type === 'info',
+        'dlg-icon-wrap--confirm': config?.type === 'confirm'
       }">
-        <h5 class="modal-title" id="dialogTitle">
-          <i class="bi me-2" [ngClass]="{
-            'bi-check-circle': config?.type === 'success',
-            'bi-x-circle': config?.type === 'error',
-            'bi-exclamation-triangle': config?.type === 'warning',
-            'bi-info-circle': config?.type === 'info',
-            'bi-question-circle': config?.type === 'confirm'
-          }"></i>
-          {{ config?.title }}
-        </h5>
-        <button type="button" class="btn-close" 
-                [class.btn-close-white]="config?.type !== 'warning'"
-                (click)="onCancel()" aria-label="Close"></button>
+        <i class="bi" [ngClass]="{
+          'bi-check-lg':            config?.type === 'success',
+          'bi-x-lg':                config?.type === 'error',
+          'bi-exclamation-lg':      config?.type === 'warning',
+          'bi-info-lg':             config?.type === 'info',
+          'bi-question-lg':         config?.type === 'confirm'
+        }"></i>
       </div>
-      <div class="modal-body">
-        <p class="mb-0">{{ config?.message }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" 
-                *ngIf="config?.type === 'confirm'" 
-                (click)="onCancel()">
-          {{ config?.cancelText || 'Annuler' }}
-        </button>
-        <button type="button" class="btn" 
-                [ngClass]="{
-                  'btn-success': config?.type === 'success',
-                  'btn-danger': config?.type === 'error',
-                  'btn-warning': config?.type === 'warning',
-                  'btn-info': config?.type === 'info',
-                  'btn-primary': config?.type === 'confirm'
-                }"
-                (click)="onConfirm()">
-          {{ config?.confirmText || 'OK' }}
-        </button>
-      </div>
+      <h5 class="dlg-title" id="dlg-title">{{ config?.title }}</h5>
+      <button class="dlg-close" (click)="onCancel()" aria-label="Fermer">
+        <i class="bi bi-x"></i>
+      </button>
     </div>
+
+    <!-- Corps -->
+    <div class="dlg-body">
+      <p class="dlg-message">{{ config?.message }}</p>
+    </div>
+
+    <!-- Pied -->
+    <div class="dlg-footer">
+      <button *ngIf="config?.type === 'confirm'"
+              class="btn btn-outline-secondary"
+              (click)="onCancel()">
+        {{ config?.cancelText || 'Annuler' }}
+      </button>
+      <button class="btn" (click)="onConfirm()" [ngClass]="{
+        'btn-success':         config?.type === 'success',
+        'btn-danger':          config?.type === 'error',
+        'btn-warning':         config?.type === 'warning',
+        'btn-info':            config?.type === 'info',
+        'btn-primary':         config?.type === 'confirm'
+      }">
+        {{ config?.confirmText || 'OK' }}
+      </button>
+    </div>
+
   </div>
 </div>
-
-<!-- Backdrop -->
-<div class="modal-backdrop fade" [class.show]="isVisible" *ngIf="isVisible"></div>

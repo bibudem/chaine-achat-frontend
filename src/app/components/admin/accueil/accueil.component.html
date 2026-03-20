@@ -176,10 +176,10 @@
             </div>
             <div class="hbar-axis">
               <span>0</span>
-              <span>{{ formatNumber(Math.round((topDemandeurs[0]?.count ?? 0) / 4)) }}</span>
-              <span>{{ formatNumber(Math.round((topDemandeurs[0]?.count ?? 0) / 2)) }}</span>
-              <span>{{ formatNumber(Math.round((topDemandeurs[0]?.count ?? 0) * 3 / 4)) }}</span>
-              <span>{{ formatNumber(topDemandeurs[0]?.count ?? 0) }}</span>
+             <span>{{ formatNumber(Math.round(topDemandeurs[0].count / 4)) }}</span>
+             <span>{{ formatNumber(Math.round(topDemandeurs[0].count / 2)) }}</span>
+             <span>{{ formatNumber(Math.round(topDemandeurs[0].count * 3 / 4)) }}</span>
+             <span>{{ formatNumber(topDemandeurs[0].count) }}</span>
             </div>
           </div>
         </ng-container>

@@ -262,31 +262,69 @@
     "dir-technologies-tel": "514-343-2080",
     "dir-technologies-courriel": "service@bib.umontreal.ca"
   },
-  "importation": {
-    "titre": "Importation des données",
-    "excel-titre": "Importer les données statistiques à partir d'un fichier csv",
-    "btn-csv": "Mise à jour des données InCites",
-    "btn-excel": "Mise à jour des données statistiques",
-    "titre-csv": "Mise à jour des données statistiques InCites",
-    "confirmer-text": "Êtes-vous certain de vouloir importer les données selon les critères sélectionnés ?",
-    "form-description": "Choisissez vos filtres si besoin. Les champs avec une étoile sont obligatoires.",
-    "form-description-csv-monographies": "Les entêtes considérées seront :  « ISBN »,« EISBN »,« titre », « publicationEnPapier », « publicationEnLigne », « type », « categorie », « programme », « secteur », « fond », « noteFond », « prix », « bibliotheque », « periodeBudgetaire », « selectionDate », « auteur », « editeur », « edition », « sujet », « DOI », « nbrUsagers », « nbrExemplaire ». ",
-    "form-description-csv-films": "Les entêtes considérées seront: « kanopyID »,« titre », « programme », « debutLicence », « finLicence », « annee », « realisateur », « production », « sujet », « langue ».",
-    "form-description-csv-prets": "Les entêtes considérées seront: « titre », « dateAcquisition », « auteur », « editeur », « format », « prix », « exemplairesActifs », « reservation », « prets », « nombrePretAutorises », « nombrePretSimulAutorises », « dateExpiration », « dateEpuisement ».",
-    "result-import-csv": "L'importation est terminée",
-    "resultat-vide": "Attention! L'importation est vide, veuillez vérifier les journaux pour avoir plus des détails.",
-    "csv-update-titre": "Mise à jour des données statistiques",
-    "csv-send": "Envoyer",
-    "titre-resultat": "L'importation est fini, vous pouvez consulter les résultats par type de rapport",
-    "text-total": "Vous avez importé  ",
-    "afficher-resultats": "Affichage de résultat brute",
-    "enregistrements": "enregistrements",
-    "tous-plateforme": "Toutes les plateformes",
-    "attendre": "Veuillez patienter ...",
-    "csv-import-provisoire": "Veuillez vérifier les données dans le résultat provisoire.",
-    "result-update": "Vous avez fait une demande de la mise à jour des données statistiques dont les délais peuvent être très long. Vous serez avisé par courriel quand le processus sera fini. Pour des problèmes techniques, veuillez nous écrire au service@bib.umontreal.ca ",
-    "demande-importation": "Vous avez fait une demande d'importation des données SUSHI dont les délais peuvent être très long. Vous serez avisé par courriel quand le processus sera fini. Pour des problèmes techniques, veuillez nous écrire au service@bib.umontreal.ca ",
-    "message-brute":"Les résultat brute peuvent contenir une grande quantité de données, nous vous suggérons de choisir une plateforme dans le filtre. "
+  "import": {
+    "titre": "Import de données",
+    "description": "Insérer des demandes en lot depuis un fichier Excel",
+    "btn-retour": "Retour",
+    "stepper": {
+      "type": "Type",
+      "format": "Format",
+      "fichier": "Fichier",
+      "apercu": "Aperçu",
+      "resultat": "Résultat"
+    },
+    "etape1": {
+      "hint": "Sélectionnez le type de formulaire correspondant à vos données :"
+    },
+    "etape2": {
+      "colonnes-titre": "Colonnes du fichier Excel",
+      "btn-modele": "Télécharger le modèle",
+      "regle-format": ".xlsx ou .xls — max 10 Mo",
+      "regle-entetes": "1re ligne = en-têtes de colonnes",
+      "regle-booleens": "Booléens :",
+      "regle-dates": "Dates :",
+      "col-obligatoires": "Colonnes obligatoires",
+      "col-facultatives": "Colonnes facultatives"
+    },
+    "etape3": {
+      "deposer": "Déposer le fichier",
+      "drag-text": "Glissez votre fichier ici ou",
+      "drag-link": "cliquez pour parcourir",
+      "drag-hint": ".xlsx, .xls — Max 10 Mo",
+      "btn-supprimer": "Supprimer",
+      "lecture": "Lecture du fichier…",
+      "analyse": "Analyse des colonnes et des données",
+      "btn-previsualiser": "Prévisualiser",
+      "btn-lecture": "Lecture en cours…"
+    },
+    "etape4": {
+      "titre": "Aperçu des données",
+      "lignes-detectees": "ligne(s) détectée(s)",
+      "lignes-incompletes": "ligne(s) incomplète(s)",
+      "col-ok": "Toutes les colonnes obligatoires sont remplies",
+      "legende-obligatoire": "Colonne obligatoire",
+      "legende-manquante": "Valeur manquante (obligatoire)",
+      "btn-modifier": "Modifier le fichier",
+      "btn-confirmer": "Confirmer et importer",
+      "btn-import-cours": "Import en cours…",
+      "lignes": "lignes"
+    },
+    "etape5": {
+      "btn-voir-items": "Voir les items",
+      "btn-nouvel": "Nouvel import",
+      "lignes-erreur": "Lignes en erreur",
+      "reussite": "% de réussite",
+      "inserees": "insérée(s)",
+      "total": "total",
+      "erreurs": "erreur(s)"
+    },
+    "erreur": {
+      "format": "Seuls les fichiers .xlsx et .xls sont acceptés.",
+      "taille": "Le fichier dépasse la limite de 10 Mo.",
+      "vide": "Le fichier ne contient pas de données après la ligne d'en-tête.",
+      "lecture": "Impossible de lire le fichier Excel.",
+      "col-manquantes": "Colonnes obligatoires manquantes :"
+    }
   },
   "logs":{
     "menu-logs": "Les journaux d'importation",

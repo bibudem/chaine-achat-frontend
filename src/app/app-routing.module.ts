@@ -17,6 +17,7 @@ import { UsagerHomeComponent } from './components/usager/usager-home/usager-home
 import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
 import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { UserGuard } from './services/user-guard.service';
+import { ImportComponent } from './components/admin/import/import.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'processus', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'processus/add', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'rapport', component: RapportsComponent },
+  { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'lst-fournisseurs', component: LstFournisseursComponent },
   // ── Nouvelle section usager ──
   {

@@ -59,6 +59,7 @@ import { SuggestionPublicComponent } from './components/usager/suggestion-public
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
+import { ImportComponent } from './components/admin/import/import.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { ItemDetailComponent } from './components/admin/item-detail/item-detail.
     SuggestionPublicComponent,
     UsagerHomeComponent,
     LstFournisseursComponent,
-    ItemDetailComponent
+    ItemDetailComponent,
+    ImportComponent
   ],
     imports: [
         RouterModule,

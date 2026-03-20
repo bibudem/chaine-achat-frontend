@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HomeService, DashboardStats, GraphData, Period } from '../../../services/home.service';
+import { HomeService, DashboardStats, GraphData, Period, ApiResponse, AllHomeData } from '../../../services/home.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -32,7 +32,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   set selectedPeriod(value: Period) {
     if (value !== this._selectedPeriod) {
       this._selectedPeriod = value;
-      this.loadAllData();   // ← recharge automatiquement au changement
+      this.loadAllData();
     }
   }
 
@@ -55,9 +55,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     CYCLE DE VIE
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   ngOnInit(): void {
     this.loadAllData();
   }
@@ -70,7 +67,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
      CHARGEMENT DES DONNÉES
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   loadAllData(): void {
-    // Annule toute requête en cours
     this.subs.unsubscribe();
     this.subs = new Subscription();
 
@@ -79,40 +75,64 @@ export class AccueilComponent implements OnInit, OnDestroy {
     this.hasError           = false;
 
     const sub = this.homeService.getAllHomeData(this._selectedPeriod).subscribe({
-      next: (res) => {
-        const { dashboard, graph } = res?.data ?? {};
+      next: (res: ApiResponse<AllHomeData>) => {
+        // ── LOG DIAGNOSTIC ─────────────────────────────────────────────
+        console.group('📦 /home/all — réponse complète');
+        console.log('res.success   :', res?.success);
+        console.log('res.data      :', res?.data);
+        console.log('dashboard     :', res?.data?.dashboard);
+        console.log('dashboard.success:', res?.data?.dashboard?.success);
+        console.log('dashboard.data   :', res?.data?.dashboard?.data);
+        console.log('graph         :', res?.data?.graph);
+        console.groupEnd();
 
-        if (dashboard?.success && dashboard.data) {
-          this.dashboardStats = dashboard.data;
-        } else {
-          this.handleError('Données dashboard invalides');
+        // ── Dashboard ──────────────────────────────────────────────────
+        const dashboard = res?.data?.dashboard;
+
+        if (!dashboard) {
+          this.hasError     = true;
+          this.errorMessage = 'Réponse dashboard absente — vérifiez le backend /home/all';
+          this.isLoadingDashboard = false;
+          this.isLoadingGraphs    = false;
+          return;
         }
 
+        // Le backend peut retourner success:false avec un message d'erreur
+        if (!dashboard.success) {
+          this.hasError     = true;
+          this.errorMessage = dashboard.message || dashboard.error || 'Erreur backend dashboard';
+          this.isLoadingDashboard = false;
+          this.isLoadingGraphs    = false;
+          return;
+        }
+
+        if (dashboard.data) {
+          this.dashboardStats = dashboard.data;
+          console.log('✅ dashboardStats:', this.dashboardStats);
+        }
+
+        // ── Graph ──────────────────────────────────────────────────────
+        const graph = res?.data?.graph;
         if (graph?.success && graph.data) {
           this.graphData = graph.data;
         }
-      },
-      error: (err) => {
-        console.error('❌ Erreur chargement dashboard:', err);
-        this.handleError(err.message || 'Erreur de connexion au serveur');
-      },
-      complete: () => {
+
         this.isLoadingDashboard = false;
         this.isLoadingGraphs    = false;
+      },
+      error: (err) => {
+        console.error('❌ Erreur HTTP /home/all:', err);
+        this.handleError(err.message || 'Erreur de connexion au serveur');
       }
     });
 
     this.subs.add(sub);
   }
 
-  /* Bouton rafraîchir manuel */
   refreshData(): void {
-    window.location.reload();
+    this.loadAllData();
   }
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     NAVIGATION
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   navigateTo(path: string): void {
     this.router.navigate([path]);
   }
@@ -134,7 +154,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return this.calculatePercentage(this.totals.en_attente, this.totals.total_items);
   }
 
-  /* Label lisible de la période active */
   get periodLabel(): string {
     switch (this._selectedPeriod) {
       case '30days': return '30 derniers jours';
@@ -156,32 +175,18 @@ export class AccueilComponent implements OnInit, OnDestroy {
   }
 
   getPriorityColor(priority: string): string {
-
     if (!priority) return '#607386';
-
     const p = priority.toLowerCase().trim();
-
     switch (p) {
-
-      case 'urgent':
-        return '#F04E24';   // rouge
-      
-      case 'prioritaire':
-      case 'Prioritaire':
-        return '#52B782';
-
+      case 'urgent':         return '#F04E24';
+      case 'prioritaire':    return '#52B782';
       case 'régulier':
-      case 'regulier':
-        return '#2178C4';   // bleu foncé
-
+      case 'regulier':       return '#2178C4';
       case 'non spécifiée':
       case 'non specifiee':
       case 'non spécifié':
-      case 'non specifie':
-        return '#FFE8AC';   // jaune
-
-      default:
-        return '#7A8DA0';   // gris fallback
+      case 'non specifie':   return '#FFE8AC';
+      default:               return '#7A8DA0';
     }
   }
 
@@ -226,32 +231,17 @@ export class AccueilComponent implements OnInit, OnDestroy {
     };
   }
 
- generateDonutGradient(): string {
-
-    if (!this.byPriority?.length) {
-      return '#e7ebee';
-    }
-
-    const total = this.byPriority
-      .reduce((sum, p) => sum + (p.count || 0), 0);
-
+  generateDonutGradient(): string {
+    if (!this.byPriority?.length) return '#e7ebee';
+    const total = this.byPriority.reduce((sum, p) => sum + (p.count || 0), 0);
     if (!total) return '#e7ebee';
 
     let cumulative = 0;
-
     const segments = this.byPriority.map((p, index) => {
-
-      const value = p.count || 0;
-      const percentage = (value / total) * 100;
-
+      const percentage = (p.count || 0) / total * 100;
       const start = cumulative;
       cumulative += percentage;
-
-      // Dernier segment force 100% pour éviter trou blanc
-      const end = index === this.byPriority.length - 1
-        ? 100
-        : cumulative;
-
+      const end = index === this.byPriority.length - 1 ? 100 : cumulative;
       return `${this.getPriorityColor(p.priorite)} ${start}% ${end}%`;
     });
 

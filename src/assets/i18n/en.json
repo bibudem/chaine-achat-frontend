@@ -183,32 +183,69 @@
     "liste-statistiques": "List of statistics",
     "liste-prix": "List of prices"
   },
-  "importation": {
-    "titre": "Importing data",
-    "sushi-titre": "Import via the SUSHI tool",
-    "btn-csv": "Update via csv",
-    "btn-excel": "Update statistics",
-    "csv-titre": "Updating statistical data via csv",
-    "excel-titre": "Import statistical data from a prepared file.",
-    "confirmer-text": "Are you sure you want to import the data according to your chosen criteria?",
-    "form-description": "Choose your filters if necessary. Fields with a star are required.",
-    "form-description-csv": "Please check the data in the principal result",
-    "form-description-excel": "The headers considered will be: « Plateforme », « Titre », « ISSN », « eISSN », « Téléchargements », « Tél. uniques », « Refus », « JR5-COURANT », « JR5-COURANT », « JR5-RETRO ». Please check the data in the provisional result.",
-    "result-import-csv": "Import is finished",
-    "csv-update-titre": "Updating statistical data",
-    "titre-resultat": "SUSHI import is finished, please choose your following actions ",
-    "resultat-vide": "Warning! The import is empty, please check the logs for more details.",
-    "text-total": "You imported ",
-    "enregistrements": "recordings",
-    "tous-plateforme": "All platforms",
-    "attendre": "Please wait ...",
-    "rapportJ1": "Results for report J1",
-    "rapportJ2": "Results for report J2",
-    "rapportJ4": "Results for report J4",
-    "mis-a-jour-statistiques": "Updating statistical data",
-    "statistique-total": "You have updated ",
-    "csv-import-provisoire": "Provisional result",
-    "result-update": "You have updated the statistical data for: "
+ "import": {
+    "titre": "Data Import",
+    "description": "Insert requests in bulk from an Excel file",
+    "btn-retour": "Back",
+    "stepper": {
+      "type": "Type",
+      "format": "Format",
+      "fichier": "File",
+      "apercu": "Preview",
+      "resultat": "Result"
+    },
+    "etape1": {
+      "hint": "Select the form type matching your data:"
+    },
+    "etape2": {
+      "colonnes-titre": "Excel file columns",
+      "btn-modele": "Download template",
+      "regle-format": ".xlsx or .xls — max 10 MB",
+      "regle-entetes": "1st row = column headers",
+      "regle-booleens": "Booleans:",
+      "regle-dates": "Dates:",
+      "col-obligatoires": "Required columns",
+      "col-facultatives": "Optional columns"
+    },
+    "etape3": {
+      "deposer": "Drop file",
+      "drag-text": "Drag your file here or",
+      "drag-link": "click to browse",
+      "drag-hint": ".xlsx, .xls — Max 10 MB",
+      "btn-supprimer": "Remove",
+      "lecture": "Reading file…",
+      "analyse": "Analyzing columns and data",
+      "btn-previsualiser": "Preview",
+      "btn-lecture": "Reading…"
+    },
+    "etape4": {
+      "titre": "Data Preview",
+      "lignes-detectees": "row(s) detected",
+      "lignes-incompletes": "incomplete row(s)",
+      "col-ok": "All required columns are filled",
+      "legende-obligatoire": "Required column",
+      "legende-manquante": "Missing value (required)",
+      "btn-modifier": "Edit file",
+      "btn-confirmer": "Confirm and import",
+      "btn-import-cours": "Importing…",
+      "lignes": "rows"
+    },
+    "etape5": {
+      "btn-voir-items": "View items",
+      "btn-nouvel": "New import",
+      "lignes-erreur": "Error rows",
+      "reussite": "% success",
+      "inserees": "inserted",
+      "total": "total",
+      "erreurs": "error(s)"
+    },
+    "erreur": {
+      "format": "Only .xlsx and .xls files are accepted.",
+      "taille": "File exceeds the 10 MB limit.",
+      "vide": "File contains no data after the header row.",
+      "lecture": "Unable to read the Excel file.",
+      "col-manquantes": "Missing required columns:"
+    }
   },
   "rapport":{
     "titre-periodique": "Periodicals report",

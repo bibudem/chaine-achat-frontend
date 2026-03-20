@@ -1,0 +1,364 @@
+<!-- import.component.html -->
+<div class="container-fluid p-2 mt-3">
+
+  <!-- ── HEADER ─────────────────────────────────────────────── -->
+  <div class="row mb-4 mt-2">
+    <div class="col-md-12 mt-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-1">{{ 'import.titre' | translate }}</h1>
+          <p class="text-muted mb-0">{{ 'import.description' | translate }}</p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-secondary" (click)="navigateTo('/items')">
+            <i class="bi bi-arrow-left me-1"></i>{{ 'import.btn-retour' | translate }}
+          </button>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+
+  <!-- ── ERREUR GLOBALE ─────────────────────────────────────── -->
+  <div *ngIf="hasError" class="alert alert-danger alert-dismissible db-alert" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="hasError = false"></button>
+  </div>
+
+  <!-- ── STEPPER (5 étapes) ─────────────────────────────────── -->
+  <div class="imp-stepper">
+
+    <div class="imp-step" [class.imp-step--active]="step === 'select'" [class.imp-step--done]="stepIndex > 1">
+      <div class="imp-step__num"><span *ngIf="stepIndex <= 1">1</span><i *ngIf="stepIndex > 1" class="bi bi-check"></i></div>
+      <span class="imp-step__lbl">{{ 'import.stepper.type' | translate }}</span>
+    </div>
+    <div class="imp-step__line"></div>
+
+    <div class="imp-step" [class.imp-step--active]="step === 'notice'" [class.imp-step--done]="stepIndex > 2">
+      <div class="imp-step__num"><span *ngIf="stepIndex <= 2">2</span><i *ngIf="stepIndex > 2" class="bi bi-check"></i></div>
+      <span class="imp-step__lbl">{{ 'import.stepper.format' | translate }}</span>
+    </div>
+    <div class="imp-step__line"></div>
+
+    <div class="imp-step" [class.imp-step--active]="step === 'upload'" [class.imp-step--done]="stepIndex > 3">
+      <div class="imp-step__num"><span *ngIf="stepIndex <= 3">3</span><i *ngIf="stepIndex > 3" class="bi bi-check"></i></div>
+      <span class="imp-step__lbl">{{ 'import.stepper.fichier' | translate }}</span>
+    </div>
+    <div class="imp-step__line"></div>
+
+    <div class="imp-step" [class.imp-step--active]="step === 'preview'" [class.imp-step--done]="stepIndex > 4">
+      <div class="imp-step__num"><span *ngIf="stepIndex <= 4">4</span><i *ngIf="stepIndex > 4" class="bi bi-check"></i></div>
+      <span class="imp-step__lbl">{{ 'import.stepper.apercu' | translate }}</span>
+    </div>
+    <div class="imp-step__line"></div>
+
+    <div class="imp-step" [class.imp-step--active]="step === 'result'">
+      <div class="imp-step__num">5</div>
+      <span class="imp-step__lbl">{{ 'import.stepper.resultat' | translate }}</span>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÉTAPE 1 — Sélection du type
+  ══════════════════════════════════════════════════════════════ -->
+  <div *ngIf="step === 'select'" class="imp-body">
+    <p class="imp-hint">{{ 'import.etape1.hint' | translate }}</p>
+    <div class="imp-type-row">
+      <button *ngFor="let ft of formTypes" class="imp-type-card" (click)="selectType(ft)">
+        <i [class]="ft.icon + ' imp-type-card__icon'"></i>
+        <span class="imp-type-card__label">{{ ft.label }}</span>
+        <span class="imp-type-card__desc">{{ ft.description }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÉTAPE 2 — Notice du format attendu
+  ══════════════════════════════════════════════════════════════ -->
+  <div *ngIf="step === 'notice' && selectedType" class="imp-body">
+    <div class="panel">
+      <div class="panel__head">
+        <h2>
+          <i [class]="selectedType.icon + ' me-2'"></i>
+          {{ selectedType.label }} — {{ 'import.etape2.colonnes-titre' | translate }}
+        </h2>
+        <button class="btn btn-outline-primary btn-sm" (click)="downloadTemplate()">
+          <i class="bi bi-download me-1"></i>{{ 'import.etape2.btn-modele' | translate }}
+        </button>
+      </div>
+      <div class="panel__body">
+        <div class="imp-format-card">
+          <div class="imp-format-card__rules">
+            <span class="imp-format-rule">
+              <i class="bi bi-file-earmark-excel"></i>
+              <strong>{{ 'import.etape2.regle-format' | translate }}</strong>
+            </span>
+            <span class="imp-format-rule">
+              <i class="bi bi-list-ol"></i>{{ 'import.etape2.regle-entetes' | translate }}
+            </span>
+            <span class="imp-format-rule">
+              <i class="bi bi-toggle-on"></i>
+              {{ 'import.etape2.regle-booleens' | translate }}
+              <code>Oui</code> / <code>Non</code>
+            </span>
+            <span class="imp-format-rule">
+              <i class="bi bi-calendar3"></i>
+              {{ 'import.etape2.regle-dates' | translate }}
+              <code>YYYY-MM-DD</code>
+            </span>
+          </div>
+          <div class="imp-format-card__divider"></div>
+          <div class="imp-format-card__cols">
+            <div class="imp-format-card__section">
+              <div class="imp-format-card__section-head imp-format-card__section-head--req">
+                <i class="bi bi-check2-circle"></i>
+                {{ 'import.etape2.col-obligatoires' | translate }}
+              </div>
+              <div class="imp-col-list">
+                <div *ngFor="let col of requiredColumns; let i = index" class="imp-col-item imp-col-item--req">
+                  <span class="imp-col-item__num">{{ i + 1 }}</span>
+                  <span class="imp-col-item__name">{{ col.name }}</span>
+                  <i class="bi bi-check2 imp-col-item__check"></i>
+                </div>
+              </div>
+            </div>
+            <div class="imp-format-card__sep"></div>
+            <div class="imp-format-card__section">
+              <div class="imp-format-card__section-head imp-format-card__section-head--opt">
+                <i class="bi bi-dash-circle"></i>
+                {{ 'import.etape2.col-facultatives' | translate }}
+              </div>
+              <div class="imp-col-list">
+                <div *ngFor="let col of optionalColumns; let i = index" class="imp-col-item">
+                  <span class="imp-col-item__num">{{ requiredColumns.length + i + 1 }}</span>
+                  <span class="imp-col-item__name">{{ col.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="imp-nav">
+      <button class="btn btn-outline-secondary" (click)="backToSelect()">
+        <i class="bi bi-arrow-left me-1"></i>{{ 'btn-return' | translate }}
+      </button>
+      <button class="btn btn-primary" (click)="goToUpload()">
+        {{ 'btn-enregistrer' | translate }}<i class="bi bi-arrow-right ms-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÉTAPE 3 — Dépôt du fichier
+  ══════════════════════════════════════════════════════════════ -->
+  <div *ngIf="step === 'upload' && selectedType" class="imp-body">
+    <div class="panel">
+      <div class="panel__head">
+        <h2>
+          <i [class]="selectedType.icon + ' me-2'"></i>
+          {{ selectedType.label }} — {{ 'import.etape3.deposer' | translate }}
+        </h2>
+      </div>
+      <div class="panel__body">
+        <div class="imp-dropzone"
+             [class.imp-dropzone--over]="dragOver"
+             [class.imp-dropzone--filled]="!!selectedFile"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave()"
+             (drop)="onDrop($event)"
+             (click)="!selectedFile && fileInput.click()">
+
+          <ng-container *ngIf="!selectedFile">
+            <i class="bi bi-cloud-upload imp-dropzone__icon"></i>
+            <p class="imp-dropzone__text">
+              {{ 'import.etape3.drag-text' | translate }}
+              <span class="imp-dropzone__link">{{ 'import.etape3.drag-link' | translate }}</span>
+            </p>
+            <p class="imp-dropzone__hint">{{ 'import.etape3.drag-hint' | translate }}</p>
+          </ng-container>
+
+          <ng-container *ngIf="selectedFile">
+            <i class="bi bi-file-earmark-excel imp-dropzone__icon imp-dropzone__icon--ok"></i>
+            <p class="imp-dropzone__filename">{{ selectedFile.name }}</p>
+            <p class="imp-dropzone__size">{{ fileSizeLabel }}</p>
+            <button class="btn btn-link btn-sm text-danger mt-1"
+                    (click)="$event.stopPropagation(); removeFile()">
+              <i class="bi bi-x-circle me-1"></i>{{ 'import.etape3.btn-supprimer' | translate }}
+            </button>
+          </ng-container>
+
+          <!-- Overlay de chargement -->
+          <div *ngIf="isParsing" class="imp-parsing-overlay">
+            <div class="imp-parsing-card">
+              <div class="imp-parsing-icon">
+                <i class="bi bi-file-earmark-excel"></i>
+                <div class="imp-parsing-pulse"></div>
+              </div>
+              <p class="imp-parsing-title">{{ 'import.etape3.lecture' | translate }}</p>
+              <div class="imp-parsing-bar">
+                <div class="imp-parsing-bar__fill"></div>
+              </div>
+              <p class="imp-parsing-hint">{{ 'import.etape3.analyse' | translate }}</p>
+            </div>
+          </div>
+
+        </div>
+        <input #fileInput type="file" accept=".xlsx,.xls" hidden (change)="onFileSelected($event)">
+      </div>
+    </div>
+    <div class="imp-nav">
+      <button class="btn btn-outline-secondary" (click)="backToNotice()" [disabled]="isParsing">
+        <i class="bi bi-arrow-left me-1"></i>{{ 'btn-return' | translate }}
+      </button>
+      <button class="btn btn-primary" (click)="previewFile()" [disabled]="!selectedFile || isParsing">
+        <span *ngIf="isParsing && selectedFile" class="spinner-border spinner-border-sm me-2"></span>
+        <ng-container *ngIf="isParsing && selectedFile">{{ 'import.etape3.btn-lecture' | translate }}</ng-container>
+        <ng-container *ngIf="!isParsing || !selectedFile">
+          {{ 'import.etape3.btn-previsualiser' | translate }}<i *ngIf="selectedFile" class="bi bi-eye ms-2"></i>
+        </ng-container>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÉTAPE 4 — Prévisualisation
+  ══════════════════════════════════════════════════════════════ -->
+  <div *ngIf="step === 'preview'" class="imp-body">
+
+    <div class="panel bg-white p-3">
+      <div class="panel__head">
+        <h2>
+          <i class="bi bi-table me-2"></i>
+          {{ 'import.etape4.titre' | translate }} — {{ previewTotal }} {{ 'import.etape4.lignes-detectees' | translate }}
+        </h2>
+        <div class="d-flex align-items-center gap-2">
+          <span *ngIf="rowsWithErrors > 0" class="imp-stat imp-stat--orange">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            {{ rowsWithErrors }} {{ 'import.etape4.lignes-incompletes' | translate }}
+          </span>
+          <span *ngIf="rowsWithErrors === 0" class="imp-stat imp-stat--green">
+            <i class="bi bi-check2 me-1"></i>{{ 'import.etape4.col-ok' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <div class="panel__body p-0">
+        <div class="imp-preview-table-wrap">
+          <table class="imp-preview-table mt-2">
+            <thead>
+              <tr>
+                <th class="imp-preview-table__num">#</th>
+                <th *ngFor="let h of previewHeaders"
+                    [class.imp-preview-table__th--req]="isRequiredCol(h)">
+                  {{ h }}
+                  <i *ngIf="isRequiredCol(h)" class="bi bi-asterisk imp-preview-table__req-star"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of previewRows; let i = index"
+                  [class.imp-preview-table__row--error]="hasRowError(row)">
+                <td class="imp-preview-table__num">{{ i + 1 }}</td>
+                <td *ngFor="let h of previewHeaders; let j = index"
+                    [class.imp-preview-table__cell--missing]="isMissingRequired(h, row[j])">
+                  <span *ngIf="row[j] !== '' && row[j] !== null">{{ row[j] }}</span>
+                  <span *ngIf="row[j] === '' || row[j] === null" class="imp-preview-table__empty">
+                    <i *ngIf="isRequiredCol(h)" class="bi bi-exclamation-circle text-danger"></i>
+                    <span *ngIf="!isRequiredCol(h)" class="text-muted">—</span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="imp-preview-legend">
+          <span>
+            <i class="bi bi-asterisk imp-preview-table__req-star"></i>
+            {{ 'import.etape4.legende-obligatoire' | translate }}
+          </span>
+          <span class="imp-preview-legend__missing">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ 'import.etape4.legende-manquante' | translate }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="imp-nav">
+      <button class="btn btn-outline-secondary" (click)="backToUpload()">
+        <i class="bi bi-arrow-left me-1"></i>{{ 'import.etape4.btn-modifier' | translate }}
+      </button>
+      <button class="btn btn-success"
+              (click)="submitImport()"
+              [disabled]="isLoading || rowsWithErrors > 0">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!isLoading" class="bi bi-cloud-upload me-2"></i>
+        {{ isLoading
+            ? ('import.etape4.btn-import-cours' | translate)
+            : ('import.etape4.btn-confirmer' | translate) + ' (' + previewTotal + ' ' + ('import.etape4.lignes' | translate) + ')'
+        }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ÉTAPE 5 — Résultat
+  ══════════════════════════════════════════════════════════════ -->
+  <div *ngIf="step === 'result' && result" class="imp-body">
+
+    <div class="imp-result"
+         [class.imp-result--success]="result.success"
+         [class.imp-result--error]="!result.success">
+      <i [class]="(result.success ? 'bi bi-check-circle-fill' : 'bi bi-x-circle-fill') + ' imp-result__icon'"></i>
+      <div class="imp-result__content">
+        <p class="imp-result__msg">{{ result.message }}</p>
+        <div *ngIf="result.success" class="imp-result__stats">
+          <span class="imp-stat imp-stat--green">
+            <strong>{{ result.inserted }}</strong> {{ 'import.etape5.inserees' | translate }}
+          </span>
+          <span class="imp-stat imp-stat--gray">
+            <strong>{{ result.total }}</strong> {{ 'import.etape5.total' | translate }}
+          </span>
+          <span *ngIf="result.errors.length > 0" class="imp-stat imp-stat--orange">
+            <strong>{{ result.errors.length }}</strong> {{ 'import.etape5.erreurs' | translate }}
+          </span>
+          <div class="imp-result__bar">
+            <div class="imp-result__bar-fill" [style.width.%]="successRate"></div>
+          </div>
+          <span class="imp-result__pct">{{ successRate }}{{ 'import.etape5.reussite' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="result.errors.length > 0" class="panel mt-3">
+      <div class="panel__head">
+        <span class="panel__title">
+          <i class="bi bi-exclamation-triangle me-2 text-warning"></i>
+          {{ 'import.etape5.lignes-erreur' | translate }} ({{ result.errors.length }})
+        </span>
+      </div>
+      <div class="panel__body">
+        <div class="imp-error-list">
+          <div *ngFor="let err of result.errors" class="imp-error-row">
+            <span class="imp-error-row__line">Ligne {{ err.ligne }}</span>
+            <span class="imp-error-row__msg">{{ err.erreur }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="imp-nav">
+      <button class="btn btn-outline-secondary" (click)="navigateTo('/items')">
+        <i class="bi bi-list-ul me-1"></i>{{ 'import.etape5.btn-voir-items' | translate }}
+      </button>
+      <button class="btn btn-primary" (click)="reset()">
+        <i class="bi bi-arrow-counterclockwise me-1"></i>{{ 'import.etape5.btn-nouvel' | translate }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

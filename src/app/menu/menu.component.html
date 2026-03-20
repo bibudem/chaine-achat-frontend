@@ -1,44 +1,56 @@
 <nav class="sidebar sidebar-offcanvas mt-5" id="sidebar">
   <ul class="nav">
-    <li class="nav-item">
-      <a class="nav-link" href="/accueil">
+
+    <!-- Accueil -->
+    <li class="nav-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/accueil">
         <i class="bi bi-house-door menu-icon"></i>
         <span class="menu-title">{{ 'menu.accueil' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" href="/items">
+    <!-- Rechercher — actif sur /items, /items/:id, /items/details/:id mais PAS /items/nouveau -->
+    <li class="nav-item" [class.active]="isSearchRoute">
+      <a class="nav-link" routerLink="/items">
         <i class="bi bi-search menu-icon"></i>
         <span class="menu-title">{{ 'menu.rechercher' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" href="/items/nouveau">
+    <!-- Ajouter — actif uniquement sur /items/nouveau -->
+    <li class="nav-item" [class.active]="isAddItemRoute">
+      <a class="nav-link" routerLink="/items/nouveau">
         <i class="bi bi-file-earmark-plus menu-icon"></i>
         <span class="menu-title">{{ 'menu.ajouter' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-item">
+    <!-- Rapports -->
+    <li class="nav-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }">
       <a class="nav-link" routerLink="/rapport">
         <i class="bi bi-bar-chart-line menu-icon"></i>
         <span class="menu-title">{{ 'menu.rapports' | translate }}</span>
       </a>
     </li>
 
-
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/processus">
+    <!-- Processus / Import -->
+    <li class="nav-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }">
+      <a class="nav-link" routerLink="/import">
         <i class="bi bi-diagram-3 menu-icon"></i>
         <span class="menu-title">{{ 'menu.processus' | translate }}</span>
       </a>
     </li>
-    <!-- Menu Outils avec indicateur -->
-    <li class="nav-item">
-      <a class="nav-link d-flex justify-content-between align-items-center" 
-         data-toggle="collapse" href="#outils" 
+
+    <!-- Outils (sous-menu collapse) -->
+    <li class="nav-item" [class.active]="isOutilsRoute">
+      <a class="nav-link d-flex justify-content-between align-items-center"
+         data-toggle="collapse" href="#outils"
          aria-expanded="false" aria-controls="outils">
         <div>
           <i class="bi bi-tools menu-icon"></i>
@@ -47,14 +59,11 @@
         <i class="bi bi-chevron-down toggle-icon ms-2"></i>
       </a>
 
-      <div class="collapse" id="outils">
+      <div class="collapse" id="outils" [class.show]="isOutilsRoute">
         <ul class="nav flex-column sub-menu">
-          <!--<li class="nav-item">
-            <a class="nav-link" routerLink="/list-fonds">
-              {{ 'menu.list-fonds' | translate }}
-            </a>
-          </li>-->
-          <li class="nav-item">
+          <li class="nav-item"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link" routerLink="/lst-fournisseurs">
               {{ 'menu.list-fournisseur' | translate }}
             </a>
@@ -62,5 +71,6 @@
         </ul>
       </div>
     </li>
+
   </ul>
 </nav>

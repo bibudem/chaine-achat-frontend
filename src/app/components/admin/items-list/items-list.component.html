@@ -14,7 +14,6 @@
       </div>
       <hr>
 
-      <!-- Message de décision -->
       <div *ngIf="decisionMessage"
            class="alert alert-{{ decisionMessage.type }} alert-dismissible fade show d-flex align-items-center"
            role="alert">
@@ -24,35 +23,32 @@
     </div>
   </div>
 
-  <!-- Filtres et recherche -->
-  <div class="row mb-4">
-    <div class="col-md-4">
+  <!-- Filtres -->
+  <div class="row mb-4 g-2">
+    <div class="col-12 col-md-4">
       <div class="input-group">
         <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control bib-input-icon"
-               placeholder="Rechercher par titre, ISBN, demandeur..."
+               placeholder="Titre, ISBN, demandeur..."
                [(ngModel)]="searchTerm"
                (keyup.enter)="onSearch()"
                (input)="onSearch()">
       </div>
     </div>
-
-    <div class="col-md-2">
-      <select class="form-select form-control" [(ngModel)]="selectedFormulaireType" (change)="applyFilters()">
-        <option value="">Type de formulaire</option>
+    <div class="col-6 col-md-2">
+      <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="applyFilters()">
+        <option value="">Type formulaire</option>
         <option *ngFor="let type of options.formulaireTypeOptions" [value]="type">{{ type }}</option>
       </select>
     </div>
-
-    <div class="col-md-2">
-      <select class="form-select form-control" [(ngModel)]="selectedBibliotheque" (change)="onBibliothequeChange()">
+    <div class="col-6 col-md-2">
+      <select class="form-select" [(ngModel)]="selectedBibliotheque" (change)="onBibliothequeChange()">
         <option value="">Toutes les bibliothèques</option>
         <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
       </select>
     </div>
-
-    <div class="col-md-2">
-      <select class="form-select form-control" [(ngModel)]="selectedStatut" (change)="applyFilters()">
+    <div class="col-6 col-md-2">
+      <select class="form-select" [(ngModel)]="selectedStatut" (change)="applyFilters()">
         <option value="">Statut</option>
         <optgroup label="Bibliothèque">
           <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
@@ -62,122 +58,96 @@
         </optgroup>
       </select>
     </div>
-
-    <div class="col-md-1 d-flex gap-2">
-      <button class="btn btn-dark w-100" (click)="resetFilters()">
-        <i class="bi bi-arrow-clockwise"></i>
+    <div class="col-6 col-md-2">
+      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser">
+        <i class="bi bi-arrow-clockwise me-1"></i>Réinit.
       </button>
     </div>
   </div>
 
-  <!-- Indicateur de chargement -->
+  <!-- Chargement -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Chargement...</span>
     </div>
-    <p class="mt-2">Chargement des données...</p>
+    <p class="mt-2 text-muted">Chargement des données...</p>
   </div>
 
-  <!-- Tableau des items -->
+  <!-- Tableau -->
   <div *ngIf="!loading" class="row">
     <div class="col">
-      <div class="card">
+      <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
+
+          <!-- Desktop / tablette : tableau classique -->
+          <div class="table-responsive d-none d-md-block">
+            <table class="table table-hover mb-0 items-table">
               <thead class="table-light">
                 <tr>
-
-                  <!-- ✅ Chaque th cliquable sauf Actions -->
-                  <th class="sortable-col" (click)="sortBy('item_id')">
+                  <th class="col-id sortable-col" (click)="sortBy('item_id')">
                     ID <i class="bi {{ getSortIcon('item_id') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('titre_document')">
+                  <th class="col-titre sortable-col" (click)="sortBy('titre_document')">
                     Titre <i class="bi {{ getSortIcon('titre_document') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('formulaire_type')">
-                    Type formulaire <i class="bi {{ getSortIcon('formulaire_type') }} ms-1"></i>
+                  <th class="col-type sortable-col" (click)="sortBy('formulaire_type')">
+                    Type <i class="bi {{ getSortIcon('formulaire_type') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('isbn_issn')">
+                  <th class="col-isbn sortable-col" (click)="sortBy('isbn_issn')">
                     ISBN/ISSN <i class="bi {{ getSortIcon('isbn_issn') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('demandeur')">
+                  <th class="col-demandeur sortable-col" (click)="sortBy('demandeur')">
                     Demandeur <i class="bi {{ getSortIcon('demandeur') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('bibliotheque')">
+                  <th class="col-bib sortable-col" (click)="sortBy('bibliotheque')">
                     Bibliothèque <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('categorie_document')">
-                    Catégorie <i class="bi {{ getSortIcon('categorie_document') }} ms-1"></i>
-                  </th>
-
-                  <th class="sortable-col" (click)="sortBy('statut_bibliotheque')">
+                  <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
                     Statut <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
                   </th>
-
-                  <th class="sortable-col" (click)="sortBy('date_creation')">
-                    Date création <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
+                  <th class="col-date sortable-col" (click)="sortBy('date_creation')">
+                    Date <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
                   </th>
-
-                  <!-- Pas de tri pour les actions -->
-                  <th class="text-center">Actions</th>
-
+                  <th class="col-actions text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of pagedItems; trackBy: trackByItemId" class="align-middle">
-
-                  <td class="fw-semibold text-muted">#{{ item.item_id }}</td>
-
-                  <td>
+                <tr *ngFor="let item of pagedItems; trackBy: trackByItemId" class="align-top">
+                  <td class="col-id">
+                    <span class="fw-semibold text-muted">#{{ item.item_id }}</span>
+                  </td>
+                  <td class="col-titre">
                     <div class="fw-semibold">{{ item.titre_document || 'Sans titre' }}</div>
-                    <div class="small text-muted">
-                      <span *ngIf="item.format_support">• {{ getFormatSupport(item.format_support) }}</span>
+                    <div class="small text-muted" *ngIf="item.format_support">
+                      {{ getFormatSupport(item.format_support) }}
                     </div>
                   </td>
-
-                  <td>{{ item.formulaire_type }}</td>
-
-                  <td>
-                    <div>{{ item.isbn_issn || 'Non spécifié' }}</div>
-                    <div class="small text-muted" *ngIf="item.editeur">Éditeur: {{ item.editeur }}</div>
+                  <td class="col-type">
+                    <span class="badge bg-light text-dark">{{ item.formulaire_type }}</span>
                   </td>
-
-                  <td>{{ item.demandeur || 'Non spécifié' }}</td>
-
-                  <td>
-                    {{ item.bibliotheque || 'Non spécifié' }}
+                  <td class="col-isbn">
+                    <div>{{ item.isbn_issn || '—' }}</div>
+                    <div class="small text-muted" *ngIf="item.editeur">{{ item.editeur }}</div>
+                  </td>
+                  <td class="col-demandeur">{{ item.demandeur || '—' }}</td>
+                  <td class="col-bib">
+                    <div>{{ item.bibliotheque || '—' }}</div>
                     <div class="small text-muted" *ngIf="item.localisation_emplacement">
                       {{ item.localisation_emplacement }}
                     </div>
                   </td>
-
-                  <td>
-                    <span *ngIf="item.categorie_document" class="badge bg-light text-dark">
-                      {{ item.categorie_document }}
-                    </span>
-                  </td>
-
-                  <td>
+                  <td class="col-statut">
                     <div class="d-flex flex-column gap-1">
                       <span *ngIf="item.statut_bibliotheque" class="badge bg-info align-self-start">
-                        Bib : {{ item.statut_bibliotheque }}
+                        {{ item.statut_bibliotheque }}
                       </span>
                       <span *ngIf="item.statut_acq" class="badge bg-secondary align-self-start">
-                        ACQ : {{ item.statut_acq }}
+                        ACQ: {{ item.statut_acq }}
                       </span>
                     </div>
                   </td>
-
-                  <td>{{ formatDate(item.date_creation) }}</td>
-
-                  <td class="text-center">
+                  <td class="col-date">{{ formatDate(item.date_creation) }}</td>
+                  <td class="col-actions text-center">
                     <div class="btn-group btn-group-sm" role="group">
                       <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" title="Consulter">
                         <i class="bi bi-eye"></i>
@@ -185,20 +155,63 @@
                       <button class="btn btn-outline-primary" (click)="editItem(item.item_id)" title="Modifier">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-outline-danger ms-1" (click)="deleteItem(item.item_id)" title="Supprimer">
+                      <button class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" title="Supprimer">
                         <i class="bi bi-trash"></i>
                       </button>
                     </div>
                   </td>
-
                 </tr>
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile : vue cartes -->
+          <div class="d-block d-md-none">
+            <div *ngFor="let item of pagedItems; trackBy: trackByItemId" class="item-card">
+              <div class="item-card__header">
+                <span class="item-card__id">#{{ item.item_id }}</span>
+                <span class="badge bg-light text-dark ms-2">{{ item.formulaire_type }}</span>
+                <div class="ms-auto btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" title="Consulter">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-primary" (click)="editItem(item.item_id)" title="Modifier">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" title="Supprimer">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="item-card__title">{{ item.titre_document || 'Sans titre' }}</div>
+              <div class="item-card__body">
+                <div class="item-card__row" *ngIf="item.demandeur">
+                  <span class="item-card__label">Demandeur</span>
+                  <span>{{ item.demandeur }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.bibliotheque">
+                  <span class="item-card__label">Bibliothèque</span>
+                  <span>{{ item.bibliotheque }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.statut_bibliotheque || item.statut_acq">
+                  <span class="item-card__label">Statut</span>
+                  <div class="d-flex flex-wrap gap-1">
+                    <span *ngIf="item.statut_bibliotheque" class="badge bg-info">{{ item.statut_bibliotheque }}</span>
+                    <span *ngIf="item.statut_acq" class="badge bg-secondary">ACQ: {{ item.statut_acq }}</span>
+                  </div>
+                </div>
+                <div class="item-card__row">
+                  <span class="item-card__label">Date</span>
+                  <span>{{ formatDate(item.date_creation) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Message si aucun résultat -->
+      <!-- Aucun résultat -->
       <div *ngIf="filteredItems.length === 0" class="text-center py-5">
         <i class="bi bi-inbox display-1 text-muted"></i>
         <h5 class="mt-3">Aucun item trouvé</h5>
@@ -211,28 +224,23 @@
       <!-- Pagination -->
       <div *ngIf="filteredItems.length > 0"
            class="pagination-wrapper d-flex justify-content-between align-items-center mt-0 mb-3">
-
         <div class="text-muted small">
           Affichage de <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
           à <strong>{{ getLastItemIndex() }}</strong>
           sur <strong>{{ filteredItems.length }}</strong> items
         </div>
-
         <nav *ngIf="totalPages > 1" aria-label="Pagination">
           <ul class="pagination pagination-sm mb-0">
-
             <li class="page-item" [class.disabled]="currentPage === 1">
               <button class="page-link" (click)="goToPage(1)" title="Première page">
                 <i class="bi bi-chevron-double-left"></i>
               </button>
             </li>
-
             <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="goToPage(currentPage - 1)" title="Page précédente">
+              <button class="page-link" (click)="goToPage(currentPage - 1)">
                 <i class="bi bi-chevron-left"></i>
               </button>
             </li>
-
             <ng-container *ngFor="let page of pages">
               <li class="page-item disabled" *ngIf="page === currentPage - 3 && page > 1">
                 <span class="page-link">…</span>
@@ -246,25 +254,20 @@
                 <span class="page-link">…</span>
               </li>
             </ng-container>
-
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="goToPage(currentPage + 1)" title="Page suivante">
+              <button class="page-link" (click)="goToPage(currentPage + 1)">
                 <i class="bi bi-chevron-right"></i>
               </button>
             </li>
-
             <li class="page-item" [class.disabled]="currentPage === totalPages">
               <button class="page-link" (click)="goToPage(totalPages)" title="Dernière page">
                 <i class="bi bi-chevron-double-right"></i>
               </button>
             </li>
-
           </ul>
         </nav>
-
       </div>
 
     </div>
   </div>
-
 </div>

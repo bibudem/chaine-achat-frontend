@@ -1,0 +1,532 @@
+/* import.component.css — v2
+   Stylistique cohérente avec accueil.component (db-wrap, panel, sc…)
+   ─────────────────────────────────────────────────────────────────── */
+
+/* ── Stepper ─────────────────────────────────────────────────────── */
+.imp-stepper {
+  display:     flex;
+  align-items: center;
+  margin:      1.5rem 0 2rem;
+}
+
+.imp-step {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            5px;
+  min-width:      72px;
+}
+
+.imp-step__num {
+  width:           32px;
+  height:          32px;
+  border-radius:   50%;
+  background:      #e2eaf3;
+  color:           #607386;
+  font-size:       .85rem;
+  font-weight:     600;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  transition:      background .2s, color .2s;
+}
+
+.imp-step__lbl {
+  font-size:      .72rem;
+  color:          #607386;
+  font-weight:    500;
+  letter-spacing: .02em;
+}
+
+.imp-step--active .imp-step__num {
+  background: #00407F;
+  color:      #fff;
+  box-shadow: 0 2px 8px rgba(0,64,127,.25);
+}
+.imp-step--active .imp-step__lbl { color: #00407F; font-weight: 700; }
+
+.imp-step--done .imp-step__num { background: #52B782; color: #fff; }
+
+.imp-step__line {
+  flex:        1;
+  height:      2px;
+  background:  #dde4ec;
+  margin-bottom: 16px;
+}
+
+/* ── Corps ───────────────────────────────────────────────────────── */
+.imp-body { animation: impFadeIn .2s ease; }
+
+@keyframes impFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.imp-hint {
+  color:         #607386;
+  font-size:     .88rem;
+  margin-bottom: .85rem;
+}
+
+/* ── Ligne de types — 1 ligne horizontale sur grand écran ────────── */
+.imp-type-row {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       .6rem;
+}
+
+.imp-type-card {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  justify-content: center;
+  gap:            6px;
+  padding:        .75rem 1rem;
+  background:     #fff;
+  border:         1.5px solid #dde4ec;
+  border-radius:  10px;
+  cursor:         pointer;
+  text-align:     center;
+  flex:           1 1 120px;     /* s'étire, plancher 120px */
+  max-width:      160px;
+  transition:     border-color .18s, box-shadow .18s, transform .12s;
+}
+
+.imp-type-card:hover {
+  border-color: #0057AC;
+  box-shadow:   0 3px 12px rgba(0,87,172,.13);
+  transform:    translateY(-2px);
+}
+
+.imp-type-card__icon {
+  font-size: 1.4rem;
+  color:     #0057AC;
+}
+
+.imp-type-card__label {
+  font-size:   .78rem;
+  font-weight: 600;
+  color:       #0B113A;
+  line-height: 1.3;
+}
+
+.imp-type-card__desc {
+  font-size:   .72rem;
+  color:       #607386;
+  line-height: 1.3;
+  text-align:  center;
+}
+
+/* Sur grands écrans : tous sur une seule ligne sans wrap */
+@media (min-width: 900px) {
+  .imp-type-row  { flex-wrap: nowrap; }
+  .imp-type-card { max-width: none; }
+}
+
+/* ── Carte format + colonnes ─────────────────────────────────────── */
+.imp-format-card {
+  background:    #fff;
+  border:        1.5px solid #dde4ec;
+  border-radius: 10px;
+  overflow:      hidden;
+}
+
+/* Règles générales en ligne */
+.imp-format-card__rules {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         .5rem 1.5rem;
+  padding:     .85rem 1.2rem;
+  background:  #f7f9fc;
+}
+
+.imp-format-rule {
+  display:     flex;
+  align-items: center;
+  gap:         .4rem;
+  font-size:   .82rem;
+  color:       #3a4a5c;
+}
+
+.imp-format-rule i { color: #0057AC; font-size: .9rem; }
+.imp-format-rule code {
+  background: #e8f0fb; color: #0057AC;
+  padding: 1px 5px; border-radius: 3px; font-size: .8rem;
+}
+
+.imp-format-card__divider {
+  height:     1px;
+  background: #eef1f5;
+}
+
+/* Conteneur deux sections côte à côte */
+.imp-format-card__cols {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+@media (max-width: 640px) {
+  .imp-format-card__cols { grid-template-columns: 1fr; }
+  .imp-format-card__sep  { height: 1px; width: 100%; background: #eef1f5; margin: 0; }
+}
+
+.imp-format-card__sep {
+  width:      1px;
+  background: #eef1f5;
+  margin:     0;
+}
+
+.imp-format-card__section { padding: 1rem 1.2rem; }
+
+.imp-format-card__section-head {
+  display:       flex;
+  align-items:   center;
+  gap:           .4rem;
+  font-size:     .8rem;
+  font-weight:   700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: .7rem;
+}
+
+.imp-format-card__section-head--req { color: #c0392b; }
+.imp-format-card__section-head--opt { color: #607386; }
+
+/* Liste de colonnes numérotées */
+.imp-col-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.imp-col-item {
+  display:     flex;
+  align-items: center;
+  gap:         .6rem;
+  padding:     .3rem .5rem;
+  border-radius: 6px;
+  font-size:   .845rem;
+  color:       #2c3a4f;
+  transition:  background .12s;
+}
+
+.imp-col-item:hover { background: #f4f7fb; }
+
+.imp-col-item--req { font-weight: 500; }
+
+.imp-col-item__num {
+  width:           20px;
+  height:          20px;
+  border-radius:   50%;
+  background:      #edf1f7;
+  color:           #607386;
+  font-size:       .7rem;
+  font-weight:     700;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+}
+
+.imp-col-item--req .imp-col-item__num {
+  background: #fde8e8;
+  color:      #c0392b;
+}
+
+.imp-col-item__name { flex: 1; }
+
+.imp-col-item__check {
+  color:     #52B782;
+  font-size: .9rem;
+  flex-shrink: 0;
+}
+
+/* ── Dropzone ────────────────────────────────────────────────────── */
+.imp-dropzone {
+  position:        relative;
+  border:          2px dashed #ccd6e0;
+  border-radius:   12px;
+  padding:         2.5rem;
+  text-align:      center;
+  cursor:          pointer;
+  transition:      border-color .18s, background .18s;
+  min-height:      190px;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+}
+
+.imp-dropzone:hover,
+.imp-dropzone--over  { border-color: #0057AC; background: #f0f5fc; }
+.imp-dropzone--filled { border-color: #52B782; background: #f3fbf6; cursor: default; }
+
+.imp-dropzone__icon     { font-size: 2.5rem; color: #9db2c8; }
+.imp-dropzone__icon--ok { color: #52B782; font-size: 3rem; }
+
+.imp-dropzone__text   { font-size: .93rem; color: #4a5a6a; margin: 0; }
+.imp-dropzone__link   { color: #0057AC; font-weight: 600; text-decoration: underline; }
+.imp-dropzone__hint,
+.imp-dropzone__size   { font-size: .77rem; color: #9db2c8; margin: 0; }
+.imp-dropzone__filename { font-weight: 600; color: #0B113A; font-size: .93rem; margin: 0; }
+
+/* ── Navigation ──────────────────────────────────────────────────── */
+.imp-nav {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  margin-top:      1.25rem;
+  padding-top:     1rem;
+  border-top:      1px solid #eef1f5;
+}
+
+/* ── Résultat ────────────────────────────────────────────────────── */
+.imp-result {
+  display:       flex;
+  align-items:   flex-start;
+  gap:           1rem;
+  border-radius: 10px;
+  padding:       1.1rem 1.4rem;
+  border:        1.5px solid;
+}
+
+.imp-result--success { background: #f3fbf6; border-color: #52B782; }
+.imp-result--error   { background: #fdf4f3; border-color: #e05c45; }
+
+.imp-result__icon    { font-size: 1.9rem; flex-shrink: 0; }
+.imp-result--success .imp-result__icon { color: #52B782; }
+.imp-result--error   .imp-result__icon { color: #e05c45; }
+.imp-result__content { flex: 1; }
+
+.imp-result__msg {
+  font-weight: 600;
+  font-size:   .97rem;
+  margin:      0 0 .45rem;
+}
+
+.imp-result__stats {
+  display:     flex;
+  align-items: center;
+  flex-wrap:   wrap;
+  gap:         .65rem;
+}
+
+.imp-stat         { font-size: .85rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.imp-stat--green  { background: #d4f4e2; color: #1a5c36; }
+.imp-stat--gray   { background: #e8eef4; color: #607386; }
+.imp-stat--orange { background: #fff0d6; color: #7a4a00; }
+
+.imp-result__bar {
+  width: 130px; height: 6px; background: #dde4ec; border-radius: 3px; overflow: hidden;
+}
+.imp-result__bar-fill {
+  height: 100%; background: #52B782; border-radius: 3px; transition: width .4s ease;
+}
+.imp-result__pct { font-size: .78rem; color: #607386; }
+
+/* ── Erreurs lignes ──────────────────────────────────────────────── */
+.imp-error-list {
+  display: flex; flex-direction: column; gap: 4px; max-height: 280px; overflow-y: auto;
+}
+.imp-error-row {
+  display: flex; gap: 1rem; font-size: .83rem; padding: .38rem .5rem;
+  border-radius: 4px; background: #fdf8f8; align-items: baseline;
+}
+.imp-error-row__line { font-weight: 600; color: #e05c45; white-space: nowrap; min-width: 60px; }
+.imp-error-row__msg  { color: #4a3030; }
+
+/* ── Tableau de prévisualisation ─────────────────────────────────── */
+.imp-preview-table-wrap {
+  overflow-x:  auto;
+  max-height:  460px;
+  overflow-y:  auto;
+}
+
+.imp-preview-table {
+  width:           100%;
+  border-collapse: collapse;
+  font-size:       .82rem;
+  white-space:     nowrap;
+}
+
+.imp-preview-table thead {
+  position: sticky;
+  top:      0;
+  z-index:  2;
+}
+
+.imp-preview-table th {
+  background:    #f4f7fb;
+  color:         #3a4a5c;
+  font-weight:   600;
+  padding:       .5rem .75rem;
+  border-bottom: 2px solid #dde4ec;
+  border-right:  1px solid #eef1f5;
+  text-align:    left;
+  white-space:   nowrap;
+}
+
+.imp-preview-table__th--req {
+  background: #fdf0f0;
+  color:      #c0392b;
+}
+
+.imp-preview-table__req-star {
+  font-size:   .55rem;
+  color:       #dc3545;
+  margin-left: 3px;
+  vertical-align: super;
+}
+
+.imp-preview-table__num {
+  background:  #f4f7fb !important;
+  color:       #9db2c8 !important;
+  font-weight: 600 !important;
+  font-size:   .76rem !important;
+  padding:     .45rem .6rem !important;
+  border-right: 2px solid #dde4ec !important;
+  text-align:  center !important;
+  min-width:   36px;
+  position:    sticky;
+  left:        0;
+  z-index:     1;
+}
+
+.imp-preview-table td {
+  padding:      .42rem .75rem;
+  border-bottom: 1px solid #f0f3f7;
+  border-right:  1px solid #f0f3f7;
+  color:         #2c3a4f;
+  max-width:     260px;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+.imp-preview-table tbody tr:hover td {
+  background: #f7f9fc;
+}
+
+.imp-preview-table__row--error td {
+  background: #fffbf5;
+}
+
+.imp-preview-table__cell--missing {
+  background: #fff3f3 !important;
+}
+
+.imp-preview-table__empty { display: inline-flex; align-items: center; }
+
+/* Légende sous le tableau */
+.imp-preview-legend {
+  display:     flex;
+  gap:         1.5rem;
+  padding:     .6rem 1rem;
+  background:  #f7f9fc;
+  border-top:  1px solid #eef1f5;
+  font-size:   .78rem;
+  color:       #607386;
+}
+
+.imp-preview-legend__missing {
+  color: #c0392b;
+}
+
+/* ── Overlay lecture fichier ─────────────────────────────────────── */
+.imp-parsing-overlay {
+  position:        absolute;
+  inset:           0;
+  background:      rgba(255,255,255,.88);
+  backdrop-filter: blur(3px);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   12px;
+  z-index:         10;
+  animation:       impFadeIn .15s ease;
+}
+
+.imp-parsing-card {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            .6rem;
+  padding:        2rem 2.5rem;
+  background:     #fff;
+  border:         1.5px solid #dde4ec;
+  border-radius:  14px;
+  box-shadow:     0 8px 32px rgba(0,64,127,.1);
+  min-width:      220px;
+  text-align:     center;
+}
+
+/* Icône avec anneau pulsant */
+.imp-parsing-icon {
+  position:  relative;
+  width:     60px;
+  height:    60px;
+  display:   flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+.imp-parsing-icon i {
+  font-size:  2rem;
+  color:      #0057AC;
+  z-index:    1;
+  animation:  impIconBounce 1s ease-in-out infinite;
+}
+
+.imp-parsing-pulse {
+  position:     absolute;
+  inset:        0;
+  border-radius: 50%;
+  border:       2.5px solid #0057AC;
+  opacity:      .4;
+  animation:    impPulse 1.4s ease-out infinite;
+}
+
+@keyframes impPulse {
+  0%   { transform: scale(.7); opacity: .6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes impIconBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.imp-parsing-title {
+  font-weight: 600;
+  font-size:   .95rem;
+  color:       #0B113A;
+  margin:      0;
+}
+
+.imp-parsing-hint {
+  font-size: .76rem;
+  color:     #9db2c8;
+  margin:    0;
+}
+
+/* Barre de progression indéterminée */
+.imp-parsing-bar {
+  width:         160px;
+  height:        4px;
+  background:    #e2eaf3;
+  border-radius: 2px;
+  overflow:      hidden;
+}
+
+.imp-parsing-bar__fill {
+  height:     100%;
+  width:       40%;
+  background:  linear-gradient(90deg, #0057AC, #52B782);
+  border-radius: 2px;
+  animation:   impBarSlide 1.2s ease-in-out infinite;
+}
+
+@keyframes impBarSlide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
