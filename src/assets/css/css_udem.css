@@ -1625,3 +1625,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: po
 
 /* Empêcher le scroll du body quand menu ouvert */
 body.sidebar-open { overflow: hidden; }
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -83,16 +83,16 @@
           <i [class]="selectedType.icon + ' me-2'"></i>
           {{ selectedType.label }} — {{ 'import.etape2.colonnes-titre' | translate }}
         </h2>
-        <button class="btn btn-outline-primary btn-sm" (click)="downloadTemplate()">
-          <i class="bi bi-download me-1"></i>{{ 'import.etape2.btn-modele' | translate }}
-        </button>
       </div>
       <div class="panel__body">
         <div class="imp-format-card">
           <div class="imp-format-card__rules">
             <span class="imp-format-rule">
               <i class="bi bi-file-earmark-excel"></i>
-              <strong>{{ 'import.etape2.regle-format' | translate }}</strong>
+              <strong>{{ 'import.etape2.regle-format' | translate }} :</strong>
+              <code (click)="downloadTemplate()" class="cursor-pointer">
+                <i class="bi bi-download me-1"></i>{{ 'import.etape2.btn-modele' | translate }}
+              </code>
             </span>
             <span class="imp-format-rule">
               <i class="bi bi-list-ol"></i>{{ 'import.etape2.regle-entetes' | translate }}
