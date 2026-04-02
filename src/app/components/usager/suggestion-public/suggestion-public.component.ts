@@ -9,13 +9,16 @@ import { ReponsesService } from '../../../services/reponses.service';
 })
 export class SuggestionPublicComponent implements OnInit {
   form!: FormGroup;
-  submitted = false;
-  success = false;
-  error = false;
-  isLoading = false;
+  submitted    = false;
+  success      = false;
+  error        = false;
+  isLoading    = false;
   showSigleCours = false;
 
-  constructor(private fb: FormBuilder, private reponsesService: ReponsesService) {}
+  constructor(
+    private fb: FormBuilder,
+    private reponsesService: ReponsesService
+  ) {}
 
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
@@ -23,34 +26,47 @@ export class SuggestionPublicComponent implements OnInit {
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
 
     this.form = this.fb.group({
-      nom:                [nom],
-      statut:             [statut],
-      faculteDepartement: [''],
-      courriel:           [courriel, Validators.email],
+
+      /* ── Identification ── */
+      nom:                [nom,      Validators.required],
+      statut:             [statut,   Validators.required],
+      faculteDepartement: ['',       Validators.required],
+      courriel:           [courriel, [Validators.required, Validators.email]],
       copieCourriel:      [true],
-      typeDocument:       ['', Validators.required],
+
+      // Champs ajoutés (présents dans SharePoint)
+      bibliotheque:       ['', Validators.required],
+      bibliothecaire:     ['', Validators.email],          // optionnel mais validé si renseigné
+
+      /* ── Description ── */
       titre:              ['', Validators.required],
       auteur:             ['', Validators.required],
-      annee:              [''],
+      editeur:            [''],                             // NOUVEAU — Éditeur du document
+      annee:              [''],                             // Date de publication
+      urlSource:          ['', Validators.pattern('https?://.+')], // NOUVEAU — URL séparée
       isbnIssn:           [''],
-      edition:            [''],
+      formatSupport:      [''],                             // NOUVEAU — Imprimé / Électronique
       notes:              [''],
       reserver:           ['non'],
+
+      /* ── Section enseignant ── */
       dateRequis:         [''],
       mettreReserve:      [false],
       sigleCours:         [{ value: '', disabled: true }],
     });
 
+    // Active/désactive le sigle de cours selon la checkbox
     this.form.get('mettreReserve')!.valueChanges.subscribe(val => {
       this.showSigleCours = val;
-      val ? this.form.get('sigleCours')!.enable()
-          : this.form.get('sigleCours')!.disable();
+      val
+        ? this.form.get('sigleCours')!.enable()
+        : this.form.get('sigleCours')!.disable();
     });
   }
 
   get f() { return this.form.controls; }
 
-  onReset() {
+  onReset(): void {
     this.submitted = false;
     this.success   = false;
     this.error     = false;
@@ -61,31 +77,42 @@ export class SuggestionPublicComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     if (this.form.invalid) return;
 
     this.isLoading = true;
 
-    // Construire le payload manuellement pour contrôler les champs
-    const formVal = this.form.getRawValue();
-    const reponses = {
-      typeDocument:       formVal.typeDocument,
-      titre:              formVal.titre,
-      auteur:             formVal.auteur,
-      annee:              formVal.annee,
-      isbnIssn:           formVal.isbnIssn,
-      edition:            formVal.edition,
-      notes:              formVal.notes,
-      reserver:           formVal.reserver,
-      faculteDepartement: formVal.faculteDepartement,
-      copieCourriel:      formVal.copieCourriel,
-      dateRequis:         formVal.dateRequis,
-      mettreReserve:      formVal.mettreReserve,
-      sigleCours:         formVal.sigleCours,
+    const v = this.form.getRawValue();
+
+    const payload = {
+      /* Identification */
+      nom:                v.nom,
+      statut:             v.statut,
+      faculteDepartement: v.faculteDepartement,
+      courriel:           v.courriel,
+      copieCourriel:      v.copieCourriel,
+      bibliotheque:       v.bibliotheque,
+      bibliothecaire:     v.bibliothecaire,
+
+      /* Description */
+      titre:              v.titre,
+      auteur:             v.auteur,
+      editeur:            v.editeur,
+      annee:              v.annee,
+      urlSource:          v.urlSource,
+      isbnIssn:           v.isbnIssn,
+      formatSupport:      v.formatSupport,
+      notes:              v.notes,
+      reserver:           v.reserver,
+
+      /* Enseignant */
+      dateRequis:         v.dateRequis,
+      mettreReserve:      v.mettreReserve,
+      sigleCours:         v.sigleCours,
     };
 
-    this.reponsesService.envoyerSuggestion(reponses).subscribe({
+    this.reponsesService.envoyerSuggestion(payload).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;

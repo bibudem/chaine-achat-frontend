@@ -24,10 +24,10 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
   fournisseursOptions: string[] = [];
   fournisseurSearch = '';
   fournisseursFiltered: string[] = [];
-  selectedFournisseurs: string[] = [];        // ← AJOUT : tableau multi-sélection
+  selectedFournisseurs: string[] = [];
 
   dropdowns: Record<string, boolean> = {};
-  private clickOutsideListener!: () => void;  // ← AJOUT : référence pour cleanup
+  private clickOutsideListener!: () => void;
 
   constructor(
     private fb: FormBuilder,
@@ -55,12 +55,10 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
     this.loadFournisseurs();
 
-    // ← MODIFIÉ : stocker la référence pour pouvoir la retirer dans ngOnDestroy
     this.clickOutsideListener = () => this.closeAllDropdowns();
     document.addEventListener('click', this.clickOutsideListener);
   }
 
-  // ← AJOUT : cleanup du listener
   ngOnDestroy(): void {
     document.removeEventListener('click', this.clickOutsideListener);
   }
@@ -89,7 +87,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       : [...this.fournisseursOptions];
   }
 
-  // ← AJOUT : remplace selectFournisseur() — multi-sélection par checkbox
   isFournisseurSelected(value: string): boolean {
     return this.selectedFournisseurs.includes(value);
   }
@@ -175,9 +172,18 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       description_requete: [''],
       action_demandee: [''],
       quantite: [null],
+      // Suggestion d'achat — champs existants
       justification: [''],
       public_cible: [''],
-      recommandation: [false]
+      recommandation: [false],
+      // Suggestion d'achat — nouveaux champs
+      usager_statut: ['', Validators.maxLength(100)],
+      usager_faculte: ['', Validators.maxLength(255)],
+      usager_courriel: ['', [Validators.maxLength(255), Validators.email]],
+      bibliothecaire_disciplinaire: ['', Validators.maxLength(255)],
+      aviser_reservation: ['', Validators.maxLength(500)],
+      aviser_reception: [true],
+      date_requise_cours: ['']
     });
   }
 
@@ -230,7 +236,11 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       'reserve_cours_session', 'reserve_cours_enseignant', 'bordereau_imprime',
       'categorie_depense', 'note_catalogueur_droit', 'type_demande_peb',
       'reference_tipasa', 'urgence', 'type_requete', 'description_requete',
-      'action_demandee', 'quantite', 'justification', 'public_cible', 'recommandation'
+      'action_demandee', 'quantite', 'justification', 'public_cible', 'recommandation',
+      // Nouveaux champs suggestion d'achat
+      'usager_statut', 'usager_faculte', 'usager_courriel',
+      'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
+      'date_requise_cours'
     ];
 
     specificFields.forEach(field => {
@@ -262,7 +272,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
           this.itemForm.patchValue(response.data, { emitEvent: false });
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
 
-          // ← AJOUT : reconstruire le tableau depuis la valeur chargée en base
           const fournisseurVal = response.data.fournisseur;
           if (fournisseurVal) {
             this.selectedFournisseurs = fournisseurVal
@@ -281,7 +290,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+ 
   async onSubmit(): Promise<void> {
     if (this.itemForm.invalid) {
       this.markFormGroupTouched();
@@ -379,58 +388,66 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     };
   }
 
-  private extractSpecificData(formData: any): any {
+ private extractSpecificData(formData: any): any {
     const type = this.selectedFormulaireType;
-
+ 
     switch(type) {
       case 'Modification CCOL':
         return {
-          precision_demande: formData.precision_demande,
-          numero_oclc: formData.numero_oclc,
-          date_debut_abonnement: formData.date_debut_abonnement,
-          collection: formData.collection,
-          catalogage: formData.catalogage
+          precision_demande:      formData.precision_demande,
+          numero_oclc:            formData.numero_oclc,
+          date_debut_abonnement:  formData.date_debut_abonnement,
+          collection:             formData.collection,
+          catalogage:             formData.catalogage
         };
       case 'Nouvel abonnement':
         return {
-          date_debut_abonnement: formData.date_debut_abonnement,
-          type_monographie: formData.type_monographie,
-          collection: formData.collection,
-          catalogage: formData.catalogage
+          date_debut_abonnement:  formData.date_debut_abonnement,
+          type_monographie:       formData.type_monographie,
+          collection:             formData.collection,
+          catalogage:             formData.catalogage
         };
       case 'Nouvel achat unique':
         return {
-          priorite_demande: formData.priorite_demande,
-          projets_speciaux: formData.projets_speciaux,
-          type_monographie: formData.type_monographie,
-          format_electronique: formData.format_electronique,
-          reserve_cours: formData.reserve_cours,
-          reserve_cours_sigle: formData.reserve_cours_sigle,
-          reserve_cours_session: formData.reserve_cours_session,
-          reserve_cours_enseignant: formData.reserve_cours_enseignant,
-          bordereau_imprime: formData.bordereau_imprime,
-          categorie_depense: formData.categorie_depense,
-          note_catalogueur_droit: formData.note_catalogueur_droit
+          priorite_demande:           formData.priorite_demande,
+          projets_speciaux:           formData.projets_speciaux,
+          type_monographie:           formData.type_monographie,
+          format_electronique:        formData.format_electronique,
+          reserve_cours:              formData.reserve_cours,
+          reserve_cours_sigle:        formData.reserve_cours_sigle,
+          reserve_cours_session:      formData.reserve_cours_session,
+          reserve_cours_enseignant:   formData.reserve_cours_enseignant,
+          bordereau_imprime:          formData.bordereau_imprime,
+          categorie_depense:          formData.categorie_depense,
+          note_catalogueur_droit:     formData.note_catalogueur_droit
         };
       case 'PEB Tipasa numérique':
         return {
-          type_demande_peb: formData.type_demande_peb,
-          reference_tipasa: formData.reference_tipasa,
-          urgence: formData.urgence
+          type_demande_peb:   formData.type_demande_peb,
+          reference_tipasa:   formData.reference_tipasa,
+          urgence:            formData.urgence
         };
       case 'Requête ACQ':
         return {
-          type_requete: formData.type_requete,
+          type_requete:       formData.type_requete,
           description_requete: formData.description_requete,
-          action_demandee: formData.action_demandee
+          action_demandee:    formData.action_demandee
         };
       case 'Springer':
         return { quantite: formData.quantite };
-      case 'Suggestion d\'achat':
+ 
+      case "Suggestion d'achat":
         return {
-          justification: formData.justification,
-          public_cible: formData.public_cible,
-          recommandation: formData.recommandation
+          justification:                formData.justification,
+          public_cible:                 formData.public_cible,
+          recommandation:               formData.recommandation,
+          usager_statut:                formData.usager_statut,
+          usager_faculte:               formData.usager_faculte,
+          usager_courriel:              formData.usager_courriel,
+          bibliothecaire_disciplinaire: formData.bibliothecaire_disciplinaire,
+          aviser_reservation:           formData.aviser_reservation,
+          aviser_reception:             formData.aviser_reception,
+          date_requise_cours:           formData.date_requise_cours || null
         };
       default:
         return {};

@@ -100,6 +100,14 @@ export interface Item {
   justification?: string;
   public_cible?: string;
   recommandation?: boolean;
+  // Nouveaux champs tbl_suggestion_achat
+  usager_statut?: string;
+  usager_faculte?: string;
+  usager_courriel?: string;
+  bibliothecaire_disciplinaire?: string;
+  aviser_reservation?: string;
+  aviser_reception?: boolean;
+  date_requise_cours?: string;
 
   // Prix et commande
   prix_cad?: number;
@@ -150,47 +158,39 @@ export class ItemFormulaireService {
 
   // ==================== CRUD OPERATIONS ====================
 
-  // CREATE - Ajouter un nouvel item
   create(item: any): Observable<ApiResponse<Item>> {
     return this.http
       .post<ApiResponse<Item>>(`${this.url}/add`, item, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item>>("create")));
   }
 
-  // Alias pour create (post)
   post(item: any): Observable<ApiResponse<Item>> {
     console.log('Données envoyées à l\'API:', item);
     return this.create(item);
   }
 
-  // READ ALL - Récupérer tous les items
   getAll(limit: number = 50, offset: number = 0): Observable<ApiResponse<Item[]>> {
     return this.http
       .get<ApiResponse<Item[]>>(`${this.url}/all?limit=${limit}&offset=${offset}`, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("getAll")));
   }
 
-  // READ ONE - Récupérer un item par ID avec ses données spécifiques
   getById(id: number): Observable<ApiResponse<Item>> {
     return this.http
       .get<ApiResponse<Item>>(`${this.url}/fiche/${id}`, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item>>("getById")));
   }
 
-  // Alias pour getById
   consulter(id: number): Observable<ApiResponse<Item>> {
     return this.getById(id);
   }
 
-  // UPDATE - Mettre à jour un item avec ses données spécifiques
   update(item: any): Observable<ApiResponse<Item>> {
     if (!item.item_id) {
       return throwError(() => new Error("ID de l'item manquant pour la mise à jour"));
     }
 
-    // Formater les données avant envoi
     const formattedItem = this.formatForApi(item);
-    
     console.log('Données de mise à jour envoyées:', formattedItem);
     
     return this.http
@@ -204,7 +204,6 @@ export class ItemFormulaireService {
       );
   }
 
-  // DELETE - Supprimer un item (cascade sur tables spécifiques)
   delete(id: number): Observable<ApiResponse<Item>> {
     return this.http
       .delete<ApiResponse<Item>>(`${this.url}/delete/${id}`, this.httpOptions)
@@ -213,21 +212,18 @@ export class ItemFormulaireService {
 
   // ==================== FILTERING & SEARCH ====================
 
-  // SEARCH - Rechercher des items
   search(term: string): Observable<ApiResponse<Item[]>> {
     return this.http
       .get<ApiResponse<Item[]>>(`${this.url}/search?q=${encodeURIComponent(term)}`, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("search")));
   }
 
-  // FILTER BY TYPE - Filtrer par type de formulaire
   getByType(type: string): Observable<ApiResponse<Item[]>> {
     return this.http
       .get<ApiResponse<Item[]>>(`${this.url}/type/${encodeURIComponent(type)}`, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("getByType")));
   }
 
-  // FILTER BY STATUS - Filtrer par statut
   getByStatus(status: string): Observable<ApiResponse<Item[]>> {
     return this.http
       .get<ApiResponse<Item[]>>(`${this.url}/status/${encodeURIComponent(status)}`, this.httpOptions)
@@ -236,7 +232,6 @@ export class ItemFormulaireService {
 
   // ==================== STATISTICS ====================
 
-  // GET STATISTICS - Obtenir les statistiques
   getStatistics(): Observable<ApiResponse<any>> {
     return this.http
       .get<ApiResponse<any>>(`${this.url}/statistics`, this.httpOptions)
@@ -245,14 +240,12 @@ export class ItemFormulaireService {
 
   // ==================== BATCH OPERATIONS ====================
 
-  // CREATE BATCH - Créer plusieurs items à la fois
   createBatch(items: any[]): Observable<ApiResponse<Item[]>> {
     return this.http
       .post<ApiResponse<Item[]>>(`${this.url}/batch`, items, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("createBatch")));
   }
 
-  // GET FOURNISSEURS - Récupérer la liste des fournisseurs
   getFournisseurs(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.url}/fournisseurs`, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>("getFournisseurs")));
@@ -260,7 +253,6 @@ export class ItemFormulaireService {
 
   // ==================== TEST ROUTE ====================
 
-  // Tester la connexion à l'API
   testConnection(): Observable<any> {
     return this.http
       .get<any>(`${this.url}/test`, this.httpOptions)
@@ -269,11 +261,9 @@ export class ItemFormulaireService {
 
   // ==================== UTILITY METHODS ====================
 
-  // Validation des données avant soumission
   validateItem(item: Item): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    // Validation des champs obligatoires
     if (!item.titre_document || item.titre_document.trim() === '') {
       errors.push('Le titre du document est obligatoire');
     }
@@ -286,7 +276,6 @@ export class ItemFormulaireService {
       errors.push('Le fonds budgétaire est obligatoire');
     }
 
-    // Validation des longueurs maximales
     if (item.titre_document && item.titre_document.length > 500) {
       errors.push('Le titre du document ne peut pas dépasser 500 caractères');
     }
@@ -317,29 +306,26 @@ export class ItemFormulaireService {
     };
   }
 
-  // Formater les données pour l'API
   formatForApi(item: any): any {
-    // Créer une copie pour ne pas modifier l'original
     const formattedItem = { ...item };
     
-    // Assurer que les booléens sont convertis correctement
     if (formattedItem.creation_notice_dtdm !== undefined) {
       formattedItem.creation_notice_dtdm = Boolean(formattedItem.creation_notice_dtdm);
     }
+    if (formattedItem.aviser_reception !== undefined) {
+      formattedItem.aviser_reception = Boolean(formattedItem.aviser_reception);
+    }
     
-    // Nettoyer les chaînes vides (les convertir en null pour l'API)
     Object.keys(formattedItem).forEach(key => {
       if (formattedItem[key] === '') {
         formattedItem[key] = null;
       }
     });
     
-    // S'assurer que les champs obligatoires ne sont pas vides
     formattedItem.titre_document = formattedItem.titre_document?.trim() || null;
     formattedItem.demandeur = formattedItem.demandeur?.trim() || null;
     formattedItem.fonds_budgetaire = formattedItem.fonds_budgetaire?.trim() || null;
     
-    // Ajouter la date de modification si c'est une mise à jour
     if (formattedItem.item_id) {
       formattedItem.date_modification = new Date().toISOString();
     }
@@ -347,7 +333,6 @@ export class ItemFormulaireService {
     return formattedItem;
   }
 
-  // Vérifier si un item existe déjà
   checkExisting(id: number): Observable<boolean> {
     return this.getById(id).pipe(
       map(response => response.success && !!response.data),

@@ -166,6 +166,53 @@
           </div>
         </div>
 
+        <!-- Rangée : Ressource électronique (visible si Électronique) -->
+        <div class="row mb-3 bg-light" *ngIf="itemForm.get('format_support')?.value === 'Électronique'">
+          <div class="col-12">
+            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+              <i class="bi bi-globe me-1"></i>Ressource électronique
+            </h6>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Nombre de titres inclus</label>
+              <input type="number" class="form-control" formControlName="nombre_titres_inclus"
+                    min="1" step="1" placeholder="Ex: 25">
+              <small class="text-muted">Nombre de titres ou volumes inclus dans cet achat</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Format PrêtNumérique</label>
+              <select class="form-select form-control" formControlName="format_pret_numerique">
+                <option value="">Sélectionnez</option>
+                <option value="PDF">PDF</option>
+                <option value="EPUB">EPUB</option>
+                <option value="Ne s'applique pas">Ne s'applique pas</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Nombre d'utilisateurs</label>
+              <select class="form-select form-control" formControlName="nombre_utilisateurs">
+                <option value="">Sélectionnez</option>
+                <option value="Un seul usager">Un seul usager</option>
+                <option value="Trois usagers simultanés">Trois usagers simultanés</option>
+                <option value="Accès illimité">Accès illimité</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Lien vers la plateforme</label>
+              <input type="url" class="form-control" formControlName="lien_plateforme"
+                    placeholder="https://...">
+            </div>
+          </div>
+        </div>
+
         <!-- Rangée 4 : Bibliothèque et Localisation -->
         <div class="row mb-3">
           <div class="col-md-3">
@@ -206,51 +253,47 @@
         <!-- Rangée 5 : Statuts -->
         <div class="row">
           <div class="col-md-3">
-          <div class="mb-3">
-            <label class="form-label">Fournisseur</label>
-
-             <div class="ms-dropdown" [class.ms-open]="dropdowns['fournisseur']" (click)="$event.stopPropagation()">
-            <button type="button" class="ms-trigger" (click)="toggleDropdown('fournisseur')">
-            <span *ngIf="selectedFournisseurs.length > 0; else phFournisseur">
-              {{ selectedFournisseurs.length }} sélectionné(s)
-            </span>
-            <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
-              <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
-              <i class="bi bi-chevron-down ms-arrow"></i>
-            </button>
-            <div class="ms-menu ms-menu-fournisseur" *ngIf="dropdowns['fournisseur']">
-              <div class="ms-search">
-                <input type="text" class="ms-search-input" placeholder="Rechercher..."
-                      [(ngModel)]="fournisseurSearch"
-                      [ngModelOptions]="{standalone: true}"
-                      (input)="filterFournisseurs(fournisseurSearch)"
-                      (click)="$event.stopPropagation()">
+            <div class="mb-3">
+              <label class="form-label">Fournisseur</label>
+              <div class="ms-dropdown" [class.ms-open]="dropdowns['fournisseur']" (click)="$event.stopPropagation()">
+                <button type="button" class="ms-trigger" (click)="toggleDropdown('fournisseur')">
+                  <span *ngIf="selectedFournisseurs.length > 0; else phFournisseur">
+                    {{ selectedFournisseurs.length }} sélectionné(s)
+                  </span>
+                  <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
+                  <i class="bi bi-chevron-down ms-arrow"></i>
+                </button>
+                <div class="ms-menu ms-menu-fournisseur" *ngIf="dropdowns['fournisseur']">
+                  <div class="ms-search">
+                    <input type="text" class="ms-search-input" placeholder="Rechercher..."
+                          [(ngModel)]="fournisseurSearch"
+                          [ngModelOptions]="{standalone: true}"
+                          (input)="filterFournisseurs(fournisseurSearch)"
+                          (click)="$event.stopPropagation()">
+                  </div>
+                  <div class="ms-divider"></div>
+                  <label class="ms-option ms-option-check"
+                        *ngFor="let f of fournisseursFiltered"
+                        (click)="$event.stopPropagation()">
+                    <input type="checkbox"
+                          [value]="f"
+                          [checked]="isFournisseurSelected(f)"
+                          (change)="toggleFournisseur(f)">
+                    {{ f }}
+                  </label>
+                  <div *ngIf="fournisseursFiltered.length === 0" class="ms-empty">
+                    Aucun résultat
+                  </div>
+                </div>
               </div>
-              <div class="ms-divider"></div>
-              <label class="ms-option ms-option-check"
-                    *ngFor="let f of fournisseursFiltered"
-                    (click)="$event.stopPropagation()">
-                <input type="checkbox"
-                      [value]="f"
-                      [checked]="isFournisseurSelected(f)"
-                      (change)="toggleFournisseur(f)">
-                {{ f }}
-              </label>
-              <div *ngIf="fournisseursFiltered.length === 0" class="ms-empty">
-                Aucun résultat
+              <div class="invalid-feedback d-block" *ngIf="hasError('fournisseur', 'required')">
+                Le fournisseur est obligatoire
               </div>
+              <small class="text-muted" *ngIf="fournisseursOptions && fournisseursOptions.length > 0">
+                {{ fournisseursOptions.length }} fournisseurs
+              </small>
             </div>
           </div>
-
-            <div class="invalid-feedback d-block" *ngIf="hasError('fournisseur', 'required')">
-              Le fournisseur est obligatoire
-            </div>
-
-            <small class="text-muted" *ngIf="fournisseursOptions && fournisseursOptions.length > 0">
-              {{ fournisseursOptions.length }} fournisseurs
-            </small>
-          </div>
-        </div>
           <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label ">Fonds budgétaire <span class="text-danger">*</span></label>
@@ -361,45 +404,6 @@
           </div>
         </div>
 
-        <!-- Rangée 8 : Ressource électronique (visible si Électronique) -->
-        <div class="row mb-3" *ngIf="itemForm.get('format_support')?.value === 'Électronique'">
-          <div class="col-12">
-            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-              <i class="bi bi-globe me-1"></i>Ressource électronique
-            </h6>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="form-label">Nombre d'utilisateurs</label>
-              <select class="form-select form-control" formControlName="nombre_utilisateurs">
-                <option value="">Sélectionnez</option>
-                <option value="Un seul usager">Un seul usager</option>
-                <option value="Trois usagers simultanés">Trois usagers simultanés</option>
-                <option value="Accès illimité">Accès illimité</option>
-                <option value="Autre">Autre</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">Lien vers la plateforme</label>
-              <input type="url" class="form-control" formControlName="lien_plateforme"
-                    placeholder="https://...">
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="form-label">Format PrêtNumérique</label>
-              <select class="form-select form-control" formControlName="format_pret_numerique">
-                <option value="">Sélectionnez</option>
-                <option value="PDF">PDF</option>
-                <option value="EPUB">EPUB</option>
-                <option value="Ne s'applique pas">Ne s'applique pas</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
         <!-- Rangée 9 : Notes -->
         <div class="row mb-3">
           <div class="col-md-6">
@@ -434,7 +438,6 @@
       <!-- ========== ONGLET 2: CHAMPS SPÉCIFIQUES ========== -->
       <div class="tab-pane" [class.show]="activeTab === 'specifique'" [class.active]="activeTab === 'specifique'">
         
-        <!-- Message si aucun type sélectionné -->
         <div *ngIf="!selectedFormulaireType" class="alert alert-info">
           <i class="bi bi-info-circle me-2"></i>
           Veuillez d'abord sélectionner un type de formulaire dans l'onglet "Informations de base"
@@ -449,7 +452,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3">
@@ -459,31 +461,27 @@
                 <textarea class="form-control" formControlName="precision_demande" rows="4"
                           [class.is-invalid]="hasError('precision_demande', 'required')"
                           placeholder="Décrivez précisément la modification demandée"></textarea>
-                <div class="invalid-feedback">
-                  La précision de la demande est obligatoire
-                </div>
+                <div class="invalid-feedback">La précision de la demande est obligatoire</div>
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Numéro OCLC</label>
-                <input type="text" class="form-control" formControlName="numero_oclc"
-                       placeholder="Ex: ocm12345678">
+                <input type="text" class="form-control" formControlName="numero_oclc" placeholder="Ex: ocm12345678">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Collection</label>
-                <input type="text" class="form-control" formControlName="collection" >
+                <input type="text" class="form-control" formControlName="collection">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Catalogage</label>
-                <input type="text" class="form-control" formControlName="catalogage" >
+                <input type="text" class="form-control" formControlName="catalogage">
               </div>
             </div>
           </div>
@@ -498,7 +496,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
@@ -507,9 +504,7 @@
                 </label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement"
                        [class.is-invalid]="hasError('date_debut_abonnement', 'required')">
-                <div class="invalid-feedback">
-                  La date de début d'abonnement est obligatoire
-                </div>
+                <div class="invalid-feedback">La date de début d'abonnement est obligatoire</div>
               </div>
             </div>
             <div class="col-md-4">
@@ -524,12 +519,11 @@
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label ">Collection</label>
-                <input type="text" class="form-control" formControlName="collection" >
+                <input type="text" class="form-control" formControlName="collection">
               </div>
             </div>
             <div class="col-md-6">
@@ -550,7 +544,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-3">
               <div class="mb-3">
@@ -592,44 +585,36 @@
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3 ml-4">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" formControlName="reserve_cours" 
-                         id="reserveCours">
-                  <label class="form-check-label " for="reserveCours">
-                    Réserve de cours
-                  </label>
+                  <input class="form-check-input" type="checkbox" formControlName="reserve_cours" id="reserveCours">
+                  <label class="form-check-label" for="reserveCours">Réserve de cours</label>
                 </div>
               </div>
             </div>
           </div>
-          
           <div class="row" *ngIf="itemForm.get('reserve_cours')?.value">
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Sigle du cours</label>
-                <input type="text" class="form-control" formControlName="reserve_cours_sigle"
-                       placeholder="Ex: INF1234">
+                <input type="text" class="form-control" formControlName="reserve_cours_sigle" placeholder="Ex: INF1234">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Session</label>
-                <input type="text" class="form-control" formControlName="reserve_cours_session"
-                       placeholder="Ex: Automne 2024">
+                <input type="text" class="form-control" formControlName="reserve_cours_session" placeholder="Ex: Automne 2024">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Enseignant</label>
-                <input type="text" class="form-control" formControlName="reserve_cours_enseignant" rows="2">
+                <input type="text" class="form-control" formControlName="reserve_cours_enseignant">
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3">
@@ -649,7 +634,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
@@ -665,8 +649,7 @@
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label ">Référence Tipasa</label>
-                <input type="text" class="form-control" formControlName="reference_tipasa"
-                       placeholder="Numéro de référence">
+                <input type="text" class="form-control" formControlName="reference_tipasa" placeholder="Numéro de référence">
               </div>
             </div>
             <div class="col-md-4">
@@ -690,7 +673,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3">
@@ -705,7 +687,6 @@
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
@@ -733,7 +714,6 @@
               </h5>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
@@ -743,12 +723,8 @@
                 <input type="number" class="form-control" formControlName="quantite" min="1"
                        [class.is-invalid]="hasError('quantite', 'required') || hasError('quantite', 'min')"
                        placeholder="Nombre d'exemplaires">
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'required')">
-                  La quantité est obligatoire
-                </div>
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'min')">
-                  La quantité doit être d'au moins 1
-                </div>
+                <div class="invalid-feedback" *ngIf="hasError('quantite', 'required')">La quantité est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('quantite', 'min')">La quantité doit être d'au moins 1</div>
               </div>
             </div>
           </div>
@@ -763,17 +739,20 @@
               </h5>
             </div>
           </div>
-          
+
+          <!-- Justification & Public cible -->
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3">
-                <label class="form-label ">Justification</label>
+                <label class="form-label ">Justification <span class="text-danger">*</span></label>
                 <textarea class="form-control" formControlName="justification" rows="4"
+                          [class.is-invalid]="hasError('justification', 'required')"
                           placeholder="Expliquez pourquoi cet achat est pertinent"></textarea>
+                <div class="invalid-feedback">La justification est obligatoire</div>
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
@@ -782,7 +761,7 @@
                        placeholder="Ex: Étudiants de 1er cycle">
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label ">Recommandation</label>
                 <select class="form-select form-control" formControlName="recommandation">
@@ -791,9 +770,98 @@
                 </select>
               </div>
             </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">Date requise (cours)</label>
+                <input type="date" class="form-control" formControlName="date_requise_cours">
+                <small class="text-muted">Date à laquelle le document est requis pour un cours</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Séparateur : Informations sur l'usager -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+                <i class="bi bi-person me-1"></i>Informations sur l'usager
+              </h6>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Statut de l'usager</label>
+                <select class="form-select form-control" formControlName="usager_statut">
+                  <option value="">Sélectionnez</option>
+                  <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
+                  <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
+                  <option value="Étudiant 3e cycle">Étudiant 3e cycle</option>
+                  <option value="Professeur">Professeur</option>
+                  <option value="Chargé de cours">Chargé de cours</option>
+                  <option value="Chercheur">Chercheur</option>
+                  <option value="Personnel">Personnel</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Faculté / Département</label>
+                <input type="text" class="form-control" formControlName="usager_faculte"
+                       placeholder="Ex: Faculté des sciences">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Courriel de l'usager</label>
+                <input type="email" class="form-control" formControlName="usager_courriel"
+                       [class.is-invalid]="hasError('usager_courriel', 'email')"
+                       placeholder="nom@universite.ca">
+                <div class="invalid-feedback">Veuillez entrer un courriel valide</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Séparateur : Bibliothécaire & Avis -->
+          <div class="row mt-2">
+            <div class="col-12">
+              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+                <i class="bi bi-bell me-1"></i>Bibliothécaire et notifications
+              </h6>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Bibliothécaire disciplinaire</label>
+                <input type="text" class="form-control" formControlName="bibliothecaire_disciplinaire"
+                       placeholder="Nom du bibliothécaire responsable">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="mb-3">
+                <label class="form-label">Aviser lors de la mise en réservation</label>
+                <input type="text" class="form-control" formControlName="aviser_reservation"
+                       placeholder="Courriel(s) ou nom(s) à aviser">
+                <small class="text-muted">Personnes à notifier quand le document est mis en réservation</small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">Aviser à la réception</label>
+                <select class="form-select form-control" formControlName="aviser_reception">
+                  <option [ngValue]="true">Oui</option>
+                  <option [ngValue]="false">Non</option>
+                </select>
+                <small class="text-muted">Notifier l'usager à la réception du document</small>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+      </div><!-- fin tab-content -->
     </div>
 
     <!-- Boutons d'action -->
@@ -802,7 +870,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
-               Annuler
+              Annuler
             </button>
           </div>
           <div class="d-flex gap-2">
