@@ -6,13 +6,9 @@ import { environment } from 'src/environments/environment';
 
 import { ErrorHandlerService } from "./error-handler.service";
 
-// Interface correspondant à votre table tbl_items
 export interface Item {
-  // Identifiant principal
   item_id?: number;
   formulaire_type?: string;
-  
-  // Champs communs à tous les formulaires
   date_creation?: string;
   priorite_demande?: string;
   titre_document: string;
@@ -20,59 +16,49 @@ export interface Item {
   isbn_issn?: string;
   editeur?: string;
   date_publication?: string;
-  
-  // Informations catalogage
   creation_notice_dtdm?: boolean;
   note_dtdm?: string;
-  
-  // Catégorie document
   categorie_document?: string;
-  
-  // Format/Support
   format_support?: string;
-  
-  // Informations financières communes
   fournisseur?: string;
   fonds_budgetaire?: string;
   fonds_sn_projet?: string;
-  
-  // Bibliothèque
   bibliotheque?: string;
   localisation_emplacement?: string;
-  
-  // Personnes concernées
   demandeur: string;
   personne_a_aviser_activation?: string;
-  
-  // Projets spéciaux
   projet_special?: string;
-  
-  // Statuts
   statut_bibliotheque?: string;
   statut_acq?: string;
-  
-  // Informations additionnelles communes
   source_information?: string;
   note_commentaire?: string;
   id_ressource?: string;
   catalogue?: string;
-  
-  // Métadonnées
   date_modification?: string;
   utilisateur_modification?: string;
 
-  // Champs spécifiques (peuvent être présents selon le type)
-  // Modification CCOL
+  // Champs tbl_items — ressource électronique
+  prix_cad?: number;
+  // FIX: devise_originale est VARCHAR(10) en DB → stocker le code court (CAD, USD, EUR, GBP)
+  devise_originale?: string;
+  prix_devise_originale?: number;
+  periode_couverte?: string;
+  nombre_titres_inclus?: number;
+  nombre_utilisateurs?: string;
+  lien_plateforme?: string;
+  format_pret_numerique?: string;
+
+  // Champs spécifiques selon le type de formulaire (tbl_modification_ccol)
   precision_demande?: string;
   numero_oclc?: string;
   collection?: string;
   catalogage?: string;
   
-  // Nouvel Abonnement
+  // tbl_nouvel_abonnement
   date_debut_abonnement?: string;
   type_monographie?: string;
   
-  // Nouvel Achat Unique
+  // tbl_nouvel_achat_unique
   projets_speciaux?: string;
   format_electronique?: string;
   reserve_cours?: boolean;
@@ -83,24 +69,23 @@ export interface Item {
   categorie_depense?: string;
   note_catalogueur_droit?: string;
   
-  // PEB Tipasa Numérique
+  // tbl_peb_tipasa_numerique
   type_demande_peb?: string;
   reference_tipasa?: string;
   urgence?: boolean;
   
-  // Requête ACQ
+  // tbl_requete_acq
   type_requete?: string;
   description_requete?: string;
   action_demandee?: string;
   
-  // Springer
+  // tbl_springer
   quantite?: number;
   
-  // Suggestion d'Achat
+  // tbl_suggestion_achat
   justification?: string;
   public_cible?: string;
   recommandation?: boolean;
-  // Nouveaux champs tbl_suggestion_achat
   usager_statut?: string;
   usager_faculte?: string;
   usager_courriel?: string;
@@ -108,16 +93,6 @@ export interface Item {
   aviser_reservation?: string;
   aviser_reception?: boolean;
   date_requise_cours?: string;
-
-  // Prix et commande
-  prix_cad?: number;
-  devise_originale?: string;
-  prix_devise_originale?: number;
-  periode_couverte?: string;
-  nombre_titres_inclus?: number;
-  nombre_utilisateurs?: string;
-  lien_plateforme?: string;
-  format_pret_numerique?: string;
 }
 
 export interface ApiResponse<T> {
@@ -159,8 +134,10 @@ export class ItemFormulaireService {
   // ==================== CRUD OPERATIONS ====================
 
   create(item: any): Observable<ApiResponse<Item>> {
+    // FIX: formatForApi() appliqué avant l'envoi pour garantir les types DB
+    const formattedItem = this.formatForApi(item);
     return this.http
-      .post<ApiResponse<Item>>(`${this.url}/add`, item, this.httpOptions)
+      .post<ApiResponse<Item>>(`${this.url}/add`, formattedItem, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item>>("create")));
   }
 
@@ -267,64 +244,83 @@ export class ItemFormulaireService {
     if (!item.titre_document || item.titre_document.trim() === '') {
       errors.push('Le titre du document est obligatoire');
     }
-
     if (!item.demandeur || item.demandeur.trim() === '') {
       errors.push('Le demandeur est obligatoire');
     }
-
     if (!item.fonds_budgetaire || item.fonds_budgetaire.trim() === '') {
       errors.push('Le fonds budgétaire est obligatoire');
     }
-
     if (item.titre_document && item.titre_document.length > 500) {
       errors.push('Le titre du document ne peut pas dépasser 500 caractères');
     }
-
     if (item.sous_titre && item.sous_titre.length > 500) {
       errors.push('Le sous-titre ne peut pas dépasser 500 caractères');
     }
-
     if (item.isbn_issn && item.isbn_issn.length > 50) {
       errors.push('L\'ISBN/ISSN ne peut pas dépasser 50 caractères');
     }
-
     if (item.editeur && item.editeur.length > 300) {
       errors.push('L\'éditeur ne peut pas dépasser 300 caractères');
     }
-
     if (item.demandeur && item.demandeur.length > 200) {
       errors.push('Le demandeur ne peut pas dépasser 200 caractères');
     }
-
     if (item.fonds_budgetaire && item.fonds_budgetaire.length > 200) {
       errors.push('Le fonds budgétaire ne peut pas dépasser 200 caractères');
     }
+    // FIX: validation de la longueur de devise_originale (VARCHAR(10) en DB)
+    if (item.devise_originale && item.devise_originale.length > 10) {
+      errors.push('Le code de devise ne peut pas dépasser 10 caractères (ex: CAD, USD, EUR, GBP)');
+    }
 
-    return {
-      valid: errors.length === 0,
-      errors
-    };
+    return { valid: errors.length === 0, errors };
   }
 
   formatForApi(item: any): any {
     const formattedItem = { ...item };
     
+    // FIX: tous les booléens explicitement castés
     if (formattedItem.creation_notice_dtdm !== undefined) {
       formattedItem.creation_notice_dtdm = Boolean(formattedItem.creation_notice_dtdm);
     }
     if (formattedItem.aviser_reception !== undefined) {
       formattedItem.aviser_reception = Boolean(formattedItem.aviser_reception);
     }
-    
+    // FIX: reserve_cours doit être un booléen pour tbl_nouvel_achat_unique (boolean en DB)
+    if (formattedItem.reserve_cours !== undefined) {
+      formattedItem.reserve_cours = Boolean(formattedItem.reserve_cours);
+    }
+    if (formattedItem.urgence !== undefined) {
+      formattedItem.urgence = Boolean(formattedItem.urgence);
+    }
+    if (formattedItem.recommandation !== undefined) {
+      formattedItem.recommandation = Boolean(formattedItem.recommandation);
+    }
+
+    // Vider les chaînes vides → null
     Object.keys(formattedItem).forEach(key => {
       if (formattedItem[key] === '') {
         formattedItem[key] = null;
       }
     });
     
-    formattedItem.titre_document = formattedItem.titre_document?.trim() || null;
-    formattedItem.demandeur = formattedItem.demandeur?.trim() || null;
-    formattedItem.fonds_budgetaire = formattedItem.fonds_budgetaire?.trim() || null;
+    // Trim des champs texte critiques
+    formattedItem.titre_document    = formattedItem.titre_document?.trim()    || null;
+    formattedItem.demandeur         = formattedItem.demandeur?.trim()         || null;
+    formattedItem.fonds_budgetaire  = formattedItem.fonds_budgetaire?.trim()  || null;
+
+    // FIX: si devise_originale est un libellé long (ancienne valeur), extraire le code
+    // Permet la rétrocompatibilité si des données anciennes sont rechargées
+    if (formattedItem.devise_originale && formattedItem.devise_originale.length > 10) {
+      const deviseCodes: { [key: string]: string } = {
+        'CAD - Dollar Canadien': 'CAD',
+        'USD - Dollar US':       'USD',
+        'EUR - Euro':            'EUR',
+        'GBP - Livre Sterling':  'GBP',
+      };
+      formattedItem.devise_originale = deviseCodes[formattedItem.devise_originale] 
+        || formattedItem.devise_originale.substring(0, 3);
+    }
     
     if (formattedItem.item_id) {
       formattedItem.date_modification = new Date().toISOString();

@@ -14,10 +14,11 @@ import { ItemFormulaireComponent } from './components/admin/item-formulaire/item
 import { UserLayoutComponent } from './components/usager/user-layout/user-layout.component';
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
-import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
+import { SuggestionPublicComponent } from './components/usager/pages/suggestion-public/suggestion-public.component';
 import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { UserGuard } from './services/user-guard.service';
 import { ImportComponent } from './components/admin/import/import.component';
+import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -39,7 +40,8 @@ const routes: Routes = [
     children: [
       { path: '',          component: UsagerHomeComponent },
       { path: 'demande', component: UsagerFormulaireComponent },
-      { path: 'suggestion-public', component: SuggestionPublicComponent }
+      { path: 'suggestion-public', component: SuggestionPublicComponent },
+      { path: 'nouvel-achat', component: NouvelAchatComponent }
     ]
   },
   { path: 'page-not-found', component: PageNotFoundComponent  },

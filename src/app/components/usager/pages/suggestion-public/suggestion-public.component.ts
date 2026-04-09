@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReponsesService } from '../../../services/reponses.service';
+import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
   selector: 'app-suggestion-public',

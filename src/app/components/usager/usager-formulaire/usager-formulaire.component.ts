@@ -41,7 +41,20 @@ export class UsagerFormulaireComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isLoading = true;
-    this.reponsesService.envoyerDemande(this.form.value).subscribe({
+    
+    // Structure correcte : baseData + specificData
+    const payload = {
+      baseData: {
+        titre_document: this.form.value.titre,
+        note_commentaire: this.form.value.description
+      },
+      specificData: {
+        nombre_utilisateurs: this.form.value.quantite
+      },
+      formulaire_type: 'Nouvel achat unique'
+    };
+
+    this.reponsesService.envoyerNouvelAchat(payload).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;

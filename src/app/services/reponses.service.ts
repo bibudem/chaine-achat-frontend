@@ -1,43 +1,111 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-export interface ReponsePayload {
-  type_formulaire: 'demande' | "Suggestion d\'achat";
+export interface SuggestionPayload {
+  type_formulaire: "Suggestion d'achat";
   usager_nom:      string;
   usager_courriel: string;
   usager_statut:   string;
   reponses:        Record<string, any>;
 }
 
+export interface NouvelAchatPayload {
+  type_formulaire: 'Nouvel achat unique';
+  usager_nom:      string;
+  usager_courriel: string;
+  usager_statut:   string;
+  reponses: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReponsesService {
-  private readonly url = `${environment.apiUrl}/reponses`;
+
+  private readonly baseUrl = `${environment.apiUrl}/reponses`;
+
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(private http: HttpClient) {}
 
-  private buildPayload(type: 'demande' | "Suggestion d\'achat", reponses: Record<string, any>): ReponsePayload {
-    return {
-      type_formulaire: type,
-      usager_nom:      `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+  // ──────────────────────────────────────────────────────────
+  // SUGGESTION D'ACHAT
+  // Composant : suggestion-public.component.ts
+  // Route     : POST /reponses/suggestion
+  // Décision  : GET  /reponses/decision-suggestion
+  // ──────────────────────────────────────────────────────────
+  envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
+    const body: SuggestionPayload = {
+      type_formulaire: "Suggestion d'achat",
+      usager_nom:      this.getNomSession(),
       usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
-      usager_statut:   sessionStorage.getItem('groupeAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
       reponses
     };
+    return this.http
+      .post(`${this.baseUrl}/suggestion`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerSuggestion')));
   }
 
-  envoyerDemande(reponses: Record<string, any>): Observable<any> {
-    return this.http.post(this.url, this.buildPayload('demande', reponses));
+  // ──────────────────────────────────────────────────────────
+  // NOUVEL ACHAT UNIQUE
+  // Composant : demande-achat-public.component.ts
+  // Route     : POST /reponses/nouvel-achat
+  // Décision  : GET  /reponses/decision-achat
+  // ──────────────────────────────────────────────────────────
+  envoyerNouvelAchat(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body: NouvelAchatPayload = {
+      type_formulaire: 'Nouvel achat unique',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/nouvel-achat`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerNouvelAchat')));
   }
 
-  envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
-    return this.http.post(this.url, this.buildPayload("Suggestion d\'achat", reponses));
-  }
-
+  // ──────────────────────────────────────────────────────────
+  // LECTURE (commun)
+  // ──────────────────────────────────────────────────────────
   lister(type?: string, page = 1, limit = 20): Observable<any> {
     const params: any = { page, limit };
     if (type) params['type'] = type;
-    return this.http.get(this.url, { params });
+    return this.http
+      .get(this.baseUrl, { params })
+      .pipe(catchError(this.handleError('lister')));
+  }
+
+  getById(id: number): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError('getById')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // PRIVÉS
+  // ──────────────────────────────────────────────────────────
+  private getNomSession(): string {
+    return `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
+  }
+
+  private handleError(operation = 'operation') {
+    return (error: any): Observable<never> => {
+      console.error(`[ReponsesService] ${operation}:`, error);
+      return throwError(() => error);
+    };
   }
 }

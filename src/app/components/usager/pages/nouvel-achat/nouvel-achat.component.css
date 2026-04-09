@@ -1,0 +1,266 @@
+/* ============================================================
+   demande-achat-public.component.css
+   Cohérent avec suggestion-public — même variables CSS
+   ============================================================ */
+
+.form-page {
+  min-height: 100vh;
+  background: #f4f6fb;
+  padding: 40px 16px 60px;
+}
+
+.form-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── En-tête ─────────────────────────────────────────────── */
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #0b113a;
+  color: white;
+  padding: 24px 30px;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 0;
+}
+
+.form-header__icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.form-header__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.form-header__subtitle {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin: 4px 0 0;
+}
+
+/* ── Badge ───────────────────────────────────────────────── */
+.badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+.badge--primary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* ── Alertes ─────────────────────────────────────────────── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+.alert i { font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+.alert--success { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; }
+.alert--success i { color: #2e7d32; }
+.alert--danger  { background: #ffebee; border: 1px solid #ef9a9a; color: #b71c1c; }
+.alert--danger  i { color: #c62828; }
+
+/* ── Sections ────────────────────────────────────────────── */
+.form-section {
+  background: white;
+  border: 1px solid #e0e4ef;
+  border-top: none;
+  padding: 24px 28px;
+}
+.form-section:last-of-type {
+  border-radius: 0 0 0 0;
+}
+
+.form-section__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0b113a;
+  margin: 0 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e4ef;
+}
+.form-section__title i { color: #3f51b5; }
+
+/* ── Labels ──────────────────────────────────────────────── */
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #374151;
+  margin-bottom: 6px;
+}
+.form-label.required::after {
+  content: ' *';
+  color: #e53935;
+}
+
+.form-text {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* ── Inputs ──────────────────────────────────────────────── */
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1.5px solid #d1d5db;
+  font-size: 0.9rem;
+  padding: 9px 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 3px rgba(63,81,181,0.12);
+  outline: none;
+}
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #ef5350;
+}
+.form-control[readonly] {
+  background: #f8fafc;
+  color: #6b7280;
+}
+
+textarea.form-control { resize: vertical; min-height: 100px; }
+
+/* ── Boutons priorité ────────────────────────────────────── */
+.btn-priorite {
+  flex: 1;
+  border: 1.5px solid #d1d5db;
+  background: white;
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 0;
+  transition: all 0.15s;
+}
+.btn-priorite:hover { border-color: #3f51b5; color: #3f51b5; }
+.btn-priorite--active {
+  background: #3f51b5;
+  border-color: #3f51b5;
+  color: white;
+}
+.btn-priorite--urgent.btn-priorite--active {
+  background: #c62828;
+  border-color: #c62828;
+}
+.btn-priorite--prioritaire.btn-priorite--active {
+  background: #e65100;
+  border-color: #e65100;
+}
+
+/* ── Boutons format ──────────────────────────────────────── */
+.btn-format {
+  flex: 1;
+  border: 1.5px solid #d1d5db;
+  background: white;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 0;
+  transition: all 0.15s;
+}
+.btn-format:hover { border-color: #3f51b5; color: #3f51b5; }
+.btn-format--active {
+  background: #0b113a;
+  border-color: #0b113a;
+  color: white;
+}
+
+/* ── Form switch ─────────────────────────────────────────── */
+.form-switch .form-check-input {
+  width: 2.4em;
+  height: 1.3em;
+  cursor: pointer;
+}
+.form-switch .form-check-input:checked {
+  background-color: #3f51b5;
+  border-color: #3f51b5;
+}
+.form-check-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+.form-actions {
+  background: white;
+  border: 1px solid #e0e4ef;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn {
+  border-radius: 7px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 24px;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-primary {
+  background: #3f51b5;
+  border: none;
+  color: white;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #303f9f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(63,81,181,0.3);
+}
+.btn-secondary {
+  background: white;
+  border: 1.5px solid #d1d5db;
+  color: #374151;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Input group ─────────────────────────────────────────── */
+.input-group-text {
+  background: #f3f4f6;
+  border: 1.5px solid #d1d5db;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .form-header    { flex-wrap: wrap; padding: 18px 16px; }
+  .form-section   { padding: 18px 16px; }
+  .form-actions   { padding: 16px; }
+  .btn-format,
+  .btn-priorite   { font-size: 0.8rem; padding: 10px 4px; }
+  .badge--primary { display: none; }
+}

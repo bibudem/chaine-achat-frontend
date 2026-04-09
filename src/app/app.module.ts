@@ -55,11 +55,12 @@ import { DialogService } from './services/dialog.service';
 import { RapportsComponent } from './components/admin/rapports/rapports.component';
 import { UserLayoutComponent } from './components/usager/user-layout/user-layout.component';
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
-import { SuggestionPublicComponent } from './components/usager/suggestion-public/suggestion-public.component';
+import { SuggestionPublicComponent } from './components/usager/pages/suggestion-public/suggestion-public.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 import { ImportComponent } from './components/admin/import/import.component';
+import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ImportComponent } from './components/admin/import/import.component';
     UsagerHomeComponent,
     LstFournisseursComponent,
     ItemDetailComponent,
-    ImportComponent
+    ImportComponent,
+    NouvelAchatComponent
   ],
     imports: [
         RouterModule,
