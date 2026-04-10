@@ -192,7 +192,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   getTypeIcon(type: string): string {
     switch (type) {
-      case 'Nouvel achat unique':  return 'bi bi-cart';
+      case 'Nouvel achat unique':  return 'bi bi-basket3';
       case 'Nouvel abonnement':    return 'bi bi-newspaper';
       case 'Modification CCOL':    return 'bi bi-pencil-square';
       case 'PEB Tipasa numérique': return 'bi bi-link-45deg';

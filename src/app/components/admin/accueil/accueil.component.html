@@ -135,8 +135,9 @@
           </div>
           <div class="type-legend">
             <div *ngFor="let t of byType; let i = index" class="type-legend__row">
-              <span class="type-legend__dot" [class]="'tc-' + i + '-bg'"></span>
-              <span class="type-legend__name">{{ t.formulaire_type }}</span>
+              <i [class]="getTypeIcon(t.formulaire_type)" ></i>
+              <span class="type-legend__name">
+                {{ t.formulaire_type }}</span>
               <div class="type-legend__track">
                 <div class="type-legend__fill" [class]="'tc-' + i + '-bg'" [style.width.%]="t.percentage"></div>
               </div>
