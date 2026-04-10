@@ -409,7 +409,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
         };
       case 'Nouvel achat unique':
         return {
-          priorite_demande:           formData.priorite_demande,
           projets_speciaux:           formData.projets_speciaux,
           type_monographie:           formData.type_monographie,
           format_electronique:        formData.format_electronique,

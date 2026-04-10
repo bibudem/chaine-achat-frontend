@@ -199,8 +199,8 @@ export class NouvelAchatComponent implements OnInit {
         prix_devise_originale:        v.prix_devise_originale,
         fonds_budgetaire:             v.fonds_budgetaire,
         note_commentaire:             v.note_commentaire,
-        statut_bibliotheque:          'Soumis aux ACQ : Formulaire complété et prêt à être transmis aux Acquisitions.',
-        statut_acq:                   'En attente de traitement aux ACQ',
+        statut_bibliotheque:          'Saisie en cours en bibliothèque',
+        statut_acq:                   'En attente',
       },
       specificData: {
         type_monographie:         null,
