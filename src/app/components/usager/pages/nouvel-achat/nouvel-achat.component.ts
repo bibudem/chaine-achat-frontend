@@ -39,6 +39,10 @@ export class NouvelAchatComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
+  derniereTitre: string = '';
+  derniereBibliotheque: string = '';
+  dernierPrixCAD: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private reponsesService: ReponsesService
@@ -175,6 +179,11 @@ export class NouvelAchatComponent implements OnInit {
     this.isLoading = true;
     const v = this.form.getRawValue();
 
+    // ✅ Capturer les données pour afficher dans l'écran de confirmation
+    this.derniereTitre = v.titre_document;
+    this.derniereBibliotheque = v.bibliotheque;
+    this.dernierPrixCAD = v.prix_cad;
+
     // Structure identique à ce qu'attend le webhook n8n "nouvelle-demande-achat"
     const payload = {
       baseData: {
@@ -223,7 +232,7 @@ export class NouvelAchatComponent implements OnInit {
       next: () => {
         this.success   = true;
         this.isLoading = false;
-        this.onReset();
+        // ✅ NE PAS réinitialiser immédiatement, garder les données pour l'écran de confirmation
       },
       error: () => {
         this.error     = true;

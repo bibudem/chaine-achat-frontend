@@ -1,118 +1,162 @@
-<!-- suggestion-public.component.html — v2 : aligné avec le formulaire SharePoint -->
-<div class="container py-4">
-  <div class="card shadow-sm p-4">
-    <h2>Suggestion d'achat</h2>
+<!-- ============================================================
+     app-suggestion-public — Suggestion d'achat
+     ============================================================ -->
 
-    <!-- Notice -->
-    <div class="alert alert-info mt-3">
-      <strong>À noter</strong>
-      <ol class="mb-0 mt-2">
-        <li>Avant de compléter ce formulaire, vérifiez dans
-          <a href="https://umontreal.on.worldcat.org/discovery?lang=fr" target="_blank">Sofia</a>
-          que nous ne le possédons pas déjà.
-        </li>
-        <li>Faire une seule demande par formulaire.</li>
-        <li>Nous analyserons votre suggestion avec soin. La décision d'achat dépend de plusieurs facteurs,
-          dont la politique de développement de la collection et du budget disponible.</li>
-        <li>À moins d'indication contraire, l'édition acquise sera la plus récente.</li>
-      </ol>
+<div class="form-page">
+  <div class="form-container">
+
+    <!-- ══ EN-TÊTE ══════════════════════════════════════════ -->
+    <div class="form-header">
+      <div class="form-header__icon">
+        <i class="bi bi-lightbulb"></i>
+      </div>
+      <div>
+        <h1 class="form-header__title">Suggestion d'achat</h1>
+        <p class="form-header__subtitle">
+          Proposez un document que vous souhaitez voir acquis par les bibliothèques
+        </p>
+      </div>
     </div>
 
-    <!-- Succès -->
-    <div *ngIf="success" class="text-center py-4">
-      <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-      <h5 class="mt-3">Votre suggestion a bien été envoyée !</h5>
-      <p class="text-muted">Nous analyserons votre suggestion avec soin.</p>
-      <button class="btn btn-outline-primary mt-2" (click)="onReset()">
-        <i class="bi bi-plus-circle me-2"></i>Faire une autre suggestion
-      </button>
+    <!-- ══ NOTICE — cachée après soumission ═════════════════ -->
+    <div class="form-notice" *ngIf="!success">
+      <div class="form-notice__icon">
+        <i class="fas fa-info-circle"></i>
+      </div>
+      <div class="form-notice__body">
+        <strong>À noter avant de soumettre votre suggestion</strong>
+        <ol class="form-notice__list">
+          <li>
+            Vérifiez dans
+            <a href="https://umontreal.on.worldcat.org/discovery?lang=fr" target="_blank">
+              Sofia <i class="fas fa-external-link-alt"></i>
+            </a>
+            que le document n'est pas déjà dans notre collection.
+          </li>
+          <li>Faites une seule demande par formulaire.</li>
+          <li>
+            Votre suggestion sera analysée avec soin. La décision dépend de la
+            politique de développement de la collection et du budget disponible.
+          </li>
+          <li>À moins d'indication contraire, l'édition acquise sera la plus récente.</li>
+        </ol>
+      </div>
     </div>
 
-    <!-- Erreur -->
-    <div *ngIf="error" class="alert alert-danger mt-3">
-      ❌ Une erreur s'est produite. Veuillez réessayer.
+    <!-- ══ ÉCRAN DE CONFIRMATION ════════════════════════════ -->
+    <div *ngIf="success" class="confirmation-screen">
+      <div class="confirmation-icon confirmation-icon--suggestion">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <h2 class="confirmation-title">Suggestion envoyée !</h2>
+      <p class="confirmation-message">
+        Votre suggestion a bien été reçue par l'équipe des bibliothèques.<br>
+        Elle sera analysée avec soin dans les meilleurs délais.
+      </p>
+
+      <div class="confirmation-details">
+        <div class="confirmation-detail" *ngIf="derniereTitre">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-book me-1"></i>Document suggéré
+          </span>
+          <span class="confirmation-detail__value">{{ derniereTitre }}</span>
+        </div>
+        <div class="confirmation-detail" *ngIf="derniereCourriel">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-envelope me-1"></i>Confirmation envoyée à
+          </span>
+          <span class="confirmation-detail__value">{{ derniereCourriel }}</span>
+        </div>
+      </div>
+
+      <div class="confirmation-actions">
+        <button type="button" class="btn btn-primary" (click)="onReset()">
+          <i class="fas fa-plus-circle"></i>
+          Faire une autre suggestion
+        </button>
+      </div>
     </div>
 
-    <p class="mt-3"><em>* Champ obligatoire</em></p>
+    <!-- ══ MESSAGE ERREUR ═══════════════════════════════════ -->
+    <div *ngIf="error" class="alert alert--danger">
+      <i class="fas fa-exclamation-circle"></i>
+      <div>
+        <strong>Une erreur est survenue.</strong><br>
+        Veuillez réessayer ou contacter
+        <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
+      </div>
+    </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate *ngIf="!success">
+    <!-- ══ FORMULAIRE ═══════════════════════════════════════ -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!success" novalidate>
 
-      <!-- ══════════════════════════════════════
-           IDENTIFICATION
-      ══════════════════════════════════════ -->
-      <fieldset class="border rounded p-3 mb-4">
-        <legend class="float-none w-auto px-2 fs-6 fw-bold">Identification</legend>
-
-        <!-- Nom -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Nom <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="nom"
-                   [class.is-invalid]="submitted && f['nom'].invalid" />
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
+      <!-- SECTION 1 — IDENTIFICATION -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-user"></i>Identification
+        </h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label required">Nom</label>
+            <input type="text" formControlName="nom" class="form-control"
+                   [class.is-invalid]="submitted && f['nom'].invalid"
+                   placeholder="Votre nom complet">
+            <div *ngIf="submitted && f['nom'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
           </div>
-        </div>
 
-        <!-- Catégorie d'usager -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Catégorie d'usager <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <select class="form-select" formControlName="statut"
-                    [class.is-invalid]="submitted && f['statut'].invalid">
-              <option value="">Faites un choix</option>
-              <option>Étudiant-e 3e cycle</option>
-              <option>Professeur-e</option>
-              <option>Chargé-e de cours</option>
-              <option>Professeur-e retraité</option>
-            </select>
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
-          </div>
-        </div>
-
-        <!-- Faculté / Département -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Faculté / Département <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="faculteDepartement"
-                   [class.is-invalid]="submitted && f['faculteDepartement'].invalid" />
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
-          </div>
-        </div>
-
-        <!-- Courriel -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Courriel <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <input type="email" class="form-control" formControlName="courriel"
-                   [class.is-invalid]="submitted && f['courriel'].invalid" />
-            <div class="invalid-feedback">Courriel invalide ou obligatoire.</div>
+          <div class="col-md-6">
+            <label class="form-label required">Courriel</label>
+            <input type="email" formControlName="courriel" class="form-control"
+                   [class.is-invalid]="submitted && f['courriel'].invalid"
+                   placeholder="prenom.nom@umontreal.ca">
+            <div *ngIf="submitted && f['courriel'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide ou obligatoire.
+            </div>
             <div class="form-check mt-2">
-              <input class="form-check-input" type="checkbox" formControlName="copieCourriel"
-                     id="copieCourriel" />
+              <input class="form-check-input" type="checkbox"
+                     formControlName="copieCourriel" id="copieCourriel">
               <label class="form-check-label small" for="copieCourriel">
                 M'envoyer une copie de la demande
               </label>
             </div>
           </div>
-        </div>
 
-        <!-- Bibliothèque — champ absent du formulaire original, présent dans SharePoint -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Bibliothèque <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <select class="form-select" formControlName="bibliotheque"
+          <div class="col-md-6">
+            <label class="form-label required">Catégorie d'usager</label>
+            <select formControlName="statut" class="form-select"
+                    [class.is-invalid]="submitted && f['statut'].invalid">
+              <option value="">— Faites un choix —</option>
+              <option>Étudiant-e 1er cycle</option>
+              <option>Étudiant-e 2e cycle</option>
+              <option>Étudiant-e 3e cycle</option>
+              <option>Professeur-e</option>
+              <option>Chargé-e de cours</option>
+              <option>Professeur-e retraité</option>
+              <option>Personnel</option>
+            </select>
+            <div *ngIf="submitted && f['statut'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Faculté / Département</label>
+            <input type="text" formControlName="faculteDepartement" class="form-control"
+                   [class.is-invalid]="submitted && f['faculteDepartement'].invalid"
+                   placeholder="Ex : Faculté des sciences">
+            <div *ngIf="submitted && f['faculteDepartement'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Bibliothèque</label>
+            <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="submitted && f['bibliotheque'].invalid">
-              <option value="">Faites un choix</option>
+              <option value="">— Sélectionnez —</option>
               <option>Aménagement</option>
               <option>Campus Laval</option>
               <option>Droit</option>
@@ -128,185 +172,165 @@
               <option>Santé</option>
               <option>TGD</option>
             </select>
-            <div class="form-text">
-              En fonction de votre Faculté/Département, indiquez la bibliothèque où le document doit être acheminé.
+            <div *ngIf="submitted && f['bibliotheque'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
             </div>
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
+            <small class="form-text">
+              Bibliothèque correspondant à votre Faculté / Département
+            </small>
           </div>
-        </div>
 
-        <!-- Bibliothécaire disciplinaire -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Bibliothécaire disciplinaire</label>
-          <div class="col-sm-8">
-            <input type="email" class="form-control" formControlName="bibliothecaire"
-                   placeholder="courriel@umontreal.ca"
-                   [class.is-invalid]="submitted && f['bibliothecaire'].invalid" />
-            <div class="form-text">
-              En fonction de votre Faculté/Département, indiquez le courriel du ou de la bibliothécaire disciplinaire.
+          <div class="col-md-6">
+            <label class="form-label">Bibliothécaire disciplinaire</label>
+            <input type="email" formControlName="bibliothecaire" class="form-control"
+                   [class.is-invalid]="submitted && f['bibliothecaire'].invalid"
+                   placeholder="courriel@umontreal.ca">
+            <div *ngIf="submitted && f['bibliothecaire'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide.
             </div>
-            <div class="invalid-feedback">Courriel invalide.</div>
+            <small class="form-text">
+              Courriel du ou de la bibliothécaire responsable de votre discipline
+            </small>
           </div>
         </div>
+      </div>
 
-      </fieldset>
-
-      <!-- ══════════════════════════════════════
-           DESCRIPTION DE LA SUGGESTION
-      ══════════════════════════════════════ -->
-      <fieldset class="border rounded p-3 mb-4">
-        <legend class="float-none w-auto px-2 fs-6 fw-bold">Description de la suggestion</legend>
-
-        <!-- Titre -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Titre du document <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <textarea class="form-control" formControlName="titre" rows="2"
-                      [class.is-invalid]="submitted && f['titre'].invalid"></textarea>
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
+      <!-- SECTION 2 — DESCRIPTION -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-book-open"></i>Description de la suggestion
+        </h2>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label required">Titre du document</label>
+            <textarea formControlName="titre" class="form-control"
+                      [class.is-invalid]="submitted && f['titre'].invalid"
+                      rows="2"
+                      placeholder="Titre complet du document suggéré"></textarea>
+            <div *ngIf="submitted && f['titre'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
           </div>
-        </div>
 
-        <!-- Auteur -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Auteur ou autrice <span class="text-danger">*</span>
-          </label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="auteur"
-                   [class.is-invalid]="submitted && f['auteur'].invalid" />
-            <div class="invalid-feedback">Ce champ est obligatoire.</div>
+          <div class="col-md-6">
+            <label class="form-label required">Auteur ou autrice</label>
+            <input type="text" formControlName="auteur" class="form-control"
+                   [class.is-invalid]="submitted && f['auteur'].invalid"
+                   placeholder="Nom de l'auteur ou de l'autrice">
+            <div *ngIf="submitted && f['auteur'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
           </div>
-        </div>
 
-        <!-- Éditeur — absent de ton formulaire, présent dans SharePoint -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Éditeur du document</label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="editeur" />
+          <div class="col-md-6">
+            <label class="form-label">Éditeur du document</label>
+            <input type="text" formControlName="editeur" class="form-control"
+                   placeholder="Maison d'édition">
           </div>
-        </div>
 
-        <!-- Date de publication -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Date de publication</label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="annee"
-                   placeholder="Ex. : 2023" />
-            <div class="form-text">Date de publication en ligne ou en format imprimé.</div>
+          <div class="col-md-4">
+            <label class="form-label">Date de publication</label>
+            <input type="text" formControlName="annee" class="form-control"
+                   placeholder="Ex : 2024">
+            <small class="form-text">Date de publication en ligne ou imprimée</small>
           </div>
-        </div>
 
-        <!-- Source internet (URL) — séparé de la date, comme dans SharePoint -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Source internet (URL)</label>
-          <div class="col-sm-8">
-            <input type="url" class="form-control" formControlName="urlSource"
-                   placeholder="https://..."
-                   [class.is-invalid]="submitted && f['urlSource'].invalid" />
-            <div class="invalid-feedback">URL invalide.</div>
+          <div class="col-md-4">
+            <label class="form-label">ISBN / ISSN</label>
+            <input type="text" formControlName="isbnIssn" class="form-control"
+                   placeholder="Ex : 9782070360024">
+            <small class="form-text">Ne pas insérer de tirets</small>
           </div>
-        </div>
 
-        <!-- ISBN / ISSN -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">ISBN / ISSN</label>
-          <div class="col-sm-8">
-            <input class="form-control" formControlName="isbnIssn" />
-            <div class="form-text">Monographies : ne pas insérer de tiret entre les chiffres.</div>
-          </div>
-        </div>
-
-        <!-- Format / Support — absent de ton formulaire, présent dans SharePoint -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Format / Support</label>
-          <div class="col-sm-8">
-            <select class="form-select" formControlName="formatSupport">
-              <option value="">Faites un choix</option>
-              <option>Imprimé/support physique</option>
+          <div class="col-md-4">
+            <label class="form-label">Format / Support</label>
+            <select formControlName="formatSupport" class="form-select">
+              <option value="">— Faites un choix —</option>
+              <option>Imprimé / support physique</option>
               <option>Électronique</option>
             </select>
           </div>
-        </div>
 
-        <!-- Notes et commentaires -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">Notes et commentaires</label>
-          <div class="col-sm-8">
-            <textarea class="form-control" formControlName="notes" rows="4"></textarea>
-          </div>
-        </div>
-
-        <!-- Réserver -->
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label">
-            Voulez-vous réserver le document à son arrivée ?
-          </label>
-          <div class="col-sm-8 d-flex align-items-center gap-4 pt-2">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" formControlName="reserver"
-                     id="reserver-oui" value="oui" />
-              <label class="form-check-label" for="reserver-oui">Oui</label>
+          <div class="col-12">
+            <label class="form-label">Source internet (URL)</label>
+            <input type="url" formControlName="urlSource" class="form-control"
+                   [class.is-invalid]="submitted && f['urlSource'].invalid"
+                   placeholder="https://...">
+            <div *ngIf="submitted && f['urlSource'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>URL invalide.
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" formControlName="reserver"
-                     id="reserver-non" value="non" />
-              <label class="form-check-label" for="reserver-non">Non</label>
+            <small class="form-text">Lien vers la fiche du document (éditeur, librairie, etc.)</small>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Notes et commentaires</label>
+            <textarea formControlName="notes" class="form-control" rows="4"
+                      placeholder="Justification de votre demande, informations complémentaires…"></textarea>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label required">Voulez-vous réserver le document à son arrivée ?</label>
+            <div class="reserver-group">
+              <label class="reserver-option" [class.reserver-option--active]="f['reserver'].value === 'oui'">
+                <input type="radio" formControlName="reserver" value="oui">
+                <i class="fas fa-bookmark me-2"></i>Oui, réserver
+              </label>
+              <label class="reserver-option" [class.reserver-option--active]="f['reserver'].value === 'non'">
+                <input type="radio" formControlName="reserver" value="non">
+                <i class="fas fa-times me-2"></i>Non
+              </label>
             </div>
           </div>
         </div>
+      </div>
 
-      </fieldset>
+      <!-- SECTION 3 — ENSEIGNANT -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-chalkboard-teacher"></i>Section réservée au corps enseignant
+        </h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Document requis pour un cours en date du</label>
+            <input type="date" formControlName="dateRequis" class="form-control">
+            <small class="form-text">Laisser vide si non applicable</small>
+          </div>
 
-      <!-- ══════════════════════════════════════
-           SECTION ENSEIGNANT
-      ══════════════════════════════════════ -->
-      <fieldset class="border rounded p-3 mb-4">
-        <legend class="float-none w-auto px-2 fs-6 fw-bold">Section réservée au corps enseignant</legend>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox"
+                     formControlName="mettreReserve"
+                     id="mettreReserveCheck" role="switch">
+              <label class="form-check-label" for="mettreReserveCheck">
+                Mettre le document à la réserve de cours
+              </label>
+            </div>
+          </div>
 
-        <!-- Document requis pour un cours -->
-        <div class="mb-3 row">
-          <label class="col-sm-5 col-form-label">
-            Document requis pour un cours en date du...
-          </label>
-          <div class="col-sm-7">
-            <input type="date" class="form-control" formControlName="dateRequis" />
-            <div class="form-text">Utiliser le calendrier ou saisir la date au format JJ/MM/AAAA.</div>
+          <div class="col-12" *ngIf="showSigleCours">
+            <div class="reserve-cours-fields">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Sigle du cours</label>
+                  <input type="text" formControlName="sigleCours" class="form-control"
+                         placeholder="Ex : SCI6051">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Réserve de cours -->
-        <div class="mb-3 row">
-          <label class="col-sm-5 col-form-label">
-            Mettre le document à la réserve de cours ?
-          </label>
-          <div class="col-sm-7 d-flex align-items-center">
-            <input class="form-check-input" type="checkbox" formControlName="mettreReserve"
-                   id="mettreReserve" />
-          </div>
-        </div>
-
-        <!-- Sigle du cours (conditionnel) -->
-        <div class="mb-3 row" *ngIf="showSigleCours">
-          <label class="col-sm-5 col-form-label">Sigle du cours</label>
-          <div class="col-sm-7">
-            <input class="form-control" formControlName="sigleCours"
-                   placeholder="Ex. : SCI6051" />
-          </div>
-        </div>
-
-      </fieldset>
-
-      <!-- Boutons -->
-      <div class="d-flex gap-3">
-        <button type="submit" class="btn btn-primary px-4" [disabled]="isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-          {{ isLoading ? 'Envoi...' : 'Envoyer' }}
+      <!-- BOUTONS -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onReset()"
+                [disabled]="isLoading">
+          <i class="fas fa-redo"></i>Recommencer
         </button>
-        <button type="button" class="btn btn-outline-secondary" (click)="onReset()">
-          Recommencer
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isLoading" class="fas fa-paper-plane"></i>
+          {{ isLoading ? 'Envoi en cours…' : 'Envoyer la suggestion' }}
         </button>
       </div>
 

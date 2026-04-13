@@ -1,6 +1,5 @@
 <!-- ============================================================
      app-nouvel-achat — Nouvel achat unique
-     Design system UdeM : Figtree + Lora + variables CSS projet
      ============================================================ -->
 
 <div class="form-page">
@@ -19,17 +18,49 @@
       </div>
     </div>
 
-    <!-- ══ MESSAGE SUCCÈS ═══════════════════════════════════ -->
-    <div *ngIf="success" class="alert alert--success mt-3">
-      <i class="fas fa-check-circle"></i>
-      <div>
-        <strong>Demande soumise avec succès !</strong><br>
-        L'équipe des Acquisitions a été notifiée. Vous recevrez une confirmation par courriel.
+    <!-- ══ ÉCRAN DE CONFIRMATION ════════════════════════════ -->
+    <div *ngIf="success" class="confirmation-screen">
+      <div class="confirmation-icon confirmation-icon--achat">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <h2 class="confirmation-title">Demande soumise !</h2>
+      <p class="confirmation-message">
+        Votre demande d'achat a bien été transmise à l'équipe des Acquisitions.<br>
+        Vous recevrez une confirmation par courriel dès qu'elle aura été traitée.
+      </p>
+
+      <div class="confirmation-details">
+        <div class="confirmation-detail" *ngIf="derniereTitre">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-book me-1"></i>Document demandé
+          </span>
+          <span class="confirmation-detail__value">{{ derniereTitre }}</span>
+        </div>
+        <div class="confirmation-detail" *ngIf="derniereBibliotheque">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-university me-1"></i>Bibliothèque
+          </span>
+          <span class="confirmation-detail__value">{{ derniereBibliotheque }}</span>
+        </div>
+        <div class="confirmation-detail" *ngIf="dernierPrixCAD">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-dollar-sign me-1"></i>Prix estimé
+          </span>
+          <span class="confirmation-detail__value">{{ dernierPrixCAD | currency:'CAD':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="confirmation-actions">
+        <button type="button" class="btn btn-primary" (click)="onReset()">
+          <i class="fas fa-plus-circle"></i>
+          Soumettre une autre demande
+        </button>
       </div>
     </div>
 
     <!-- ══ MESSAGE ERREUR ═══════════════════════════════════ -->
-    <div *ngIf="error" class="alert alert--danger mt-3">
+    <div *ngIf="error" class="alert alert--danger">
       <i class="fas fa-exclamation-circle"></i>
       <div>
         <strong>Une erreur est survenue.</strong><br>
@@ -41,14 +72,11 @@
     <!-- ══ FORMULAIRE ═══════════════════════════════════════ -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!success" novalidate>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 1 — IDENTIFICATION
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 1 — IDENTIFICATION -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-user"></i>Identification
         </h2>
-
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label required">Nom du demandeur</label>
@@ -103,14 +131,11 @@
         </div>
       </div>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 2 — INFORMATIONS BIBLIOGRAPHIQUES
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 2 — INFORMATIONS BIBLIOGRAPHIQUES -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-book-open"></i>Informations bibliographiques
         </h2>
-
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Titre du document</label>
@@ -184,14 +209,11 @@
         </div>
       </div>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 3 — FORMAT ET SUPPORT
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 3 — FORMAT ET SUPPORT -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-layer-group"></i>Format et support
         </h2>
-
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Format / Support</label>
@@ -209,7 +231,6 @@
             </div>
           </div>
 
-          <!-- Champs électronique — zone surlignée -->
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">
@@ -221,7 +242,6 @@
                     <option value="EPUB">EPUB</option>
                   </select>
                 </div>
-
                 <div class="col-md-4">
                   <label class="form-label">Nombre d'utilisateurs</label>
                   <select formControlName="nombre_utilisateurs" class="form-select">
@@ -231,7 +251,6 @@
                     <option value="Autre (note)*">Autre (note)*</option>
                   </select>
                 </div>
-
                 <div class="col-md-4">
                   <label class="form-label required">Lien vers la plateforme</label>
                   <input type="url" formControlName="lien_plateforme" class="form-control"
@@ -248,14 +267,11 @@
         </div>
       </div>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 4 — INFORMATIONS FINANCIÈRES
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 4 — INFORMATIONS FINANCIÈRES -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-coins"></i>Informations financières
         </h2>
-
         <div class="row g-3">
           <div class="col-md-3">
             <label class="form-label required">Devise originale</label>
@@ -295,35 +311,31 @@
             <label class="form-label required">Fonds budgétaire</label>
             <input type="text" formControlName="fonds_budgetaire" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   placeholder="Ex : MO-005, PE-005">
+                   placeholder="Ex : MO-005">
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Format invalide — ex : MO-005 (avec tiret).
+              <i class="fas fa-exclamation-triangle me-1"></i>Format invalide — ex : MO-005.
             </div>
             <small class="form-text">Inscrire le code AVEC tiret</small>
           </div>
         </div>
       </div>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 5 — RÉSERVE DE COURS
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 5 — RÉSERVE DE COURS -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-chalkboard-teacher"></i>Réserve de cours
         </h2>
-
         <div class="row g-3">
           <div class="col-12">
             <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox" formControlName="mettreReserve"
                      id="mettreReserveCheck" role="switch">
-              <label class="form-check-label ml-5" for="mettreReserveCheck">
+              <label class="form-check-label" for="mettreReserveCheck">
                 Ce document est destiné à la réserve de cours
               </label>
             </div>
           </div>
 
-          <!-- Champs réserve — zone surlignée -->
           <div class="col-12" *ngIf="showReserveCours">
             <div class="reserve-cours-fields">
               <div class="row g-3">
@@ -336,7 +348,6 @@
                     <i class="fas fa-exclamation-triangle me-1"></i>Sigle invalide — ex : SCI6051.
                   </div>
                 </div>
-
                 <div class="col-md-4">
                   <label class="form-label required">Session</label>
                   <input type="text" formControlName="reserve_cours_session" class="form-control"
@@ -346,7 +357,6 @@
                     <i class="fas fa-exclamation-triangle me-1"></i>La session est requise.
                   </div>
                 </div>
-
                 <div class="col-md-4">
                   <label class="form-label required">Enseignant</label>
                   <input type="text" formControlName="reserve_cours_enseignant" class="form-control"
@@ -362,14 +372,11 @@
         </div>
       </div>
 
-      <!-- ────────────────────────────────────────────────────
-           SECTION 6 — NOTE / COMMENTAIRE
-           ──────────────────────────────────────────────────── -->
+      <!-- SECTION 6 — NOTE / COMMENTAIRE -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-comment-dots"></i>Note / Commentaire
         </h2>
-
         <div class="row g-3">
           <div class="col-12">
             <textarea formControlName="note_commentaire" class="form-control"
@@ -388,24 +395,19 @@
         </div>
       </div>
 
-      <!-- ── BOUTONS D'ACTION ─────────────────────────────── -->
+      <!-- BOUTONS -->
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="onReset()"
                 [disabled]="isLoading">
           <i class="fas fa-times"></i>Annuler
         </button>
-
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">
-          <span *ngIf="isLoading"
-                class="spinner-border spinner-border-sm"
-                role="status"
-                aria-hidden="true"></span>
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isLoading" class="fas fa-paper-plane"></i>
           {{ isLoading ? 'Envoi en cours…' : 'Soumettre la demande' }}
         </button>
       </div>
 
     </form>
-
   </div>
 </div>

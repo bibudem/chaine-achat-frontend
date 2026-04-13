@@ -12,6 +12,11 @@ export class UsagerFormulaireComponent implements OnInit {
   success   = false;
   error     = false;
   isLoading = false;
+  
+  // Variables pour afficher dans l'écran de confirmation
+  derniereTitre = '';
+  derniereDescription = '';
+  derniereQuantite = 0;
 
   constructor(private fb: FormBuilder, private reponsesService: ReponsesService) {}
 
@@ -42,6 +47,11 @@ export class UsagerFormulaireComponent implements OnInit {
 
     this.isLoading = true;
     
+    // ✅ Capturer les données pour afficher dans l'écran de confirmation
+    this.derniereTitre = this.form.value.titre;
+    this.derniereDescription = this.form.value.description;
+    this.derniereQuantite = this.form.value.quantite;
+
     // Structure correcte : baseData + specificData
     const payload = {
       baseData: {
@@ -58,6 +68,7 @@ export class UsagerFormulaireComponent implements OnInit {
       next: () => {
         this.success   = true;
         this.isLoading = false;
+        // ✅ NE PAS réinitialiser immédiatement, garder les données pour l'écran de confirmation
       },
       error: () => {
         this.error     = true;

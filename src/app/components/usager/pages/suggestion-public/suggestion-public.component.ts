@@ -9,11 +9,16 @@ import { ReponsesService } from '../../../../services/reponses.service';
 })
 export class SuggestionPublicComponent implements OnInit {
   form!: FormGroup;
-  submitted    = false;
-  success      = false;
-  error        = false;
-  isLoading    = false;
-  showSigleCours = false;
+  submitted       = false;
+  success         = false;
+  error           = false;
+  isLoading       = false;
+  showSigleCours  = false;
+  
+  // Variables pour afficher dans l'écran de confirmation
+  derniereTitre   = '';
+  derniereCourriel = '';
+  dernierNom      = '';
 
   constructor(
     private fb: FormBuilder,
@@ -85,6 +90,11 @@ export class SuggestionPublicComponent implements OnInit {
 
     const v = this.form.getRawValue();
 
+    // ✅ Capturer les données pour afficher dans l'écran de confirmation
+    this.derniereTitre = v.titre;
+    this.derniereCourriel = v.courriel;
+    this.dernierNom = v.nom;
+
     const payload = {
       /* Identification */
       nom:                v.nom,
@@ -116,7 +126,7 @@ export class SuggestionPublicComponent implements OnInit {
       next: () => {
         this.success   = true;
         this.isLoading = false;
-        this.onReset();
+        // ✅ NE PAS réinitialiser immédiatement, garder les données pour l'écran de confirmation
       },
       error: () => {
         this.error     = true;

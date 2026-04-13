@@ -1,0 +1,464 @@
+/* ============================================================
+   suggestion-public.component.css
+   Même design system que nouvel-achat.component.css
+   Classes spécifiques : form-notice, reserver-group
+   ============================================================ */
+
+/* ── Page wrapper ────────────────────────────────────────── */
+.form-page {
+  min-height: calc(100vh - var(--navbar-height));
+  margin-bottom: 20px;
+}
+
+/* ── En-tête ─────────────────────────────────────────────── */
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  color: var(--white);
+  padding: 22px 28px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 3px solid var(--accent-yellow);
+}
+
+.form-header__icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.form-header__title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--white);
+}
+
+.form-header__subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  opacity: 0.78;
+  margin: 3px 0 0;
+}
+
+/* ── Badge ───────────────────────────────────────────────── */
+.badge--primary {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+/* ── Notice informative (spécifique suggestion) ──────────── */
+.form-notice {
+  display: flex;
+  gap: 14px;
+  background: var(--extra-light-blue);
+  border: 1px solid rgba(35, 128, 209, 0.25);
+  border-left: 4px solid var(--light-blue);
+  padding: 16px 20px;
+  border-radius: 0;
+  border-top: none;
+}
+
+.form-notice__icon {
+  color: var(--light-blue);
+  font-size: 1.1rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.form-notice__body {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.85rem;
+  color: var(--medium-gray);
+  line-height: 1.6;
+}
+
+.form-notice__body strong {
+  display: block;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+}
+
+.form-notice__list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.form-notice__list li {
+  margin-bottom: 4px;
+}
+
+.form-notice__list li:last-child {
+  margin-bottom: 0;
+}
+
+.form-notice__list a {
+  color: var(--secondary-blue);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-notice__list a:hover {
+  text-decoration: underline;
+}
+
+.form-notice__list a i {
+  font-size: 0.65rem;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+/* ── Alertes ─────────────────────────────────────────────── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-bottom: 0;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.88rem;
+  border: none;
+}
+
+.alert i {
+  font-size: 1.1rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.alert--success {
+  background: var(--extra-light-blue);
+  border-left: 4px solid var(--success-blue);
+  color: var(--primary-blue);
+}
+.alert--success i { color: var(--secondary-blue); }
+
+.alert--danger {
+  background: var(--warning-light);
+  border-left: 4px solid var(--danger-red);
+  color: var(--danger-red);
+}
+.alert--danger i { color: var(--danger-red); }
+
+/* ── Sections ────────────────────────────────────────────── */
+.form-section {
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+  border-top: none;
+  padding: 22px 26px 18px;
+}
+
+.form-section__title {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary-blue);
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--extra-light-blue);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-section__title i {
+  color: var(--secondary-blue);
+  font-size: 0.9rem;
+}
+
+/* ── Labels ──────────────────────────────────────────────── */
+.form-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-gray);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: var(--warning-orange);
+}
+
+.form-text {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.7rem;
+  color: var(--border-gray);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── Inputs & selects ────────────────────────────────────── */
+.form-control,
+.form-select {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 0.9rem !important;
+  color: var(--medium-gray) !important;
+  border: 1px solid var(--light-gray) !important;
+  border-radius: 8px !important;
+  padding: 0 1rem !important;
+  min-height: 42px !important;
+  background-color: var(--white) !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:hover,
+.form-select:hover {
+  border-color: var(--border-gray) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--light-blue) !important;
+  box-shadow: 0 0 0 3px rgba(35, 128, 209, 0.15) !important;
+  outline: none !important;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--warning-orange) !important;
+  box-shadow: 0 0 0 3px rgba(240, 78, 36, 0.12) !important;
+}
+
+.form-control::placeholder {
+  font-size: 0.85rem;
+  color: var(--border-gray);
+}
+
+textarea.form-control {
+  padding: 0.65rem 1rem !important;
+  resize: vertical;
+  min-height: 80px !important;
+  height: auto !important;
+}
+
+/* ── Feedback validation ─────────────────────────────────── */
+.invalid-feedback {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.72rem;
+  color: var(--warning-orange);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── Checkbox copie courriel ─────────────────────────────── */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 0;
+}
+
+.form-check .form-check-input {
+  width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border-gray) !important;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-check .form-check-input:checked {
+  background-color: var(--secondary-blue);
+  border-color: var(--secondary-blue);
+}
+
+.form-check .form-check-label {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: var(--text-gray) !important;
+  margin-left: 0 !important;
+  padding-top: 0 !important;
+  cursor: pointer;
+  margin-left: 2.25rem!important;
+}
+
+
+/* ── Boutons radio « Réserver » (spécifique suggestion) ──── */
+.reserver-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reserver-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  background: var(--white);
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reserver-option input[type="radio"] {
+  display: none;
+}
+
+.reserver-option:hover {
+  border-color: var(--border-gray);
+  background: var(--extra-light-blue);
+  color: var(--secondary-blue);
+}
+
+.reserver-option--active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+}
+
+/* ── Form switch (réserve de cours) ──────────────────────── */
+.form-check.form-switch {
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-switch .form-check-input {
+  width: 2.5em !important;
+  height: 1.4em !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  border-radius: 2em !important;
+  flex-shrink: 0;
+  background-color: var(--border-gray);
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: var(--secondary-blue);
+}
+
+.form-check-label {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: var(--medium-gray) !important;
+  margin-left: 0 !important;
+  padding-top: 0 !important;
+  cursor: pointer;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* ── Zone sigle de cours (conditionnel) ──────────────────── */
+.reserve-cours-fields {
+  background: var(--extra-light-blue);
+  border: 1px solid rgba(35, 128, 209, 0.2);
+  border-radius: 8px;
+  padding: 16px 18px 8px;
+  margin-top: 4px;
+}
+
+/* ── Boutons d'action ────────────────────────────────────── */
+.form-actions {
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+  border-top: 2px solid var(--extra-light-blue);
+  border-radius: 0 0 12px 12px;
+  padding: 18px 26px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 8px;
+  padding: 10px 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--secondary-blue);
+  color: var(--white);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--text-gray);
+  border: 1px solid var(--light-gray);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--light-gray);
+  color: var(--medium-gray);
+  border-color: var(--border-gray);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .form-page      { padding: 16px 12px 40px; }
+  .form-header    { padding: 16px 18px; flex-wrap: wrap; gap: 12px; }
+  .form-notice    { flex-direction: column; gap: 10px; padding: 14px 16px; }
+  .form-section   { padding: 18px 16px 14px; }
+  .form-actions   { padding: 14px 16px; }
+  .badge--primary { display: none; }
+  .reserver-group { flex-direction: column; }
+  .reserver-option { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .form-header__title    { font-size: 1.05rem; }
+  .form-header__subtitle { display: none; }
+  .form-actions          { flex-direction: column-reverse; }
+  .form-actions .btn     { width: 100%; justify-content: center; }
+}

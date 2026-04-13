@@ -23,10 +23,10 @@ import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nou
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
   { path: 'items/nouveau', component: ItemFormulaireComponent },
-  { path: 'items/:id', component: ItemFormulaireComponent },
   { path: 'items/details/:id', component: ItemDetailComponent },
+  { path: 'items/:id', component: ItemFormulaireComponent },
+  { path: 'items', component: ItemsListComponent },
   { path: 'processus', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'processus/add', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'rapport', component: RapportsComponent },
