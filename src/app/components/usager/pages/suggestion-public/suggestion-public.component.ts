@@ -9,11 +9,12 @@ import { ReponsesService } from '../../../../services/reponses.service';
 })
 export class SuggestionPublicComponent implements OnInit {
   form!: FormGroup;
-  submitted       = false;
-  success         = false;
-  error           = false;
-  isLoading       = false;
-  showSigleCours  = false;
+  submitted        = false;
+  success          = false;
+  error            = false;
+  isLoading        = false;
+  showSigleCours   = false;
+  showElectronique = false;
   
   // Variables pour afficher dans l'écran de confirmation
   derniereTitre   = '';
@@ -44,13 +45,15 @@ export class SuggestionPublicComponent implements OnInit {
       bibliothecaire:     ['', Validators.email],          // optionnel mais validé si renseigné
 
       /* ── Description ── */
+      typeDocument:       [''],                             // Type de document
       titre:              ['', Validators.required],
       auteur:             ['', Validators.required],
-      editeur:            [''],                             // NOUVEAU — Éditeur du document
+      editeur:            [''],                             // Éditeur du document
+      edition:            [''],                             // Édition
       annee:              [''],                             // Date de publication
-      urlSource:          ['', Validators.pattern('https?://.+')], // NOUVEAU — URL séparée
+      urlSource:          ['', Validators.pattern('https?://.+')], // URL séparée
       isbnIssn:           [''],
-      formatSupport:      [''],                             // NOUVEAU — Imprimé / Électronique
+      formatSupport:      [''],                             // Imprimé / Électronique
       notes:              [''],
       reserver:           ['non'],
 
@@ -66,6 +69,18 @@ export class SuggestionPublicComponent implements OnInit {
       val
         ? this.form.get('sigleCours')!.enable()
         : this.form.get('sigleCours')!.disable();
+    });
+
+    // Format électronique — afficher/masquer les champs spécifiques
+    this.form.get('formatSupport')!.valueChanges.subscribe(val => {
+      this.showElectronique = val === 'Électronique';
+      const url = this.form.get('urlSource')!;
+      if (this.showElectronique) {
+        url.setValidators([Validators.required, Validators.pattern('https?://.+')]);
+      } else {
+        url.clearValidators();
+      }
+      url.updateValueAndValidity();
     });
   }
 
@@ -106,9 +121,11 @@ export class SuggestionPublicComponent implements OnInit {
       bibliothecaire:     v.bibliothecaire,
 
       /* Description */
+      typeDocument:       v.typeDocument,
       titre:              v.titre,
       auteur:             v.auteur,
       editeur:            v.editeur,
+      edition:            v.edition,
       annee:              v.annee,
       urlSource:          v.urlSource,
       isbnIssn:           v.isbnIssn,

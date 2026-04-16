@@ -42,7 +42,7 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }">
       <a class="nav-link" routerLink="/import">
-        <i class="bi bi-diagram-3 menu-icon"></i>
+        <i class="bi bi-database-down menu-icon"></i>
         <span class="menu-title">{{ 'menu.processus' | translate }}</span>
       </a>
     </li>
@@ -53,7 +53,7 @@
          data-toggle="collapse" href="#outils"
          aria-expanded="false" aria-controls="outils">
         <div>
-          <i class="bi bi-tools menu-icon"></i>
+          <i class="bi bi-card-list menu-icon"></i>
           <span class="menu-title">{{ 'menu.outils' | translate }}</span>
         </div>
         <i class="bi bi-chevron-down toggle-icon ms-2"></i>
@@ -66,6 +66,13 @@
               [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link" routerLink="/lst-fournisseurs">
               {{ 'menu.list-fournisseur' | translate }}
+            </a>
+          </li>
+          <li class="nav-item"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }" *ngIf="ifAdmin">
+            <a class="nav-link" routerLink="/reponses">
+              {{ 'menu.reponses' | translate }}
             </a>
           </li>
         </ul>

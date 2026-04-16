@@ -19,6 +19,7 @@ import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-four
 import { UserGuard } from './services/user-guard.service';
 import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
+import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'rapport', component: RapportsComponent },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'lst-fournisseurs', component: LstFournisseursComponent },
+  { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',

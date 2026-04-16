@@ -23,6 +23,27 @@ export interface NouvelAchatPayload {
   };
 }
 
+export interface Reponse {
+  id: number;
+  type_formulaire: string;
+  usager_nom: string;
+  usager_courriel: string;
+  usager_statut: string;
+  reponses: any;
+  dateA: string;
+  statut_approbation: string;
+  courriel_admin: string | null;
+  date_traitement: string | null;
+  commentaire_admin: string | null;
+}
+
+export interface PaginatedResponse {
+  data: Reponse[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReponsesService {
 
@@ -89,9 +110,26 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('lister')));
   }
 
-  getById(id: number): Observable<any> {
+  /**
+   * Récupère toutes les réponses avec pagination et filtres
+   */
+  getAll(
+    type?: string,
+    statut?: string,
+    page: number = 1,
+    limit: number = 20
+  ): Observable<PaginatedResponse> {
+    const params: any = { page, limit };
+    if (type) params['type'] = type;
+    if (statut) params['statut'] = statut;
     return this.http
-      .get(`${this.baseUrl}/${id}`)
+      .get<PaginatedResponse>(this.baseUrl, { params })
+      .pipe(catchError(this.handleError('getAll')));
+  }
+
+  getById(id: number): Observable<Reponse> {
+    return this.http
+      .get<Reponse>(`${this.baseUrl}/${id}`)
       .pipe(catchError(this.handleError('getById')));
   }
 

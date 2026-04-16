@@ -158,7 +158,10 @@
         "list-plateforme": "Platform list",
         "list-domaines": "List of domains",
         "list-secteurs": "List of sectors",
-        "logs": "Logs"
+        "logs": "Logs",
+        "list-fournisseur": "Suppliers list",
+        "processus": "Workflow",
+        "reponses": "Form Responses"
       },
   "home": {
         "board": "Our statistics",
@@ -354,5 +357,41 @@
     "plateformes": "Platform list",
     "list-fonds": "Fonds list",
     "logs-menu": "Logs"
+  },
+  "reponses": {
+    "titre": "Form Responses",
+    "sous_titre": "View and manage all responses to suggestion and purchase forms",
+    "filtre_type": "Form Type",
+    "filtre_statut": "Approval Status",
+    "appliquer": "Apply",
+    "reinitialiser": "Reset",
+    "tableau_titre": "List of responses",
+    "chargement": "Loading data...",
+    "aucune_reponse": "No responses found.",
+    "col_id": "ID",
+    "col_type": "Form Type",
+    "col_nom": "Requester Name",
+    "col_email": "Email",
+    "col_date": "Date",
+    "col_statut": "Status",
+    "col_actions": "Actions",
+    "btn_details": "View details",
+    "detail_titre": "Response Details",
+    "meta_informations": "General Information",
+    "meta_id": "Identifier",
+    "meta_type": "Form Type",
+    "meta_nom": "Requester Name",
+    "meta_email": "Requester Email",
+    "meta_statut_user": "User Status",
+    "meta_date": "Submission Date",
+    "meta_statut_approbation": "Approval Status",
+    "meta_commentaire": "Admin Comment",
+    "contenu_reponses": "Response Content",
+    "tab_lisible": "Readable View",
+    "btn_fermer": "Close",
+    "btn_copier": "Copy JSON",
+    "btn_copier_titre": "Copy JSON to clipboard",
+    "btn_telecharger": "Download JSON",
+    "btn_telecharger_titre": "Download JSON file"
   }
 }

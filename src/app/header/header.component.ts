@@ -19,6 +19,10 @@ export class HeaderComponent {
   flagChoix:string= 'flag-icon-fr';
 
   currentDate = new Date();
+  
+  // États des dropdowns
+  showUserDropdown = false;
+  showAppsDropdown = false;
 
   constructor(public authService: AuthService,
               private translate: TranslateService,
@@ -60,6 +64,26 @@ export class HeaderComponent {
     }
   }
 
+  // Méthodes pour les dropdowns
+  toggleUserDropdown() {
+    this.showUserDropdown = !this.showUserDropdown;
+    if (this.showUserDropdown) {
+      this.showAppsDropdown = false;
+    }
+  }
+
+  toggleAppsDropdown() {
+    this.showAppsDropdown = !this.showAppsDropdown;
+    if (this.showAppsDropdown) {
+      this.showUserDropdown = false;
+    }
+  }
+
+  closeDropdowns() {
+    this.showUserDropdown = false;
+    this.showAppsDropdown = false;
+  }
 
 
 }
+

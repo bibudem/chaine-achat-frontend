@@ -61,6 +61,8 @@ import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-four
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
+import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
+import { ReponsesDetailComponent } from './components/admin/reponses/reponses-detail/reponses-detail.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +91,9 @@ import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nou
     LstFournisseursComponent,
     ItemDetailComponent,
     ImportComponent,
-    NouvelAchatComponent
+    NouvelAchatComponent,
+    ReponsesListComponent,
+    ReponsesDetailComponent
   ],
     imports: [
         RouterModule,

@@ -1,79 +1,166 @@
-<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+<header class="top-header">
+  <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
 
-  <!-- ═══════════════════════════════════════════
-       BRAND WRAPPER
-  ═══════════════════════════════════════════ -->
-  <div class="navbar-brand-wrapper d-flex justify-content-center">
-    <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-      <a class="navbar-brand brand-logo" href="/accueil">
-        <img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM" />
-      </a>
-      <a class="navbar-brand brand-logo-mini" href="/accueil">
-        <img src="assets/images/favicon.ico" alt="logo" />
-      </a>
-      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+    <!-- ═══════════════════════════════════════════
+        BRAND WRAPPER
+    ═══════════════════════════════════════════ -->
+    <div class="navbar-brand-wrapper d-flex justify-content-center">
+      <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+        <a class="navbar-brand brand-logo" href="/accueil">
+          <img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM" />
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="/accueil">
+          <img src="assets/images/favicon.ico" alt="logo" />
+        </a>
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="bi bi-list"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+        MENU WRAPPER
+    ═══════════════════════════════════════════ -->
+    <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+
+      <!-- LEFT quick links -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item d-none d-xl-flex align-items-center">
+          <a class="nav-link nav-quicklink" routerLink="/"  >
+            <img src="assets/images/logo-app.png" alt="logo" class="img-logo-app" />
+          </a>
+        </li>
+    
+      </ul>
+      <div class="top-navbar-right ms-3 ms-auto" (click)="closeDropdowns()">
+        <ul class="navbar-nav align-items-center">
+          <!-- Date -->
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" href="javascript:;">
+              <i class="bi bi-calendar3"></i>
+              <span class="date-text">{{ currentDate | date:'dd MMM yyyy' }}</span>
+            </a>
+          </li>
+          <!-- User Profile Dropdown -->
+          <li class="nav-item dropdown dropdown-medium" [class.show]="showUserDropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" 
+               (click)="toggleUserDropdown(); $event.stopPropagation()">
+              <div class="user-setting d-flex align-items-center gap-1">
+                <i class="bi bi-person-circle m-lg-2 font-20"></i>
+                <div class="user-name d-none d-sm-block">
+                  Système Administrateur
+                </div>
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" [ngClass]="{'show': showUserDropdown}">
+              <li>
+                <a class="dropdown-item" (click)="logout(); closeDropdowns()">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-lock-fill"></i>
+                    <span>{{ 'logout' | translate }}</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- Ajout du switch de langue avec un style similaire à la section profil -->
+          <!--<li class="nav-item dropdown dropdown-medium">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
+              <div class="user-setting d-flex align-items-center gap-1">
+                <i class="bi bi-translate m-lg-2 font-20"></i>
+                <div class="user-name d-none d-sm-block">
+                  {{ translate.currentLang === 'fr' ? 'Français' : 'English' | translate }}
+                </div>
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" (click)="changeLanguage('en')">
+                  <div class="d-flex align-items-center">
+                    <div class="setting-text ms-3"><span>{{ 'english' | translate }}</span></div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="changeLanguage('fr')">
+                  <div class="d-flex align-items-center">
+                    <div class="setting-text ms-3"><span>{{ 'french' | translate }}</span></div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </li>-->
+          <!-- Apps Grid Dropdown -->
+          <li class="nav-item dropdown dropdown-large" [class.show]="showAppsDropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;"
+               (click)="toggleAppsDropdown(); $event.stopPropagation()">
+              <div class="projects">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" [ngClass]="{'show': showAppsDropdown}">
+              <div class="row row-cols-5 gx-2">
+                <div class="col">
+                  <a routerLink="/usager/suggestion-public" target="_blank" (click)="closeDropdowns()">
+                    <div class="apps p-2 radius-10 text-center">
+                      <div class="apps-icon-box mb-1 text-white bg-info bg-gradient">
+                        <i class="bi bi-lightbulb"></i>
+                      </div>
+                      <p class="mb-0 apps-name">Suggestion d'achat</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col">
+                  <a routerLink="/usager/nouvel-achat" target="_blank" (click)="closeDropdowns()">
+                    <div class="apps p-2 radius-10 text-center">
+                      <div class="apps-icon-box mb-1 text-white bg-secondary bg-gradient">
+                        <i class="bi bi-basket3"></i>
+                      </div>
+                      <p class="mb-0 apps-name">Nouvel achat unique</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col">
+                  <a href="https://bib.umontreal.ca/gerer-diffuser/deposer-these-memoire" target="_blank" rel="noopener noreferrer">
+                    <div class="apps p-2 radius-10 text-center">
+                      <div class="apps-icon-box mb-1 text-white bg-primary bg-gradient">
+                        <i class="bi bi-folder-symlink"></i>
+                      </div>
+                      <p class="mb-0 apps-name">{{ 'sectionTME' | translate }}</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col">
+                  <a href="https://bib.umontreal.ca/gerer-diffuser/deposer-these-memoire/procedure-depot/soutien-tgde" target="_blank" rel="noopener noreferrer">
+                    <div class="apps p-2 radius-10 text-center">
+                      <div class="apps-icon-box mb-1 text-white bg-warning bg-gradient">
+                        <i class="bi bi-exclamation-octagon"></i>
+                      </div>
+                      <p class="mb-0 apps-name">{{ 'help' | translate }}</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col">
+                  <a href="https://bib.umontreal.ca/" target="_blank" rel="noopener noreferrer">
+                    <div class="apps p-2 radius-10 text-center">
+                      <div class="apps-icon-box mb-1 text-white bg-success bg-gradient">
+                        <i class="bi bi-columns-gap"></i>
+                      </div>
+                      <p class="mb-0 apps-name">{{ 'bibWebsite' | translate }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mobile toggler -->
+      <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
         <span class="bi bi-list"></span>
       </button>
+
     </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       MENU WRAPPER
-  ═══════════════════════════════════════════ -->
-  <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-    <!-- LEFT quick links -->
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item d-none d-xl-flex align-items-center">
-        <a class="nav-link nav-quicklink" routerLink="/"  >
-          <img src="assets/images/logo-app.png" alt="logo" class="img-logo-app" />
-        </a>
-      </li>
-      <li class="nav-item d-none d-xl-flex align-items-center">
-        <a class="nav-link nav-quicklink" routerLink="/usager/suggestion-public" title="Formulaire usager" target="_blank">
-          <i class="bi bi-lightbulb"></i>
-          <span> Suggestion d'achat</span>
-        </a>
-      </li>
-      <li class="nav-item d-none d-xl-flex align-items-center">
-        <a class="nav-link nav-quicklink" routerLink="/usager/nouvel-achat" title="Formulaire usager" target="_blank">
-          <i class="bi bi-basket3"></i>
-          <span> Nouvel achat unique</span>
-        </a>
-      </li>
-    </ul>
-
-    <div class="top-navbar-right ms-3">
-      <ul class="navbar-nav align-items-center">
-
-        <!-- Date -->
-        <li class="nav-item">
-          <a class="nav-link d-flex align-items-center gap-2" href="javascript:;">
-            <i class="bi bi-calendar3"></i>
-            <span class="date-text">{{ currentDate | date:'dd MMM yyyy' }}</span>
-          </a>
-        </li>
-        <!-- User Profile -->
-        <li class="nav-item" ngbDropdown [autoClose]="'outside'">
-          <a class="nav-link d-flex align-items-center gap-2" ngbDropdownToggle>
-            <div class="user-setting">
-              <i class="bi bi-person-circle"></i>
-              <span class="user-name">Système Administrateur</span>
-            </div>
-          </a>
-          <ul ngbDropdownMenu class="dropdown-menu dropdown-menu-end user-profile-dropdown mt-5">
-            <li>
-            <li><a (click)="logout()" routerLink="/auth/sign-in" class="dropdown-item item-logout"><div class="d-flex align-items-center"><div class="setting-icon"><i class="bi bi-box-arrow-right"></i></div><div class="setting-text ms-3"><span>Déconnexion</span></div></div></a></li>
-          </ul>
-        </li>
-
-      </ul>
-    </div>
-
-    <!-- Mobile toggler -->
-    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-      <span class="bi bi-list"></span>
-    </button>
-
-  </div>
-</nav>
+  </nav>
+</header>

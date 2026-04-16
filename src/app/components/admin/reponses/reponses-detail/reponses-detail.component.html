@@ -1,0 +1,128 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ 'reponses.detail_titre' | translate }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <!-- Méta-données ────────────────────────────────────────────── -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>{{ 'reponses.meta_informations' | translate }}</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_id' | translate }}</label>
+          <p class="text-muted mb-0">#{{ reponse?.id }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_type' | translate }}</label>
+          <p class="mb-0">
+              {{ reponse?.type_formulaire }}
+          </p>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_nom' | translate }}</label>
+          <p class="text-muted mb-0">{{ reponse?.usager_nom }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_email' | translate }}</label>
+          <p class="text-muted mb-0">{{ reponse?.usager_courriel }}</p>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_statut_user' | translate }}</label>
+          <p class="text-muted mb-0">{{ reponse?.usager_statut }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">{{ 'reponses.meta_date' | translate }}</label>
+          <p class="text-muted mb-0">{{ formatDate(reponse?.dateA || '') }}</p>
+        </div>
+
+        <div class="col-md-6 mb-0">
+          <label class="form-label">{{ 'reponses.meta_statut_approbation' | translate }}</label>
+          <p class="mb-0">
+            <span class="badge" 
+                  [ngClass]="'bg-' + (reponse?.statut_approbation === 'approuve' ? 'success' : reponse?.statut_approbation === 'refuse' ? 'danger' : 'warning')">
+              {{ reponse?.statut_approbation }}
+            </span>
+          </p>
+        </div>
+        <div class="col-md-6 mb-0" *ngIf="reponse?.commentaire_admin">
+          <label class="form-label">{{ 'reponses.meta_commentaire' | translate }}</label>
+          <p class="text-muted mb-0">{{ reponse?.commentaire_admin }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onglets pour le contenu JSON ────────────────────────────── -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5>{{ 'reponses.contenu_reponses' | translate }}</h5>
+      <div class="btn-group btn-group-sm" role="group">
+        <button 
+          type="button" 
+          class="btn btn-outline-primary"
+          [class.active]="activeTab === 'formatted'"
+          (click)="activeTab = 'formatted'">
+          <i class="bi bi-list me-1"></i>{{ 'reponses.tab_lisible' | translate }}
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-outline-primary"
+          [class.active]="activeTab === 'json'"
+          (click)="activeTab = 'json'">
+          <i class="bi bi-code me-1"></i>JSON
+        </button>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- Vue lisible ─────────────────────────────────────────── -->
+      <div *ngIf="activeTab === 'formatted'" class="formatted-view">
+        <div *ngFor="let key of (getFormattedData() | keyvalue)" class="form-group mb-3">
+          <label class="form-label text-capitalize">
+            {{ key.key }}
+          </label>
+          <div class="bg-light p-3 rounded border">
+            <p class="mb-0 text-muted">
+              {{ formatValue(key.value) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vue JSON ─────────────────────────────────────────────── -->
+      <div *ngIf="activeTab === 'json'" class="json-view">
+        <pre>{{ jsonFormatted }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer avec boutons ──────────────────────────────────────── -->
+<div class="modal-footer">
+  <button 
+    type="button" 
+    class="btn btn-secondary btn-sm" 
+    (click)="activeModal.dismiss()">
+    {{ 'reponses.btn_fermer' | translate }}
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-primary btn-sm" 
+    (click)="copyToClipboard()"
+    title="{{ 'reponses.btn_copier_titre' | translate }}">
+    <i class="bi bi-copy me-1"></i>{{ 'reponses.btn_copier' | translate }}
+    <small *ngIf="copyFeedback" class="ms-2">{{ copyFeedback }}</small>
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-success btn-sm" 
+    (click)="downloadJson()"
+    title="{{ 'reponses.btn_telecharger_titre' | translate }}">
+    <i class="bi bi-download me-1"></i>{{ 'reponses.btn_telecharger' | translate }}
+  </button>
+</div>

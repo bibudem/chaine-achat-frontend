@@ -80,6 +80,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1030;
   font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 13.5px;
+  overflow: visible !important;
 }
 
 /* ── Brand wrapper ── */
@@ -128,6 +129,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 16px;
   height: var(--navbar-height);
   gap: 2px;
+  overflow: visible !important;
 }
 
 /* ── Quick links (gauche) ── */
@@ -283,9 +285,54 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 16px rgba(0,0,0,.08);
   min-width: 340px;
   margin-top: 8px !important;
-  overflow: hidden;
+  overflow: visible;
+  max-height: 400px;
+  overflow-y: auto;
   animation: dropIn .12s ease;
   font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: absolute;
+  top: 100%;
+  left: auto;
+  right: 0;
+  z-index: 1050;
+  display: none;
+}
+
+/* S'assurer que le dropdown s'affiche avec la classe show (Bootstrap 5 et Angular) */
+.dropdown.show > .dropdown-menu,
+.dropdown-menu.show {
+  display: block !important;
+  animation: dropIn .12s ease;
+}
+
+/* Taille des dropdowns */
+.dropdown-medium .dropdown-menu {
+  min-width: 240px;
+  max-width: 340px;
+}
+
+.dropdown-large .dropdown-menu {
+  min-width: 340px;
+  max-width: 500px;
+}
+
+/* Apps grid dropdown */
+.dropdown-large .dropdown-menu.dropdown-menu-end {
+  width: 380px;
+}
+
+/* Dropdown items styling */
+.dropdown-menu .dropdown-item {
+  padding: 10px 16px;
+  color: var(--text-gray);
+  font-size: 13px;
+  transition: background var(--transition), color var(--transition);
+  border-radius: 0;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: var(--extra-light-blue);
+  color: var(--secondary-blue);
 }
 
 @keyframes dropIn {
@@ -990,6 +1037,12 @@ select.typeahead, select.tt-query, select.tt-hint {
   border-left: 4px solid var(--danger-red);
 }
 
+.alert-warning {
+  background-color: var(--warning-light)!important;
+  color: var(--dark-gray)!important;
+  border-left: 4px solid var(--warning-orange)!important;
+}
+
 /* =============================================
    CLASSES UTILITAIRES
    ============================================= */
@@ -1208,8 +1261,6 @@ select.typeahead, select.tt-query, select.tt-hint {
 /* =============================================
    BADGES
    ============================================= */
-.badge-primary, .badge-success, .badge-warning,
-.badge-danger,  .badge-info,    .badge-secondary { all: unset; }
 
 .badge {
   padding: 0.35em 0.6em;
