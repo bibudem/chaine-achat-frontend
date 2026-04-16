@@ -1,157 +1,29 @@
-/* ==============================================
-   DROPDOWN PROFIL UTILISATEUR
-   ============================================== */
-
-.img-logo-app {
-  width: 160px!important;
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
+  box-shadow: none!important;
+  border-radius: 16px;
 }
-
-/* ── Top navbar right ── */
-.top-navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 0;
-  margin: 0;
-  min-height: 56px;
+.typing {
   position: relative;
-  z-index: 1020;
+  font-size: 1.2em;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
-
-.top-navbar-right .navbar-nav {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-wrap: nowrap;
-  position: relative;
-  z-index: 1020;
-}
-
-.top-navbar-right .nav-item {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  z-index: 1020;
-}
-
-.top-navbar-right .nav-link {
-  padding: 5px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-  position: relative;
-  z-index: 1020;
-  cursor: pointer;
-}
-
-/* ── Dropdowns dans top-navbar-right ── */
-.top-navbar-right .dropdown {
-  position: relative;
-  z-index: 1020;
-}
-
-.top-navbar-right .dropdown-menu {
+.typing::after {
+  content: "|";
   position: absolute;
-  top: 100%;
   right: 0;
-  left: auto;
-  z-index: 1050;
-  min-width: 200px;
-  display: none;
-  padding: 8px 0;
+  width: 100%;
+  color: white;
+  background: #fff;
+  animation: typing 3s steps(16) forwards, caret 1s infinite;
 }
-
-.top-navbar-right .dropdown-menu.show {
-  display: block !important;
+@keyframes typing {
+  to {
+    width: 0;
+  }
 }
-
-.top-navbar-right .dropdown.show .dropdown-menu {
-  display: block !important;
+@keyframes caret {
+  50% {
+    color: red;
+  }
 }
-
-/* Dropdown items styling */
-.top-navbar-right .dropdown-menu .dropdown-item {
-  padding: 10px 16px;
-  color: var(--text-gray);
-  font-size: 13px;
-  transition: background var(--transition), color var(--transition);
-  display: flex;
-  align-items: center;
-}
-
-.top-navbar-right .dropdown-menu .dropdown-item i {
-  font-size: 14px;
-  min-width: 20px;
-  color: var(--light-blue);
-  transition: color var(--transition);
-}
-
-.top-navbar-right .dropdown-menu .dropdown-item:hover {
-  background-color: var(--extra-light-blue);
-  color: var(--secondary-blue);
-}
-
-.top-navbar-right .dropdown-menu .dropdown-item:hover i {
-  color: var(--secondary-blue);
-}
-
-.top-navbar-right .dropdown-menu .dropdown-divider {
-  margin: 4px 0;
-}
-
-/* Dropdown pour les icônes (date, apps, etc.) */
-.top-navbar-right .dropdown-large .dropdown-menu {
-  min-width: 500px;
-  width: 500px;
-  padding: 16px;
-}
-
-.top-navbar-right .dropdown-medium .dropdown-menu {
-  min-width: 240px;
-}
-
-/* Apps grid styling */
-.dropdown-large .dropdown-menu .row {
-  gap: 8px !important;
-}
-
-.dropdown-large .dropdown-menu .apps {
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none;
-  color: inherit;
-}
-
-.dropdown-large .dropdown-menu .apps:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-}
-
-.dropdown-large .dropdown-menu .apps-icon-box {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  border-radius: 6px;
-}
-
-.dropdown-large .dropdown-menu .apps-name {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-gray);
-}
-
-/* Éviter que le dropdown soit coupé par la navbar */
-.navbar {
-  overflow: visible !important;
-  z-index: 1030;
-}
-
-.navbar-menu-wrapper {
-  overflow: visible !important;
-  z-index: 1020;
-}
-

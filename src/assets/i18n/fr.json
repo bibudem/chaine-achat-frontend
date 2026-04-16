@@ -1,5 +1,5 @@
 {
-  "app-title": "Monographies électroniques",
+  "app-title": "Gestion d'Achats",
   "app-title-dev": "Espace développement",
   "app-footer-link": "Bibliothèques de l'UdeM",
   "lngApp": "Français",
@@ -140,7 +140,7 @@
     "list-fournisseur": "Liste de fournisseurs",
     "list-fonds": "Liste de fonds",
     "rapports": "Rapports",
-    "reponses": "Réponses usagers"
+    "reponses": "Réponses enregistrées"
   },
   "rapport": {
     "titre": "Rapports",
