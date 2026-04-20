@@ -134,6 +134,17 @@ export class HomeService {
   }
 
   /* ─────────────────────────────────────────────
+     GET /home/type-counts  (toutes périodes)
+  ───────────────────────────────────────────── */
+  getTypeCounts(): Observable<ApiResponse<Array<{ formulaire_type: string; count: number }>>> {
+    return this.http
+      .get<ApiResponse<Array<{ formulaire_type: string; count: number }>>>(
+        `${this.baseUrl}/type-counts`, { headers: this.headers }
+      )
+      .pipe(catchError(this.errorHandler.handleError<ApiResponse<Array<{ formulaire_type: string; count: number }>>>('getTypeCounts')));
+  }
+
+  /* ─────────────────────────────────────────────
      GET /home/graph?period=...
   ───────────────────────────────────────────── */
   getGraphData(period: Period = '7days'): Observable<ApiResponse<GraphData>> {

@@ -1,4 +1,4 @@
-<!-- accueil.component.html — v5 -->
+<!-- accueil.component.html — v7 -->
 <div class="db-wrap">
 
   <!-- ── HEADER ───────────────────────────────────── -->
@@ -13,7 +13,6 @@
       <div class="info-chip info-chip--green"
            [class.info-chip--open]="editingCard === 'repartition'"
            [class.info-chip--link]="!!acqConfig.repartitionUrl">
-        <!-- Zone cliquable : ouvre l'Excel -->
         <div class="info-chip__clickable" (click)="openRepartition($event)"
              [title]="acqConfig.repartitionUrl ? 'Ouvrir le tableau de répartition' : ''">
           <div class="info-chip__icon">
@@ -31,13 +30,11 @@
             <span class="info-chip__val">Mis à jour le {{ acqConfig.majDate }}</span>
           </div>
         </div>
-        <!-- Bouton crayon -->
         <button class="info-chip__edit-btn" (click)="startEdit('repartition')" title="Modifier">
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 256 256" fill="currentColor">
             <path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/>
           </svg>
         </button>
-        <!-- Dropdown édition -->
         <div *ngIf="editingCard === 'repartition'" class="info-chip__dropdown">
           <p class="info-chip__dropdown-title">Répartition ACQ</p>
           <div class="info-chip__field">
@@ -63,20 +60,15 @@
       <!-- ── Chip : Taux USD ── -->
       <div class="info-chip info-chip--orange" [class.info-chip--open]="editingCard === 'taux'">
         <div class="info-chip__icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 256 256" fill="currentColor">
-            <path d="M152,120H136V56h8a32,32,0,0,1,32,32,8,8,0,0,0,16,0,48.05,48.05,0,0,0-48-48h-8V24a8,8,0,0,0-16,0V40h-8a48,48,0,0,0,0,96h8v64H104a32,32,0,0,1-32-32,8,8,0,0,0-16,0,48.05,48.05,0,0,0,48,48h16v16a8,8,0,0,0,16,0V216h16a48,48,0,0,0,0-96Zm-40,0a32,32,0,0,1,0-64h8v64Zm40,80H136V136h16a32,32,0,0,1,0,64Z"/>
-          </svg>
+          <i class="bi bi-currency-dollar"></i>
         </div>
         <div class="info-chip__body">
           <span class="info-chip__label">Taux USD · {{ acqConfig.tauxPeriode }}</span>
           <span class="info-chip__val info-chip__val--lg">{{ acqConfig.tauxRate }}</span>
         </div>
         <button class="info-chip__edit-btn" (click)="startEdit('taux')" title="Modifier">
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 256 256" fill="currentColor">
-            <path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/>
-          </svg>
+          <i class="bi bi-bar-chart"></i>
         </button>
-        <!-- Dropdown édition -->
         <div *ngIf="editingCard === 'taux'" class="info-chip__dropdown">
           <p class="info-chip__dropdown-title">Taux USD sécurisé</p>
           <div class="info-chip__field">
@@ -125,25 +117,20 @@
   ══════════════════════════════════════════════ -->
   <div class="db-stats">
 
-    <!-- Total des demandes -->
     <div class="sc sc--blue">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_items) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">
-          +{{ formatNumber(totals.items_last_7_days) }} / 7j
-        </span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">+{{ formatNumber(totals.items_last_7_days) }} / 7j</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
         <span class="sc__lbl">Total des demandes</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
-          <polyline points="0,24 10,18 22,21 34,10 46,14 56,5 64,8"
-            fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,24 10,18 22,21 34,10 46,14 56,5 64,8" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
 
-    <!-- Demandeurs uniques -->
     <div class="sc sc--green">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.unique_demandeurs) }}</span>
@@ -153,44 +140,35 @@
       <div class="sc__bottom">
         <span class="sc__lbl">Demandeurs uniques</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
-          <polyline points="0,26 10,20 22,16 34,18 46,10 56,7 64,4"
-            fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,26 10,20 22,16 34,18 46,10 56,7 64,4" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
 
-    <!-- En traitement -->
     <div class="sc sc--orange">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.en_traitement) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">
-          {{ formatNumber(totals.en_attente) }} attente
-        </span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(totals.en_attente) }} attente</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
         <span class="sc__lbl">En traitement</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
-          <polyline points="0,10 10,16 22,12 34,18 46,14 56,20 64,16"
-            fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,10 10,16 22,12 34,18 46,14 56,20 64,16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
 
-    <!-- Terminées -->
     <div class="sc sc--teal">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.termines) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">
-          {{ completionRate }}% réussite
-        </span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ completionRate }}% réussite</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
         <span class="sc__lbl">Terminées</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
-          <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3"
-            fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
@@ -198,149 +176,279 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       LIGNE 2 — PANELS
+       LIGNE 2 — PANELS  3 colonnes × 2 rangées
+       col gauche  : span 2 rangées (vue globale + top 5 + activité)
+       col centre  : rangée 1 donut  | rangée 2 répartition
+       col droite  : rangée 1 catalogue | rangée 2 statuts
   ══════════════════════════════════════════════ -->
-  <div class="db-panels">
+  <div class="row g-3 db-panels">
 
-    <!-- ── Répartition par type ───────────────────── -->
-    <div class="panel panel--types">
-      <div class="panel__head">
-        <span class="panel__title">Répartition par type</span>
-        <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">
-          Voir tout &rarr;
-        </button>
-      </div>
-      <div class="panel__body">
-        <div *ngIf="isLoadingDashboard" class="db-spinner">
-          <div class="spinner-border spinner-border-sm text-primary"></div>
+    <!-- ══ COL GAUCHE — grand panel ancré (2 rangées) ══ -->
+    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-left">
+      <!-- Rangée 1 : Catalogue des types -->
+      <div class="panel panel--catalog flex-grow-1">
+        <div class="panel__head">
+          <span class="panel__title">Types de formulaire</span>
+          <span class="panel__sub">{{ allTypes.length }} types</span>
         </div>
-        <ng-container *ngIf="!isLoadingDashboard && byType.length > 0">
-          <div class="type-seg-bar">
-            <div *ngFor="let t of byType; let i = index"
-                 class="type-seg-bar__slice"
-                 [class]="'tc-' + i"
-                 [style.width.%]="t.percentage"
-                 [title]="t.formulaire_type + ' — ' + t.percentage + '%'">
-            </div>
+        <div class="panel__body panel__body--catalog">
+          <div *ngIf="isLoadingTypeCounts" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
           </div>
-          <div class="type-legend">
-            <div *ngFor="let t of byType; let i = index" class="type-legend__row">
-              <i [class]="getTypeIcon(t.formulaire_type)" ></i>
-              <span class="type-legend__name">
-                {{ t.formulaire_type }}</span>
-              <div class="type-legend__track">
-                <div class="type-legend__fill" [class]="'tc-' + i + '-bg'" [style.width.%]="t.percentage"></div>
+          <ng-container *ngIf="!isLoadingTypeCounts">
+            <div *ngFor="let type of allTypes"
+                 class="catalog-row"
+                 (click)="navigateToType(type)"
+                 [title]="'Filtrer · ' + type">
+              <div class="catalog-row__icon pt-2">
+                <i [class]="getTypeIcon(type)"></i>
               </div>
-              <span class="type-legend__pct">{{ t.percentage }}%</span>
-              <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>
+              <div class="catalog-row__body">
+                <span class="catalog-row__name">{{ type }}</span>
+                <span class="catalog-row__desc">{{ typeDescriptions[type] }}</span>
+              </div>
+              <div class="catalog-row__meta">
+                <i class="bi bi-arrow-right-short catalog-row__arrow"></i>
+              </div>
             </div>
-          </div>
-        </ng-container>
-        <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">Aucune donnée disponible</p>
-      </div>
-    </div>
-
-    <!-- ── Top 5 — barres horizontales ──────────── -->
-    <div class="panel panel--top">
-      <div class="panel__head">
-        <span class="panel__title">Top 5 demandeurs</span>
-        <span class="panel__sub" *ngIf="!isLoadingDashboard">
-          {{ totals.total_items }} demandes au total
-        </span>
-      </div>
-      <div class="panel__body panel__body--hbar">
-        <div *ngIf="isLoadingDashboard" class="db-spinner">
-          <div class="spinner-border spinner-border-sm text-primary"></div>
+          </ng-container>
         </div>
-        <ng-container *ngIf="!isLoadingDashboard && topDemandeurs.length > 0">
-          <div class="hbar-chart">
-            <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row">
-              <span class="hbar-label">{{ d.demandeur }}</span>
-              <div class="hbar-track">
-                <div class="hbar-fill"
-                     [class.hbar-fill--first]="d.rank === 1"
-                     [style.width.%]="calculatePercentage(d.count, maxTopDemandeurCount)">
-                  <span class="hbar-fill__val">{{ formatNumber(d.count) }}</span>
+      </div>
+
+    </div>
+    <!-- ══ COL centre ══ -->
+    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-right">
+      <!-- Rangée 1 : Répartition par type -->
+      <div class="panel panel--types mb-3 flex-grow-1">
+        <div class="panel__head">
+          <span class="panel__title">Répartition par type</span>
+          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">Voir tout &rarr;</button>
+        </div>
+        <div class="panel__body">
+
+          <div *ngIf="isLoadingDashboard" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+
+          <ng-container *ngIf="!isLoadingDashboard && byType.length > 0">
+            <div class="type-seg-bar">
+              <div *ngFor="let t of byType; let i = index"
+                   class="type-seg-bar__slice"
+                   [class]="'tc-' + i"
+                   [style.width.%]="t.percentage"
+                   [title]="t.formulaire_type + ' — ' + t.percentage + '%'">
+              </div>
+            </div>
+            <div class="type-legend">
+              <div *ngFor="let t of byType; let i = index"
+                   class="type-legend__row type-legend__row--link"
+                   (click)="navigateToType(t.formulaire_type)"
+                   [title]="'Voir les demandes · ' + t.formulaire_type">
+                <span class="type-legend__dot" [class]="'tc-' + i + '-bg'"></span>
+                <span class="type-legend__name">{{ t.formulaire_type }}</span>
+                <div class="type-legend__track">
+                  <div class="type-legend__fill" [class]="'tc-' + i + '-bg'" [style.width.%]="t.percentage"></div>
+                </div>
+                <span class="type-legend__pct">{{ t.percentage }}%</span>
+                <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">Aucune donnée disponible</p>
+        </div>
+      </div>
+
+      <!-- Rangée 2 : Par bibliothèque -->
+      <div class="panel panel--biblio flex-grow-1">
+        <div class="panel__head">
+          <span class="panel__title">Par bibliothèque</span>
+          <span class="panel__sub" *ngIf="!isLoadingGraphs">{{ periodLabel }}</span>
+        </div>
+        <div class="panel__body">
+
+          <div *ngIf="isLoadingGraphs" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+
+          <ng-container *ngIf="!isLoadingGraphs && libraryStats.length > 0">
+            <div *ngFor="let lib of libraryStats; let i = index" class="bib-row">
+              <div class="bib-gauge"
+                   [style.background]="'conic-gradient(' + getBibColor(i) + ' 0% ' + lib.percentage + '%, #E5F0F8 ' + lib.percentage + '% 100%)'">
+                <div class="bib-gauge__inner">
+                  <span class="bib-gauge__pct">{{ Math.round(lib.percentage) }}%</span>
                 </div>
               </div>
-              <span class="hbar-pct">{{ calculatePercentage(d.count, totals.total_items) }}%</span>
+              <div class="bib-info">
+                <span class="bib-info__name">{{ lib.bibliotheque }}</span>
+                <span class="bib-info__count">{{ formatNumber(lib.total) }} demandes</span>
+              </div>
+              <span class="bib-total" [style.color]="getBibColor(i)">{{ formatNumber(lib.total) }}</span>
             </div>
-            <div class="hbar-axis">
-              <span>0</span>
-             <span>{{ formatNumber(Math.round(maxTopDemandeurCount / 4)) }}</span>
-             <span>{{ formatNumber(Math.round(maxTopDemandeurCount / 2)) }}</span>
-             <span>{{ formatNumber(Math.round(maxTopDemandeurCount * 3 / 4)) }}</span>
-             <span>{{ formatNumber(maxTopDemandeurCount) }}</span>
-            </div>
+          </ng-container>
+
+          <p *ngIf="!isLoadingGraphs && libraryStats.length === 0" class="db-empty">Aucune donnée disponible</p>
+        </div>
+      </div>
+
+    </div>
+
+      <!-- ══ COL droite ══ -->
+    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-center">
+
+      <!-- Rangée 1 : Priorités donut -->
+      <div class="panel panel--priority mb-3 flex-grow-1">
+        <div class="panel__head">
+          <span class="panel__title">Par priorité</span>
+          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ totals.total_items }} demandes</span>
+        </div>
+        <div class="panel__body panel__body--donut">
+
+          <div *ngIf="isLoadingDashboard" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
           </div>
-        </ng-container>
-        <p *ngIf="!isLoadingDashboard && topDemandeurs.length === 0" class="db-empty">Aucun demandeur</p>
+
+          <ng-container *ngIf="!isLoadingDashboard && byPriority.length > 0">
+            <div class="priority-donut" [style.background]="generateDonutGradient()">
+              <div class="priority-donut__inner">
+                <span class="priority-donut__total">{{ totals.total_items }}</span>
+                <span class="priority-donut__label">Total</span>
+              </div>
+            </div>
+            <div class="priority-legend">
+              <div class="priority-legend__item" *ngFor="let p of byPriority">
+                <span class="priority-legend__color" [style.background]="getPriorityColor(p.priorite)"></span>
+                <span class="priority-legend__text">{{ p.priorite }}</span>
+                <span class="priority-legend__value">
+                  {{ formatNumber(p.count) }}
+                  <span class="priority-legend__pct">({{ calculatePercentage(p.count, totals.total_items) }}%)</span>
+                </span>
+              </div>
+            </div>
+          </ng-container>
+
+          <p *ngIf="!isLoadingDashboard && byPriority.length === 0" class="db-empty">Aucune donnée</p>
+        </div>
+      </div>
+      <div  class="panel panel--statuts flex-grow-1">
+        <div class="panel__head">
+          <span class="panel__title">Top 5 demandeurs</span>
+          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ periodLabel }}</span>
+        </div>
+        <div class="panel__body panel__body--main">
+
+          <div *ngIf="isLoadingDashboard" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+
+          <ng-container *ngIf="!isLoadingDashboard">
+            <!-- Barres top 5 -->
+            <ng-container *ngIf="topDemandeurs.length > 0">
+              <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row">
+                <span class="hbar-label">{{ d.demandeur }}</span>
+                <div class="hbar-track">
+                  <div class="hbar-fill"
+                       [class.hbar-fill--first]="d.rank === 1"
+                       [style.width.%]="calculatePercentage(d.count, maxTopDemandeurCount)">
+                  </div>
+                </div>
+                <span class="hbar-meta">
+                  <span class="hbar-cnt">{{ formatNumber(d.count) }}</span>
+                  <span class="hbar-pct">{{ calculatePercentage(d.count, totals.total_items) }}%</span>
+                </span>
+              </div>
+            </ng-container>
+            <p *ngIf="topDemandeurs.length === 0" class="db-empty">Aucun demandeur</p>
+
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /db-panels -->
+
+</div><!-- /db-wrap -->
+
+<!-- ── Bouton aide flottant ─────────────────────────────── -->
+<button class="help-fab" (click)="showHelpPanel = true" title="Des questions ?">
+  <i class="bi bi-question-circle"></i>
+  <span class="help-fab__label">FAQ</span>
+</button>
+
+<!-- ── Backdrop ─────────────────────────────────────────── -->
+<div class="help-overlay" [class.help-overlay--open]="showHelpPanel" (click)="showHelpPanel = false"></div>
+
+<!-- ── Drawer ───────────────────────────────────────────── -->
+<aside class="help-drawer" [class.help-drawer--open]="showHelpPanel" aria-label="Aide et contacts">
+
+  <div class="help-drawer__head">
+    <div class="help-drawer__head-left">
+      <div class="help-drawer__head-icon">
+        <i class="bi bi-question-lg"></i>
+      </div>
+      <div>
+        <p class="help-drawer__title">Des questions ?</p>
+        <p class="help-drawer__sub">Acquisitions — BIB UdeM</p>
+      </div>
+    </div>
+    <button class="help-drawer__close" (click)="showHelpPanel = false" title="Fermer">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="help-drawer__body">
+
+    <!-- Note formulaire -->
+    <div class="help-tip">
+      <div class="help-tip__content">
+        <p class="help-tip__title">DES QUESTIONS?</p>
+        <p>
+          Pour faciliter le suivi de vos demandes, <strong>si des incertitudes ou des questionnements relatifs aux documents à commander surviennent au moment de compléter l'un ou l'autre de ces formulaires (prix, format, etc.), nous vous invitons à les consigner dans le champ Bibliothèque : Note, commentaire ou question.</strong>
+        <br>
+        Un membre de l'équipe des Acquisitions contactera le demandeur en bibliothèque au moment de traiter la demande.</p>
       </div>
     </div>
 
-    <!-- ── Priorités ─────────────────────────────── -->
-    <div class="panel panel--priority">
-      <div class="panel__head">
-        <span class="panel__title">Par priorité</span>
-        <span class="panel__sub" *ngIf="!isLoadingDashboard">
-          {{ totals.total_items }} demandes
-        </span>
-      </div>
+    <div class="help-drawer__sep"></div>
 
-      <div class="panel__body panel__body--donut">
+    <!-- Contacts -->
+    <p class="help-contacts-lbl">Pour toute autre question, écrivez-nous :</p>
 
-        <div *ngIf="isLoadingDashboard" class="db-spinner">
-          <div class="spinner-border spinner-border-sm text-primary"></div>
+    <div class="help-contacts">
+      <a href="mailto:acqmono@bib.umontreal.ca" class="help-contact">
+        <div class="help-contact__icon" style="background:#EBF3FB;color:#00407F">
+          <i class="bi bi-book-half"></i>
         </div>
+        <div class="help-contact__body">
+          <span class="help-contact__type">Monographies</span>
+          <span class="help-contact__email">acqmono@bib.umontreal.ca</span>
+        </div>
+        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
+      </a>
 
-        <ng-container *ngIf="!isLoadingDashboard && byPriority.length > 0">
+      <a href="mailto:acqperi@bib.umontreal.ca" class="help-contact">
+        <div class="help-contact__icon" style="background:#E8F3FA;color:#005fa3">
+          <i class="bi bi-journal-text"></i>
+        </div>
+        <div class="help-contact__body">
+          <span class="help-contact__type">Périodiques</span>
+          <span class="help-contact__email">acqperi@bib.umontreal.ca</span>
+        </div>
+        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
+      </a>
 
-          <!-- Donut -->
-          <div class="priority-donut"
-              [style.background]="generateDonutGradient()">
-
-            <div class="priority-donut__inner">
-              <span class="priority-donut__total">
-                {{ totals.total_items }}
-              </span>
-              <span class="priority-donut__label">
-                Total
-              </span>
-            </div>
-          </div>
-
-          <!-- Légende -->
-          <div class="priority-legend">
-            <div class="priority-legend__item"
-                *ngFor="let p of byPriority">
-
-              <span class="priority-legend__color"
-                    [style.background]="getPriorityColor(p.priorite)">
-              </span>
-
-              <span class="priority-legend__text">
-                {{ p.priorite }}
-              </span>
-
-              <span class="priority-legend__value">
-                {{ formatNumber(p.count) }}
-                ({{ calculatePercentage(p.count, totals.total_items) }}%)
-              </span>
-
-            </div>
-          </div>
-
-        </ng-container>
-
-        <p *ngIf="!isLoadingDashboard && byPriority.length === 0"
-          class="db-empty">
-          Aucune donnée
-        </p>
-
-      </div>
+      <a href="mailto:resselect@bib.umontreal.ca" class="help-contact">
+        <div class="help-contact__icon" style="background:#EAF3E8;color:#246405">
+          <i class="bi bi-globe2"></i>
+        </div>
+        <div class="help-contact__body">
+          <span class="help-contact__type">Ressources électroniques</span>
+          <span class="help-contact__email">resselect@bib.umontreal.ca</span>
+        </div>
+        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
+      </a>
     </div>
 
   </div>
-
-
-</div>
+</aside>

@@ -25,6 +25,9 @@ export class AccueilComponent implements OnInit, OnDestroy {
   hasError           = false;
   errorMessage       = '';
 
+  /* ─── Panneau aide ─── */
+  showHelpPanel = false;
+
   /* ─── Config ressources ACQ ─── */
   acqConfig = {
     majDate:        '2 septembre 2025',
@@ -56,6 +59,24 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ─── Utilitaires template ─── */
   readonly Math = Math;
 
+  /* ─── Catalogue types (toutes périodes) ─── */
+  readonly allTypes: string[] = [
+    'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
+    'PEB Tipasa numérique', 'Requête ACQ', 'Springer', "Suggestion d'achat"
+  ];
+  typeAllTimeCounts: Record<string, number> = {};
+  isLoadingTypeCounts = true;
+
+  readonly typeDescriptions: Record<string, string> = {
+    'Nouvel achat unique':   'Acquisition d\'un document imprimé ou électronique',
+    'Nouvel abonnement':     'Abonnement à un périodique ou une ressource continue',
+    'Modification CCOL':     'Modification d\'une notice dans le catalogue collectif',
+    'PEB Tipasa numérique':  'Prêt entre bibliothèques via la plateforme Tipasa',
+    'Requête ACQ':           'Demande adressée directement aux acquisitions',
+    'Springer':              'Commande dans le cadre du programme Springer',
+    "Suggestion d'achat":    'Suggestion soumise par un usager de la bibliothèque',
+  };
+
   readonly chartColors = {
     primary:   '#00407F',
     secondary: '#0057AC',
@@ -77,6 +98,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAcqConfig();
     this.loadAllData();
+    this.loadTypeCounts();
   }
 
   ngOnDestroy(): void {
@@ -157,6 +179,10 @@ export class AccueilComponent implements OnInit, OnDestroy {
     this.router.navigate([path]);
   }
 
+  navigateToType(formulaire_type: string): void {
+    this.router.navigate(['/items'], { queryParams: { formulaire_type } });
+  }
+
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      GETTERS SÉCURISÉS
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -165,6 +191,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   get byPriority()    { return this.dashboardStats.byPriority    ?? []; }
   get topDemandeurs() { return this.dashboardStats.topDemandeurs ?? []; }
   get byMonth()       { return this.dashboardStats.byMonth       ?? []; }
+  get libraryStats()  { return this.graphData?.libraryStats       ?? []; }
 
   /**
    * Retourne le count du top demandeur (pour l'axe des barres)
@@ -218,6 +245,11 @@ export class AccueilComponent implements OnInit, OnDestroy {
     }
   }
 
+  getBibColor(index: number): string {
+    const colors = ['#0b113a', '#00407F', '#2380D1', '#246405', '#52B782', '#F04E24', '#FFCA40'];
+    return colors[index % colors.length];
+  }
+
   getTypeIcon(type: string): string {
     switch (type) {
       case 'Nouvel achat unique':  return 'bi bi-basket3';
@@ -237,6 +269,22 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      CONFIG RESSOURCES ACQ
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  private loadTypeCounts(): void {
+    this.isLoadingTypeCounts = true;
+    this.homeService.getTypeCounts().subscribe({
+      next: (res) => {
+        this.typeAllTimeCounts = {};
+        if (res?.success && Array.isArray(res.data)) {
+          res.data.forEach(row => {
+            this.typeAllTimeCounts[row.formulaire_type] = row.count;
+          });
+        }
+        this.isLoadingTypeCounts = false;
+      },
+      error: () => { this.isLoadingTypeCounts = false; }
+    });
+  }
+
   private loadAcqConfig(): void {
     this.configService.getConfig().subscribe({
       next: (res) => {

@@ -43,6 +43,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.lireDecisionParams();
+
+    const typeParam = this.route.snapshot.queryParamMap.get('formulaire_type');
+    if (typeParam) this.selectedFormulaireType = typeParam;
+
     this.subs.add(
       this.searchSubject.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(() => { this.currentPage = 1; this.loadItems(); })
