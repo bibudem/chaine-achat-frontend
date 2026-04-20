@@ -46,7 +46,7 @@ export interface ApiResponse<T> {
 export interface FiltresRapport {
   dateDebut?: string;
   dateFin?: string;
-  formulaireType?: string;
+  formulaire_type?: string;
   bibliotheque?: string;
   priorite?: string;
   demandeur?: string;

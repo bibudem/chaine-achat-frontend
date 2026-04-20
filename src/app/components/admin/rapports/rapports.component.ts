@@ -174,7 +174,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       delete this.filtresMatSelect[key];
     }
-    this.appliquerEtAfficher();
+    this.chargerApercu();
   }
 
   // Filtre statuts fusionnés — vérifie statut_bibliotheque ET statut_acq
@@ -194,7 +194,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.statutFiltreActif = true;
         this.statutFiltreLabel = valeur;
       }
-      this.appliquerEtAfficher();
+      this.chargerApercu();
     }
 
     isStatutSelected(type: string, valeur: string): boolean {
@@ -260,18 +260,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   appliquerEtAfficher(): void {
     let rows = [...this.donneesBrutes];
 
-    // 1. Filtres multi-select standards (type, bibliothèque, priorité)
-    rows = this.appliquerFiltresMatSelect(rows);
-
-    // 2. Filtre statut (une seule colonne ciblée)
-    if (this.statutFiltre) {
-      const { colonne, valeur } = this.statutFiltre;
-      rows = rows.filter(row =>
-        String(row[colonne] || '').toLowerCase().trim() === valeur.toLowerCase().trim()
-      );
-    }
-
-    // 3. Filtre titre (recherche partielle insensible à la casse)
+    // Filtre titre uniquement (client-side instantané — les autres filtres sont côté serveur)
     if (this.rechercheTitre.trim()) {
       const term = this.rechercheTitre.toLowerCase().trim();
       rows = rows.filter(row => {
@@ -280,7 +269,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    // 4. Regroupement selon le type de rapport
+    // Regroupement selon le type de rapport
     const rowsGroupes = this.grouperPourRapport(rows, this.rapportSelectionneId);
 
     this.listeRapport    = rowsGroupes;
@@ -365,28 +354,32 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   // ─── Filtres ─────────────────────────────────────────────
 
   private construireFiltres(): FiltresRapport {
-    return {
+    const f: FiltresRapport = {
       dateDebut: this.filtres.dateDebut || undefined,
       dateFin:   this.filtres.dateFin   || undefined,
       demandeur: this.filtres.demandeur || undefined,
-      limit:     500,
+      limit:     5000,
       offset:    0
     };
-  }
 
-  private appliquerFiltresMatSelect(rows: any[]): any[] {
-    if (Object.keys(this.filtresMatSelect).length === 0) return rows;
-    let result = [...rows];
-    Object.entries(this.filtresMatSelect).forEach(([key, values]: [string, any]) => {
-      if (!values?.length) return;
-      const valuesSet = new Set<string>(values.map((v: any) => String(v).toLowerCase().trim()));
-      result = result.filter(row => {
-        const val = row[key];
-        if (val === null || val === undefined || val === '') return false;
-        return valuesSet.has(String(val).toLowerCase().trim());
-      });
-    });
-    return result;
+    const types = this.selectedMap['formulaireType'];
+    if (types?.length) f.formulaire_type = types.join(',');
+
+    const bibs = this.selectedMap['bibliotheque'];
+    if (bibs?.length) f.bibliotheque = bibs.join(',');
+
+    const prios = this.selectedMap['priorite'];
+    if (prios?.length) f.priorite = prios.join(',');
+
+    if (this.statutFiltre) {
+      if (this.statutFiltre.colonne === 'statut_bibliotheque') {
+        f.statutBibliotheque = this.statutFiltre.valeur;
+      } else {
+        f.statutAcq = this.statutFiltre.valeur;
+      }
+    }
+
+    return f;
   }
 
   private mapKey(key: string): string {
