@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'rapport', component: RapportsComponent },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'lst-fournisseurs', component: LstFournisseursComponent },
-  { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',

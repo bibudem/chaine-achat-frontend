@@ -59,7 +59,7 @@ export class ReponsesService {
   // SUGGESTION D'ACHAT
   // Composant : suggestion-public.component.ts
   // Route     : POST /reponses/suggestion
-  // Décision  : GET  /reponses/decision-suggestion
+  // Décision  : GET  /reponses/suggestion_usagers
   // ──────────────────────────────────────────────────────────
   envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
     const body: SuggestionPayload = {

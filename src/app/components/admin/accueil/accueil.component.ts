@@ -1,14 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HomeService, DashboardStats, GraphData, Period, ApiResponse, AllHomeData } from '../../../services/home.service';
+import { ConfigService } from '../../../services/config.service';
+import { DialogService } from '../../../services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-accueil',
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.css']
 })
+
+
 export class AccueilComponent implements OnInit, OnDestroy {
 
   /* ─── Données ─── */
@@ -20,6 +24,17 @@ export class AccueilComponent implements OnInit, OnDestroy {
   isLoadingGraphs    = true;
   hasError           = false;
   errorMessage       = '';
+
+  /* ─── Config ressources ACQ ─── */
+  acqConfig = {
+    majDate:        '2 septembre 2025',
+    repartitionUrl: '',
+    tauxRate:       '1,368',
+    tauxPeriode:    '2025–2026'
+  };
+  editConfig  = { ...this.acqConfig };
+  editingCard: 'repartition' | 'taux' | null = null;
+  isSavingConfig = false;
 
   /* ─── Subscriptions ─── */
   private subs = new Subscription();
@@ -36,6 +51,8 @@ export class AccueilComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+
   /* ─── Utilitaires template ─── */
   readonly Math = Math;
 
@@ -51,11 +68,14 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   constructor(
     private homeService: HomeService,
+    private configService: ConfigService,
+    private dialog: DialogService,
     private translate: TranslateService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.loadAcqConfig();
     this.loadAllData();
   }
 
@@ -146,6 +166,14 @@ export class AccueilComponent implements OnInit, OnDestroy {
   get topDemandeurs() { return this.dashboardStats.topDemandeurs ?? []; }
   get byMonth()       { return this.dashboardStats.byMonth       ?? []; }
 
+  /**
+   * Retourne le count du top demandeur (pour l'axe des barres)
+   * Sécurisé : retourne 1 si le tableau est vide pour éviter division par 0
+   */
+  get maxTopDemandeurCount(): number {
+    return this.topDemandeurs.length > 0 ? this.topDemandeurs[0].count : 1;
+  }
+
   get completionRate(): number {
     return this.calculatePercentage(this.totals.termines, this.totals.total_items);
   }
@@ -206,6 +234,77 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      PRIVÉ
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CONFIG RESSOURCES ACQ
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  private loadAcqConfig(): void {
+    this.configService.getConfig().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          const d = res.data;
+          this.acqConfig.majDate        = d['acq_maj_date']        || this.acqConfig.majDate;
+          this.acqConfig.repartitionUrl = d['acq_repartition_url'] || this.acqConfig.repartitionUrl;
+          this.acqConfig.tauxRate       = d['acq_taux_usd']        || this.acqConfig.tauxRate;
+          this.acqConfig.tauxPeriode    = d['acq_taux_periode']    || this.acqConfig.tauxPeriode;
+        }
+        this.editConfig = { ...this.acqConfig };
+      },
+      error: () => {
+        this.editConfig = { ...this.acqConfig };
+      }
+    });
+  }
+
+  openRepartition(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.acqConfig.repartitionUrl) {
+      window.open(this.acqConfig.repartitionUrl, '_blank');
+    }
+  }
+
+  startEdit(card: 'repartition' | 'taux'): void {
+    this.editConfig  = { ...this.acqConfig };
+    this.editingCard = card;
+  }
+
+  async saveConfig(): Promise<void> {
+    const confirmed = await this.dialog.confirm(
+      'Voulez-vous vraiment appliquer ces modifications ?',
+      'Confirmer le changement'
+    );
+    if (!confirmed) return;
+
+    const updates =
+      this.editingCard === 'repartition'
+        ? [
+            { cle: 'acq_maj_date',        valeur: this.editConfig.majDate },
+            { cle: 'acq_repartition_url', valeur: this.editConfig.repartitionUrl }
+          ]
+        : [
+            { cle: 'acq_taux_usd',     valeur: this.editConfig.tauxRate },
+            { cle: 'acq_taux_periode', valeur: this.editConfig.tauxPeriode }
+          ];
+
+    this.isSavingConfig = true;
+
+    forkJoin(updates.map(u => this.configService.updateConfig(u.cle, u.valeur))).subscribe({
+      next: () => {
+        this.acqConfig      = { ...this.editConfig };
+        this.editingCard    = null;
+        this.isSavingConfig = false;
+        this.dialog.showSuccess('Configuration mise à jour avec succès.');
+      },
+      error: () => {
+        this.isSavingConfig = false;
+        this.dialog.showError('Erreur lors de la mise à jour — veuillez réessayer.');
+      }
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingCard = null;
+  }
+
   private handleError(message: string): void {
     this.hasError           = true;
     this.errorMessage       = message;
