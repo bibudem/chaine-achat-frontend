@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
@@ -146,9 +146,29 @@ export class ItemFormulaireService {
     return this.create(item);
   }
 
-  getAll(limit: number = 50, offset: number = 0): Observable<ApiResponse<Item[]>> {
+  getAll(opts: {
+    limit?: number;
+    offset?: number;
+    search?: string;
+    bibliotheque?: string;
+    statut?: string;
+    formulaire_type?: string;
+    sort?: string;
+    order?: 'asc' | 'desc';
+  } = {}): Observable<ApiResponse<Item[]>> {
+    let p = new HttpParams()
+      .set('limit',  String(opts.limit  ?? 50))
+      .set('offset', String(opts.offset ?? 0));
+
+    if (opts.search)          p = p.set('search',          opts.search);
+    if (opts.bibliotheque)    p = p.set('bibliotheque',    opts.bibliotheque);
+    if (opts.statut)          p = p.set('statut',          opts.statut);
+    if (opts.formulaire_type) p = p.set('formulaire_type', opts.formulaire_type);
+    if (opts.sort)            p = p.set('sort',            opts.sort);
+    if (opts.order)           p = p.set('order',           opts.order);
+
     return this.http
-      .get<ApiResponse<Item[]>>(`${this.url}/all?limit=${limit}&offset=${offset}`, this.httpOptions)
+      .get<ApiResponse<Item[]>>(`${this.url}/all`, { headers: this.httpOptions.headers, params: p })
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("getAll")));
   }
 
