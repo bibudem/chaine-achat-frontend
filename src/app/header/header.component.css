@@ -2,6 +2,10 @@
   box-shadow: none!important;
   border-radius: 18px;
 }
+
+/* Couleurs sémantiques des formulaires usager dans le menu */
+.preview-icon--achat   { background: var(--achat-dark) !important; } /* Teal  — Nouvel achat unique  */
+.preview-icon--suggest { background: var(--suggest-mid) !important; } /* Ambre — Suggestion d'achat   */
 .typing {
   position: relative;
   font-size: 1.2em;
@@ -13,8 +17,8 @@
   position: absolute;
   right: 0;
   width: 100%;
-  color: white;
-  background: #fff;
+  color: var(--white);
+  background: var(--white);
   animation: typing 3s steps(16) forwards, caret 1s infinite;
 }
 @keyframes typing {

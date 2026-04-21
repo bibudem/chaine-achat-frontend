@@ -134,8 +134,8 @@
   "menu":{
     "accueil": "Accueil",
     "rechercher": "Rechercher",
-    "ajouter": "Ajouter",
-    "processus": "Processus",
+    "ajouter": "Nouveau",
+    "processus": "Import",
     "outils": "Registres",
     "list-fournisseur": "Liste de fournisseurs",
     "list-fonds": "Liste de fonds",

@@ -250,6 +250,11 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return colors[index % colors.length];
   }
 
+  getTypeColorIndex(type: string): number {
+    const idx = this.allTypes.indexOf(type);
+    return idx >= 0 ? idx : 0;
+  }
+
   getTypeIcon(type: string): string {
     switch (type) {
       case 'Nouvel achat unique':  return 'bi bi-basket3';

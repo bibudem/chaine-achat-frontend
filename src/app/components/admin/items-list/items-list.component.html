@@ -81,7 +81,7 @@
 
           <!-- Desktop / tablette : tableau classique -->
           <div class="table-responsive d-none d-md-block">
-            <table class="table table-hover mb-0 items-table">
+            <table class="table table-border mb-0 items-table">
               <thead class="table-light">
                 <tr>
                   <th class="col-id sortable-col" (click)="sortBy('item_id')">
@@ -123,7 +123,9 @@
                     </div>
                   </td>
                   <td class="col-type">
-                    <span class="badge bg-light text-dark">{{ item.formulaire_type }}</span>
+                    <span class="badge" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
+                      {{ item.formulaire_type }}
+                    </span>
                   </td>
                   <td class="col-isbn">
                     <div>{{ item.isbn_issn || '—' }}</div>
@@ -138,10 +140,10 @@
                   </td>
                   <td class="col-statut">
                     <div class="d-flex flex-column gap-1">
-                      <span *ngIf="item.statut_bibliotheque" class="badge bg-info align-self-start">
+                      <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib align-self-start">
                         {{ item.statut_bibliotheque }}
                       </span>
-                      <span *ngIf="item.statut_acq" class="badge bg-secondary align-self-start">
+                      <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
                         ACQ: {{ item.statut_acq }}
                       </span>
                     </div>
@@ -170,7 +172,9 @@
             <div *ngFor="let item of pagedItems; trackBy: trackByItemId" class="item-card">
               <div class="item-card__header">
                 <span class="item-card__id">#{{ item.item_id }}</span>
-                <span class="badge bg-light text-dark ms-2">{{ item.formulaire_type }}</span>
+                <span class="badge ms-2" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
+                  {{ item.formulaire_type }}
+                </span>
                 <div class="ms-auto btn-group btn-group-sm">
                   <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" title="Consulter">
                     <i class="bi bi-eye"></i>
@@ -196,8 +200,8 @@
                 <div class="item-card__row" *ngIf="item.statut_bibliotheque || item.statut_acq">
                   <span class="item-card__label">Statut</span>
                   <div class="d-flex flex-wrap gap-1">
-                    <span *ngIf="item.statut_bibliotheque" class="badge bg-info">{{ item.statut_bibliotheque }}</span>
-                    <span *ngIf="item.statut_acq" class="badge bg-secondary">ACQ: {{ item.statut_acq }}</span>
+                    <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
+                    <span *ngIf="item.statut_acq" class="badge badge-statut-acq">ACQ: {{ item.statut_acq }}</span>
                   </div>
                 </div>
                 <div class="item-card__row">

@@ -65,7 +65,8 @@
   <div *ngIf="step === 'select'" class="imp-body">
     <p class="imp-hint">{{ 'import.etape1.hint' | translate }}</p>
     <div class="imp-type-row">
-      <button *ngFor="let ft of formTypes" class="imp-type-card" (click)="selectType(ft)">
+      <button *ngFor="let ft of formTypes" class="imp-type-card" (click)="selectType(ft)"
+              [style.--imp-card-color]="getTypeColor(ft.type)">
         <i [class]="ft.icon + ' imp-type-card__icon'"></i>
         <span class="imp-type-card__label">{{ ft.label }}</span>
         <span class="imp-type-card__desc">{{ ft.description }}</span>

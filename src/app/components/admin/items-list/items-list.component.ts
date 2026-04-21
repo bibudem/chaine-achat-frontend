@@ -229,4 +229,16 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     return format === 'Imprimé/support physique' ? 'Imprimé'
          : format === 'Électronique' ? 'Électronique' : format;
   }
+
+  getTypeBadgeClass(type: string | undefined): string {
+    const t = (type ?? '').toLowerCase();
+    if (t.includes('suggestion'))  return 'badge-type--suggest';
+    if (t.includes('ccol'))        return 'badge-type--ccol';
+    if (t.includes('abonnement'))  return 'badge-type--abo';
+    if (t.includes('springer'))    return 'badge-type--springer';
+    if (t.includes('peb'))         return 'badge-type--peb';
+    if (t.includes('acq'))         return 'badge-type--acq';
+    if (t.includes('achat'))       return 'badge-type--achat';
+    return 'badge-type--autre';
+  }
 }

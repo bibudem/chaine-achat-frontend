@@ -1,4 +1,4 @@
-<div class="container-fluid min-vh-100 pb-4">
+<div class="container-fluid min-vh-100 pb-4 mt-5">
 
   <!-- ── LOADING ───────────────────────────────────────────── -->
   <div *ngIf="loading" class="text-center py-5">
@@ -18,11 +18,11 @@
     <!-- ╔══════════════════════════════════════════════════════
          BARRE DE TITRE
     ══════════════════════════════════════════════════════════╗ -->
-    <div class="itd-topbar mt-5">
+    <div class="itd-topbar">
       <div class="itd-topbar__left">
         <div>
           <div class="itd-topbar__id">#{{ item.item_id }}</div>
-          <h1 class="h3">{{ item.titre_document || 'Sans titre' }}</h1>
+          <h1 class="itd-topbar__title mb-0">{{ item.titre_document || 'Sans titre' }}</h1>
         </div>
       </div>
       <div class="itd-topbar__actions">
@@ -46,7 +46,7 @@
         <!-- Type & Priorité -->
         <div class="itd-sidebar__block">
           <div class="itd-sidebar__label">Type de formulaire</div>
-          <span class="badge bg-dark text-white border w-100 text-start py-2 px-2">
+          <span [class]="getTypeBadgeClass(item.formulaire_type)">
             {{ item.formulaire_type }}
           </span>
         </div>
@@ -253,7 +253,7 @@
               <!-- Données financières optionnelles -->
               <ng-container *ngIf="hasFinancialData()">
                 <div class="col-12">
-                  <div class="itd-infoband">
+                  <div class="itd-infoband itd-infoband--blue">
                     <div class="row g-3">
                       <div class="col-md-3">
                         <div class="itd-field">
@@ -540,7 +540,6 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-9"></div>
               <div class="col-md-6" *ngIf="item.note_dtdm">
                 <div class="itd-field">
                   <span class="itd-field__label">Note DTDM (Catalogage)</span>

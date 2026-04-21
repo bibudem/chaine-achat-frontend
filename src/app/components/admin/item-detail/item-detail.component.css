@@ -76,7 +76,7 @@
   display:             grid;
   grid-template-columns: 240px 1fr;
   gap:                 1.25rem;
-  margin-top:5px;
+  margin-top:          1.25rem;
   align-items:         start;
 }
 
@@ -230,6 +230,8 @@
 /* ── Liens ───────────────────────────────────────────────────────── */
 a { color: var(--secondary-blue, #00407F); text-decoration: none; font-weight: 500; }
 a:hover { text-decoration: underline; }
+
+/* ── Badges sémantiques — définis globalement dans css_udem.css ── */
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE

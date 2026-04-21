@@ -41,9 +41,6 @@ import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.compo
 import { NgSelectModule } from '@ng-select/ng-select';
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
-import { ListeProcessusComponent } from './components/admin/processus/liste-processus/liste-processus.component';
-import {ListeProcessusDelailsComponent} from "./components/admin/processus/liste-processus-details/liste-processus-details.component";
-import {MiseAjourMonographieComponent} from "./components/admin/processus/mise-a-jour-monografies/mise-a-jour-monografies.component";
 import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
 import {ListFournisseursComponent} from "./components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component";
 import {ListBoxModule} from "@syncfusion/ej2-angular-dropdowns";
@@ -63,6 +60,7 @@ import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { ReponsesDetailComponent } from './components/admin/reponses/reponses-detail/reponses-detail.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -75,9 +73,6 @@ import { ReponsesDetailComponent } from './components/admin/reponses/reponses-de
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
-    ListeProcessusComponent,
-    ListeProcessusDelailsComponent,
-    MiseAjourMonographieComponent,
     ListFournisseursComponent,
     ListFondsComponent,
     ItemsListComponent,
@@ -93,7 +88,8 @@ import { ReponsesDetailComponent } from './components/admin/reponses/reponses-de
     ImportComponent,
     NouvelAchatComponent,
     ReponsesListComponent,
-    ReponsesDetailComponent
+    ReponsesDetailComponent,
+    FaqComponent
   ],
     imports: [
         RouterModule,

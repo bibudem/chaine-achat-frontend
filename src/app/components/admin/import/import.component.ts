@@ -8,7 +8,6 @@ import {
   ImportResult,
   FormTypeInfo,
   ColumnInfo,
-  FormType,
   FORM_TYPES
 } from '../../../services/import.service';
 
@@ -96,6 +95,18 @@ export class ImportComponent implements OnDestroy {
     this.errorMessage   = '';
     this.previewHeaders = [];
     this.previewRows    = [];
+  }
+
+  getTypeColor(type: string): string {
+    const t = (type ?? '').toLowerCase();
+    if (t.includes('suggestion'))  return '#C8872A';
+    if (t.includes('ccol'))        return '#3730A3';
+    if (t.includes('abonnement'))  return '#6D28D9';
+    if (t.includes('springer'))    return '#9A3412';
+    if (t.includes('peb'))         return '#0369A1';
+    if (t.includes('acq'))         return '#B91C1C';
+    if (t.includes('achat'))       return '#1B5E6E';
+    return '#0057AC';
   }
 
   navigateTo(path: string): void {

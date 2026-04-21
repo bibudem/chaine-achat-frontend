@@ -1,100 +1,16 @@
 /* lst-fournisseurs.component.css
-   Styles propres au composant — le reste hérite du global (variables CSS, pagination, cards…)
-   ─────────────────────────────────────────────────────────────────────────────────────────── */
+   Styles propres au composant.
+   ms-dropdown, colonnes-pills/colonne-pill → définis globalement dans css_udem.css.
+   ─────────────────────────────────────────────────────────────────────────────────── */
 
-/* ── Multi-select custom (identique rapport) ─────────────────────── */
-.ms-dropdown { position: relative; }
-
+/* ── ms-trigger compact (hauteur 38px, spécifique à cette vue) ───── */
 .ms-trigger {
-  width:            100%;
-  height:           38px !important;
-  min-height:       38px !important;
-  max-height:       38px !important;
-  display:          flex;
-  align-items:      center;
-  justify-content:  space-between;
-  cursor:           pointer;
-  text-align:       left;
-  overflow:         hidden;
-  font-size:        0.875rem !important;
-  padding:          0 0.75rem !important;
-  line-height:      1 !important;
-  border:           1px solid var(--light-gray, #dee2e6);
-  border-radius:    8px;
-  background-color: var(--white, #fff);
-  transition:       border-color .15s;
-}
-.ms-trigger:hover  { border-color: var(--border-gray, #9DABB9); }
-.ms-trigger:focus  { border-color: var(--light-blue, #2380D1); outline: none;
-                     box-shadow: 0 0 0 3px rgba(35,128,209,.15); }
-
-.ms-arrow {
-  font-size:   0.7rem;
-  margin-left: 0.5rem;
-  flex-shrink: 0;
-  color:       var(--text-gray, #607386);
-  transition:  transform .15s ease;
-}
-.ms-open .ms-arrow { transform: rotate(180deg); }
-
-.ms-menu {
-  position:   absolute;
-  top:        calc(100% + 4px);
-  left:       0;
-  right:      0;
-  z-index:    1050;
-  background: var(--white, #fff);
-  border:     1px solid var(--light-gray, #dee2e6);
-  border-radius: 8px;
-  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.1));
-  max-height: 220px;
-  overflow-y: auto;
-  padding:    .25rem 0;
-}
-
-.ms-option {
-  display:     flex;
-  align-items: center;
-  gap:         .5rem;
-  padding:     .4rem .75rem;
-  font-size:   .875rem;
-  cursor:      pointer;
-  color:       var(--medium-gray, #37424D);
-  transition:  background .12s;
-}
-.ms-option:hover { background: var(--extra-light-blue, #E5F0F8); }
-
-.ms-option input[type="checkbox"] {
-  margin:      0;
-  padding:     0 !important;
-  flex-shrink: 0;
-}
-
-/* ── Pills sélectionnées ─────────────────────────────────────────── */
-.colonnes-pills {
-  display:   flex;
-  flex-wrap: wrap;
-  gap:       4px;
-}
-
-.colonne-pill {
-  display:        inline-flex;
-  align-items:    center;
-  gap:            3px;
-  background:     var(--extra-light-blue, #E5F0F8);
-  border:         1px solid var(--light-blue, #2380D1);
-  border-radius:  20px;
-  padding:        .15em .55em;
-  font-size:      .72rem;
-  cursor:         pointer;
-  white-space:    nowrap;
-  color:          var(--secondary-blue, #00407F);
-  transition:     background .15s, border-color .15s;
-}
-.colonne-pill:hover {
-  background:   var(--warning-light, #fee1de);
-  border-color: var(--danger-red, #B72600);
-  color:        var(--danger-red, #B72600);
+  height:     38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  font-size:  0.875rem !important;
+  padding:    0 0.75rem !important;
+  line-height: 1 !important;
 }
 
 /* ── Tableau fournisseurs ────────────────────────────────────────── */

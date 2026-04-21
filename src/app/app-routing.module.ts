@@ -6,7 +6,6 @@ import { AuthGuard } from "./services/auth-guard.service";
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {AdminGuard} from "./services/admin-guard.service";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
-import {ListeProcessusComponent} from "./components/admin/processus/liste-processus/liste-processus.component";
 import {ItemDetailComponent} from "./components/admin/item-detail/item-detail.component";
 import {RapportsComponent} from "./components/admin/rapports/rapports.component";
 import { ItemsListComponent } from './components/admin/items-list/items-list.component';
@@ -28,8 +27,6 @@ const routes: Routes = [
   { path: 'items/details/:id', component: ItemDetailComponent },
   { path: 'items/:id', component: ItemFormulaireComponent },
   { path: 'items', component: ItemsListComponent },
-  { path: 'processus', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
-  { path: 'processus/add', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'rapport', component: RapportsComponent },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'lst-fournisseurs', component: LstFournisseursComponent },

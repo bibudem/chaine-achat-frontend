@@ -31,9 +31,7 @@
           </div>
         </div>
         <button class="info-chip__edit-btn" (click)="startEdit('repartition')" title="Modifier">
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 256 256" fill="currentColor">
-            <path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/>
-          </svg>
+          <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'repartition'" class="info-chip__dropdown">
           <p class="info-chip__dropdown-title">Répartition ACQ</p>
@@ -67,7 +65,7 @@
           <span class="info-chip__val info-chip__val--lg">{{ acqConfig.tauxRate }}</span>
         </div>
         <button class="info-chip__edit-btn" (click)="startEdit('taux')" title="Modifier">
-          <i class="bi bi-bar-chart"></i>
+          <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'taux'" class="info-chip__dropdown">
           <p class="info-chip__dropdown-title">Taux USD sécurisé</p>
@@ -196,11 +194,11 @@
             <div class="spinner-border spinner-border-sm text-primary"></div>
           </div>
           <ng-container *ngIf="!isLoadingTypeCounts">
-            <div *ngFor="let type of allTypes"
+            <div *ngFor="let type of allTypes; let i = index"
                  class="catalog-row"
                  (click)="navigateToType(type)"
                  [title]="'Filtrer · ' + type">
-              <div class="catalog-row__icon pt-2">
+              <div class="catalog-row__icon" [ngClass]="'tc-' + i + '-bg'">
                 <i [class]="getTypeIcon(type)"></i>
               </div>
               <div class="catalog-row__body">
@@ -232,22 +230,22 @@
 
           <ng-container *ngIf="!isLoadingDashboard && byType.length > 0">
             <div class="type-seg-bar">
-              <div *ngFor="let t of byType; let i = index"
+              <div *ngFor="let t of byType"
                    class="type-seg-bar__slice"
-                   [class]="'tc-' + i"
+                   [class]="'tc-' + getTypeColorIndex(t.formulaire_type)"
                    [style.width.%]="t.percentage"
                    [title]="t.formulaire_type + ' — ' + t.percentage + '%'">
               </div>
             </div>
             <div class="type-legend">
-              <div *ngFor="let t of byType; let i = index"
+              <div *ngFor="let t of byType"
                    class="type-legend__row type-legend__row--link"
                    (click)="navigateToType(t.formulaire_type)"
                    [title]="'Voir les demandes · ' + t.formulaire_type">
-                <span class="type-legend__dot" [class]="'tc-' + i + '-bg'"></span>
+                <span class="type-legend__dot" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'"></span>
                 <span class="type-legend__name">{{ t.formulaire_type }}</span>
                 <div class="type-legend__track">
-                  <div class="type-legend__fill" [class]="'tc-' + i + '-bg'" [style.width.%]="t.percentage"></div>
+                  <div class="type-legend__fill" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
                 </div>
                 <span class="type-legend__pct">{{ t.percentage }}%</span>
                 <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>
@@ -369,86 +367,3 @@
   </div><!-- /db-panels -->
 
 </div><!-- /db-wrap -->
-
-<!-- ── Bouton aide flottant ─────────────────────────────── -->
-<button class="help-fab" (click)="showHelpPanel = true" title="Des questions ?">
-  <i class="bi bi-question-circle"></i>
-  <span class="help-fab__label">FAQ</span>
-</button>
-
-<!-- ── Backdrop ─────────────────────────────────────────── -->
-<div class="help-overlay" [class.help-overlay--open]="showHelpPanel" (click)="showHelpPanel = false"></div>
-
-<!-- ── Drawer ───────────────────────────────────────────── -->
-<aside class="help-drawer" [class.help-drawer--open]="showHelpPanel" aria-label="Aide et contacts">
-
-  <div class="help-drawer__head">
-    <div class="help-drawer__head-left">
-      <div class="help-drawer__head-icon">
-        <i class="bi bi-question-lg"></i>
-      </div>
-      <div>
-        <p class="help-drawer__title">Des questions ?</p>
-        <p class="help-drawer__sub">Acquisitions — BIB UdeM</p>
-      </div>
-    </div>
-    <button class="help-drawer__close" (click)="showHelpPanel = false" title="Fermer">
-      <i class="bi bi-x-lg"></i>
-    </button>
-  </div>
-
-  <div class="help-drawer__body">
-
-    <!-- Note formulaire -->
-    <div class="help-tip">
-      <div class="help-tip__content">
-        <p class="help-tip__title">DES QUESTIONS?</p>
-        <p>
-          Pour faciliter le suivi de vos demandes, <strong>si des incertitudes ou des questionnements relatifs aux documents à commander surviennent au moment de compléter l'un ou l'autre de ces formulaires (prix, format, etc.), nous vous invitons à les consigner dans le champ Bibliothèque : Note, commentaire ou question.</strong>
-        <br>
-        Un membre de l'équipe des Acquisitions contactera le demandeur en bibliothèque au moment de traiter la demande.</p>
-      </div>
-    </div>
-
-    <div class="help-drawer__sep"></div>
-
-    <!-- Contacts -->
-    <p class="help-contacts-lbl">Pour toute autre question, écrivez-nous :</p>
-
-    <div class="help-contacts">
-      <a href="mailto:acqmono@bib.umontreal.ca" class="help-contact">
-        <div class="help-contact__icon" style="background:#EBF3FB;color:#00407F">
-          <i class="bi bi-book-half"></i>
-        </div>
-        <div class="help-contact__body">
-          <span class="help-contact__type">Monographies</span>
-          <span class="help-contact__email">acqmono@bib.umontreal.ca</span>
-        </div>
-        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
-      </a>
-
-      <a href="mailto:acqperi@bib.umontreal.ca" class="help-contact">
-        <div class="help-contact__icon" style="background:#E8F3FA;color:#005fa3">
-          <i class="bi bi-journal-text"></i>
-        </div>
-        <div class="help-contact__body">
-          <span class="help-contact__type">Périodiques</span>
-          <span class="help-contact__email">acqperi@bib.umontreal.ca</span>
-        </div>
-        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
-      </a>
-
-      <a href="mailto:resselect@bib.umontreal.ca" class="help-contact">
-        <div class="help-contact__icon" style="background:#EAF3E8;color:#246405">
-          <i class="bi bi-globe2"></i>
-        </div>
-        <div class="help-contact__body">
-          <span class="help-contact__type">Ressources électroniques</span>
-          <span class="help-contact__email">resselect@bib.umontreal.ca</span>
-        </div>
-        <i class="bi bi-arrow-up-right help-contact__arrow"></i>
-      </a>
-    </div>
-
-  </div>
-</aside>

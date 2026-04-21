@@ -30,68 +30,7 @@
   font-size: 0.82rem;
 }
 
-/* =======================================================
-   MULTI-SELECT CUSTOM (spécifique composant rapports)
-======================================================= */
-
-.ms-dropdown {
-  position: relative;
-}
-
-.ms-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  text-align: left;
-  overflow: hidden;
-}
-
-.ms-arrow {
-  font-size: 0.7rem;
-  margin-left: 0.5rem;
-  flex-shrink: 0;
-  transition: transform 0.15s ease;
-}
-
-.ms-open .ms-arrow {
-  transform: rotate(180deg);
-}
-
-.ms-menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 1050;
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
-  max-height: 220px;
-  overflow-y: auto;
-  padding: 0.25rem 0;
-}
-
-.ms-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.ms-option:hover {
-  background: var(--extra-light-blue);
-}
-
-.ms-option input[type="checkbox"] {
-  margin: 0;
-  padding: 0 !important;
-  flex-shrink: 0;
-}
+/* ms-dropdown, ms-trigger, ms-menu, ms-option → définis globalement dans css_udem.css */
 
 /* =======================================================
    COLONNES BAR (spécifique rapports)
@@ -168,32 +107,7 @@
   margin: 0;
 }
 
-/* Pills colonnes actives */
-.colonnes-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  flex: 1;
-}
-
-.colonne-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  background: var(--extra-light-blue);
-  border: 1px solid var(--light-blue);
-  border-radius: 20px;
-  padding: 0.15em 0.55em;
-  font-size: 0.72rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-}
-
-.colonne-pill:hover {
-  background: #fdecea;
-  border-color: #f5c6cb;
-}
+/* colonnes-pills, colonne-pill → définis globalement dans css_udem.css */
 
 /* =======================================================
    TABLE MATERIAL — ajustements spécifiques rapports

@@ -30,6 +30,23 @@
   --border-gray: #9DABB9;
   --white: #ffffff;
 
+  /* ── Achat unique (formulaire usager — teal émeraude) ───── */
+  --achat-dark:    #1B5E6E;
+  --achat-mid:     #2A9086;
+  --achat-light:   #D9F0EE;
+  --achat-border:  rgba(42, 144, 134, 0.25);
+
+  /* ── Suggestion publique (formulaire usager — ambre) ─────── */
+  --suggest-dark:  #7B4A15;
+  --suggest-mid:   #C8872A;
+  --suggest-light: #FDF3E3;
+  --suggest-border:rgba(200, 135, 42, 0.25);
+
+  /* ── Statut ACQ (backoffice admin — indigo) ──────────────── */
+  --acq-dark:      #3730A3;
+  --acq-mid:       #4F46E5;
+  --acq-light:     #EDE9FE;
+
   /* Ombres */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -39,7 +56,68 @@
   --navbar-height: 56px;
   --brand-width: 240px;
   --transition: .15s ease;
+
+  /* ── Extrémités de dégradés stat cards ──────────────────── */
+  --sc-blue-end:   #1a5fa0;
+  --sc-green-end:  #3a8a0e;
+  --sc-orange-dk:  #7a2000;
+  --sc-orange-mid: #c84200;
+  --sc-teal-dk:    #003366;
+  --sc-teal-mid:   #005fa3;
+
+  /* ── Arrière-plans de cartes thématiques ────────────────── */
+  --blue-card-bg:   #EBF3FB;
+  --green-card-bg:  #EAF3E8;
+  --orange-card-bg: #FDF0EB;
+  --teal-card-bg:   #E8F3FA;
+  --gray-card-bg:   #EEF0F2;
+
+  /* ── Types de demande (palette 7 types) ─────────────────── */
+  --type-violet:     #6D28D9;
+  --type-cyan:       #0369A1;
+  --type-gray:       #37424D;
+  --type-terracotta: #9A3412;
+
+  /* ── Panneaux / aide / drawer ───────────────────────────── */
+  --panel-head-bg:             #fafcff;
+  --help-tip-bg:               #f5f9ff;
+  --help-tip-border:           #daeaf8;
+  --help-field-border:         #c4dff2;
+  --help-contact-hover-bg:     #f5f9ff;
+  --help-contact-hover-border: #b5d4ea;
+
+  /* ── Chips info ACQ ─────────────────────────────────────── */
+  --chip-green-bg-start:  #edf7f0;
+  --chip-green-bg-end:    #d8f0e0;
+  --chip-green-border:    #b5dfc4;
+  --chip-orange-bg-start: #fdf2ee;
+  --chip-orange-bg-end:   #fce3d8;
+  --chip-orange-border:   #f5c4ae;
+
+  /* ── Composant import ───────────────────────────────────── */
+  --import-blue:       #0057AC;
+  --import-border:     #dde4ec;
+  --import-sep:        #eef1f5;
+  --import-bg-light:   #f7f9fc;
+  --import-bg-form:    #f4f7fb;
+  --import-bar-bg:     #e2eaf3;
+  --import-text-body:  #3a4a5c;
+  --import-text-dark:  #2c3a4f;
+  --import-red:        #c0392b;
+  --import-red-bg:     #fde8e8;
+  --import-red-light:  #fdf0f0;
+  --import-code-bg:    #e8f0fb;
+  --import-success-bg: #f3fbf6;
+  --import-error-bg:   #fdf4f3;
+  --import-error-icon: #e05c45;
+  --import-stat-green-bg:   #d4f4e2;
+  --import-stat-green-text: #1a5c36;
+  --import-stat-gray-bg:    #e8eef4;
+  --import-stat-orange-bg:  #fff0d6;
+  --import-stat-orange-text:#7a4a00;
 }
+
+
 
 /* =============================================
    ANTI-FLASH SHELL ADMIN SUR ROUTES USAGER
@@ -1271,6 +1349,21 @@ select.typeahead, select.tt-query, select.tt-hint {
 }
 
 /* =============================================
+   BADGES SÉMANTIQUES — TYPES DE FORMULAIRE
+   Palette stable partagée par items-list, item-detail et toute
+   future liste. Ne pas modifier les couleurs sans mettre à jour
+   les 7 types dans toute l'application.
+   ============================================= */
+.badge-type--ccol     { background: #EDE9FE; color: #3730A3; border: 1px solid rgba(55,48,163,.3); }   /* Modif. CCOL — Indigo    */
+.badge-type--abo      { background: #F3E8FF; color: #4C1D95; border: 1px solid rgba(109,40,217,.3); }  /* Nouvel abonnement — Violet */
+.badge-type--achat    { background: #D9F0EE; color: #1B5E6E; border: 1px solid rgba(42,144,134,.3); }  /* Achat unique — Teal     */
+.badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }   /* PEB Tipasa — Cyan       */
+.badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }   /* Requête ACQ — Gris foncé */
+.badge-type--springer { background: #FEE8E0; color: #7C2D12; border: 1px solid rgba(154,52,18,.3); }   /* Springer — Terracotta   */
+.badge-type--suggest  { background: #FDF3E3; color: #7B4A15; border: 1px solid rgba(200,135,42,.3); }  /* Suggestion — Ambre      */
+.badge-type--autre    { background: var(--light-gray);       color: var(--medium-gray); }               /* Autre — Neutre          */
+
+/* =============================================
    SPINNER
    ============================================= */
 .spinner-border { width: 2rem; height: 2rem; }
@@ -1369,6 +1462,192 @@ input[type="date"]:focus,
 .form-select { background-position: right 0.9rem center; background-size: 14px; }
 input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: pointer; }
 .bib-input-icon { border-radius: 0 8px 8px 0 !important; }
+
+/* =============================================
+   VALIDATION — SURCHARGE DESIGN SYSTEM
+   Bootstrap définit .invalid-feedback et .is-invalid; on
+   remplace leurs couleurs par celles du design system UdeM.
+   ============================================= */
+.invalid-feedback {
+  font-size: 0.78rem;
+  color: var(--warning-orange);
+  margin-top: 4px;
+  display: block;
+}
+.is-invalid { border-color: var(--warning-orange) !important; }
+
+/* =============================================
+   MULTI-SELECT CUSTOM (ms-dropdown)
+   Composant réutilisable partagé par :
+     - rapports.component
+     - lst-fournisseurs.component
+     - item-formulaire.component
+   Variables : design system UdeM (pas Bootstrap raw).
+   ============================================= */
+
+/* Conteneur positionné */
+.ms-dropdown { position: relative; }
+
+/* Déclencheur (bouton qui affiche/masque le menu) */
+.ms-trigger {
+  width:           100%;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  cursor:          pointer;
+  text-align:      left;
+  overflow:        hidden;
+  text-overflow:   ellipsis;
+  white-space:     nowrap;
+}
+
+/* Chevron animé */
+.ms-arrow {
+  font-size:   0.7rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+  color:       var(--text-gray);
+  transition:  transform .15s ease;
+}
+.ms-open .ms-arrow { transform: rotate(180deg); }
+
+/* Menu déroulant */
+.ms-menu {
+  position:   absolute;
+  top:        calc(100% + 4px);
+  left:       0;
+  right:      0;
+  z-index:    1050;
+  background: var(--white);
+  border:     1px solid var(--light-gray);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  max-height: 220px;
+  overflow-y: auto;
+  padding:    .25rem 0;
+}
+
+/* Option simple (checkbox implicite) */
+.ms-option {
+  display:     flex;
+  align-items: center;
+  gap:         .5rem;
+  padding:     .4rem .75rem;
+  font-size:   .875rem;
+  cursor:      pointer;
+  color:       var(--medium-gray);
+  transition:  background .12s;
+}
+.ms-option:hover { background: var(--extra-light-blue); }
+.ms-option input[type="checkbox"] { margin: 0; padding: 0 !important; flex-shrink: 0; }
+
+/* Option avec case à cocher explicite (item-formulaire) */
+.ms-option-check {
+  display:     flex;
+  align-items: center;
+  gap:         .5rem;
+  padding:     .45rem .75rem;
+  font-size:   .875rem;
+  cursor:      pointer;
+  color:       var(--medium-gray);
+  transition:  background .1s ease;
+}
+.ms-option-check:hover { background: var(--extra-light-blue); }
+.ms-option-check input[type="checkbox"] {
+  flex-shrink:  0;
+  accent-color: var(--secondary-blue);
+  width:  14px;
+  height: 14px;
+  cursor: pointer;
+}
+.ms-option-check:has(input[type="checkbox"]:checked) {
+  background:  var(--extra-light-blue);
+  color:       var(--secondary-blue);
+  font-weight: 500;
+}
+
+/* Barre de recherche interne */
+.ms-search {
+  padding:       .4rem .5rem;
+  border-bottom: 1px solid var(--light-gray);
+  background:    var(--extra-light-blue);
+  position:      sticky;
+  top:    0;
+  z-index: 1;
+}
+.ms-search-input {
+  width:         100%;
+  border:        1px solid var(--light-gray);
+  border-radius: 4px;
+  padding:       .3rem .5rem;
+  font-size:     .8rem;
+  outline:       none;
+  background:    var(--white);
+}
+.ms-search-input:focus { border-color: var(--light-blue); }
+
+/* Boutons tout sélectionner / désélectionner */
+.ms-actions { display: flex; gap: 6px; padding: .35rem .5rem; }
+.ms-action-btn {
+  font-size:     .72rem;
+  padding:       .2em .6em;
+  border:        1px solid var(--light-gray);
+  border-radius: 4px;
+  background:    var(--white);
+  cursor:        pointer;
+}
+.ms-action-btn:hover { background: var(--extra-light-blue); border-color: var(--light-blue); }
+
+.ms-divider { border-top: 1px solid var(--light-gray); margin: 0; }
+
+/* Aucun résultat */
+.ms-empty {
+  padding:    .75rem;
+  font-size:  .85rem;
+  color:      var(--text-gray);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Dropdown fournisseur — liste radio simple (défilement seul) */
+.ms-menu-fournisseur {
+  max-height:     260px;
+  overflow-y:     auto;
+  display:        flex;
+  flex-direction: column;
+}
+
+/* =============================================
+   PILLS DE COLONNES SÉLECTIONNÉES
+   Partagé par rapports.component et lst-fournisseurs.component.
+   ============================================= */
+.colonnes-pills {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       4px;
+  flex:      1;
+}
+
+/* Cliquer sur une pill la retire de la sélection */
+.colonne-pill {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           3px;
+  background:    var(--extra-light-blue);
+  border:        1px solid var(--light-blue);
+  border-radius: 20px;
+  padding:       .15em .55em;
+  font-size:     .72rem;
+  cursor:        pointer;
+  white-space:   nowrap;
+  color:         var(--secondary-blue);
+  transition:    background .15s, border-color .15s;
+}
+.colonne-pill:hover {
+  background:   var(--warning-light);
+  border-color: var(--danger-red);
+  color:        var(--danger-red);
+}
 
 /* =============================================
    TYPING ANIMATION
@@ -1700,8 +1979,232 @@ body.sidebar-open { overflow: hidden; }
 }
 
 /* ============================================================
-   ÉCRAN DE CONFIRMATION — à ajouter à la fin de
-   suggestion-public.component.css ET nouvel-achat.component.css
+   FORMULAIRES USAGER — STRUCTURE COMMUNE
+   Partagé entre nouvel-achat.component et suggestion-public.component.
+   PRINCIPE : seules les couleurs d'accentuation (gradient, focus ring,
+   fond readonly, états actifs) restent dans le fichier composant.
+   ============================================================ */
+
+/* Conteneur de page */
+.form-container { margin-bottom: 20px; }
+
+/* En-tête (gradient et border-bottom définis dans le composant) */
+.form-header {
+  display:       flex;
+  align-items:   center;
+  gap:           16px;
+  color:         var(--white);
+  padding:       22px 28px;
+  border-radius: 12px 12px 0 0;
+}
+.form-header__icon {
+  width:           46px;
+  height:          46px;
+  background:      rgba(255,255,255,.15);
+  border-radius:   10px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       1.2rem;
+  flex-shrink:     0;
+}
+.form-header__title {
+  font-family: 'Lora', Georgia, serif;
+  font-size:   1.25rem;
+  font-weight: 700;
+  margin:      0;
+  color:       var(--white);
+}
+.form-header__subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size:   0.82rem;
+  opacity:     0.78;
+  margin:      3px 0 0;
+}
+
+/* Badge type de formulaire dans l'en-tête */
+.badge--primary {
+  font-family:  'Figtree', sans-serif;
+  font-size:    0.72rem;
+  font-weight:  600;
+  padding:      5px 14px;
+  border-radius: 20px;
+  background:   rgba(255,255,255,.18);
+  color:        var(--white);
+  border:       1px solid rgba(255,255,255,.3);
+  white-space:  nowrap;
+}
+
+/* Alertes (variantes BEM — complément des classes Bootstrap .alert-*) */
+.alert--success {
+  background:  var(--extra-light-green);
+  border-left: 4px solid var(--success-green);
+  color:       var(--primary-green);
+}
+.alert--success i { color: var(--secondary-green); }
+
+.alert--danger {
+  background:  var(--warning-light);
+  border-left: 4px solid var(--danger-red);
+  color:       var(--danger-red);
+}
+.alert--danger i { color: var(--danger-red); }
+
+/* Sections du formulaire */
+.form-section {
+  background:  var(--white);
+  border:      1px solid var(--light-gray);
+  border-top:  none;
+  padding:     22px 26px 18px;
+}
+.form-section:last-of-type {
+  border-bottom-left-radius:  4px;
+  border-bottom-right-radius: 4px;
+}
+
+/* Titre de section (border-bottom couleur d'accent définie dans le composant) */
+.form-section__title {
+  font-family:    'Figtree', sans-serif;
+  font-size:      0.75rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color:          var(--primary-blue);
+  margin:         0 0 18px;
+  padding-bottom: 10px;
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+}
+.form-section__title i { font-size: 0.9rem; }
+
+/* Astérisque champ obligatoire */
+.form-label.required::after { content: ' *'; color: var(--warning-orange); }
+
+/* Groupe input avec préfixe symbolique (ex : $) */
+.input-group .form-control { border-radius: 0 8px 8px 0 !important; }
+.input-group-text {
+  font-family:   'Figtree', sans-serif;
+  font-size:     0.9rem;
+  font-weight:   600;
+  border:        1px solid var(--light-gray);
+  border-radius: 8px 0 0 8px !important;
+  padding:       0 14px;
+  min-height:    42px;
+  display:       flex;
+  align-items:   center;
+  /* background et color : dans le composant selon la couleur d'accent */
+}
+
+/* Boutons de sélection segmentés (format, priorité) */
+.btn-group.w-100 .btn-format,
+.btn-group.w-100 .btn-priorite {
+  flex:        1;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 500;
+  border:      1px solid var(--light-gray);
+  background:  var(--white);
+  color:       var(--text-gray);
+  transition:  all 0.15s ease;
+  cursor:      pointer;
+}
+.btn-group.w-100 .btn-format   { padding: 10px 8px; font-size: 0.88rem; }
+.btn-group.w-100 .btn-priorite { padding: 9px 4px;  font-size: 0.85rem; }
+
+.btn-group.w-100 .btn-format:first-child,
+.btn-group.w-100 .btn-priorite:first-child { border-radius: 8px 0 0 8px; }
+
+.btn-group.w-100 .btn-format:last-child,
+.btn-group.w-100 .btn-priorite:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
+
+.btn-group.w-100 .btn-priorite:not(:first-child):not(:last-child) { border-left: none; }
+
+/* États urgent et prioritaire (couleurs sémantiques communes aux deux formulaires) */
+.btn-priorite--urgent.btn-priorite--active {
+  background:   var(--danger-red) !important;
+  border-color: var(--danger-red) !important;
+}
+.btn-priorite--prioritaire.btn-priorite--active {
+  background:   var(--warning-orange) !important;
+  border-color: var(--warning-orange) !important;
+}
+
+/* Interrupteur toggle */
+.form-check.form-switch {
+  padding-left: 0;
+  display:      flex;
+  align-items:  center;
+  gap:          12px;
+}
+.form-switch .form-check-input {
+  width:            2.5em !important;
+  height:           1.4em !important;
+  margin-left:      5px !important;
+  padding:          0 !important;
+  cursor:           pointer;
+  border-radius:    2em !important;
+  flex-shrink:      0;
+  background-color: var(--border-gray);
+  border:           none;
+  transition:       background-color 0.2s ease;
+  /* couleur :checked → dans le composant */
+}
+/* Spécificité plus haute que le .form-check-label global */
+.form-check.form-switch .form-check-label {
+  font-family: 'Figtree', sans-serif !important;
+  font-weight: 500 !important;
+  color:       var(--medium-gray) !important;
+  margin-left: 50px !important;
+  padding-top: 5px !important;
+  cursor:      pointer;
+}
+
+/* Bouton annuler (neutre, identique dans les deux formulaires) */
+.btn-secondary {
+  background: var(--white) !important;
+  color:      var(--text-gray) !important;
+  border:     1px solid var(--light-gray) !important;
+}
+.btn-secondary:hover:not(:disabled) {
+  background:   var(--light-gray) !important;
+  color:        var(--medium-gray) !important;
+  border-color: var(--border-gray) !important;
+}
+
+/* Barre d'actions en bas du formulaire (border-top dans le composant) */
+.form-actions {
+  background:    var(--white);
+  border:        1px solid var(--light-gray);
+  border-radius: 0 0 12px 12px;
+  padding:       18px 26px;
+  display:       flex;
+  justify-content: flex-end;
+  align-items:   center;
+  gap:           12px;
+}
+
+/* Responsive usager forms */
+@media (max-width: 768px) {
+  .form-page    { padding: 16px 12px 40px; }
+  .form-header  { padding: 16px 18px; flex-wrap: wrap; gap: 12px; }
+  .form-section { padding: 18px 16px 14px; }
+  .form-actions { padding: 14px 16px; }
+  .badge--primary { display: none; }
+  .btn-group.w-100 .btn-format,
+  .btn-group.w-100 .btn-priorite { font-size: 0.8rem; padding: 9px 4px; }
+}
+@media (max-width: 480px) {
+  .form-header__title    { font-size: 1.05rem; }
+  .form-header__subtitle { display: none; }
+  .form-actions          { flex-direction: column-reverse; }
+  .form-actions .btn     { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   ÉCRAN DE CONFIRMATION
+   Base commune. Les couleurs d'accentuation (.confirmation-detail
+   background, .confirmation-detail__label i color, gradients
+   .confirmation-icon--*) sont surchargées dans chaque composant.
    ============================================================ */
 
 /* ── Conteneur principal ─────────────────────────────────── */
@@ -1816,6 +2319,18 @@ body.sidebar-open { overflow: hidden; }
   padding: 12px 28px;
   font-size: 0.9rem;
   gap: 8px;
+}
+/* Statut bibliothèque — neutre élégant */
+.badge-statut-bib {
+  background: #ffffff;
+  color: #607386;
+  border: 1px solid #607386dc;
+}
+
+.badge-statut-acq {
+  background: #ffffff;
+  color: #0b113a;
+  border: 1px solid #0b113a;
 }
 
 /* ── Responsive ──────────────────────────────────────────── */

@@ -29,13 +29,7 @@
 .items-table td.col-date    { white-space: nowrap; vertical-align: middle; }
 .items-table td.col-actions { white-space: nowrap; vertical-align: middle; }
 
-/* Tri */
-.sortable-col {
-  cursor:      pointer;
-  user-select: none;
-  white-space: nowrap;
-}
-.sortable-col:hover { background-color: var(--extra-light-blue, #E5F0F8) !important; }
+/* Tri — .sortable-col défini globalement dans css_udem.css */
 
 /* Badges */
 .items-table .badge {
@@ -111,3 +105,5 @@
   min-width:   90px;
   padding-top: 2px;
 }
+
+/* ── Badges sémantiques — définis globalement dans css_udem.css ── */

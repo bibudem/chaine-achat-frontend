@@ -1,0 +1,67 @@
+<!-- Bouton FAB -->
+<button class="faq-fab" (click)="toggle()" [class.faq-fab--active]="isOpen" aria-label="Aide / FAQ">
+  <i class="bi" [class.bi-question-lg]="!isOpen" [class.bi-x-lg]="isOpen"></i>
+</button>
+
+<!-- Panneau latéral -->
+<div class="faq-backdrop" *ngIf="isOpen" (click)="close()"></div>
+
+<div class="faq-panel" [class.faq-panel--open]="isOpen" role="dialog" aria-label="Aide / FAQ">
+
+  <!-- En-tête -->
+  <div class="faq-panel__head">
+    <div class="faq-panel__icon">
+      <i class="bi bi-question-circle"></i>
+    </div>
+    <div>
+      <h5 class="faq-panel__title">Aide & FAQ</h5>
+      <span class="faq-panel__sub">Questions fréquentes</span>
+    </div>
+    <button class="faq-panel__close" (click)="close()" aria-label="Fermer">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- Section info contact (toujours visible) -->
+  <div class="faq-contact">
+    <p>Si des incertitudes surviennent au moment de compléter un formulaire (prix, format, etc.), consignez-les dans le champ <strong>Bibliothèque&nbsp;: Note, commentaire ou question</strong>. Un membre de l'équipe des Acquisitions vous contactera lors du traitement.</p>
+    <p class="faq-contact__label">Pour toute autre question&nbsp;:</p>
+    <ul class="faq-contact__list">
+      <li><a href="mailto:acqmono@bib.umontreal.ca">acqmono@bib.umontreal.ca</a><span>— monographies</span></li>
+      <li><a href="mailto:acqperi@bib.umontreal.ca">acqperi@bib.umontreal.ca</a><span>— périodiques</span></li>
+      <li><a href="mailto:resselect@bib.umontreal.ca">resselect@bib.umontreal.ca</a><span>— ressources électroniques</span></li>
+    </ul>
+  </div>
+
+  <!-- Séparateur -->
+  <div class="faq-section-label">
+    <i class="bi bi-patch-question me-1"></i> Questions fréquentes
+  </div>
+
+  <!-- Corps : liste accordéon -->
+  <div class="faq-panel__body">
+    <div
+      *ngFor="let item of items; let i = index"
+      class="faq-item"
+      [class.faq-item--open]="item.open"
+    >
+      <button class="faq-item__q" (click)="toggleItem(item)">
+        <span class="faq-item__num">{{ i + 1 }}</span>
+        <span class="faq-item__text">{{ item.question }}</span>
+        <i class="bi faq-item__chevron"
+           [class.bi-chevron-down]="!item.open"
+           [class.bi-chevron-up]="item.open"></i>
+      </button>
+      <div class="faq-item__a faq-item__a--html" *ngIf="item.open && item.answerHtml" [innerHTML]="item.answerHtml"></div>
+      <div class="faq-item__a" *ngIf="item.open && !item.answerHtml">{{ item.answer }}</div>
+    </div>
+  </div>
+
+  <!-- Pied -->
+  <div class="faq-panel__foot">
+    <i class="bi bi-envelope me-1"></i>
+    Besoin d'aide supplémentaire ?
+    <a href="mailto:support@bib.umontreal.ca">Contactez le support</a>
+  </div>
+
+</div>

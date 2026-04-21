@@ -1,559 +1,115 @@
 /* ============================================================
    nouvel-achat.component.css
-   Intégré au design system UdeM (Figtree + Lora + variables CSS)
+   ACCENT : teal émeraude (variables --achat-*)
+   Structure, responsive et composants partagés → css_udem.css
    ============================================================ */
 
-.form-container {
-  margin-bottom: 20px;
-}
-/* ── En-tête ─────────────────────────────────────────────── */
+/* ── Gradient d'en-tête ────────────────────────────────────── */
 .form-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-  color: var(--white);
-  padding: 22px 28px;
-  border-radius: 12px 12px 0 0;
-  border-bottom: 3px solid var(--accent-yellow);
+  background:    linear-gradient(135deg, var(--achat-dark), var(--achat-mid));
+  border-bottom: 3px solid #5ECEC0;
 }
 
-.form-header__icon {
-  width: 46px;
-  height: 46px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-
-.form-header__title {
-  font-family: 'Lora', Georgia, serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--white);
-}
-
-.form-header__subtitle {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.82rem;
-  opacity: 0.78;
-  margin: 3px 0 0;
-}
-
-/* ── Badge ───────────────────────────────────────────────── */
-.badge--primary {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.18);
-  color: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  white-space: nowrap;
-}
-
-/* ── Alertes ─────────────────────────────────────────────── */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 18px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.88rem;
-  border: none;
-}
-
-.alert i {
-  font-size: 1.1rem;
-  margin-top: 1px;
-  flex-shrink: 0;
-}
-
-.alert--success {
-  background: var(--extra-light-green);
-  border-left: 4px solid var(--success-green);
-  color: var(--primary-green);
-}
-.alert--success i { color: var(--secondary-green); }
-
-.alert--danger {
-  background: var(--warning-light);
-  border-left: 4px solid var(--danger-red);
-  color: var(--danger-red);
-}
-.alert--danger i { color: var(--danger-red); }
-
-/* ── Sections ────────────────────────────────────────────── */
-.form-section {
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-  border-top: none;
-  padding: 22px 26px 18px;
-}
-
-.form-section:last-of-type {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-
+/* ── Titre de section ──────────────────────────────────────── */
 .form-section__title {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--primary-blue);
-  margin: 0 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--extra-light-blue);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  border-bottom: 2px solid var(--achat-light);
 }
+.form-section__title i { color: var(--achat-mid); }
 
-.form-section__title i {
-  color: var(--light-blue);
-  font-size: 0.9rem;
-}
-
-/* ── Labels ──────────────────────────────────────────────── */
-.form-label {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-gray);
-  margin-bottom: 5px;
-  display: block;
-}
-
-.form-label.required::after {
-  content: ' *';
-  color: var(--warning-orange);
-}
-
-.form-text {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.7rem;
-  color: var(--border-gray);
-  margin-top: 4px;
-  display: block;
-}
-
-/* ── Inputs & selects ────────────────────────────────────── */
+/* ── Focus ring teal sur les champs ────────────────────────── */
+/* Surcharge la hauteur globale (46px → 42px) et la couleur de focus */
 .form-control,
 .form-select {
-  font-family: 'Figtree', sans-serif !important;
-  font-size: 0.9rem !important;
-  color: var(--medium-gray) !important;
-  border: 1px solid var(--light-gray) !important;
-  border-radius: 8px !important;
-  padding: 0 1rem !important;
   min-height: 42px !important;
-  background-color: var(--white) !important;
-  box-shadow: none !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-
-.form-control:hover,
-.form-select:hover {
-  border-color: var(--border-gray) !important;
-}
-
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--light-blue) !important;
-  box-shadow: 0 0 0 3px rgba(35, 128, 209, 0.15) !important;
-  outline: none !important;
+  border-color: var(--achat-mid) !important;
+  box-shadow:   0 0 0 3px rgba(42, 144, 134, 0.15) !important;
+  outline:      none !important;
 }
 
-.form-control.is-invalid,
-.form-select.is-invalid {
-  border-color: var(--warning-orange) !important;
-  box-shadow: 0 0 0 3px rgba(240, 78, 36, 0.12) !important;
-}
-
+/* ── Champs en lecture seule ───────────────────────────────── */
 .form-control[readonly] {
-  background: var(--extra-light-blue) !important;
-  color: var(--text-gray) !important;
-  cursor: default;
+  background: var(--achat-light) !important;
+  color:      var(--text-gray)   !important;
+  cursor:     default;
 }
 
-.form-control::placeholder {
-  font-size: 0.85rem;
-  color: var(--border-gray);
-}
-
-textarea.form-control {
-  padding: 0.65rem 1rem !important;
-  resize: vertical;
-  min-height: 100px !important;
-  height: auto !important;
-}
-
-/* ── Feedback validation ─────────────────────────────────── */
-.invalid-feedback {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.72rem;
-  color: var(--warning-orange);
-  margin-top: 4px;
-  display: block;
-}
-
-/* ── Input group (prix CAD) ──────────────────────────────── */
+/* ── Préfixe monétaire ($) ─────────────────────────────────── */
 .input-group-text {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: var(--extra-light-blue);
-  border: 1px solid var(--light-gray);
-  border-radius: 8px 0 0 8px !important;
-  color: var(--secondary-blue);
-  padding: 0 14px;
-  min-height: 42px;
-  display: flex;
-  align-items: center;
+  background: var(--achat-light);
+  color:      var(--achat-mid);
 }
 
-.input-group .form-control {
-  border-radius: 0 8px 8px 0 !important;
-}
-
-/* ── Boutons format (Imprimé / Électronique) ─────────────── */
-.btn-group.w-100 .btn-format {
-  flex: 1;
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 500;
-  padding: 10px 8px;
-  border: 1px solid var(--light-gray);
-  background: var(--white);
-  color: var(--text-gray);
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.btn-group.w-100 .btn-format:first-child {
-  border-radius: 8px 0 0 8px;
-}
-
-.btn-group.w-100 .btn-format:last-child {
-  border-radius: 0 8px 8px 0;
-  border-left: none;
-}
-
-.btn-group.w-100 .btn-format:hover {
-  background: var(--extra-light-blue);
-  color: var(--secondary-blue);
-  border-color: var(--border-gray);
+/* ── Boutons segmentés — état actif (teal) ─────────────────── */
+.btn-group.w-100 .btn-format:hover,
+.btn-group.w-100 .btn-priorite:hover {
+  background: var(--achat-light);
+  color:      var(--achat-mid);
 }
 
 .btn-format--active {
-  background: var(--light-blue) !important;
-  border-color: var(--light-blue) !important;
-  color: var(--white) !important;
+  background:   var(--achat-mid) !important;
+  border-color: var(--achat-mid) !important;
+  color:        var(--white)     !important;
   z-index: 1;
-}
-
-/* ── Boutons priorité ────────────────────────────────────── */
-.btn-group.w-100 .btn-priorite {
-  flex: 1;
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 9px 4px;
-  border: 1px solid var(--light-gray);
-  background: var(--white);
-  color: var(--text-gray);
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.btn-group.w-100 .btn-priorite:first-child { border-radius: 8px 0 0 8px; }
-.btn-group.w-100 .btn-priorite:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
-.btn-group.w-100 .btn-priorite:not(:first-child):not(:last-child) { border-left: none; }
-
-.btn-priorite:hover {
-  background: var(--extra-light-blue);
-  color: var(--secondary-blue);
 }
 
 .btn-priorite--active {
-  background: var(--light-blue) !important;
-  border-color: var(--light-blue) !important;
-  color: var(--white) !important;
+  background:   var(--achat-mid) !important;
+  border-color: var(--achat-mid) !important;
+  color:        var(--white)     !important;
   z-index: 1;
 }
 
-.btn-priorite--urgent.btn-priorite--active {
-  background: var(--danger-red) !important;
-  border-color: var(--danger-red) !important;
-}
-
-.btn-priorite--prioritaire.btn-priorite--active {
-  background: var(--warning-orange) !important;
-  border-color: var(--warning-orange) !important;
-}
-
-/* ── Form switch (réserve de cours) ──────────────────────── */
-.form-check.form-switch {
-  padding-left: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.form-switch .form-check-input {
-  width: 2.5em !important;
-  height: 1.4em !important;
-  margin-left: 5px !important;
-  padding: 0 !important;
-  cursor: pointer;
-  border-radius: 2em !important;
-  flex-shrink: 0;
-  background-color: var(--border-gray);
-  border: none;
-  transition: background-color 0.2s ease;
-}
-
+/* ── Interrupteur (réserve de cours) — couleur cochée ──────── */
 .form-switch .form-check-input:checked {
-  background-color: var(--secondary-blue);
+  background-color: var(--achat-mid);
 }
 
-.form-check-label {
-  font-family: 'Figtree', sans-serif !important;
-  font-weight: 500 !important;
-  color: var(--medium-gray) !important;
-  margin-left: 50px !important;
-  padding-top: 5px !important;
-  cursor: pointer;
-}
-
-/* ── Zone réserve de cours (apparaît dynamiquement) ─────── */
-.reserve-cours-fields {
-  background: var(--extra-light-blue);
-  border: 1px solid rgba(35, 128, 209, 0.2);
-  border-radius: 8px;
-  padding: 16px 18px 8px;
-  margin-top: 4px;
-}
-
-/* ── Zone électronique (apparaît dynamiquement) ──────────── */
+/* ── Zones conditionnelles ─────────────────────────────────── */
+.reserve-cours-fields,
 .electronique-fields {
-  background: var(--extra-light-blue);
-  border: 1px solid rgba(35, 128, 209, 0.2);
+  background:    var(--achat-light);
+  border:        1px solid rgba(42, 144, 134, 0.2);
   border-radius: 8px;
-  padding: 16px 18px 8px;
-  margin-top: 8px;
+  padding:       16px 18px 8px;
 }
+.reserve-cours-fields { margin-top: 4px; }
+.electronique-fields  { margin-top: 8px; }
 
-/* ── Boutons d'action ────────────────────────────────────── */
-.form-actions {
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-  border-top: 2px solid var(--extra-light-blue);
-  border-radius: 0 0 12px 12px;
-  padding: 18px 26px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-}
+/* ── Barre d'actions ───────────────────────────────────────── */
+.form-actions { border-top: 2px solid var(--achat-light); }
 
-.btn {
-  font-family: 'Figtree', sans-serif;
-  font-weight: 600;
-  font-size: 0.88rem;
-  border-radius: 8px;
-  padding: 10px 22px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s ease;
-  cursor: pointer;
-  border: none;
-}
-
+/* ── Bouton soumettre ──────────────────────────────────────── */
 .btn-primary {
-  background: var(--secondary-blue);
-  color: var(--white);
+  background: var(--achat-mid);
+  color:      var(--white);
+  border:     none;
 }
 .btn-primary:hover:not(:disabled) {
-  background: var(--hover-dark-blue);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background:  var(--achat-dark);
+  transform:   translateY(-1px);
+  box-shadow:  var(--shadow-md);
 }
-
-.btn-secondary {
-  background: var(--white);
-  color: var(--text-gray);
-  border: 1px solid var(--light-gray);
-}
-.btn-secondary:hover:not(:disabled) {
-  background: var(--light-gray);
-  color: var(--medium-gray);
-  border-color: var(--border-gray);
-}
-
-.btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none !important;
+.btn-primary:disabled {
+  opacity:   0.55;
+  cursor:    not-allowed;
+  transform: none  !important;
   box-shadow: none !important;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .form-page      { padding: 16px 12px 40px; }
-  .form-header    { padding: 16px 18px; flex-wrap: wrap; gap: 12px; }
-  .form-section   { padding: 18px 16px 14px; }
-  .form-actions   { padding: 14px 16px; }
-  .badge--primary { display: none; }
+/* ── Écran de confirmation — surcharges couleur achat ──────── */
+/* Structure et responsive définis dans css_udem.css */
+.confirmation-detail { background: var(--achat-light); }
+.confirmation-detail__label i { color: var(--achat-mid); }
 
-  .btn-format,
-  .btn-priorite   { font-size: 0.8rem; padding: 9px 4px; }
+.confirmation-icon--achat {
+  background: linear-gradient(135deg, var(--achat-mid), var(--achat-dark));
+  box-shadow: 0 4px 16px rgba(42, 144, 134, 0.28);
 }
-
-@media (max-width: 480px) {
-  .form-header__title    { font-size: 1.05rem; }
-  .form-header__subtitle { display: none; }
-  .form-actions          { flex-direction: column-reverse; }
-  .form-actions .btn     { width: 100%; justify-content: center; }
-}
-/* ============================================================
-   ÉCRAN DE CONFIRMATION — à ajouter à la fin de
-   suggestion-public.component.css ET nouvel-achat.component.css
-   ============================================================ */
-
-/* ── Conteneur principal ─────────────────────────────────── */
-.confirmation-screen {
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-  padding: 52px 40px 44px;
-  text-align: center;
-  animation: confirmFadeIn 0.4s ease;
-}
-
-@keyframes confirmFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Icône centrale ──────────────────────────────────────── */
-.confirmation-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-  font-size: 1.8rem;
-  color: var(--white);
-}
-
-/* Suggestion : vert */
 .confirmation-icon--suggestion {
   background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
   box-shadow: 0 4px 16px rgba(36, 100, 5, 0.28);
-}
-
-/* Nouvel achat : bleu */
-.confirmation-icon--achat {
-  background: linear-gradient(135deg, var(--light-blue), var(--secondary-blue));
-  box-shadow: 0 4px 16px rgba(0, 64, 127, 0.28);
-}
-
-/* ── Titre ───────────────────────────────────────────────── */
-.confirmation-title {
-  font-family: 'Lora', Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-blue);
-  margin: 0 0 12px;
-}
-
-/* ── Message ─────────────────────────────────────────────── */
-.confirmation-message {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.92rem;
-  color: var(--text-gray);
-  line-height: 1.65;
-  margin: 0 0 28px;
-}
-
-/* ── Récapitulatif ───────────────────────────────────────── */
-.confirmation-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 520px;
-  margin: 0 auto 32px;
-  text-align: left;
-}
-
-.confirmation-detail {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  background: var(--extra-light-blue);
-  border-radius: 8px;
-  padding: 10px 16px;
-}
-
-.confirmation-detail__label {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-gray);
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-width: 140px;
-}
-
-.confirmation-detail__label i {
-  color: var(--light-blue);
-}
-
-.confirmation-detail__value {
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--medium-gray);
-  word-break: break-word;
-}
-
-/* ── Bouton ──────────────────────────────────────────────── */
-.confirmation-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.confirmation-actions .btn {
-  padding: 12px 28px;
-  font-size: 0.9rem;
-  gap: 8px;
-}
-
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 576px) {
-  .confirmation-screen       { padding: 36px 20px 32px; }
-  .confirmation-icon         { width: 60px; height: 60px; font-size: 1.5rem; }
-  .confirmation-title        { font-size: 1.25rem; }
-  .confirmation-detail       { flex-direction: column; gap: 4px; }
-  .confirmation-detail__label { min-width: unset; }
-  .confirmation-actions .btn { width: 100%; justify-content: center; }
 }

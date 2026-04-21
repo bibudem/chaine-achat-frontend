@@ -62,6 +62,20 @@ export class ItemDetailComponent implements OnInit {
     return 'badge bg-light text-dark';
   }
 
+  getTypeBadgeClass(type: string | undefined): string {
+    const base = 'badge itd-badge-lg w-100 text-start';
+    switch (type) {
+      case 'Modification CCOL':    return `${base} badge-type--ccol`;
+      case 'Nouvel abonnement':    return `${base} badge-type--abo`;
+      case 'Nouvel achat unique':  return `${base} badge-type--achat`;
+      case 'PEB Tipasa numérique': return `${base} badge-type--peb`;
+      case 'Requête ACQ':          return `${base} badge-type--acq`;
+      case 'Springer':             return `${base} badge-type--springer`;
+      case "Suggestion d'achat":   return `${base} badge-type--suggest`;
+      default:                     return `${base} badge-type--autre`;
+    }
+  }
+
   getPrioriteBadgeClass(priorite: string | undefined): string {
     if (!priorite) return 'badge bg-light text-dark';
     if (priorite.toLowerCase().includes('urgent'))      return 'badge bg-danger';
