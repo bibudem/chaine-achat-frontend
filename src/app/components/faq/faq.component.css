@@ -72,7 +72,13 @@
   gap: 12px;
   padding: 18px 20px 16px;
   flex-shrink: 0;
+  background: var(--primary-blue);
+  color: #ffffff !important;
 }
+.faq-panel__head h5{
+  color: #ffffff !important;
+}
+
 .faq-panel__icon {
   width: 40px;
   height: 40px;
@@ -89,7 +95,6 @@
   font-family: 'Lora', Georgia, serif;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--primary-blue, #0b113a);
   margin: 0;
   line-height: 1.2;
 }
@@ -212,7 +217,7 @@
   border-bottom: 1px solid #cddff0;
   font-family: 'Figtree', sans-serif;
   font-size: 0.83rem;
-  color: var(--medium-gray, #37424D);
+  color: var( --medium-gray)!important;
   line-height: 1.6;
 }
 .faq-contact p { margin: 0 0 8px; }
