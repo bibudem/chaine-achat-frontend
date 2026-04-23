@@ -1,0 +1,91 @@
+/* ============================================================
+   modification-ccol.component.css
+   ACCENT : bleu acier (--ccol-*)
+   Structure, responsive et composants partagés → css_udem.css
+   ============================================================ */
+/* ── Gradient d'en-tête ────────────────────────────────────── */
+.form-header {
+  background: var(--dark-gray);
+  border-bottom: 5px solid var(--ccol-mid);
+}
+
+/* ── Titre de section ──────────────────────────────────────── */
+.form-section__title {
+  border-bottom: 2px solid var(--ccol-light);
+}
+.form-section__title i { color: var(--ccol-mid); }
+
+/* ── Focus ring sur les champs ─────────────────────────────── */
+.form-control,
+.form-select {
+  min-height: 42px !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--ccol-mid)             !important;
+  box-shadow:   0 0 0 3px rgba(58,110,165, 0.15) !important;
+  outline:      none                        !important;
+}
+
+/* ── Champs en lecture seule ───────────────────────────────── */
+.form-control[readonly] {
+  background: var(--ccol-light) !important;
+  cursor:     default;
+}
+
+/* ── Boutons segmentés ─────────────────────────────────────── */
+.btn-group.w-100 .btn-format:hover {
+  background: var(--ccol-light);
+  color:      var(--ccol-mid);
+}
+.btn-format--active {
+  background:   var(--ccol-mid) !important;
+  border-color: var(--ccol-mid) !important;
+  color:        #fff            !important;
+  z-index: 1;
+}
+
+/* ── Interrupteur ──────────────────────────────────────────── */
+.form-switch .form-check-input:checked {
+  background-color: var(--ccol-mid);
+  border-color:     var(--ccol-mid);
+}
+
+/* ── Zone conditionnelle électronique ──────────────────────── */
+.electronique-fields {
+  background:    var(--ccol-light);
+  border:        1px solid rgba(58, 110, 165, 0.2);
+  border-radius: 8px;
+  padding:       16px 18px 8px;
+  margin-top:    8px;
+}
+
+/* ── Barre d'actions ───────────────────────────────────────── */
+.form-actions { border-top: 2px solid var(--ccol-light); }
+
+/* ── Bouton soumettre ──────────────────────────────────────── */
+.btn-primary {
+  background: var(--ccol-mid);
+  color:      #fff;
+  border:     none;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--ccol-dark);
+  transform:  translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:disabled {
+  opacity:    0.55;
+  cursor:     not-allowed;
+  transform:  none  !important;
+  box-shadow: none  !important;
+}
+
+/* ── Confirmation ──────────────────────────────────────────── */
+.confirmation-detail { background: var(--ccol-light); }
+.confirmation-detail__label i { color: var(--ccol-mid); }
+
+.confirmation-icon--ccol {
+  background: linear-gradient(135deg, var(--ccol-mid), var(--ccol-dark));
+  box-shadow: 0 4px 16px rgba(58, 110, 165, 0.28);
+}

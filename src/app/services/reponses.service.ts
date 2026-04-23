@@ -76,7 +76,7 @@ export class ReponsesService {
 
   // ──────────────────────────────────────────────────────────
   // NOUVEL ACHAT UNIQUE
-  // Composant : demande-achat-public.component.ts
+  // Composant : nouvel-achat.component.ts
   // Route     : POST /reponses/nouvel-achat
   // Décision  : GET  /reponses/decision-achat
   // ──────────────────────────────────────────────────────────
@@ -97,6 +97,78 @@ export class ReponsesService {
     return this.http
       .post(`${this.baseUrl}/nouvel-achat`, body, this.httpOptions)
       .pipe(catchError(this.handleError('envoyerNouvelAchat')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // REQUÊTE ACCESSIBILITÉ
+  // Composant : requete-accessibilite.component.ts
+  // Route     : POST /reponses/requete-accessibilite
+  // ──────────────────────────────────────────────────────────
+  envoyerRequeteAccessibilite(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body = {
+      type_formulaire: 'Requête Accessibilité',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/requete-accessibilite`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerRequeteAccessibilite')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // MODIFICATION ET CCOL
+  // Composant : modification-ccol.component.ts
+  // Route     : POST /reponses/modification-ccol
+  // ──────────────────────────────────────────────────────────
+  envoyerModificationCcol(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body = {
+      type_formulaire: 'Modification et CCOL',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/modification-ccol`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerModificationCcol')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // SPRINGER
+  // Composant : springer.component.ts
+  // Route     : POST /reponses/springer
+  // ──────────────────────────────────────────────────────────
+  envoyerSpringer(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body = {
+      type_formulaire: 'Springer',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/springer`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerSpringer')));
   }
 
   // ──────────────────────────────────────────────────────────

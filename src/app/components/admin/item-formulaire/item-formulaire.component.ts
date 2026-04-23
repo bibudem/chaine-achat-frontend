@@ -29,6 +29,28 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
   dropdowns: Record<string, boolean> = {};
   private clickOutsideListener!: () => void;
 
+  readonly OUI_NON_NA: string[] = ['OUI', 'NON', "Ne s'applique pas"];
+  readonly besoinsFormat: string[] = [
+    "Électronique : écrire à l'éditeur pour version numérique gratuite",
+    'Électronique : acheter licence institutionnelle standard + version numérique gratuite',
+    'Électronique : acheter licence institutionnelle standard',
+    'Imprimé/support physique : acheter exemplaires + version numérique gratuite',
+    "Imprimé/support physique : acheter exemplaire sans version numérique"
+  ];
+  precisionsDemande: string[] = [
+    'Achat de complément de collection (CCOL) pour abonnement (courant ou ancien)',
+    'Achat de numéro de périodique hors abonnement',
+    "Achat d'archives de périodiques (web)",
+    "Achat en vue d'un NABO",
+    "Annulation d'abonnement",
+    'Cesse de paraître',
+    "Changement de support — vers l'électronique",
+    'Changement de titre',
+    'Création de notice pour abonnement courant',
+    "Modification du nombre d'utilisateurs",
+    'Complément de collection'
+  ];
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -136,7 +158,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       categorie_document: [''],
       format_support: [''],
       fonds_budgetaire: ['', [Validators.required, Validators.maxLength(200)]],
-      fonds_sn_projet: ['', Validators.maxLength(100)],
+      fonds_sn_projet: ['', Validators.maxLength(50)],
       bibliotheque: [''],
       localisation_emplacement: ['', Validators.maxLength(200)],
       demandeur: ['', [Validators.required, Validators.maxLength(200)]],
@@ -171,7 +193,19 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       type_requete: [''],
       description_requete: [''],
       action_demandee: [''],
-      quantite: [null],
+      // Requête Accessibilité — champs spécifiques
+      reference_usager:               [''],
+      besoin_specifique_format:       [''],
+      permalien_sofia:                [''],
+      fournisseur_contacte_sans_succes: [''],
+      exemplaire_papier_detenu:       [''],
+      exemplaire_electronique_detenu: [''],
+      verification_caeb:              [''],
+      verification_sqla:              [''],
+      verification_emma:              [''],
+      acq_numerisation_recommandee:   [''],
+      acq_date_demande_editeur:       [''],
+      acq_date_livraison_estimee:     [''],
       // Suggestion d'achat — champs existants
       justification: [''],
       public_cible: [''],
@@ -192,7 +226,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     this.resetSpecificFields();
 
     switch(type) {
-      case 'Modification CCOL':
+      case 'Modification et CCOL':
         this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
         break;
       case 'Nouvel abonnement':
@@ -202,16 +236,18 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
         this.itemForm.get('type_monographie')?.setValidators([Validators.required]);
         break;
       case 'Springer':
-        this.itemForm.get('quantite')?.setValidators([Validators.required, Validators.min(1)]);
         break;
       case 'PEB Tipasa numérique':
         this.itemForm.get('type_demande_peb')?.setValidators([Validators.required]);
         break;
-      case 'Requête ACQ':
+      case 'Requête Accessibilité':
         this.itemForm.get('type_requete')?.setValidators([Validators.required]);
         break;
       case 'Suggestion d\'achat':
-        this.itemForm.get('justification')?.setValidators([Validators.required]);
+        this.itemForm.get('usager_statut')?.setValidators([Validators.required]);
+        this.itemForm.get('usager_faculte')?.setValidators([Validators.required]);
+        this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.email]);
+        this.itemForm.get('bibliothecaire_disciplinaire')?.setValidators([Validators.required, Validators.email]);
         break;
       default:
         break;
@@ -219,7 +255,8 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
     const specificFieldsToUpdate = [
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
-      'quantite', 'type_demande_peb', 'type_requete', 'justification'
+      'type_demande_peb', 'type_requete',
+      'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
     ];
 
     specificFieldsToUpdate.forEach(field => {
@@ -236,8 +273,14 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       'reserve_cours_session', 'reserve_cours_enseignant', 'bordereau_imprime',
       'categorie_depense', 'note_catalogueur_droit', 'type_demande_peb',
       'reference_tipasa', 'urgence', 'type_requete', 'description_requete',
-      'action_demandee', 'quantite', 'justification', 'public_cible', 'recommandation',
-      // Nouveaux champs suggestion d'achat
+      'action_demandee', 'justification', 'public_cible', 'recommandation',
+      // Requête Accessibilité
+      'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
+      'fournisseur_contacte_sans_succes', 'exemplaire_papier_detenu',
+      'exemplaire_electronique_detenu', 'verification_caeb', 'verification_sqla',
+      'verification_emma', 'acq_numerisation_recommandee', 'acq_date_demande_editeur',
+      'acq_date_livraison_estimee',
+      // Suggestion d'achat
       'usager_statut', 'usager_faculte', 'usager_courriel',
       'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
       'date_requise_cours'
@@ -253,11 +296,11 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     });
   }
 
-  isModificationCCOL(): boolean { return this.selectedFormulaireType === 'Modification CCOL'; }
+  isModificationCCOL(): boolean { return this.selectedFormulaireType === 'Modification et CCOL'; }
   isNouvelAbonnement(): boolean { return this.selectedFormulaireType === 'Nouvel abonnement'; }
   isNouvelAchatUnique(): boolean { return this.selectedFormulaireType === 'Nouvel achat unique'; }
   isPEBTipasaNumerique(): boolean { return this.selectedFormulaireType === 'PEB Tipasa numérique'; }
-  isRequeteACQ(): boolean { return this.selectedFormulaireType === 'Requête ACQ'; }
+  isRequeteAccessibilite(): boolean { return this.selectedFormulaireType === 'Requête Accessibilité'; }
   isSpringer(): boolean { return this.selectedFormulaireType === 'Springer'; }
   isSuggestionAchat(): boolean { return this.selectedFormulaireType === 'Suggestion d\'achat'; }
 
@@ -388,11 +431,11 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     };
   }
 
- private extractSpecificData(formData: any): any {
+  private extractSpecificData(formData: any): any {
     const type = this.selectedFormulaireType;
- 
+
     switch(type) {
-      case 'Modification CCOL':
+      case 'Modification et CCOL':
         return {
           precision_demande:      formData.precision_demande,
           numero_oclc:            formData.numero_oclc,
@@ -426,20 +469,29 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
           reference_tipasa:   formData.reference_tipasa,
           urgence:            formData.urgence
         };
-      case 'Requête ACQ':
+      case 'Requête Accessibilité':
         return {
-          type_requete:       formData.type_requete,
-          description_requete: formData.description_requete,
-          action_demandee:    formData.action_demandee
+          type_requete:                     formData.type_requete,
+          reference_usager:                 formData.reference_usager,
+          description_requete:              formData.description_requete,
+          action_demandee:                  formData.action_demandee,
+          besoin_specifique_format:         formData.besoin_specifique_format,
+          permalien_sofia:                  formData.permalien_sofia,
+          fournisseur_contacte_sans_succes: formData.fournisseur_contacte_sans_succes,
+          exemplaire_papier_detenu:         formData.exemplaire_papier_detenu,
+          exemplaire_electronique_detenu:   formData.exemplaire_electronique_detenu,
+          verification_caeb:                formData.verification_caeb,
+          verification_sqla:                formData.verification_sqla,
+          verification_emma:                formData.verification_emma,
+          acq_numerisation_recommandee:     formData.acq_numerisation_recommandee,
+          acq_date_demande_editeur:         formData.acq_date_demande_editeur,
+          acq_date_livraison_estimee:       formData.acq_date_livraison_estimee,
         };
       case 'Springer':
-        return { quantite: formData.quantite };
+        return {};
  
       case "Suggestion d'achat":
         return {
-          justification:                formData.justification,
-          public_cible:                 formData.public_cible,
-          recommandation:               formData.recommandation,
           usager_statut:                formData.usager_statut,
           usager_faculte:               formData.usager_faculte,
           usager_courriel:              formData.usager_courriel,

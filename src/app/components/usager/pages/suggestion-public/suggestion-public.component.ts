@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
@@ -15,11 +15,19 @@ export class SuggestionPublicComponent implements OnInit {
   isLoading        = false;
   showSigleCours   = false;
   showElectronique = false;
-  
-  // Variables pour afficher dans l'écran de confirmation
-  derniereTitre   = '';
+
+  derniereTitre    = '';
   derniereCourriel = '';
-  dernierNom      = '';
+  dernierNom       = '';
+
+  bibliotheques: string[] = [
+    'Aménagement', 'Campus Laval', 'Droit', 'Du Parc',
+    'Hubert-Reeves', 'Kinésiologie', 'L.S.H.', 'Livres rares',
+    'Mathématiques-Informatique', 'Médecine vétérinaire', 'Musique',
+    "Marguerite-d'Youville", 'Santé', 'Service Accessibilité', 'TGD', 'TEST-DRIN'
+  ];
+
+  priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
   constructor(
     private fb: FormBuilder,
@@ -34,47 +42,51 @@ export class SuggestionPublicComponent implements OnInit {
     this.form = this.fb.group({
 
       /* ── Identification ── */
-      nom:                [nom,      Validators.required],
-      statut:             [statut,   Validators.required],
-      faculteDepartement: ['',       Validators.required],
-      courriel:           [courriel, [Validators.required, Validators.email]],
-      copieCourriel:      [true],
-
-      // Champs ajoutés (présents dans SharePoint)
-      bibliotheque:       ['', Validators.required],
-      bibliothecaire:     ['', Validators.email],          // optionnel mais validé si renseigné
+      nom:                      [nom,      Validators.required],
+      statut:                   [statut,   Validators.required],
+      usager_faculte:           ['',       Validators.required],
+      courriel:                 [courriel, [Validators.required, Validators.email]],
+      copieCourriel:            [true],
+      bibliotheque:             ['',       Validators.required],
+      priorite_demande:         ['Urgent', Validators.required],
+      bibliothecaire_disciplinaire: ['',   [Validators.required, Validators.email]],
 
       /* ── Description ── */
-      typeDocument:       [''],                             // Type de document
-      titre:              ['', Validators.required],
-      auteur:             ['', Validators.required],
-      editeur:            [''],                             // Éditeur du document
-      edition:            [''],                             // Édition
-      annee:              [''],                             // Date de publication
-      urlSource:          ['', Validators.pattern('https?://.+')], // URL séparée
-      isbnIssn:           [''],
-      formatSupport:      [''],                             // Imprimé / Électronique
-      notes:              [''],
-      reserver:           ['non'],
+      categorie_document:       [''],
+      titre_document:           ['',       Validators.required],
+      auteur:                   ['',       Validators.required],
+      editeur:                  [''],
+      edition:                  [''],
+      date_publication:         [''],
+      source_information:       ['',       Validators.pattern('https?://.+')],
+      isbn_issn:                ['',       [Validators.required, this.isbnValidator]],
+      format_support:           [''],
+      format_electronique:      [''],
+      acces_electronique:       [''],
+      note_commentaire:         [''],
+
+      /* ── Réservation ── */
+      aviser_reservation:       [false],
+      aviser_reception:         [false],
 
       /* ── Section enseignant ── */
-      dateRequis:         [''],
-      mettreReserve:      [false],
-      sigleCours:         [{ value: '', disabled: true }],
+      date_requise_cours:       [''],
+      reserve_cours:            [false],
+      reserve_cours_sigle:      [{ value: '', disabled: true }],
     });
 
-    // Active/désactive le sigle de cours selon la checkbox
-    this.form.get('mettreReserve')!.valueChanges.subscribe(val => {
+    // Réserve de cours — activer/désactiver le sigle
+    this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
       this.showSigleCours = val;
       val
-        ? this.form.get('sigleCours')!.enable()
-        : this.form.get('sigleCours')!.disable();
+        ? this.form.get('reserve_cours_sigle')!.enable()
+        : this.form.get('reserve_cours_sigle')!.disable();
     });
 
     // Format électronique — afficher/masquer les champs spécifiques
-    this.form.get('formatSupport')!.valueChanges.subscribe(val => {
+    this.form.get('format_support')!.valueChanges.subscribe(val => {
       this.showElectronique = val === 'Électronique';
-      const url = this.form.get('urlSource')!;
+      const url = this.form.get('source_information')!;
       if (this.showElectronique) {
         url.setValidators([Validators.required, Validators.pattern('https?://.+')]);
       } else {
@@ -84,16 +96,40 @@ export class SuggestionPublicComponent implements OnInit {
     });
   }
 
+  private isbnValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    if (/-/.test(value)) return { invalidIsbn: true };
+    const v      = value.replace(/\s/g, '');
+    const isbn10 = /^\d{9}[\dX]$/i;
+    const isbn13 = /^97[89]\d{10}$/;
+    const issn   = /^\d{7}[\dX]$/i;
+    return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
+  }
+
+  // Suppression automatique des tirets dans isbn_issn à la saisie
+  stripDashes(event: Event): void {
+    const input    = event.target as HTMLInputElement;
+    const stripped = input.value.replace(/-/g, '');
+    if (stripped !== input.value) {
+      this.form.get('isbn_issn')?.setValue(stripped, { emitEvent: true });
+    }
+  }
+
   get f() { return this.form.controls; }
 
   onReset(): void {
-    this.submitted = false;
-    this.success   = false;
-    this.error     = false;
+    this.submitted       = false;
+    this.success         = false;
+    this.error           = false;
+    this.showSigleCours  = false;
+    this.showElectronique = false;
     this.form.reset({
-      copieCourriel: true,
-      reserver:      'non',
-      mettreReserve: false,
+      priorite_demande:   'Urgent',
+      copieCourriel:      true,
+      aviser_reservation: false,
+      aviser_reception:   false,
+      reserve_cours:      false,
     });
   }
 
@@ -102,48 +138,51 @@ export class SuggestionPublicComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isLoading = true;
-
     const v = this.form.getRawValue();
 
-    // ✅ Capturer les données pour afficher dans l'écran de confirmation
-    this.derniereTitre = v.titre;
+    this.derniereTitre    = v.titre_document;
     this.derniereCourriel = v.courriel;
-    this.dernierNom = v.nom;
+    this.dernierNom       = v.nom;
 
     const payload = {
       /* Identification */
-      nom:                v.nom,
-      statut:             v.statut,
-      faculteDepartement: v.faculteDepartement,
-      courriel:           v.courriel,
-      copieCourriel:      v.copieCourriel,
-      bibliotheque:       v.bibliotheque,
-      bibliothecaire:     v.bibliothecaire,
+      nom:                          v.nom,
+      usager_statut:                v.statut,
+      usager_faculte:               v.usager_faculte,
+      usager_courriel:              v.courriel,
+      priorite_demande:             v.priorite_demande,
+      copieCourriel:                v.copieCourriel,
+      bibliotheque:                 v.bibliotheque,
+      bibliothecaire_disciplinaire: v.bibliothecaire_disciplinaire,
 
       /* Description */
-      typeDocument:       v.typeDocument,
-      titre:              v.titre,
-      auteur:             v.auteur,
-      editeur:            v.editeur,
-      edition:            v.edition,
-      annee:              v.annee,
-      urlSource:          v.urlSource,
-      isbnIssn:           v.isbnIssn,
-      formatSupport:      v.formatSupport,
-      notes:              v.notes,
-      reserver:           v.reserver,
+      categorie_document:           v.categorie_document,
+      titre_document:               v.titre_document,
+      auteur:                       v.auteur,
+      editeur:                      v.editeur,
+      edition:                      v.edition,
+      date_publication:             v.date_publication,
+      source_information:           v.source_information,
+      isbn_issn:                    v.isbn_issn,
+      format_support:               v.format_support,
+      format_electronique:          this.showElectronique ? v.format_electronique : null,
+      acces_electronique:           this.showElectronique ? v.acces_electronique : null,
+      note_commentaire:             v.note_commentaire,
+
+      /* Réservation */
+      aviser_reservation:           v.aviser_reservation,
+      aviser_reception:             v.aviser_reception,
 
       /* Enseignant */
-      dateRequis:         v.dateRequis,
-      mettreReserve:      v.mettreReserve,
-      sigleCours:         v.sigleCours,
+      date_requise_cours:           v.date_requise_cours,
+      reserve_cours:                v.reserve_cours,
+      reserve_cours_sigle:          v.reserve_cours ? v.reserve_cours_sigle : null,
     };
 
     this.reponsesService.envoyerSuggestion(payload).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;
-        // ✅ NE PAS réinitialiser immédiatement, garder les données pour l'écran de confirmation
       },
       error: () => {
         this.error     = true;

@@ -18,6 +18,9 @@ import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-four
 import { UserGuard } from './services/user-guard.service';
 import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
+import { ModificationCcolComponent } from './components/usager/pages/modification-ccol/modification-ccol.component';
+import { RequeteAccessibiliteComponent } from './components/usager/pages/requete-accessibilite/requete-accessibilite.component';
+import { SpringerComponent } from './components/usager/pages/springer/springer.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 
 const routes: Routes = [
@@ -40,7 +43,10 @@ const routes: Routes = [
       { path: '',          component: UsagerHomeComponent },
       { path: 'demande', component: UsagerFormulaireComponent },
       { path: 'suggestion-public', component: SuggestionPublicComponent },
-      { path: 'nouvel-achat', component: NouvelAchatComponent }
+      { path: 'nouvel-achat', component: NouvelAchatComponent },
+      { path: 'modification-ccol', component: ModificationCcolComponent },
+      { path: 'requete-accessibilite', component: RequeteAccessibiliteComponent },
+      { path: 'springer', component: SpringerComponent }
     ]
   },
   { path: 'page-not-found', component: PageNotFoundComponent  },

@@ -6,8 +6,8 @@
 
 /* ── Gradient d'en-tête ────────────────────────────────────── */
 .form-header {
-  background:    linear-gradient(135deg, var(--suggest-dark), var(--suggest-mid));
-  border-bottom: 3px solid #E8C97A;
+  background: var(--dark-gray);
+  border-bottom: 5px solid var(--suggest-dark);
 }
 
 /* ── Titre de section ──────────────────────────────────────── */

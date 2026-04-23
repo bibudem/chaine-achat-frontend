@@ -9,9 +9,10 @@ import { environment } from 'src/environments/environment';
 export type FormType =
   | 'Nouvel achat unique'
   | 'Nouvel abonnement'
-  | 'Modification CCOL'
+  | 'Modification et CCOL'
   | 'PEB Tipasa numérique'
   | 'Requête ACQ'
+  | 'Requête Accessibilité'
   | 'Springer'
   | "Suggestion d'achat";
 
@@ -91,8 +92,8 @@ export const FORM_TYPES: FormTypeInfo[] = [
   },
   {
     // tbl_items + tbl_modification_ccol
-    type:        'Modification CCOL',
-    label:       'Modification CCOL',
+    type:        'Modification et CCOL',
+    label:       'Modification et CCOL',
     icon:        'bi bi-pencil-square',
     description: 'Modifications de notices dans le catalogue collectif.',
     columns: [
@@ -137,6 +138,32 @@ export const FORM_TYPES: FormTypeInfo[] = [
     ]
   },
   {
+    // tbl_items + tbl_requete_accessibilite
+    type:        'Requête Accessibilité',
+    label:       'Requête Accessibilité',
+    icon:        'bi bi-universal-access',
+    description: "Demandes d'acquisition et de modification pour les ressources accessibles.",
+    columns: [
+      { name: 'titre_document',                   required: true,  example: 'Introduction aux mathématiques' },
+      { name: 'demandeur',                         required: true,  example: 'Marie Tremblay' },
+      { name: 'bibliotheque',                      required: true,  example: 'Service Accessibilité' },
+      { name: 'type_requete',                      required: true,  example: 'Information' },
+      { name: 'isbn_issn',                         required: false, example: '9782070360024' },
+      { name: 'priorite_demande',                  required: false, example: 'Urgent' },
+      { name: 'fonds_budgetaire',                  required: false, example: 'SA-001' },
+      { name: 'reference_usager',                  required: false, example: 'ACC-2025-001' },
+      { name: 'description_requete',               required: false, example: 'Version EPUB requise' },
+      { name: 'besoin_specifique_format',           required: false, example: 'Électronique : acheter licence institutionnelle standard' },
+      { name: 'fournisseur_contacte_sans_succes',  required: false, example: 'NON' },
+      { name: 'exemplaire_papier_detenu',           required: false, example: 'OUI' },
+      { name: 'exemplaire_electronique_detenu',     required: false, example: 'NON' },
+      { name: 'verification_caeb',                  required: false, example: "Ne s'applique pas" },
+      { name: 'verification_sqla',                  required: false, example: 'NON' },
+      { name: 'verification_emma',                  required: false, example: 'NON' },
+      { name: 'permalien_sofia',                    required: false, example: 'https://...' },
+    ]
+  },
+  {
     // tbl_items + tbl_springer
     type:        'Springer',
     label:       'Springer',
@@ -146,7 +173,6 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'titre_document',        required: true,  example: 'Springer Handbook of Robotics' },
       { name: 'demandeur',             required: true,  example: 'Anna Schmidt' },
       { name: 'bibliotheque',          required: true,  example: 'Sciences appliquées' },
-      { name: 'quantite',              required: true,  example: '1' },
       { name: 'isbn_issn',             required: false, example: '978-3-030-00000-0' },
       { name: 'priorite_demande',      required: false, example: 'Régulier' },
       { name: 'fournisseur',           required: false, example: 'Springer' },

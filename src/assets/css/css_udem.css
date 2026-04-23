@@ -42,6 +42,21 @@
   --suggest-light: #FDF3E3;
   --suggest-border:rgba(200, 135, 42, 0.25);
 
+  /* ── Modification et CCOL (formulaire usager — bleu acier) ── */
+  --ccol-dark:  #1E3F73;
+  --ccol-mid:   #3A6EA5;
+  --ccol-light: #EBF0FB;
+
+  /* ── Requête Accessibilité (formulaire usager — violet) ────── */
+  --acces-dark:  #4A1580;
+  --acces-mid:   #7B3DB8;
+  --acces-light: #F3EAFB;
+
+  /* ── Springer (formulaire usager — vert nature) ─────────── */
+  --springer-dark:  #1B5E20;
+  --springer-mid:   #388E3C;
+  --springer-light: #E8F5E9;
+
   /* ── Statut ACQ (backoffice admin — indigo) ──────────────── */
   --acq-dark:      #3730A3;
   --acq-mid:       #4F46E5;
@@ -1116,7 +1131,7 @@ select.typeahead, select.tt-query, select.tt-hint {
 }
 
 .alert-warning {
-  background-color: var(--warning-light)!important;
+  background-color: #f399151c!important;
   color: var(--dark-gray)!important;
   border-left: 4px solid var(--warning-orange)!important;
 }

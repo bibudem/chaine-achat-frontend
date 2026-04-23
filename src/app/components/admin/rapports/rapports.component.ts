@@ -51,7 +51,6 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Filtres
   filtres: FiltresRapport = { dateDebut: '', dateFin: '', demandeur: '', limit: 500, offset: 0 };
-  filtresMatSelect: Record<string, any[]> = {};
 
   // Filtre titre (recherche texte libre)
   rechercheTitre = '';
@@ -65,8 +64,8 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Options statiques
   typesFormulaires: string[] = [
-    'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-    'PEB Tipasa numérique', 'Requête ACQ', 'Springer', "Suggestion d'achat"
+    'Modification et CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
+    'PEB Tipasa numérique', 'Requête ACQ', 'Requête Accessibilité', 'Springer', "Suggestion d'achat"
   ];
   priorites: string[] = ['Urgent', 'Régulier', 'Basse'];
   bibliotheques: string[] = [
@@ -167,12 +166,6 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.selectedMap[filterId] = [...this.selectedMap[filterId], value];
     } else {
       this.selectedMap[filterId] = this.selectedMap[filterId].filter(v => v !== value);
-    }
-    const key = this.mapKey(filterId);
-    if (this.selectedMap[filterId].length > 0) {
-      this.filtresMatSelect[key] = this.selectedMap[filterId];
-    } else {
-      delete this.filtresMatSelect[key];
     }
     this.chargerApercu();
   }
@@ -362,7 +355,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
       offset:    0
     };
 
-    const types = this.selectedMap['formulaireType'];
+    const types = this.selectedMap['formulaire_type'];
     if (types?.length) f.formulaire_type = types.join(',');
 
     const bibs = this.selectedMap['bibliotheque'];
@@ -380,16 +373,6 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return f;
-  }
-
-  private mapKey(key: string): string {
-    const map: Record<string, string> = {
-      formulaireType:      'formulaire_type',
-      formulaire_type:     'formulaire_type',
-      bibliotheque:        'bibliotheque',
-      priorite:            'priorite_demande',
-    };
-    return map[key] || key;
   }
 
   // ─── Options dynamiques ──────────────────────────────────
@@ -555,7 +538,6 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   reinitialiserFiltres(): void {
     const { dateDebut, dateFin } = this.rapportsService.getCurrentMonthDates();
     this.filtres              = { dateDebut, dateFin, demandeur: '', limit: 500, offset: 0 };
-    this.filtresMatSelect     = {};
     this.selectedMap          = {};
     this.dropdowns            = {};
     this.rechercheTitre       = '';

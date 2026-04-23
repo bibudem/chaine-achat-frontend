@@ -9,20 +9,21 @@ import { ReponsesService } from '../../../../services/reponses.service';
 })
 export class NouvelAchatComponent implements OnInit {
   form!: FormGroup;
-  submitted       = false;
-  success         = false;
-  error           = false;
-  isLoading       = false;
-  showReserveCours = false;
-  showElectronique = false;
+  submitted             = false;
+  success               = false;
+  error                 = false;
+  isLoading             = false;
+  showReserveCours      = false;
+  showElectronique      = false;
+  showMonographie       = false;
+  showAviserReservation = true; // format par défaut = Imprimé
 
-  // Listes de référence
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
     'Du Parc', 'Hubert-Reeves', 'Kinésiologie', 'L.S.H.',
     'Livres rares', 'Mathématiques-Informatique', 'Médecine vétérinaire',
     'Musique', "Marguerite-d'Youville", 'Prêt entre bibliothèques',
-    'Santé', 'Service du catalogage', 'TGD'
+    'Santé', 'Service Accessibilité', 'Service du catalogage', 'TGD', 'TEST-DRIN'
   ];
 
   categoriesDocument: string[] = [
@@ -30,11 +31,19 @@ export class NouvelAchatComponent implements OnInit {
     'Archives de périodiques', 'Archives de monographies'
   ];
 
+  typesMonographie: string[] = [
+    'Livre', 'Enregistrement sonore', 'Film', 'Matériel didactique',
+    'Partition de musique', 'Zine', 'Carte et données géospatiales',
+    'Autres (microfilm, etc.)', "Ne s'applique pas"
+  ];
+
   devises: { label: string; code: string }[] = [
     { label: 'CAD — Dollar Canadien', code: 'CAD' },
     { label: 'USD — Dollar US',       code: 'USD' },
     { label: 'EUR — Euro',            code: 'EUR' },
-    { label: 'GBP — Livre Sterling',  code: 'GBP' }
+    { label: 'GBP — Livre Sterling',  code: 'GBP' },
+    { label: 'CHF — Franc Suisse',    code: 'CHF' },
+    { label: 'Autre',                 code: 'Autre' }
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
@@ -49,7 +58,6 @@ export class NouvelAchatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Pré-remplissage depuis sessionStorage (même logique que suggestion-public)
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
     const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
@@ -57,10 +65,10 @@ export class NouvelAchatComponent implements OnInit {
     this.form = this.fb.group({
 
       /* ── Identification ── */
-      nom:                         [nom,      Validators.required],
+      nom:                         [nom,       Validators.required],
       statut:                      [statut],
-      courriel:                    [courriel, [Validators.required, Validators.email]],
-      bibliotheque:                ['',       Validators.required],
+      courriel:                    [courriel,  [Validators.required, Validators.email]],
+      bibliotheque:                ['',        Validators.required],
       priorite_demande:            ['Régulier', Validators.required],
 
       /* ── Informations bibliographiques ── */
@@ -71,18 +79,21 @@ export class NouvelAchatComponent implements OnInit {
       date_publication:            ['', Validators.required],
       source_information:          ['', [Validators.required, Validators.pattern('https?://.+')]],
       categorie_document:          ['', Validators.required],
+      type_monographie:            [{ value: '', disabled: true }],
 
       /* ── Format ── */
       format_support:              ['Imprimé/support physique', Validators.required],
-      format_pret_numerique:       ['Ne s\'applique pas'],
+      format_pret_numerique:       ["Ne s'applique pas"],
       nombre_utilisateurs:         ['Accès illimité'],
       lien_plateforme:             [''],
+      aviser_reservation:          ['', Validators.email],
+      aviser_activation:           [{ value: '', disabled: true }, Validators.email],
 
       /* ── Finances ── */
       prix_cad:                    [null, [Validators.required, Validators.min(0.01)]],
-      devise_originale:            ['', Validators.required],
+      devise_originale:            ['',   Validators.required],
       prix_devise_originale:       [null, [Validators.required, Validators.min(0.01)]],
-      fonds_budgetaire:            ['', [Validators.required, Validators.pattern('^[A-Z]{2}-[0-9]{3}$')]],
+      fonds_budgetaire:            ['',   [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
 
       /* ── Réserve de cours ── */
       mettreReserve:               [false],
@@ -92,6 +103,19 @@ export class NouvelAchatComponent implements OnInit {
 
       /* ── Notes ── */
       note_commentaire:            ['', Validators.maxLength(1000)],
+    });
+
+    // Catégorie → activer type_monographie uniquement pour Monographie
+    this.form.get('categorie_document')!.valueChanges.subscribe(val => {
+      this.showMonographie = val === 'Monographie';
+      const typeMonographie = this.form.get('type_monographie')!;
+      if (this.showMonographie) {
+        typeMonographie.enable();
+      } else {
+        typeMonographie.disable();
+        typeMonographie.clearValidators();
+        typeMonographie.updateValueAndValidity();
+      }
     });
 
     // Réserve de cours — activer/désactiver les sous-champs
@@ -114,16 +138,27 @@ export class NouvelAchatComponent implements OnInit {
       enseignant.updateValueAndValidity();
     });
 
-    // Format électronique — afficher/masquer les champs spécifiques
+    // Format — champs conditionnels + champs aviseur
     this.form.get('format_support')!.valueChanges.subscribe(val => {
-      this.showElectronique = val === 'Électronique';
-      const lien = this.form.get('lien_plateforme')!;
+      this.showElectronique      = val === 'Électronique';
+      this.showAviserReservation = val === 'Imprimé/support physique';
+
+      const lien      = this.form.get('lien_plateforme')!;
+      const aviserRes = this.form.get('aviser_reservation')!;
+      const aviserAct = this.form.get('aviser_activation')!;
+
       if (this.showElectronique) {
         lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
+        aviserAct.enable();
+        aviserRes.disable();
       } else {
         lien.clearValidators();
+        aviserAct.disable();
+        aviserRes.enable();
       }
       lien.updateValueAndValidity();
+      aviserRes.updateValueAndValidity();
+      aviserAct.updateValueAndValidity();
     });
 
     // Conversion automatique du prix en CAD
@@ -131,21 +166,32 @@ export class NouvelAchatComponent implements OnInit {
     this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
   }
 
-  // Validateur ISBN / ISSN
+  // Validateur ISBN / ISSN — tirets refusés (auto-supprimés à la saisie)
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) return null;
-    const clean = value.replace(/[\s-]/g, '');
-    const isbn  = /^(97[89])?\d{9}[\dX]$/i;
-    const issn  = /^\d{4}-\d{3}[\dX]$/i;
-    return isbn.test(clean) || issn.test(value) ? null : { invalidIsbn: true };
+    if (/-/.test(value)) return { invalidIsbn: true };
+    const v     = value.replace(/\s/g, '');
+    const isbn10 = /^\d{9}[\dX]$/i;
+    const isbn13 = /^97[89]\d{10}$/;
+    const issn   = /^\d{7}[\dX]$/i;
+    return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
+  }
+
+  // Suppression automatique des tirets dans isbn_issn à la saisie
+  stripDashes(event: Event): void {
+    const input    = event.target as HTMLInputElement;
+    const stripped = input.value.replace(/-/g, '');
+    if (stripped !== input.value) {
+      this.form.get('isbn_issn')?.setValue(stripped, { emitEvent: true });
+    }
   }
 
   private convertirPrix(): void {
     const prix   = this.form.get('prix_devise_originale')?.value;
     const devise = this.form.get('devise_originale')?.value;
     if (!prix || !devise) return;
-    const taux: { [k: string]: number } = { USD: 1.368, EUR: 1.48, GBP: 1.73 };
+    const taux: { [k: string]: number } = { USD: 1.368, EUR: 1.48, GBP: 1.73, CHF: 1.52 };
     const prixCAD = devise === 'CAD' ? prix : prix * (taux[devise] || 1);
     this.form.get('prix_cad')?.setValue(parseFloat(prixCAD.toFixed(2)), { emitEvent: false });
   }
@@ -158,11 +204,13 @@ export class NouvelAchatComponent implements OnInit {
   }
 
   onReset(): void {
-    this.submitted       = false;
-    this.success         = false;
-    this.error           = false;
-    this.showReserveCours = false;
-    this.showElectronique = false;
+    this.submitted             = false;
+    this.success               = false;
+    this.error                 = false;
+    this.showReserveCours      = false;
+    this.showElectronique      = false;
+    this.showMonographie       = false;
+    this.showAviserReservation = true;
     this.form.reset({
       priorite_demande:      'Régulier',
       format_support:        'Imprimé/support physique',
@@ -179,17 +227,14 @@ export class NouvelAchatComponent implements OnInit {
     this.isLoading = true;
     const v = this.form.getRawValue();
 
-    // ✅ Capturer les données pour afficher dans l'écran de confirmation
-    this.derniereTitre = v.titre_document;
+    this.derniereTitre        = v.titre_document;
     this.derniereBibliotheque = v.bibliotheque;
-    this.dernierPrixCAD = v.prix_cad;
+    this.dernierPrixCAD       = v.prix_cad;
 
-    // Structure identique à ce qu'attend le webhook n8n "nouvelle-demande-achat"
     const payload = {
       baseData: {
         formulaire_type:              'Nouvel achat unique',
         demandeur:                    v.nom,
-        personne_a_aviser_activation: v.courriel,
         bibliotheque:                 v.bibliotheque,
         priorite_demande:             v.priorite_demande,
         titre_document:               v.titre_document,
@@ -202,7 +247,8 @@ export class NouvelAchatComponent implements OnInit {
         format_support:               v.format_support,
         format_pret_numerique:        v.format_pret_numerique,
         nombre_utilisateurs:          v.nombre_utilisateurs,
-        lien_plateforme:              v.lien_plateforme,
+        lien_plateforme:              this.showElectronique ? v.lien_plateforme : null,
+        personne_a_aviser_activation: this.showElectronique ? v.aviser_activation : null,
         prix_cad:                     v.prix_cad,
         devise_originale:             v.devise_originale,
         prix_devise_originale:        v.prix_devise_originale,
@@ -212,27 +258,21 @@ export class NouvelAchatComponent implements OnInit {
         statut_acq:                   'En attente',
       },
       specificData: {
-        type_monographie:         null,
-        format_electronique:      v.showElectronique ? v.format_pret_numerique : null,
+        type_monographie:         this.showMonographie ? v.type_monographie : null,
+        format_electronique:      this.showElectronique ? v.format_pret_numerique : null,
+        aviser_reservation:       this.showAviserReservation ? v.aviser_reservation : null,
+        aviser_activation:        this.showElectronique ? v.aviser_activation : null,
         reserve_cours:            v.mettreReserve,
-        reserve_cours_sigle:      v.mettreReserve ? v.reserve_cours_sigle    : null,
-        reserve_cours_session:    v.mettreReserve ? v.reserve_cours_session   : null,
+        reserve_cours_sigle:      v.mettreReserve ? v.reserve_cours_sigle     : null,
+        reserve_cours_session:    v.mettreReserve ? v.reserve_cours_session    : null,
         reserve_cours_enseignant: v.mettreReserve ? v.reserve_cours_enseignant : null,
       },
-      formulaire_type: 'Nouvel achat unique',
-
-      // Champs de surface pour le courriel admin n8n
-      usager_nom:      v.nom,
-      usager_courriel: v.courriel,
-      usager_statut:   v.statut,
-      type_formulaire: 'Nouvel achat unique',
     };
 
     this.reponsesService.envoyerNouvelAchat(payload).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;
-        // ✅ NE PAS réinitialiser immédiatement, garder les données pour l'écran de confirmation
       },
       error: () => {
         this.error     = true;

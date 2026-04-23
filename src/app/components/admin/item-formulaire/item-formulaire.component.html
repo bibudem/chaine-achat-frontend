@@ -458,9 +458,11 @@
                 <label class="form-label ">
                   <span class="text-danger">*</span> Précision de la demande
                 </label>
-                <textarea class="form-control" formControlName="precision_demande" rows="4"
-                          [class.is-invalid]="hasError('precision_demande', 'required')"
-                          placeholder="Décrivez précisément la modification demandée"></textarea>
+                <select class="form-select form-control" formControlName="precision_demande"
+                        [class.is-invalid]="hasError('precision_demande', 'required')">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
+                </select>
                 <div class="invalid-feedback">La précision de la demande est obligatoire</div>
               </div>
             </div>
@@ -664,25 +666,42 @@
           </div>
         </div>
 
-        <!-- ===== REQUÊTE ACQ ===== -->
-        <div *ngIf="isRequeteACQ()">
+        <!-- ===== REQUÊTE ACCESSIBILITÉ ===== -->
+        <div *ngIf="isRequeteAccessibilite()">
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-question-circle me-2"></i>Requête ACQ
+                <i class="bi bi-universal-access me-2"></i>Requête Accessibilité
               </h5>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label ">Type de requête</label>
-                <select class="form-select form-control" formControlName="type_requete">
+                <label class="form-label"><span class="text-danger">*</span> Type de requête</label>
+                <select class="form-select form-control" formControlName="type_requete"
+                        [class.is-invalid]="hasError('type_requete', 'required')">
                   <option value="">Sélectionnez</option>
                   <option value="Information">Information</option>
                   <option value="Modification">Modification</option>
                   <option value="Annulation">Annulation</option>
                   <option value="Autre">Autre</option>
+                </select>
+                <div class="invalid-feedback">Le type de requête est obligatoire</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Référence usager</label>
+                <input type="text" class="form-control" formControlName="reference_usager">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Besoin spécifique (format)</label>
+                <select class="form-select form-control" formControlName="besoin_specifique_format">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let b of besoinsFormat" [value]="b">{{ b }}</option>
                 </select>
               </div>
             </div>
@@ -690,16 +709,124 @@
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label ">Description de la requête</label>
+                <label class="form-label">Description de la requête</label>
                 <textarea class="form-control" formControlName="description_requete" rows="2"
                           placeholder="Décrivez votre requête en détail"></textarea>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label ">Action demandée</label>
+                <label class="form-label">Action demandée</label>
                 <textarea class="form-control" formControlName="action_demandee" rows="2"
                           placeholder="Quelle action souhaitez-vous?"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Permalien SOFIA</label>
+                <input type="url" class="form-control" formControlName="permalien_sofia"
+                       placeholder="https://...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Vérifications Accessibilité -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+                <i class="bi bi-check2-square me-1"></i>Vérifications Accessibilité
+              </h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Fournisseur contacté sans succès</label>
+                <select class="form-select form-control" formControlName="fournisseur_contacte_sans_succes">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Exemplaire papier détenu</label>
+                <select class="form-select form-control" formControlName="exemplaire_papier_detenu">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Exemplaire électronique détenu</label>
+                <select class="form-select form-control" formControlName="exemplaire_electronique_detenu">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Vérification CAEB</label>
+                <select class="form-select form-control" formControlName="verification_caeb">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Vérification SQLA</label>
+                <select class="form-select form-control" formControlName="verification_sqla">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Vérification EMMA</label>
+                <select class="form-select form-control" formControlName="verification_emma">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acquisitions -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+                <i class="bi bi-bag me-1"></i>Acquisitions
+              </h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Numérisation recommandée</label>
+                <select class="form-select form-control" formControlName="acq_numerisation_recommandee">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Date demande à l'éditeur</label>
+                <input type="date" class="form-control" formControlName="acq_date_demande_editeur">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Date livraison estimée</label>
+                <input type="date" class="form-control" formControlName="acq_date_livraison_estimee">
               </div>
             </div>
           </div>
@@ -712,20 +839,7 @@
               <h5 class="mb-3 pb-2 border-bottom">
                 <i class="bi bi-book me-2"></i>Springer
               </h5>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label ">
-                  <span class="text-danger">*</span> Quantité
-                </label>
-                <input type="number" class="form-control" formControlName="quantite" min="1"
-                       [class.is-invalid]="hasError('quantite', 'required') || hasError('quantite', 'min')"
-                       placeholder="Nombre d'exemplaires">
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'required')">La quantité est obligatoire</div>
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'min')">La quantité doit être d'au moins 1</div>
-              </div>
+              <p class="text-muted small">Aucun champ spécifique requis pour ce type de formulaire.</p>
             </div>
           </div>
         </div>

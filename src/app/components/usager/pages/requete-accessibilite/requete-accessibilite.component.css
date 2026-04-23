@@ -1,0 +1,92 @@
+/* ============================================================
+   requete-accessibilite.component.css
+   ACCENT : violet accessibilité (--acces-*)
+   Structure, responsive et composants partagés → css_udem.css
+   ============================================================ */
+/* ── Gradient d'en-tête ────────────────────────────────────── */
+.form-header {
+  background: var(--dark-gray);
+  border-bottom: 5px solid var(--acces-mid);
+}
+
+/* ── Titre de section ──────────────────────────────────────── */
+.form-section__title {
+  border-bottom: 2px solid var(--acces-light);
+}
+.form-section__title i { color: var(--acces-mid); }
+
+/* ── Focus ring sur les champs ─────────────────────────────── */
+.form-control,
+.form-select {
+  min-height: 42px !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--acces-mid)                  !important;
+  box-shadow:   0 0 0 3px rgba(123, 61, 184, 0.15) !important;
+  outline:      none                               !important;
+}
+
+/* ── Boutons segmentés ─────────────────────────────────────── */
+.btn-group.w-100 .btn-format:hover,
+.btn-group.w-100 .btn-priorite:hover {
+  background: var(--acces-light);
+  color:      var(--acces-mid);
+}
+.btn-format--active {
+  background:   var(--acces-mid) !important;
+  border-color: var(--acces-mid) !important;
+  color:        #fff             !important;
+  z-index: 1;
+}
+.btn-priorite--active {
+  background:   var(--acces-mid) !important;
+  border-color: var(--acces-mid) !important;
+  color:        #fff             !important;
+  z-index: 1;
+}
+
+/* ── Interrupteur ──────────────────────────────────────────── */
+.form-switch .form-check-input:checked {
+  background-color: var(--acces-mid);
+  border-color:     var(--acces-mid);
+}
+
+/* ── Zone conditionnelle électronique ──────────────────────── */
+.electronique-fields {
+  background:    var(--acces-light);
+  border:        1px solid rgba(123, 61, 184, 0.2);
+  border-radius: 8px;
+  padding:       16px 18px 8px;
+  margin-top:    8px;
+}
+
+/* ── Barre d'actions ───────────────────────────────────────── */
+.form-actions { border-top: 2px solid var(--acces-light); }
+
+/* ── Bouton soumettre ──────────────────────────────────────── */
+.btn-primary {
+  background: var(--acces-mid);
+  color:      #fff;
+  border:     none;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--acces-dark);
+  transform:  translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:disabled {
+  opacity:    0.55;
+  cursor:     not-allowed;
+  transform:  none  !important;
+  box-shadow: none  !important;
+}
+
+/* ── Confirmation ──────────────────────────────────────────── */
+.confirmation-detail { background: var(--acces-light); }
+.confirmation-detail__label i { color: var(--acces-mid); }
+
+.confirmation-icon--acces {
+  background: linear-gradient(135deg, var(--acces-mid), var(--acces-dark));
+  box-shadow: 0 4px 16px rgba(123, 61, 184, 0.28);
+}

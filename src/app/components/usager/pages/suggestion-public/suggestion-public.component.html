@@ -142,10 +142,10 @@
 
           <div class="col-md-6">
             <label class="form-label required">Faculté / Département</label>
-            <input type="text" formControlName="faculteDepartement" class="form-control"
-                   [class.is-invalid]="submitted && f['faculteDepartement'].invalid"
+            <input type="text" formControlName="usager_faculte" class="form-control"
+                   [class.is-invalid]="submitted && f['usager_faculte'].invalid"
                    placeholder="Ex : Faculté des sciences">
-            <div *ngIf="submitted && f['faculteDepartement'].invalid" class="invalid-feedback">
+            <div *ngIf="submitted && f['usager_faculte'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
             </div>
           </div>
@@ -155,20 +155,7 @@
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="submitted && f['bibliotheque'].invalid">
               <option value="">— Sélectionnez —</option>
-              <option>Aménagement</option>
-              <option>Campus Laval</option>
-              <option>Droit</option>
-              <option>Du Parc</option>
-              <option>Hubert-Reeves</option>
-              <option>Kinésiologie</option>
-              <option>L.S.H.</option>
-              <option>Livres rares</option>
-              <option>Mathématiques-Informatique</option>
-              <option>Médecine vétérinaire</option>
-              <option>Musique</option>
-              <option>Marguerite-d'Youville</option>
-              <option>Santé</option>
-              <option>TGD</option>
+              <option *ngFor="let b of bibliotheques" [value]="b">{{ b }}</option>
             </select>
             <div *ngIf="submitted && f['bibliotheque'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
@@ -179,16 +166,34 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label">Bibliothécaire disciplinaire</label>
-            <input type="email" formControlName="bibliothecaire" class="form-control"
-                   [class.is-invalid]="submitted && f['bibliothecaire'].invalid"
+            <label class="form-label required">Bibliothécaire disciplinaire</label>
+            <input type="email" formControlName="bibliothecaire_disciplinaire" class="form-control"
+                   [class.is-invalid]="submitted && f['bibliothecaire_disciplinaire'].invalid"
                    placeholder="courriel@umontreal.ca">
-            <div *ngIf="submitted && f['bibliothecaire'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide.
+            <div *ngIf="submitted && f['bibliothecaire_disciplinaire'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Courriel obligatoire.
             </div>
             <small class="form-text">
               Courriel du ou de la bibliothécaire responsable de votre discipline
             </small>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label required">Priorité de la demande</label>
+            <div class="btn-group w-100" role="group">
+              <button type="button" class="btn btn-priorite"
+                      *ngFor="let p of priorites"
+                      [class.btn-priorite--active]="form.get('priorite_demande')?.value === p"
+                      [class.btn-priorite--urgent]="p === 'Urgent'"
+                      [class.btn-priorite--prioritaire]="p === 'Prioritaire'"
+                      (click)="form.patchValue({ priorite_demande: p })">
+                <i class="fas me-1"
+                   [class.fa-clock]="p === 'Régulier'"
+                   [class.fa-exclamation]="p === 'Prioritaire'"
+                   [class.fa-fire]="p === 'Urgent'"></i>
+                {{ p }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -201,7 +206,7 @@
         <div class="row g-3">
           <div class="col-md-4">
             <label class="form-label">Type de document</label>
-            <select formControlName="typeDocument" class="form-select">
+            <select formControlName="categorie_document" class="form-select">
               <option value="">— Faites un choix —</option>
               <option>Livre</option>
               <option>Périodique</option>
@@ -214,11 +219,10 @@
 
           <div class="col-8">
             <label class="form-label required">Titre du document</label>
-            <input type="text" formControlName="titre" class="form-control"
-                      [class.is-invalid]="submitted && f['titre'].invalid"
-                      rows="2"
-                      placeholder="Titre complet du document suggéré">
-            <div *ngIf="submitted && f['titre'].invalid" class="invalid-feedback">
+            <input type="text" formControlName="titre_document" class="form-control"
+                   [class.is-invalid]="submitted && f['titre_document'].invalid"
+                   placeholder="Titre complet du document suggéré">
+            <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
             </div>
           </div>
@@ -241,10 +245,10 @@
 
           <div class="col-md-4">
             <label class="form-label" [ngClass]="{ 'required': showElectronique }">Source internet (URL)</label>
-            <input type="url" formControlName="urlSource" class="form-control"
-                   [class.is-invalid]="submitted && f['urlSource'].invalid"
+            <input type="url" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="submitted && f['source_information'].invalid"
                    placeholder="https://...">
-            <div *ngIf="submitted && f['urlSource'].invalid" class="invalid-feedback">
+            <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>URL invalide.
             </div>
             <small class="form-text">Lien vers la fiche du document (éditeur, librairie, etc.)</small>
@@ -259,36 +263,39 @@
 
           <div class="col-md-3">
             <label class="form-label">Date de publication</label>
-            <input type="text" formControlName="annee" class="form-control"
+            <input type="text" formControlName="date_publication" class="form-control"
                    placeholder="Ex : 2024">
             <small class="form-text">Date de publication en ligne ou imprimée</small>
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">ISBN / ISSN</label>
-            <input type="text" formControlName="isbnIssn" class="form-control"
-                   placeholder="Ex : 9782070360024">
-            <small class="form-text">Ne pas insérer de tirets</small>
+            <label class="form-label required">ISBN / ISSN</label>
+            <input type="text" formControlName="isbn_issn" class="form-control"
+                   [class.is-invalid]="submitted && f['isbn_issn'].invalid"
+                   placeholder="Ex : 9782070360024"
+                   (input)="stripDashes($event)">
+            <div *ngIf="submitted && f['isbn_issn'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Format ISBN / ISSN invalide (sans tirets).
+            </div>
+            <small class="form-text">Les tirets sont automatiquement supprimés</small>
           </div>
 
           <div class="col-md-3">
             <label class="form-label">Format / Support</label>
-            <select formControlName="formatSupport" class="form-select">
+            <select formControlName="format_support" class="form-select">
               <option value="">— Faites un choix —</option>
               <option>Imprimé / support physique</option>
               <option>Électronique</option>
             </select>
           </div>
 
-          
-
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Format électronique</label>
-                  <select class="form-select">
-                    <option>— Faites un choix —</option>
+                  <select formControlName="format_electronique" class="form-select">
+                    <option value="">— Faites un choix —</option>
                     <option>PDF</option>
                     <option>EPUB</option>
                     <option>Web</option>
@@ -297,8 +304,8 @@
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Accès</label>
-                  <select class="form-select">
-                    <option>— Faites un choix —</option>
+                  <select formControlName="acces_electronique" class="form-select">
+                    <option value="">— Faites un choix —</option>
                     <option>Accès illimité</option>
                     <option>Accès limité dans le temps</option>
                     <option>Accès par nombre d'usagers</option>
@@ -310,31 +317,45 @@
 
           <div class="col-12">
             <label class="form-label">Notes et commentaires</label>
-            <textarea formControlName="notes" class="form-control" rows="4"
+            <textarea formControlName="note_commentaire" class="form-control" rows="4"
                       placeholder="Justification de votre demande, informations complémentaires…"></textarea>
-          </div>
-
-          <div class="col-12">
-            <label class="form-label required">Voulez-vous réserver le document à son arrivée ?</label>
-            <div class="d-flex gap-4 align-items-center mt-2">
-              <div class="form-check d-flex align-items-center gap-2">
-                <input class="form-check-input ml-2" type="radio" formControlName="reserver" value="oui" id="reserver-oui">
-                <label class="form-check-label mb-0" for="reserver-oui">
-                  <i class="fas fa-bookmark me-2"></i>Oui, réserver
-                </label>
-              </div>
-              <div class="form-check d-flex align-items-center gap-2">
-                <input class="form-check-input ml-2" type="radio" formControlName="reserver" value="non" id="reserver-non">
-                <label class="form-check-label mb-0" for="reserver-non">
-                  <i class="fas fa-times me-2"></i>Non
-                </label>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 3 — ENSEIGNANT -->
+      <!-- SECTION 3 — RÉSERVATION -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-bookmark"></i>Réservation
+        </h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox"
+                     formControlName="aviser_reservation"
+                     id="aviserReservationCheck" role="switch">
+              <label class="form-check-label" for="aviserReservationCheck">
+                Réserver le document à son arrivée
+              </label>
+            </div>
+            <small class="form-text">Vous serez avisé(e) lorsque le document sera mis en réservation</small>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox"
+                     formControlName="aviser_reception"
+                     id="aviserReceptionCheck" role="switch">
+              <label class="form-check-label" for="aviserReceptionCheck">
+                Aviser à la réception
+              </label>
+            </div>
+            <small class="form-text">Vous serez avisé(e) lorsque le document sera reçu en bibliothèque</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 — ENSEIGNANT -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-chalkboard-teacher"></i>Section réservée au corps enseignant
@@ -342,14 +363,14 @@
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label">Document requis pour un cours en date du</label>
-            <input type="date" formControlName="dateRequis" class="form-control">
+            <input type="date" formControlName="date_requise_cours" class="form-control">
             <small class="form-text">Laisser vide si non applicable</small>
           </div>
 
           <div class="col-12">
             <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox"
-                     formControlName="mettreReserve"
+                     formControlName="reserve_cours"
                      id="mettreReserveCheck" role="switch">
               <label class="form-check-label" for="mettreReserveCheck">
                 Mettre le document à la réserve de cours
@@ -362,8 +383,8 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Sigle du cours</label>
-                  <input type="text" formControlName="sigleCours" class="form-control"
-                         placeholder="Ex : SCI6051">
+                  <input type="text" formControlName="reserve_cours_sigle" class="form-control"
+                         placeholder="Ex : INF1234">
                 </div>
               </div>
             </div>

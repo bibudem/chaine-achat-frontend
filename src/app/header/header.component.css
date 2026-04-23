@@ -4,8 +4,11 @@
 }
 
 /* Couleurs sémantiques des formulaires usager dans le menu */
-.preview-icon--achat   { background: var(--achat-dark) !important; } /* Teal  — Nouvel achat unique  */
-.preview-icon--suggest { background: var(--suggest-mid) !important; } /* Ambre — Suggestion d'achat   */
+.preview-icon--achat          { background: var(--achat-dark)    !important; } /* Teal   — Nouvel achat unique    */
+.preview-icon--suggest        { background: var(--suggest-mid)   !important; } /* Ambre  — Suggestion d'achat     */
+.preview-icon--ccol           { background: var(--ccol-mid)      !important; } /* Bleu   — Modification et CCOL   */
+.preview-icon--springer       { background: var(--springer-mid)  !important; } /* Vert   — Springer               */
+.preview-icon--accessibilite  { background: #7C3AED              !important; } /* Violet — Requête Accessibilité   */
 .typing {
   position: relative;
   font-size: 1.2em;
