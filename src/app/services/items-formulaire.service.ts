@@ -48,11 +48,9 @@ export interface Item {
   lien_plateforme?: string;
   format_pret_numerique?: string;
 
-  // Champs spécifiques selon le type de formulaire (tbl_modification_ccol)
+  // tbl_modification_ccol
   precision_demande?: string;
   numero_oclc?: string;
-  collection?: string;
-  catalogage?: string;
   
   // tbl_nouvel_abonnement
   date_debut_abonnement?: string;
@@ -66,33 +64,44 @@ export interface Item {
   reserve_cours_session?: string;
   reserve_cours_enseignant?: string;
   bordereau_imprime?: string;
-  categorie_depense?: string;
-  note_catalogueur_droit?: string;
   
   // tbl_peb_tipasa_numerique
   type_demande_peb?: string;
   reference_tipasa?: string;
   urgence?: boolean;
   
-  // tbl_requete_acq
+  // tbl_requete_acq (Requête Accessibilité)
   type_requete?: string;
+  reference_usager?: string;
   description_requete?: string;
   action_demandee?: string;
-  
-  // tbl_springer
+  besoin_specifique_format?: string;
+  permalien_sofia?: string;
+  fournisseur_contacte_sans_succes?: string;
+  exemplaire_detenu?: string;
+  verification_caeb?: string;
+  verification_sqla?: string;
+  verification_emma?: string;
+  acq_numerisation_recommandee?: string;
+  acq_date_demande_editeur?: string;
+  acq_date_livraison_estimee?: string;
+
+  // tbl_nouvel_achat_unique
   quantite?: number;
-  
+
   // tbl_suggestion_achat
-  justification?: string;
-  public_cible?: string;
-  recommandation?: boolean;
+  auteur?: string;
   usager_statut?: string;
   usager_faculte?: string;
   usager_courriel?: string;
   bibliothecaire_disciplinaire?: string;
-  aviser_reservation?: string;
+  aviser_reservation?: boolean;
   aviser_reception?: boolean;
   date_requise_cours?: string;
+
+  // Champs usager à aviser (Nouvel achat unique, Nouvel abonnement)
+  usager_aviser_reservation?: string;
+  usager_aviser_activation?: string;
 }
 
 export interface ApiResponse<T> {
@@ -340,10 +349,6 @@ export class ItemFormulaireService {
       };
       formattedItem.devise_originale = deviseCodes[formattedItem.devise_originale] 
         || formattedItem.devise_originale.substring(0, 3);
-    }
-    
-    if (formattedItem.item_id) {
-      formattedItem.date_modification = new Date().toISOString();
     }
     
     return formattedItem;

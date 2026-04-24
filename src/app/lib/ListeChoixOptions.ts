@@ -54,6 +54,7 @@ statusOptions = [
     'Prêt entre bibliothèques',
     'Santé',
     'Service du catalogage',
+    'Service Accessibilité',
     'TGD',
     'TEST-DRIN'
   ];
@@ -146,12 +147,12 @@ statusOptions = [
   // Options pour le type de formulaire Mentor (provenant du fichier Excel)
 formulaireTypeOptions = [
   'Nouvel achat unique',
-  'Modification CCOL',
+  'Modification et CCOL',
   'Nouvel abonnement',
   'Springer',
   'PEB Tipasa numérique',
-  'Suggestion d\'achat',
-  'Requête ACQ'
+  "Suggestion d'achat",
+  'Requête Accessibilité'
 ];
 
   listProgramme = [

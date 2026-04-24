@@ -339,14 +339,14 @@
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Collection</span>
-                    <span class="itd-field__value">{{ val(item.collection) }}</span>
+                    <span class="itd-field__label">Date début abonnement</span>
+                    <span class="itd-field__value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" *ngIf="item.usager_aviser_activation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Catalogage</span>
-                    <span class="itd-field__value">{{ val(item.catalogage) }}</span>
+                    <span class="itd-field__label">Usager à aviser — Activation</span>
+                    <span class="itd-field__value">{{ val(item.usager_aviser_activation) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.precision_demande">
@@ -371,10 +371,10 @@
                     <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" *ngIf="item.usager_aviser_reservation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Collection</span>
-                    <span class="itd-field__value">{{ val(item.collection) }}</span>
+                    <span class="itd-field__label">Usager à aviser — Réservation</span>
+                    <span class="itd-field__value">{{ val(item.usager_aviser_reservation) }}</span>
                   </div>
                 </div>
               </ng-container>
@@ -397,12 +397,6 @@
                   <div class="itd-field">
                     <span class="itd-field__label">Bordereau imprimé</span>
                     <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="itd-field">
-                    <span class="itd-field__label">Catégorie de dépense</span>
-                    <span class="itd-field__value">{{ val(item.categorie_depense) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.reserve_cours">
@@ -430,12 +424,6 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div class="col-12" *ngIf="item.note_catalogueur_droit">
-                  <div class="itd-field">
-                    <span class="itd-field__label">Note catalogueur droit</span>
-                    <span class="itd-note">{{ item.note_catalogueur_droit }}</span>
                   </div>
                 </div>
               </ng-container>
@@ -498,24 +486,18 @@
 
               <!-- Suggestion d'achat -->
               <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat'">
-                <div class="col-md-4">
+                <div class="col-md-4" *ngIf="item.auteur">
                   <div class="itd-field">
-                    <span class="itd-field__label">Public cible</span>
-                    <span class="itd-field__value">{{ val(item.public_cible) }}</span>
+                    <span class="itd-field__label">Auteur(rice)</span>
+                    <span class="itd-field__value">{{ val(item.auteur) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Recommandation</span>
-                    <span class="badge" [ngClass]="item.recommandation ? 'bg-success' : 'bg-secondary'">
-                      {{ item.recommandation ? 'Oui' : 'Non' }}
+                    <span class="itd-field__label">Aviser lors de la réservation</span>
+                    <span class="badge" [ngClass]="item.aviser_reservation ? 'bg-success' : 'bg-secondary'">
+                      {{ item.aviser_reservation ? 'Oui' : 'Non' }}
                     </span>
-                  </div>
-                </div>
-                <div class="col-12" *ngIf="item.justification">
-                  <div class="itd-field">
-                    <span class="itd-field__label">Justification</span>
-                    <span class="itd-note">{{ item.justification }}</span>
                   </div>
                 </div>
               </ng-container>

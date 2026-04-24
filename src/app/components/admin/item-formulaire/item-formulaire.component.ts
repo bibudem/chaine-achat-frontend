@@ -68,7 +68,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
     if (this.isEditMode) {
       this.loadItem();
-      this.itemForm.get('formulaire_type')?.disable();
+      this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
     }
 
     this.itemForm.get('formulaire_type')?.valueChanges.subscribe(value => {
@@ -165,7 +165,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       personne_a_aviser_activation: ['', Validators.maxLength(200)],
       source_information: ['', Validators.maxLength(500)],
       note_commentaire: [''],
-      id_ressource: ['', Validators.maxLength(100)],
+      id_ressource: ['', Validators.maxLength(50)],
       catalogue: ['', Validators.maxLength(200)],
       statut_bibliotheque: ['En attente en bibliothèque'],
       statut_acq: [''],
@@ -174,8 +174,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       utilisateur_modification: [{ value: '', disabled: true }],
       precision_demande: [''],
       numero_oclc: [''],
-      collection: [''],
-      catalogage: [''],
       date_debut_abonnement: [''],
       type_monographie: [''],
       projets_speciaux: [''],
@@ -184,9 +182,11 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       reserve_cours_sigle: [''],
       reserve_cours_session: [''],
       reserve_cours_enseignant: [''],
-      bordereau_imprime: [''],
-      categorie_depense: [''],
-      note_catalogueur_droit: [''],
+      bordereau_imprime: ['Non'],
+      quantite: [null],
+      usager_aviser_reservation:  ['', Validators.maxLength(255)],
+      usager_aviser_activation:   ['', Validators.maxLength(255)],
+      auteur: ['', Validators.maxLength(500)],
       type_demande_peb: [''],
       reference_tipasa: [''],
       urgence: [false],
@@ -198,24 +198,19 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       besoin_specifique_format:       [''],
       permalien_sofia:                [''],
       fournisseur_contacte_sans_succes: [''],
-      exemplaire_papier_detenu:       [''],
-      exemplaire_electronique_detenu: [''],
+      exemplaire_detenu:              [''],
       verification_caeb:              [''],
       verification_sqla:              [''],
       verification_emma:              [''],
       acq_numerisation_recommandee:   [''],
       acq_date_demande_editeur:       [''],
       acq_date_livraison_estimee:     [''],
-      // Suggestion d'achat — champs existants
-      justification: [''],
-      public_cible: [''],
-      recommandation: [false],
-      // Suggestion d'achat — nouveaux champs
+      // Suggestion d'achat
       usager_statut: ['', Validators.maxLength(100)],
       usager_faculte: ['', Validators.maxLength(255)],
       usager_courriel: ['', [Validators.maxLength(255), Validators.email]],
       bibliothecaire_disciplinaire: ['', Validators.maxLength(255)],
-      aviser_reservation: ['', Validators.maxLength(500)],
+      aviser_reservation: [false],
       aviser_reception: [true],
       date_requise_cours: ['']
     });
@@ -233,7 +228,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
         this.itemForm.get('date_debut_abonnement')?.setValidators([Validators.required]);
         break;
       case 'Nouvel achat unique':
-        this.itemForm.get('type_monographie')?.setValidators([Validators.required]);
+        this.itemForm.get('quantite')?.setValidators([Validators.required, Validators.min(1)]);
         break;
       case 'Springer':
         break;
@@ -255,7 +250,7 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
     const specificFieldsToUpdate = [
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
-      'type_demande_peb', 'type_requete',
+      'type_demande_peb', 'type_requete', 'quantite',
       'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
     ];
 
@@ -267,23 +262,23 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
   resetSpecificFields(): void {
     const specificFields = [
-      'precision_demande', 'numero_oclc', 'collection', 'catalogage',
+      'precision_demande', 'numero_oclc',
       'date_debut_abonnement', 'type_monographie', 'projets_speciaux',
       'format_electronique', 'reserve_cours', 'reserve_cours_sigle',
       'reserve_cours_session', 'reserve_cours_enseignant', 'bordereau_imprime',
-      'categorie_depense', 'note_catalogueur_droit', 'type_demande_peb',
-      'reference_tipasa', 'urgence', 'type_requete', 'description_requete',
-      'action_demandee', 'justification', 'public_cible', 'recommandation',
+      'type_demande_peb', 'reference_tipasa', 'urgence',
+      'type_requete', 'description_requete', 'action_demandee',
       // Requête Accessibilité
       'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
-      'fournisseur_contacte_sans_succes', 'exemplaire_papier_detenu',
-      'exemplaire_electronique_detenu', 'verification_caeb', 'verification_sqla',
-      'verification_emma', 'acq_numerisation_recommandee', 'acq_date_demande_editeur',
-      'acq_date_livraison_estimee',
+      'fournisseur_contacte_sans_succes', 'exemplaire_detenu',
+      'verification_caeb', 'verification_sqla', 'verification_emma',
+      'acq_numerisation_recommandee', 'acq_date_demande_editeur', 'acq_date_livraison_estimee',
       // Suggestion d'achat
       'usager_statut', 'usager_faculte', 'usager_courriel',
       'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
-      'date_requise_cours'
+      'date_requise_cours', 'auteur',
+      // Nouvel achat unique
+      'quantite', 'usager_aviser_reservation', 'usager_aviser_activation'
     ];
 
     specificFields.forEach(field => {
@@ -302,7 +297,11 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
   isPEBTipasaNumerique(): boolean { return this.selectedFormulaireType === 'PEB Tipasa numérique'; }
   isRequeteAccessibilite(): boolean { return this.selectedFormulaireType === 'Requête Accessibilité'; }
   isSpringer(): boolean { return this.selectedFormulaireType === 'Springer'; }
-  isSuggestionAchat(): boolean { return this.selectedFormulaireType === 'Suggestion d\'achat'; }
+  isSuggestionAchat(): boolean { return this.selectedFormulaireType === "Suggestion d'achat"; }
+
+  hasSpecificFields(): boolean {
+    return !!this.selectedFormulaireType && !this.isSpringer();
+  }
 
   loadItem(): void {
     if (!this.itemId) return;
@@ -311,8 +310,26 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     this.itemService.consulter(this.itemId).subscribe({
       next: (response: ApiResponse<Item>) => {
         if (response.success && response.data) {
-          this.selectedFormulaireType = response.data.formulaire_type || null;
-          this.itemForm.patchValue(response.data, { emitEvent: false });
+          // Normalise les noms de type hérités (formulaires usager vs admin)
+          const typeAliases: Record<string, string> = {
+            'Requête ACQ': 'Requête Accessibilité',
+          };
+          const rawType = response.data.formulaire_type || null;
+          const normalizedType = (rawType && typeAliases[rawType]) ? typeAliases[rawType] : rawType;
+          this.selectedFormulaireType = normalizedType;
+
+          // Patch les champs de base (toujours à la racine de response.data)
+          this.itemForm.patchValue({ ...response.data, formulaire_type: normalizedType }, { emitEvent: false });
+
+          // Patch les champs spécifiques si le backend les retourne dans un objet imbriqué
+          const specificData = (response.data as any).specificData;
+          if (specificData && typeof specificData === 'object') {
+            this.itemForm.patchValue(specificData, { emitEvent: false });
+          }
+
+          // Applique les validateurs pour le type chargé sans déclencher de reset
+          this.applyValidatorsForEditMode(this.selectedFormulaireType);
+
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
 
           const fournisseurVal = response.data.fournisseur;
@@ -331,6 +348,40 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
         this.dialogService.showError('Erreur lors du chargement de l\'item');
         this.loading = false;
       }
+    });
+  }
+
+  private applyValidatorsForEditMode(type: string | null): void {
+    switch (type) {
+      case 'Modification et CCOL':
+        this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
+        break;
+      case 'Nouvel abonnement':
+        this.itemForm.get('date_debut_abonnement')?.setValidators([Validators.required]);
+        break;
+      case 'Nouvel achat unique':
+        this.itemForm.get('quantite')?.setValidators([Validators.required, Validators.min(1)]);
+        break;
+      case 'PEB Tipasa numérique':
+        this.itemForm.get('type_demande_peb')?.setValidators([Validators.required]);
+        break;
+      case 'Requête Accessibilité':
+        this.itemForm.get('type_requete')?.setValidators([Validators.required]);
+        break;
+      case "Suggestion d'achat":
+        this.itemForm.get('usager_statut')?.setValidators([Validators.required]);
+        this.itemForm.get('usager_faculte')?.setValidators([Validators.required]);
+        this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.email]);
+        this.itemForm.get('bibliothecaire_disciplinaire')?.setValidators([Validators.required, Validators.email]);
+        break;
+    }
+    const specificFields = [
+      'precision_demande', 'date_debut_abonnement', 'type_monographie',
+      'type_demande_peb', 'type_requete', 'quantite',
+      'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
+    ];
+    specificFields.forEach(field => {
+      this.itemForm.get(field)?.updateValueAndValidity({ emitEvent: false });
     });
   }
  
@@ -437,18 +488,16 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     switch(type) {
       case 'Modification et CCOL':
         return {
-          precision_demande:      formData.precision_demande,
-          numero_oclc:            formData.numero_oclc,
-          date_debut_abonnement:  formData.date_debut_abonnement,
-          collection:             formData.collection,
-          catalogage:             formData.catalogage
+          precision_demande:        formData.precision_demande,
+          numero_oclc:              formData.numero_oclc,
+          date_debut_abonnement:    formData.date_debut_abonnement,
+          usager_aviser_activation: formData.usager_aviser_activation
         };
       case 'Nouvel abonnement':
         return {
-          date_debut_abonnement:  formData.date_debut_abonnement,
-          type_monographie:       formData.type_monographie,
-          collection:             formData.collection,
-          catalogage:             formData.catalogage
+          date_debut_abonnement:      formData.date_debut_abonnement,
+          type_monographie:           formData.type_monographie,
+          usager_aviser_reservation:  formData.usager_aviser_reservation
         };
       case 'Nouvel achat unique':
         return {
@@ -460,8 +509,9 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
           reserve_cours_session:      formData.reserve_cours_session,
           reserve_cours_enseignant:   formData.reserve_cours_enseignant,
           bordereau_imprime:          formData.bordereau_imprime,
-          categorie_depense:          formData.categorie_depense,
-          note_catalogueur_droit:     formData.note_catalogueur_droit
+          quantite:                   formData.quantite,
+          usager_aviser_reservation:  formData.usager_aviser_reservation,
+          usager_aviser_activation:   formData.usager_aviser_activation
         };
       case 'PEB Tipasa numérique':
         return {
@@ -478,20 +528,21 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
           besoin_specifique_format:         formData.besoin_specifique_format,
           permalien_sofia:                  formData.permalien_sofia,
           fournisseur_contacte_sans_succes: formData.fournisseur_contacte_sans_succes,
-          exemplaire_papier_detenu:         formData.exemplaire_papier_detenu,
-          exemplaire_electronique_detenu:   formData.exemplaire_electronique_detenu,
+          exemplaire_detenu:                formData.exemplaire_detenu,
           verification_caeb:                formData.verification_caeb,
           verification_sqla:                formData.verification_sqla,
           verification_emma:                formData.verification_emma,
           acq_numerisation_recommandee:     formData.acq_numerisation_recommandee,
           acq_date_demande_editeur:         formData.acq_date_demande_editeur,
           acq_date_livraison_estimee:       formData.acq_date_livraison_estimee,
+          type_monographie:                 formData.type_monographie,
         };
       case 'Springer':
         return {};
  
       case "Suggestion d'achat":
         return {
+          auteur:                       formData.auteur,
           usager_statut:                formData.usager_statut,
           usager_faculte:               formData.usager_faculte,
           usager_courriel:              formData.usager_courriel,
