@@ -202,6 +202,7 @@ export class ModificationCcolComponent implements OnInit {
         fonds_sn_projet:              v.fonds_sn_projet,
         source_information:           v.source_information,
         note_commentaire:             v.note_commentaire,
+        periode_couverte:             v.periode_couverte,
         statut_bibliotheque:          'Saisie en cours - En attente',
         statut_acq:                   'En attente',
       },
@@ -210,7 +211,6 @@ export class ModificationCcolComponent implements OnInit {
         numero_oclc:           v.numero_oclc,
         date_debut_abonnement: v.date_debut_abonnement,
         collection:            v.collection,
-        periode_couverte:      v.periode_couverte,
         catalogage:            v.catalogage,
       },
     };
