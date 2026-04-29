@@ -56,10 +56,10 @@
 
         <!-- Rangée 1 : Identité (obligatoires) — col-md-3 / col-md-6 / col-md-3 = 12 -->
         <div class="row mt-3">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="mb-3">
               <label class="form-label">
-                <span class="text-danger">*</span> Type de formulaire
+                <span class="text-danger">*</span> Type de demande
               </label>
               <select class="form-select form-control" formControlName="formulaire_type"
                       [class.is-invalid]="hasError('formulaire_type', 'required')"
@@ -68,14 +68,14 @@
                 <option *ngFor="let type of options.formulaireTypeOptions" [value]="type">{{ type }}</option>
               </select>
               <div class="invalid-feedback" *ngIf="hasError('formulaire_type', 'required')">
-                Le type de formulaire est obligatoire
+                Le type de demande est obligatoire
               </div>
               <small class="text-muted" *ngIf="isEditMode">
-                <i class="bi bi-info-circle me-1"></i>Le type de formulaire ne peut pas être modifié
+                <i class="bi bi-info-circle me-1"></i>Le type de demande ne peut pas être modifié
               </small>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="mb-3">
               <label class="form-label">Titre du document <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="titre_document"
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="mb-3">
               <label class="form-label">Demandeur <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="demandeur"
@@ -181,7 +181,7 @@
               <i class="bi bi-globe me-1"></i>Ressource électronique
             </h6>
           </div>
-          <div class="col-md">
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label">Nombre de titres inclus</label>
               <input type="number" class="form-control" formControlName="nombre_titres_inclus"
@@ -263,71 +263,6 @@
                 <option [ngValue]="true">Oui</option>
                 <option [ngValue]="false">Non</option>
               </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Rangée 5a : Fournisseur (absent pour Nouvel achat unique et Nouvel abonnement) -->
-        <!-- Dropdown col-md-4 + sélections visibles en badges col-md-8 sur la même ligne -->
-        <div class="row mb-3" *ngIf="!isNouvelAchatUnique() && !isNouvelAbonnement()">
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label class="form-label">Fournisseur</label>
-              <div class="ms-dropdown" [class.ms-open]="dropdowns['fournisseur']" (click)="$event.stopPropagation()">
-                <button type="button" class="ms-trigger" (click)="toggleDropdown('fournisseur')">
-                  <span *ngIf="selectedFournisseurs.length > 0; else phFournisseur">
-                    {{ selectedFournisseurs.length }} sélectionné(s)
-                  </span>
-                  <ng-template #phFournisseur>Sélectionnez un fournisseur</ng-template>
-                  <i class="bi bi-chevron-down ms-arrow"></i>
-                </button>
-                <div class="ms-menu ms-menu-fournisseur" *ngIf="dropdowns['fournisseur']">
-                  <div class="ms-search">
-                    <input type="text" class="ms-search-input" placeholder="Rechercher..."
-                          [(ngModel)]="fournisseurSearch"
-                          [ngModelOptions]="{standalone: true}"
-                          (input)="filterFournisseurs(fournisseurSearch)"
-                          (click)="$event.stopPropagation()">
-                  </div>
-                  <div class="ms-divider"></div>
-                  <label class="ms-option ms-option-check"
-                        *ngFor="let f of fournisseursFiltered"
-                        (click)="$event.stopPropagation()">
-                    <input type="checkbox"
-                          [value]="f"
-                          [checked]="isFournisseurSelected(f)"
-                          (change)="toggleFournisseur(f)">
-                    {{ f }}
-                  </label>
-                  <div *ngIf="fournisseursFiltered.length === 0" class="ms-empty">
-                    Aucun résultat
-                  </div>
-                </div>
-              </div>
-              <div class="invalid-feedback d-block" *ngIf="hasError('fournisseur', 'required')">
-                Le fournisseur est obligatoire
-              </div>
-              <small class="text-muted" *ngIf="fournisseursOptions && fournisseursOptions.length > 0">
-                {{ fournisseursOptions.length }} fournisseurs
-              </small>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="mb-3">
-              <label class="form-label text-muted small">Sélectionné(s)</label>
-              <div class="form-control d-flex flex-wrap gap-1 align-items-center" style="min-height:46px; height:auto">
-                <ng-container *ngIf="selectedFournisseurs.length > 0; else noFournisseur">
-                  <span *ngFor="let f of selectedFournisseurs"
-                        class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 py-1 px-2">
-                    {{ f }}
-                    <i class="bi bi-x-circle-fill text-secondary" style="cursor:pointer; font-size:0.75rem"
-                       (click)="toggleFournisseur(f)"></i>
-                  </span>
-                </ng-container>
-                <ng-template #noFournisseur>
-                  <span class="text-muted small fst-italic">Aucun fournisseur sélectionné</span>
-                </ng-template>
-              </div>
             </div>
           </div>
         </div>

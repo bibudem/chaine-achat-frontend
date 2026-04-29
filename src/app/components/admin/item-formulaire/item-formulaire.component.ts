@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
   templateUrl: './item-formulaire.component.html',
   styleUrls: ['./item-formulaire.component.css']
 })
-export class ItemFormulaireComponent implements OnInit, OnDestroy {
+export class ItemFormulaireComponent implements OnInit {
   itemForm: FormGroup;
   itemId: number | null = null;
   isEditMode = false;
@@ -21,13 +21,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
 
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
-  fournisseursOptions: string[] = [];
-  fournisseurSearch = '';
-  fournisseursFiltered: string[] = [];
-  selectedFournisseurs: string[] = [];
-
-  dropdowns: Record<string, boolean> = {};
-  private clickOutsideListener!: () => void;
 
   readonly OUI_NON_NA: string[] = ['OUI', 'NON', "Ne s'applique pas"];
   readonly besoinsFormat: string[] = [
@@ -74,64 +67,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
     this.itemForm.get('formulaire_type')?.valueChanges.subscribe(value => {
       this.onFormulaireTypeChange(value);
     });
-
-    this.loadFournisseurs();
-
-    this.clickOutsideListener = () => this.closeAllDropdowns();
-    document.addEventListener('click', this.clickOutsideListener);
-  }
-
-  ngOnDestroy(): void {
-    document.removeEventListener('click', this.clickOutsideListener);
-  }
-
-  loadFournisseurs(): void {
-    this.itemService.getFournisseurs().subscribe({
-      next: (response: any) => {
-        const raw = response?.data ?? response;
-        const arr = Array.isArray(raw) ? raw : [];
-
-        this.fournisseursOptions = arr
-          .map((f: any) => f?.titre ?? f)
-          .filter((titre: any) => typeof titre === 'string' && titre.trim().length > 0)
-          .sort((a: string, b: string) => a.localeCompare(b, 'fr'));
-
-        this.fournisseursFiltered = [...this.fournisseursOptions];
-      },
-      error: (error) => console.error('❌ Erreur chargement fournisseurs:', error)
-    });
-  }
-
-  filterFournisseurs(search: string): void {
-    const term = search.toLowerCase().trim();
-    this.fournisseursFiltered = term
-      ? this.fournisseursOptions.filter(f => f.toLowerCase().includes(term))
-      : [...this.fournisseursOptions];
-  }
-
-  isFournisseurSelected(value: string): boolean {
-    return this.selectedFournisseurs.includes(value);
-  }
-
-  toggleFournisseur(value: string): void {
-    if (this.isFournisseurSelected(value)) {
-      this.selectedFournisseurs = this.selectedFournisseurs.filter(f => f !== value);
-    } else {
-      this.selectedFournisseurs = [...this.selectedFournisseurs, value];
-    }
-    this.itemForm.get('fournisseur')?.setValue(
-      this.selectedFournisseurs.join(', ')
-    );
-  }
-
-  toggleDropdown(id: string): void {
-    const current = this.dropdowns[id];
-    this.closeAllDropdowns();
-    this.dropdowns[id] = !current;
-  }
-
-  closeAllDropdowns(): void {
-    Object.keys(this.dropdowns).forEach(k => this.dropdowns[k] = false);
   }
 
   createForm(): FormGroup {
@@ -169,7 +104,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       catalogue: ['', Validators.maxLength(200)],
       statut_bibliotheque: ['En attente en bibliothèque'],
       statut_acq: [''],
-      fournisseur: ['', Validators.maxLength(255)],
       date_modification: [{ value: '', disabled: true }],
       utilisateur_modification: [{ value: '', disabled: true }],
       precision_demande: [''],
@@ -331,13 +265,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
           this.applyValidatorsForEditMode(this.selectedFormulaireType);
 
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
-
-          const fournisseurVal = response.data.fournisseur;
-          if (fournisseurVal) {
-            this.selectedFournisseurs = fournisseurVal
-              .split(', ')
-              .filter((f: string) => f.trim().length > 0);
-          }
         } else {
           this.dialogService.showError(response.error || 'Impossible de charger l\'item');
         }
@@ -478,7 +405,6 @@ export class ItemFormulaireComponent implements OnInit, OnDestroy {
       nombre_utilisateurs: formData.nombre_utilisateurs,
       lien_plateforme: formData.lien_plateforme,
       format_pret_numerique: formData.format_pret_numerique,
-      fournisseur: formData.fournisseur,
     };
   }
 

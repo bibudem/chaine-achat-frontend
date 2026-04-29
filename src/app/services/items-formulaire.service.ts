@@ -252,11 +252,6 @@ export class ItemFormulaireService {
       .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<Item[]>>("createBatch")));
   }
 
-  getFournisseurs(): Observable<ApiResponse<any[]>> {
-    return this.http.get<ApiResponse<any[]>>(`${this.url}/fournisseurs`, this.httpOptions)
-      .pipe(catchError(this.errorHandlerService.handleError<ApiResponse<any[]>>("getFournisseurs")));
-  }
-
   // ==================== TEST ROUTE ====================
 
   testConnection(): Observable<any> {
