@@ -14,7 +14,6 @@ import { UserLayoutComponent } from './components/usager/user-layout/user-layout
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 import { SuggestionPublicComponent } from './components/usager/pages/suggestion-public/suggestion-public.component';
-import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { UserGuard } from './services/user-guard.service';
 import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
@@ -32,7 +31,6 @@ const routes: Routes = [
   { path: 'items', component: ItemsListComponent },
   { path: 'rapport', component: RapportsComponent },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
-  { path: 'lst-fournisseurs', component: LstFournisseursComponent },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },
   // ── Nouvelle section usager ──
   {

@@ -42,7 +42,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
-import {ListFournisseursComponent} from "./components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component";
 import {ListBoxModule} from "@syncfusion/ej2-angular-dropdowns";
 import { RouterModule } from '@angular/router';
 import { ItemsListComponent } from './components/admin/items-list/items-list.component';
@@ -54,7 +53,6 @@ import { UserLayoutComponent } from './components/usager/user-layout/user-layout
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
 import { SuggestionPublicComponent } from './components/usager/pages/suggestion-public/suggestion-public.component';
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
-import { LstFournisseursComponent } from './components/lst-fournisseurs/lst-fournisseurs.component';
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
@@ -76,7 +74,6 @@ import { SpringerComponent } from './components/usager/pages/springer/springer.c
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
-    ListFournisseursComponent,
     ListFondsComponent,
     ItemsListComponent,
     ItemFormulaireComponent,
@@ -86,7 +83,6 @@ import { SpringerComponent } from './components/usager/pages/springer/springer.c
     UsagerFormulaireComponent,
     SuggestionPublicComponent,
     UsagerHomeComponent,
-    LstFournisseursComponent,
     ItemDetailComponent,
     ImportComponent,
     NouvelAchatComponent,

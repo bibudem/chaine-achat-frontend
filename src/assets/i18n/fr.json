@@ -82,7 +82,6 @@
   "forme": "Forme",
   "nr": "Nr.",
   "configuration-fonds": "Configurer la liste de Fonds",
-  "configuration-fournisseurs": "Configurer la liste de Fournisseurs",
   "programmes": "Programmes",
   "list-values": "Liste de monographies électroniques",
   "form-values": "Dossier détaillé",
@@ -137,7 +136,6 @@
     "ajouter": "Nouveau",
     "processus": "Import",
     "outils": "Registres",
-    "list-fournisseur": "Liste de fournisseurs",
     "list-fonds": "Liste de fonds",
     "rapports": "Rapports",
     "reponses": "Réponses enregistrées"
@@ -386,10 +384,4 @@
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
   },
-  "lst-fournisseurs": {
-  "titre":    "Liste des fournisseurs",
-  "format":   "Format offert",
-  "affichage":"Affichage des prix",
-  "type-doc": "Types de documents"
-}
 }

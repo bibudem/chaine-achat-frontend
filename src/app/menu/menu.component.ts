@@ -22,7 +22,7 @@ export class MenuComponent implements OnInit {
   /** "Ajouter" actif uniquement sur /items/nouveau */
   isAddItemRoute = false;
 
-  /** "Outils" actif sur /lst-fournisseurs et sous-routes */
+  /** "Outils" actif sur /reponses */
   isOutilsRoute  = false;
 
   constructor(
@@ -49,7 +49,7 @@ export class MenuComponent implements OnInit {
     // Ajouter : uniquement /items/nouveau
     this.isAddItemRoute = url === '/items/nouveau';
 
-    // Outils : /lst-fournisseurs, /reponses et sous-routes
-    this.isOutilsRoute  = url.startsWith('/lst-fournisseurs') || url.startsWith('/reponses');
+    // Outils : /reponses et sous-routes
+    this.isOutilsRoute  = url.startsWith('/reponses');
   }
 }
