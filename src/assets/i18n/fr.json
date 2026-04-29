@@ -238,6 +238,9 @@
 
     "note_dtdm": "Note DTDM (Catalogage)",
     "note_commentaire": "Note / Commentaire bibliothèque",
+    "suivi_acq": "Suivi de la demande (ACQ)",
+    "note_acq": "Note ACQ",
+    "bibliotheque_note_interne": "Note interne (Bibliothèque)",
 
     "utilisateur_modification": "Modifié par",
     "date_creation": "Date de création",
@@ -383,5 +386,5 @@
     "mise-a-jour-prets": "Mise à jour « Prêts Numériques »",
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
-  },
+  }
 }

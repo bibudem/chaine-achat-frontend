@@ -374,7 +374,7 @@
           </div>
         </div>
 
-        <!-- Rangée 8 : Notes — 2 × col-md-6 = 12 -->
+        <!-- Rangée 8 : Notes bibliothèque — 2 × col-md-6 = 12 -->
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="mb-3">
@@ -386,6 +386,38 @@
             <div class="mb-3">
               <label class="form-label">Note/Commentaire (Bibliothèque)</label>
               <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rangée 9 : Champs ACQ — suivi + note ACQ + note interne bibliothèque -->
+        <div class="row mb-3 p-2 bg-light rounded">
+          <div class="col-12 mb-2">
+            <h6 class="text-muted small fw-semibold mb-0">
+              <i class="bi bi-building me-1"></i>Acquisitions
+            </h6>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Suivi de la demande</label>
+              <select class="form-select form-control" formControlName="suivi_acq">
+                <option value="">Sélectionnez</option>
+                <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Note ACQ</label>
+              <textarea class="form-control" formControlName="note_acq" rows="3"
+                        placeholder="Note / Commentaire Acquisitions"></textarea>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Note interne (Bibliothèque)</label>
+              <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="3"
+                        placeholder="Note interne bibliothèque"></textarea>
             </div>
           </div>
         </div>
