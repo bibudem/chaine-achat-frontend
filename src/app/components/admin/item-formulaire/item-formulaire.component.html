@@ -65,7 +65,7 @@
                       [class.is-invalid]="hasError('formulaire_type', 'required')"
                       [ngClass]="{'fw-bold': itemForm.get('formulaire_type')?.value}">
                 <option value="">Sélectionnez</option>
-                <option *ngFor="let type of options.formulaireTypeOptions" [value]="type">{{ type }}</option>
+                <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
               </select>
               <div class="invalid-feedback" *ngIf="hasError('formulaire_type', 'required')">
                 Le type de demande est obligatoire
@@ -110,61 +110,76 @@
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Éditeur</label>
+              <label class="form-label">Éditeur <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="editeur"
+                     [class.is-invalid]="hasError('editeur', 'required')"
                      placeholder="Nom de l'éditeur">
+              <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">L'éditeur est obligatoire</div>
             </div>
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">ISBN/ISSN</label>
+              <label class="form-label">ISBN/ISSN <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
-                     placeholder="Ex: 978-3-16-148410-0">
+                     appIsbnMask #isbnMask="appIsbnMask"
+                     [class.is-invalid]="hasError('isbn_issn', 'required') || isbnMask.wasStripped"
+                     placeholder="Ex: 9780306406157">
+              <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required') && !isbnMask.wasStripped">L'ISBN/ISSN est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="isbnMask.wasStripped">Format attendu : chiffres uniquement</div>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="mb-3">
-              <label class="form-label">ID de ressource</label>
-              <input type="text" class="form-control" formControlName="id_ressource">
-            </div>
-          </div>
-        </div>
-
-        <!-- Rangée 3 : Classification — col-md auto (égal), s'adapte au nombre de champs visibles -->
-        <div class="row">
           <!-- Date publication : absente pour Nouvel abonnement et Springer -->
-          <div class="col-md"
+          <div class="col-md-2"
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
               <label class="form-label">Date de publication</label>
               <input type="date" class="form-control" formControlName="date_publication">
             </div>
           </div>
+        </div>
+
+        <!-- Rangée 3 : Classification — col-md auto (égal), s'adapte au nombre de champs visibles -->
+        <div class="row">
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Catégorie de document</label>
-              <select class="form-select form-control" formControlName="categorie_document">
-                <option value="">Sélectionnez</option>
-                <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
+              <label class="form-label">Bibliothèque <span class="text-danger">*</span></label>
+              <select class="form-select form-control" formControlName="bibliotheque"
+                      [class.is-invalid]="hasError('bibliotheque', 'required')">
+                <option value="">Sélectionnez une bibliothèque</option>
+                <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
               </select>
+              <div class="invalid-feedback" *ngIf="hasError('bibliotheque', 'required')">La bibliothèque est obligatoire</div>
             </div>
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Format/Support</label>
-              <select class="form-select form-control" formControlName="format_support">
+              <label class="form-label">Catégorie de document <span class="text-danger">*</span></label>
+              <select class="form-select form-control" formControlName="categorie_document"
+                      [class.is-invalid]="hasError('categorie_document', 'required')">
+                <option value="">Sélectionnez</option>
+                <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="hasError('categorie_document', 'required')">La catégorie est obligatoire</div>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="mb-3">
+              <label class="form-label">Type de traitement <span class="text-danger">*</span></label>
+              <select class="form-select form-control" formControlName="format_support"
+                      [class.is-invalid]="hasError('format_support', 'required')">
                 <option value="">Sélectionnez</option>
                 <option value="Imprimé/support physique">Imprimé/support physique</option>
                 <option value="Électronique">Électronique</option>
                 <option value="Imprimé et électronique">Imprimé et électronique</option>
               </select>
+              <div class="invalid-feedback" *ngIf="hasError('format_support', 'required')">Le format/support est obligatoire</div>
             </div>
           </div>
           <!-- Priorité : absente pour Nouvel abonnement, Modification CCOL, Springer -->
           <div class="col-md"
-               *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
+               *ngIf="selectedFormulaireType && (isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()) ">
             <div class="mb-3">
-              <label class="form-label">Priorité</label>
+              <label class="form-label">Priorité de la demande</label>
               <select class="form-select form-control" formControlName="priorite_demande">
                 <option *ngFor="let priorite of options.prioriteOptions" [value]="priorite.value">{{ priorite.label }}</option>
               </select>
@@ -172,38 +187,49 @@
           </div>
         </div>
 
-        <!-- Rangée : Ressource électronique (visible si Électronique ou Imprimé et électronique) -->
-        <!-- col-md auto pour chaque champ, s'adapte au nombre de champs visibles -->
-        <div class="row mb-3 bg-light"
-             *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
-          <div class="col-12">
-            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-              <i class="bi bi-globe me-1"></i>Ressource électronique
+        <!-- Section : Support et accès (visible si type de demande + format sélectionnés) -->
+        <div class="row mb-3 bg-light rounded p-2" *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value">
+          <div class="col-12 mb-2">
+            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-0">
+              <i class="bi bi-layers me-1"></i>Support et accès
             </h6>
           </div>
-          <div class="col-md-2">
+
+          <!-- Imprimé : Localisation / Emplacement -->
+          <div class="col-md"
+               *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value == 'Imprimé/support physique'">
             <div class="mb-3">
-              <label class="form-label">Nombre de titres inclus</label>
-              <input type="number" class="form-control" formControlName="nombre_titres_inclus"
-                    min="1" step="1" placeholder="Ex: 25">
-              <small class="text-muted">Nombre de titres ou volumes inclus dans cet achat</small>
+              <label class="form-label">Localisation / Emplacement</label>
+              <input type="text" class="form-control" formControlName="localisation_emplacement">
             </div>
           </div>
-          <!-- Format PrêtNumérique : spécifique Nouvel achat unique et Accessibilité -->
-          <div class="col-md"
-               *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isRequeteAccessibilite()">
+
+          <!-- Imprimé / Mixte : Création de notice TDM -->
+          <div class="col-md-2"
+               *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value !== 'Électronique'">
             <div class="mb-3">
-              <label class="form-label">Format PrêtNumérique</label>
-              <select class="form-select form-control" formControlName="format_pret_numerique">
-                <option value="">Sélectionnez</option>
-                <option value="PDF">PDF</option>
-                <option value="EPUB">EPUB</option>
-                <option value="Ne s'applique pas">Ne s'applique pas</option>
+              <label class="form-label">Création de notice TDM</label>
+              <select class="form-select form-control" formControlName="creation_notice_dtdm">
+                <option [ngValue]="true">Oui</option>
+                <option [ngValue]="false">Non</option>
               </select>
             </div>
           </div>
-          <!-- Nombre utilisateurs : absent pour PEB Tipasa -->
-          <div class="col-md" *ngIf="!isPEBTipasaNumerique()">
+
+          <!-- Électronique / Mixte : Nombre de titres inclus -->
+          <div class="col-md"
+               *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
+            <div class="mb-3">
+              <label class="form-label">Nombre de titres inclus</label>
+              <input type="number" class="form-control" formControlName="nombre_titres_inclus"
+                     min="1" step="1" placeholder="Ex: 25">
+              <small class="text-muted">Titres ou volumes inclus dans cet achat</small>
+            </div>
+          </div>
+
+          <!-- Électronique : Nombre d'utilisateurs (absent pour PEB Tipasa) -->
+          <div class="col-md"
+               *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
             <div class="mb-3">
               <label class="form-label">Nombre d'utilisateurs</label>
               <select class="form-select form-control" formControlName="nombre_utilisateurs">
@@ -215,79 +241,98 @@
               </select>
             </div>
           </div>
-          <!-- Lien plateforme : absent pour PEB, Accessibilité, Suggestion d'achat -->
+
+          <!-- Électronique : Format PrêtNumérique (Nouvel achat unique + Accessibilité) -->
           <div class="col-md"
-               *ngIf="!isPEBTipasaNumerique() && !isRequeteAccessibilite() && !isSuggestionAchat()">
+               *ngIf="itemForm.get('format_support')?.value === 'Électronique' && (isNouvelAchatUnique() || isRequeteAccessibilite())">
+            <div class="mb-3">
+              <label class="form-label">Format PrêtNumérique</label>
+              <select class="form-select form-control" formControlName="format_pret_numerique">
+                <option value="">Sélectionnez</option>
+                <option value="PDF">PDF</option>
+                <option value="EPUB">EPUB</option>
+                <option value="Ne s'applique pas">Ne s'applique pas</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Électronique : Lien plateforme (absent pour PEB, Accessibilité, Suggestion d'achat) -->
+          <div class="col-md"
+               *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique' && (isNouvelAchatUnique() || isModificationCCOL() || isNouvelAbonnement())">
             <div class="mb-3">
               <label class="form-label">Lien vers la plateforme</label>
               <input type="url" class="form-control" formControlName="lien_plateforme"
-                    placeholder="https://...">
+                     placeholder="https://...">
             </div>
           </div>
-        </div>
 
-        <!-- Rangée 4 : Bibliothèque et localisation — col-md auto, s'adapte si localisation absente -->
-        <div class="row mb-3">
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">Bibliothèque</label>
-              <select class="form-select form-control" formControlName="bibliotheque">
-                <option value="">Sélectionnez une bibliothèque</option>
-                <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md"
-               *ngIf="!itemForm.get('format_support')?.value || itemForm.get('format_support')?.value !== 'Électronique'">
-            <div class="mb-3">
-              <label class="form-label">Localisation/Emplacement</label>
-              <input type="text" class="form-control" formControlName="localisation_emplacement">
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">Projets spéciaux</label>
-              <!-- Texte libre pour Nouvel achat unique, dropdown pour les autres -->
-              <input *ngIf="isNouvelAchatUnique()" type="text" class="form-control"
-                     formControlName="projet_special" placeholder="Saisie libre — max 50 car.">
-              <select *ngIf="!isNouvelAchatUnique()" class="form-select form-control" formControlName="projet_special">
-                <option value="">Sélectionnez</option>
-                <option *ngFor="let projet of options.projetsSpeciauxOptions" [value]="projet">{{ projet }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">Création notice DTDM</label>
-              <select class="form-select form-control" formControlName="creation_notice_dtdm">
-                <option [ngValue]="true">Oui</option>
-                <option [ngValue]="false">Non</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Rangée 5b : Fonds et statuts — 4 × col-md-3 = 12 -->
-        <div class="row">
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="form-label">Fonds budgétaire <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="fonds_budgetaire"
-                     [class.is-invalid]="hasError('fonds_budgetaire', 'required')">
-              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
-                Le fonds budgétaire est obligatoire
+          <!-- Électronique : Personne à aviser lors de l'activation (Nom + Courriel regroupés) -->
+          <div class="col-12 mt-1"
+               *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
+            <div class="border-top pt-2">
+              <small class="text-muted fw-semibold d-block mb-2">
+                <i class="bi bi-bell me-1"></i>Personne à aviser lors de l'activation
+              </small>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-2">
+                    <label class="form-label">Nom</label>
+                    <input type="text" class="form-control" formControlName="personne_a_aviser_nom"
+                           placeholder="Prénom Nom">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-2">
+                    <label class="form-label">Courriel</label>
+                    <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
+                           appEmailMask
+                           [class.is-invalid]="hasError('personne_a_aviser_courriel', 'email')"
+                           placeholder="courriel@exemple.com">
+                    <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
+                      Courriel invalide.
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+        </div>
+
+        <!-- Fonds budgétaire et statuts -->
+        <div class="row">
+          <div class="col-md">
+            <div class="mb-3">
+              <label class="form-label">Fonds budgétaire <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="fonds_budgetaire"
+                     appFondsBudgetaireMask
+                     [class.is-invalid]="hasError('fonds_budgetaire', 'required') || hasError('fonds_budgetaire', 'pattern')"
+                     placeholder="Ex : PE-001">
+              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
+                Le fonds budgétaire est obligatoire
+              </div>
+              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'pattern')">
+                Format attendu : AA-### (ex : PE-001, MO-260)
+              </div>
+            </div>
+          </div>
+          <div class="col-md" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() ">
             <div class="mb-3">
               <label class="form-label">Fonds SN - No de projet</label>
               <input type="text" class="form-control" formControlName="fonds_sn_projet">
             </div>
           </div>
-          <div class="col-md-3">
+          <!-- Période couverte : spécifique Nouvel achat unique et Modification CCOL -->
+          <div class="col-md-2"
+               *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
             <div class="mb-3">
-              <label class="form-label">Statut bibliothèque</label>
+              <label class="form-label">Période couverte</label>
+              <input type="text" class="form-control" formControlName="periode_couverte"
+                    placeholder="Ex: 1996-2000">
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="mb-3">
+              <label class="form-label">Bibliothèque : Statut de la demande</label>
               <select class="form-select form-control" formControlName="statut_bibliotheque">
                 <option *ngFor="let statut of options.statusOptions" [value]="statut">
                   {{ statut }}
@@ -295,9 +340,9 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Statut ACQ</label>
+              <label class="form-label">ACQ : Statut de la demande </label>
               <select class="form-select form-control" formControlName="statut_acq">
                 <option value="">Sélectionnez</option>
                 <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">
@@ -308,44 +353,39 @@
           </div>
         </div>
 
-        <!-- Rangée 6 : Personnes à aviser, catalogue, source — 3 × col-md-4 = 12 -->
+        <!-- Catalogage et source d'information -->
         <div class="row mb-3">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="mb-3">
-              <label class="form-label">Personne à aviser lors de l'activation</label>
-              <input type="text" class="form-control" formControlName="personne_a_aviser_activation">
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label class="form-label">Catalogue</label>
+              <label class="form-label">Catalogage</label>
               <input type="text" class="form-control" formControlName="catalogue">
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="mb-3">
-              <label class="form-label">Source d'information</label>
-              <input type="text" class="form-control" formControlName="source_information">
+              <label class="form-label">Source d'information <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="source_information"
+                     [class.is-invalid]="hasError('source_information', 'required')">
+              <div class="invalid-feedback" *ngIf="hasError('source_information', 'required')">La source d'information est obligatoire</div>
             </div>
           </div>
-        </div>
-
-        <!-- Rangée 7 : Prix et commande — col-md auto, s'adapte si Période couverte absente -->
-        <div class="row mb-3">
-          <div class="col-md">
+          <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Prix total (CAD)</label>
+              <label class="form-label">Prix total (CAD) <span class="text-danger">*</span></label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
+                      [class.is-invalid]="hasError('prix_cad', 'required')"
                       min="0" step="0.01" placeholder="0.00">
+                <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">Le prix est obligatoire</div>
               </div>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Devise originale</label>
-              <select class="form-select form-control" formControlName="devise_originale">
+              <label class="form-label">Devise originale <span class="text-danger">*</span></label>
+              <select class="form-select form-control" formControlName="devise_originale"
+                      [class.is-invalid]="hasError('devise_originale', 'required')">
                 <option value="">--</option>
                 <option value="CAD">CAD</option>
                 <option value="USD">USD</option>
@@ -354,43 +394,36 @@
                 <option value="CHF">CHF</option>
                 <option value="Autre">Autre</option>
               </select>
+              <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">La devise est obligatoire</div>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Prix (devise originale)</label>
+              <label class="form-label">Prix (devise originale) <span class="text-danger">*</span></label>
               <input type="number" class="form-control" formControlName="prix_devise_originale"
+                    [class.is-invalid]="hasError('prix_devise_originale', 'required')"
                     min="0" step="0.01" placeholder="0.00">
-            </div>
-          </div>
-          <!-- Période couverte : spécifique Nouvel achat unique et Modification CCOL -->
-          <div class="col-md"
-               *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
-            <div class="mb-3">
-              <label class="form-label">Période couverte</label>
-              <input type="text" class="form-control" formControlName="periode_couverte"
-                    placeholder="Ex: 1996-2000">
+              <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">Le prix est obligatoire</div>
             </div>
           </div>
         </div>
-
-        <!-- Rangée 8 : Notes bibliothèque — 2 × col-md-6 = 12 -->
+        <!-- Notes bibliothèque et TDM -->
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Note DTDM (Catalogage)</label>
+              <label class="form-label">TDM: Note / OCN</label>
               <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Note/Commentaire (Bibliothèque)</label>
+              <label class="form-label">Bibliothèque : Note / Commentaire / Question</label>
               <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
             </div>
           </div>
         </div>
 
-        <!-- Rangée 9 : Champs ACQ — suivi + note ACQ + note interne bibliothèque -->
+        <!-- Champs ACQ — suivi, note ACQ et note interne bibliothèque -->
         <div class="row mb-3 p-2 bg-light rounded">
           <div class="col-12 mb-2">
             <h6 class="text-muted small fw-semibold mb-0">
@@ -399,7 +432,7 @@
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Suivi de la demande</label>
+              <label class="form-label">ACQ : Suivi de la demande</label>
               <select class="form-select form-control" formControlName="suivi_acq">
                 <option value="">Sélectionnez</option>
                 <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
@@ -408,14 +441,14 @@
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Note ACQ</label>
+              <label class="form-label">Acquisitions: Note / Commentaire</label>
               <textarea class="form-control" formControlName="note_acq" rows="3"
                         placeholder="Note / Commentaire Acquisitions"></textarea>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Note interne (Bibliothèque)</label>
+              <label class="form-label">Bibliothèque - Note interne</label>
               <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="3"
                         placeholder="Note interne bibliothèque"></textarea>
             </div>
@@ -490,8 +523,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Usager à aviser lors de l'activation</label>
-                <input type="text" class="form-control" formControlName="usager_aviser_activation"
-                       placeholder="Courriel de l'usager">
+                <input type="email" class="form-control" formControlName="usager_aviser_activation"
+                       appEmailMask
+                       [class.is-invalid]="hasError('usager_aviser_activation', 'email')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">
+                  Courriel invalide.
+                </div>
               </div>
             </div>
           </div>
@@ -534,8 +572,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Usager à aviser — Réservation</label>
-                <input type="text" class="form-control" formControlName="usager_aviser_reservation"
-                       placeholder="Courriel de l'usager">
+                <input type="email" class="form-control" formControlName="usager_aviser_reservation"
+                       appEmailMask
+                       [class.is-invalid]="hasError('usager_aviser_reservation', 'email')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">
+                  Courriel invalide.
+                </div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -551,15 +594,25 @@
               </h5>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
+          <!-- 4 × col-md-3 = 12 -->
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Projets spéciaux</label>
-                <input type="text" class="form-control" formControlName="projets_speciaux">
+                <label class="form-label">Projet spécial</label>
+                <select class="form-select form-control" formControlName="projets_speciaux">
+                  <option value="">Sélectionnez</option>
+                  <option *ngFor="let projet of options.projetsSpeciauxOptions" [value]="projet">{{ projet }}</option>
+                </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">ID de ressource</label>
+                <input type="text" class="form-control" formControlName="id_ressource"
+                       placeholder="Ex: BIB-2024-001">
+              </div>
+            </div>
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> Quantité</label>
                 <input type="number" class="form-control" formControlName="quantite"
@@ -569,7 +622,7 @@
                 <div class="invalid-feedback" *ngIf="hasError('quantite', 'min')">La quantité doit être ≥ 1</div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Bordereau imprimé</label>
                 <select class="form-select form-control" formControlName="bordereau_imprime">
@@ -587,19 +640,6 @@
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">Sélectionnez</option>
                   <option *ngFor="let t of options.typeMonographieOptions" [value]="t">{{ t }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row" *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Format électronique</label>
-                <select class="form-select form-control" formControlName="format_electronique">
-                  <option value="">Sélectionnez</option>
-                  <option value="PDF">PDF</option>
-                  <option value="EPUB">EPUB</option>
-                  <option value="Autre">Autre</option>
                 </select>
               </div>
             </div>
@@ -649,8 +689,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Usager à aviser — Réservation</label>
-                <input type="text" class="form-control" formControlName="usager_aviser_reservation"
-                       placeholder="Courriel de l'usager">
+                <input type="email" class="form-control" formControlName="usager_aviser_reservation"
+                       appEmailMask
+                       [class.is-invalid]="hasError('usager_aviser_reservation', 'email')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">
+                  Courriel invalide.
+                </div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -663,8 +708,13 @@
                   <span class="text-muted fw-normal small"
                         *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique'"> (Imprimé)</span>
                 </label>
-                <input type="text" class="form-control" formControlName="usager_aviser_activation"
-                       placeholder="Courriel de l'usager">
+                <input type="email" class="form-control" formControlName="usager_aviser_activation"
+                       appEmailMask
+                       [class.is-invalid]="hasError('usager_aviser_activation', 'email')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">
+                  Courriel invalide.
+                </div>
               </div>
             </div>
           </div>
@@ -679,9 +729,9 @@
               </h5>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
+          <!-- 4 × col-md-3 = 12 -->
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Type de demande PEB</label>
                 <select class="form-select form-control" formControlName="type_demande_peb">
@@ -692,13 +742,13 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Référence Tipasa</label>
                 <input type="text" class="form-control" formControlName="reference_tipasa" placeholder="Numéro de référence">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Urgence</label>
                 <select class="form-select form-control" formControlName="urgence">
@@ -707,6 +757,7 @@
                 </select>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -715,13 +766,13 @@
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-universal-access me-2"></i>Requête Accessibilité
+                <i class="bi bi-universal-access me-2"></i>Requête ACQ Accessibilité
               </h5>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
+          <!-- 4 × col-md-3 = 12 -->
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> Type de requête</label>
                 <select class="form-select form-control" formControlName="type_requete"
@@ -735,13 +786,13 @@
                 <div class="invalid-feedback">Le type de requête est obligatoire</div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Référence usager</label>
                 <input type="text" class="form-control" formControlName="reference_usager">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Besoin spécifique (format)</label>
                 <select class="form-select form-control" formControlName="besoin_specifique_format">
@@ -893,7 +944,6 @@
               <h5 class="mb-3 pb-2 border-bottom">
                 <i class="bi bi-book me-2"></i>Springer
               </h5>
-              <p class="text-muted small">Aucun champ spécifique requis pour ce type de formulaire.</p>
             </div>
           </div>
         </div>
@@ -907,16 +957,16 @@
               </h5>
             </div>
           </div>
-          <!-- Auteur col-md-8 + Date cours col-md-4 = 12 -->
+          <!-- Auteur col-md-6 + Date cours col-md-3 + Projet spécial col-md-3 = 12 -->
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Auteur(rice)</label>
                 <textarea class="form-control" formControlName="auteur" rows="2"
                           placeholder="Saisie libre — max 500 car."></textarea>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Document requis pour un cours</label>
                 <input type="date" class="form-control" formControlName="date_requise_cours">

@@ -74,37 +74,37 @@ export class ItemFormulaireComponent implements OnInit {
       formulaire_type: [null, Validators.required],
       date_creation: [''],
       priorite_demande: ['Régulier'],
-      projet_special: ['Ne s\'applique pas'],
       titre_document: ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre: ['', Validators.maxLength(500)],
-      isbn_issn: ['', Validators.maxLength(50)],
-      editeur: ['', Validators.maxLength(300)],
+      isbn_issn: ['', [Validators.required, Validators.maxLength(50)]],
+      editeur: ['', [Validators.required, Validators.maxLength(300)]],
       date_publication: ['', Validators.maxLength(50)],
-      creation_notice_dtdm: [false],
+      creation_notice_dtdm: [true],
       note_dtdm: [''],
-      prix_cad: [null],
-      devise_originale: [''],
-      prix_devise_originale: [null],
+      prix_cad: [null, Validators.required],
+      devise_originale: ['', Validators.required],
+      prix_devise_originale: [null, Validators.required],
       periode_couverte: [''],
       nombre_titres_inclus: [null],
       nombre_utilisateurs: [''],
       lien_plateforme: [''],
       format_pret_numerique: [''],
-      categorie_document: [''],
-      format_support: [''],
-      fonds_budgetaire: ['', [Validators.required, Validators.maxLength(200)]],
+      categorie_document: ['', Validators.required],
+      format_support: ['', Validators.required],
+      fonds_budgetaire: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}-\d{3}$/)]],
       fonds_sn_projet: ['', Validators.maxLength(50)],
-      bibliotheque: [''],
+      bibliotheque: ['', Validators.required],
       localisation_emplacement: ['', Validators.maxLength(200)],
       demandeur: ['', [Validators.required, Validators.maxLength(200)]],
-      personne_a_aviser_activation: ['', Validators.maxLength(200)],
-      source_information: ['', Validators.maxLength(500)],
+      personne_a_aviser_nom: ['', Validators.maxLength(200)],
+      personne_a_aviser_courriel: ['', [Validators.maxLength(200), Validators.email]],
+      source_information: ['', [Validators.required, Validators.maxLength(500)]],
       note_commentaire: [''],
       id_ressource: ['', Validators.maxLength(50)],
       catalogue: ['', Validators.maxLength(200)],
-      statut_bibliotheque: ['En attente en bibliothèque'],
-      statut_acq: [''],
-      suivi_acq: [''],
+      statut_bibliotheque: ['Saisie en cours - En attente'],
+      statut_acq: ['En attente'],
+      suivi_acq: ['En attente de traitement'],
       note_acq: [''],
       bibliotheque_note_interne: [''],
       date_modification: [{ value: '', disabled: true }],
@@ -113,7 +113,7 @@ export class ItemFormulaireComponent implements OnInit {
       numero_oclc: [''],
       date_debut_abonnement: [''],
       type_monographie: [''],
-      projets_speciaux: [''],
+      projets_speciaux: ['Ne s\'applique pas'],
       format_electronique: [''],
       reserve_cours: [false],
       reserve_cours_sigle: [''],
@@ -121,8 +121,8 @@ export class ItemFormulaireComponent implements OnInit {
       reserve_cours_enseignant: [''],
       bordereau_imprime: ['Non'],
       quantite: [null],
-      usager_aviser_reservation:  ['', Validators.maxLength(255)],
-      usager_aviser_activation:   ['', Validators.maxLength(255)],
+      usager_aviser_reservation:  ['', [Validators.maxLength(255), Validators.email]],
+      usager_aviser_activation:   ['', [Validators.maxLength(255), Validators.email]],
       auteur: ['', Validators.maxLength(500)],
       type_demande_peb: [''],
       reference_tipasa: [''],
@@ -172,10 +172,10 @@ export class ItemFormulaireComponent implements OnInit {
       case 'PEB Tipasa numérique':
         this.itemForm.get('type_demande_peb')?.setValidators([Validators.required]);
         break;
-      case 'Requête Accessibilité':
+      case 'Requête ACQ Accessibilité':
         this.itemForm.get('type_requete')?.setValidators([Validators.required]);
         break;
-      case 'Suggestion d\'achat':
+      case "Suggestion d'achat - Usager":
         this.itemForm.get('usager_statut')?.setValidators([Validators.required]);
         this.itemForm.get('usager_faculte')?.setValidators([Validators.required]);
         this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.email]);
@@ -214,15 +214,20 @@ export class ItemFormulaireComponent implements OnInit {
       'usager_statut', 'usager_faculte', 'usager_courriel',
       'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
       'date_requise_cours', 'auteur',
+      // Partagés entre plusieurs types (maintenant spécifiques)
+       'format_pret_numerique',
       // Nouvel achat unique
-      'quantite', 'usager_aviser_reservation', 'usager_aviser_activation'
+      'id_ressource', 'quantite', 'usager_aviser_reservation', 'usager_aviser_activation'
     ];
 
     specificFields.forEach(field => {
       const control = this.itemForm.get(field);
       if (control) {
         control.clearValidators();
-        control.reset(null, { emitEvent: false });
+        const defaultValue = field === 'projets_speciaux' ? 'Ne s\'applique pas'
+                           : field === 'bordereau_imprime'  ? 'Non'
+                           : null;
+        control.reset(defaultValue, { emitEvent: false });
         control.updateValueAndValidity({ emitEvent: false });
       }
     });
@@ -232,9 +237,9 @@ export class ItemFormulaireComponent implements OnInit {
   isNouvelAbonnement(): boolean { return this.selectedFormulaireType === 'Nouvel abonnement'; }
   isNouvelAchatUnique(): boolean { return this.selectedFormulaireType === 'Nouvel achat unique'; }
   isPEBTipasaNumerique(): boolean { return this.selectedFormulaireType === 'PEB Tipasa numérique'; }
-  isRequeteAccessibilite(): boolean { return this.selectedFormulaireType === 'Requête Accessibilité'; }
+  isRequeteAccessibilite(): boolean { return this.selectedFormulaireType === 'Requête ACQ Accessibilité'; }
   isSpringer(): boolean { return this.selectedFormulaireType === 'Springer'; }
-  isSuggestionAchat(): boolean { return this.selectedFormulaireType === "Suggestion d'achat"; }
+  isSuggestionAchat(): boolean { return this.selectedFormulaireType === "Suggestion d'achat - Usager"; }
 
   hasSpecificFields(): boolean {
     return !!this.selectedFormulaireType && !this.isSpringer();
@@ -249,7 +254,9 @@ export class ItemFormulaireComponent implements OnInit {
         if (response.success && response.data) {
           // Normalise les noms de type hérités (formulaires usager vs admin)
           const typeAliases: Record<string, string> = {
-            'Requête ACQ': 'Requête Accessibilité',
+            'Requête ACQ':           'Requête ACQ Accessibilité',
+            'Requête Accessibilité': 'Requête ACQ Accessibilité',
+            "Suggestion d'achat":    "Suggestion d'achat - Usager",
           };
           const rawType = response.data.formulaire_type || null;
           const normalizedType = (rawType && typeAliases[rawType]) ? typeAliases[rawType] : rawType;
@@ -295,10 +302,10 @@ export class ItemFormulaireComponent implements OnInit {
       case 'PEB Tipasa numérique':
         this.itemForm.get('type_demande_peb')?.setValidators([Validators.required]);
         break;
-      case 'Requête Accessibilité':
+      case 'Requête ACQ Accessibilité':
         this.itemForm.get('type_requete')?.setValidators([Validators.required]);
         break;
-      case "Suggestion d'achat":
+      case "Suggestion d'achat - Usager":
         this.itemForm.get('usager_statut')?.setValidators([Validators.required]);
         this.itemForm.get('usager_faculte')?.setValidators([Validators.required]);
         this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.email]);
@@ -392,8 +399,8 @@ export class ItemFormulaireComponent implements OnInit {
       bibliotheque: formData.bibliotheque,
       localisation_emplacement: formData.localisation_emplacement,
       demandeur: formData.demandeur,
-      personne_a_aviser_activation: formData.personne_a_aviser_activation,
-      projet_special: formData.projet_special,
+      personne_a_aviser_nom: formData.personne_a_aviser_nom,
+      personne_a_aviser_courriel: formData.personne_a_aviser_courriel,
       statut_bibliotheque: formData.statut_bibliotheque,
       statut_acq: formData.statut_acq,
       suivi_acq: formData.suivi_acq,
@@ -401,7 +408,6 @@ export class ItemFormulaireComponent implements OnInit {
       bibliotheque_note_interne: formData.bibliotheque_note_interne,
       source_information: formData.source_information,
       note_commentaire: formData.note_commentaire,
-      id_ressource: formData.id_ressource,
       catalogue: formData.catalogue,
       prix_cad: formData.prix_cad,
       devise_originale: formData.devise_originale,
@@ -423,16 +429,17 @@ export class ItemFormulaireComponent implements OnInit {
           precision_demande:        formData.precision_demande,
           numero_oclc:              formData.numero_oclc,
           date_debut_abonnement:    formData.date_debut_abonnement,
-          usager_aviser_activation: formData.usager_aviser_activation
+          usager_aviser_activation: formData.usager_aviser_activation,
         };
       case 'Nouvel abonnement':
         return {
           date_debut_abonnement:      formData.date_debut_abonnement,
           type_monographie:           formData.type_monographie,
-          usager_aviser_reservation:  formData.usager_aviser_reservation
+          usager_aviser_reservation:  formData.usager_aviser_reservation,
         };
       case 'Nouvel achat unique':
         return {
+          id_ressource:               formData.id_ressource,
           projets_speciaux:           formData.projets_speciaux,
           type_monographie:           formData.type_monographie,
           format_electronique:        formData.format_electronique,
@@ -449,9 +456,9 @@ export class ItemFormulaireComponent implements OnInit {
         return {
           type_demande_peb:   formData.type_demande_peb,
           reference_tipasa:   formData.reference_tipasa,
-          urgence:            formData.urgence
+          urgence:            formData.urgence,
         };
-      case 'Requête Accessibilité':
+      case 'Requête ACQ Accessibilité':
         return {
           type_requete:                     formData.type_requete,
           reference_usager:                 formData.reference_usager,
@@ -470,9 +477,10 @@ export class ItemFormulaireComponent implements OnInit {
           type_monographie:                 formData.type_monographie,
         };
       case 'Springer':
-        return {};
- 
-      case "Suggestion d'achat":
+        return {
+        };
+
+      case "Suggestion d'achat - Usager":
         return {
           auteur:                       formData.auteur,
           usager_statut:                formData.usager_statut,

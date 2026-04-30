@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface SuggestionPayload {
-  type_formulaire: "Suggestion d'achat";
+  type_formulaire: "Suggestion d'achat - Usager";
   usager_nom:      string;
   usager_courriel: string;
   usager_statut:   string;
@@ -63,7 +63,7 @@ export class ReponsesService {
   // ──────────────────────────────────────────────────────────
   envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
     const body: SuggestionPayload = {
-      type_formulaire: "Suggestion d'achat",
+      type_formulaire: "Suggestion d'achat - Usager",
       usager_nom:      this.getNomSession(),
       usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
       usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
@@ -109,7 +109,7 @@ export class ReponsesService {
     specificData: Record<string, any>;
   }): Observable<any> {
     const body = {
-      type_formulaire: 'Requête Accessibilité',
+      type_formulaire: 'Requête ACQ Accessibilité',
       usager_nom:      this.getNomSession(),
       usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
       usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',

@@ -50,7 +50,7 @@ export class ReponsesListComponent implements OnInit {
 
   formTypes = [
     { value: '', label: 'Tous les types' },
-    { value: "Suggestion d'achat", label: "Suggestion d'achat" },
+    { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
     { value: 'Nouvel achat unique', label: 'Nouvel achat unique' }
   ];
 

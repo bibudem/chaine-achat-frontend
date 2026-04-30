@@ -1,21 +1,14 @@
 // liste-choix-options.ts
 export class ListeChoixOptions {
-  // Options pour le type de formulaire
-  typeOptions = [
-    { value: 'nouvel_achat_unique', label: 'Nouvel achat unique' },
-    { value: 'modification_ccol', label: 'Modification CCOL' },
-    { value: 'nouvel_abonnement', label: 'Nouvel abonnement' },
-    { value: 'springer', label: 'Springer' },
-    { value: 'peb_tipasa', label: 'PEB Tipasa' },
-    { value: 'suggestion_usagers', label: 'Suggestion usagers' },
-    { value: 'requete_accessibilite', label: 'Requête accessibilité' }
-  ];
 
   // Options pour le statut (bibliothèque)
 statusOptions = [
-  'Saisie en cours en bibliothèque',
-  'En attente en bibliothèque',
-  'Soumis aux ACQ'
+  'Saisie en cours - En attente',
+  'Saisie en cours – À valider ou compléter',
+  'Saisie en cours – Annuler',
+  'Saisie en cours - Publication à paraître',
+  'À autoriser en bibliothèque',
+  'Soumettre aux ACQ'
 ];
 
 
@@ -56,7 +49,6 @@ statusOptions = [
     'Service du catalogage',
     'Service Accessibilité',
     'TGD',
-    'TEST-DRIN'
   ];
 
   // Options pour la précision de demande
@@ -108,28 +100,23 @@ statusOptions = [
   // Options pour le statut DIRCOL ACQ
   dircolAcqStatutOptions = [
     'En attente',
-    'Complété',
-    'Demande annulée',
-    'Budget atteint',
     'En traitement',
+    'Complétée',
+    'Demande Annulée',
+    'Budget atteint',
     'En cours'
   ];
 
   // Options pour le suivi DIRCOL ACQ
   dircolAcqSuiviOptions = [
-    'En traitement',
+    'En attente de traitement',
     'Commande créée',
+    'Abonnement modifié / annulé',
     'Ressource électronique activée',
     'Demande annulée (non traitée)',
-    'Abonnement modifié / annulé',
-    'Budget atteint',
+    'Demande reportée (budget atteint)',
     'Envoi en bibliothèque sans catalogage',
     'MONOS : saisie en cours',
-    'Version numérique gratuite : courriel envoyé à l\'éditeur',
-    'Version numérique gratuite : PDF ou URL privé transmis à Accessibilité',
-    'Achat : Commande créée',
-    'Achat : Ressource électronique activée (Sofia)',
-    'Achat : Document papier transmis à Accessibilité (sans catalogage)'
   ];
 
   // Options pour le statut accessibilité
@@ -144,16 +131,16 @@ statusOptions = [
     'Oui'
   ];
 
-  // Options pour le type de formulaire Mentor (provenant du fichier Excel)
-formulaireTypeOptions = [
-  'Nouvel achat unique',
-  'Modification et CCOL',
-  'Nouvel abonnement',
-  'Springer',
-  'PEB Tipasa numérique',
-  "Suggestion d'achat",
-  'Requête Accessibilité'
-];
+  // Options pour le type de formulaire (value = valeur DB, label = affichage UI)
+  formulaireTypeOptions = [
+    { value: 'Nouvel achat unique',         label: 'Nouvel achat unique' },
+    { value: 'Modification et CCOL',        label: 'Modification et CCOL' },
+    { value: 'Nouvel abonnement',           label: 'Nouvel abonnement' },
+    { value: 'Springer',                    label: 'Springer' },
+    { value: 'PEB Tipasa numérique',        label: 'PEB Tipasa numérique' },
+    { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
+    { value: 'Requête ACQ Accessibilité',   label: 'Requête Accessibilité' },
+  ];
 
   listProgramme = [
     { id: 1, name: "EBA - Achat sectoriel (Add On)" },

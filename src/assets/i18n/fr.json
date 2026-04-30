@@ -201,6 +201,8 @@
 
     "demandeur": "Demandeur",
     "personne_a_aviser_activation": "Personne à aviser",
+    "personne_a_aviser_nom": "Personne à aviser — Nom",
+    "personne_a_aviser_courriel": "Personne à aviser — Courriel",
     "statut_bibliotheque": "Statut bibliothèque",
     "statut_acq": "Statut ACQ",
     "priorite_demande": "Priorité",

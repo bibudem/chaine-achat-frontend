@@ -80,10 +80,13 @@
           </div>
         </div>
 
-        <div class="itd-sidebar__block" *ngIf="item.personne_a_aviser_activation">
-          <div class="itd-sidebar__label">Personne à aviser</div>
-          <div class="itd-sidebar__value">
-            <i class="bi bi-bell me-1 text-muted"></i>{{ item.personne_a_aviser_activation }}
+        <div class="itd-sidebar__block" *ngIf="item.personne_a_aviser_nom || item.personne_a_aviser_courriel">
+          <div class="itd-sidebar__label">Personne à aviser lors de l'activation</div>
+          <div class="itd-sidebar__value" *ngIf="item.personne_a_aviser_nom">
+            <i class="bi bi-person me-1 text-muted"></i>{{ item.personne_a_aviser_nom }}
+          </div>
+          <div class="itd-sidebar__value" *ngIf="item.personne_a_aviser_courriel">
+            <i class="bi bi-envelope me-1 text-muted"></i>{{ item.personne_a_aviser_courriel }}
           </div>
         </div>
 
@@ -453,7 +456,7 @@
               </ng-container>
 
               <!-- Requête ACQ -->
-              <ng-container *ngIf="item.formulaire_type === 'Requête ACQ'">
+              <ng-container *ngIf="item.formulaire_type === 'Requête ACQ Accessibilité'">
                 <div class="col-md-4">
                   <div class="itd-field">
                     <span class="itd-field__label">Type de requête</span>

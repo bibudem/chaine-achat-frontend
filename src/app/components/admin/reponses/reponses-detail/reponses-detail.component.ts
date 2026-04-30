@@ -92,7 +92,7 @@ export class ReponsesDetailComponent implements OnInit {
    */
   getTypeClass(type: string): string {
     switch (type) {
-      case "Suggestion d'achat":
+      case "Suggestion d'achat - Usager":
         return 'text-info bg-light-info';
       case 'Nouvel achat unique':
         return 'text-primary bg-light-primary';

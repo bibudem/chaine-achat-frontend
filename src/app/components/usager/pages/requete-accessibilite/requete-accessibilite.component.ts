@@ -171,7 +171,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
     const payload = {
       baseData: {
-        formulaire_type:              'Requête Accessibilité',
+        formulaire_type:              'Requête ACQ Accessibilité',
         demandeur:                    v.nom,
         personne_a_aviser_activation: this.showElectronique ? v.personne_a_aviser_activation : null,
         bibliotheque:                 v.bibliotheque,

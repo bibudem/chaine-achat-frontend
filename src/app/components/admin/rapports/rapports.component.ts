@@ -65,7 +65,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Options statiques
   typesFormulaires: string[] = [
     'Modification et CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-    'PEB Tipasa numérique', 'Requête ACQ', 'Requête Accessibilité', 'Springer', "Suggestion d'achat"
+    'PEB Tipasa numérique', 'Requête ACQ Accessibilité', 'Springer', "Suggestion d'achat - Usager"
   ];
   priorites: string[] = ['Urgent', 'Régulier', 'Basse'];
   bibliotheques: string[] = [

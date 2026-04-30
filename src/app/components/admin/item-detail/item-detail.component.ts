@@ -69,9 +69,9 @@ export class ItemDetailComponent implements OnInit {
       case 'Nouvel abonnement':    return `${base} badge-type--abo`;
       case 'Nouvel achat unique':  return `${base} badge-type--achat`;
       case 'PEB Tipasa numérique': return `${base} badge-type--peb`;
-      case 'Requête ACQ':          return `${base} badge-type--acq`;
+      case 'Requête ACQ Accessibilité': return `${base} badge-type--acq`;
       case 'Springer':             return `${base} badge-type--springer`;
-      case "Suggestion d'achat":   return `${base} badge-type--suggest`;
+      case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
       default:                     return `${base} badge-type--autre`;
     }
   }
@@ -102,7 +102,7 @@ export class ItemDetailComponent implements OnInit {
   hasSpecificData(): boolean {
     const types = [
       'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-      'PEB Tipasa numérique', 'Requête ACQ', 'Springer', "Suggestion d'achat"
+      'PEB Tipasa numérique', 'Requête ACQ Accessibilité', 'Springer', "Suggestion d'achat - Usager"
     ];
     return types.includes(this.item?.formulaire_type ?? '');
   }

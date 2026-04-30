@@ -26,7 +26,8 @@ export interface Item {
   bibliotheque?: string;
   localisation_emplacement?: string;
   demandeur: string;
-  personne_a_aviser_activation?: string;
+  personne_a_aviser_nom?: string;
+  personne_a_aviser_courriel?: string;
   projet_special?: string;
   statut_bibliotheque?: string;
   statut_acq?: string;

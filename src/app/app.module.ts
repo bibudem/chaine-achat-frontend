@@ -39,7 +39,7 @@ import { LOCALE_ID } from '@angular/core';
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import { NgSelectModule } from '@ng-select/ng-select';
-// directive pour les masks
+import { FondsBudgetaireMaskDirective, IsbnMaskDirective, EmailMaskDirective } from './directives/input-mask.directive';
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
 import {ListBoxModule} from "@syncfusion/ej2-angular-dropdowns";
@@ -91,7 +91,10 @@ import { SpringerComponent } from './components/usager/pages/springer/springer.c
     ReponsesListComponent,
     ReponsesDetailComponent,
     FaqComponent,
-    SpringerComponent
+    SpringerComponent,
+    FondsBudgetaireMaskDirective,
+    IsbnMaskDirective,
+    EmailMaskDirective
   ],
     imports: [
         RouterModule,

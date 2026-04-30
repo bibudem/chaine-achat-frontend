@@ -38,7 +38,7 @@
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
         <option value="">Type formulaire</option>
-        <option *ngFor="let type of options.formulaireTypeOptions" [value]="type">{{ type }}</option>
+        <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
       </select>
     </div>
     <div class="col-6 col-md-2">

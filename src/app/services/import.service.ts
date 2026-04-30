@@ -11,10 +11,9 @@ export type FormType =
   | 'Nouvel abonnement'
   | 'Modification et CCOL'
   | 'PEB Tipasa numérique'
-  | 'Requête ACQ'
-  | 'Requête Accessibilité'
+  | 'Requête ACQ Accessibilité'
   | 'Springer'
-  | "Suggestion d'achat";
+  | "Suggestion d'achat - Usager";
 
 export interface ImportResult {
   success:  boolean;
@@ -124,23 +123,8 @@ export const FORM_TYPES: FormTypeInfo[] = [
   },
   {
     // tbl_items + tbl_requete_acq
-    type:        'Requête ACQ',
-    label:       'Requête ACQ',
-    icon:        'bi bi-question-circle',
-    description: 'Questions adressées au service des acquisitions.',
-    columns: [
-      { name: 'titre_document',      required: true,  example: 'Disponibilité titre X' },
-      { name: 'demandeur',           required: true,  example: 'Luc Bernard' },
-      { name: 'bibliotheque',        required: true,  example: 'Médecine' },
-      { name: 'type_requete',        required: false, example: 'Information' },
-      { name: 'description_requete', required: false, example: 'Vérifier si...' },
-      { name: 'action_demandee',     required: false, example: 'Commander' },
-    ]
-  },
-  {
-    // tbl_items + tbl_requete_accessibilite
-    type:        'Requête Accessibilité',
-    label:       'Requête Accessibilité',
+    type:        'Requête ACQ Accessibilité',
+    label:       'Requête ACQ Accessibilité',
     icon:        'bi bi-universal-access',
     description: "Demandes d'acquisition et de modification pour les ressources accessibles.",
     columns: [
@@ -185,8 +169,8 @@ export const FORM_TYPES: FormTypeInfo[] = [
   },
   {
     // tbl_items + tbl_suggestion_achat
-    type:        "Suggestion d'achat",
-    label:       "Suggestion d'achat",
+    type:        "Suggestion d'achat - Usager",
+    label:       "Suggestion d'achat - Usager",
     icon:        'bi bi-lightbulb',
     description: "Suggestions d'acquisition par les usagers.",
     columns: [
