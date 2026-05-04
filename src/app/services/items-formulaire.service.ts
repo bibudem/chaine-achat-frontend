@@ -69,7 +69,8 @@ export interface Item {
   // tbl_peb_tipasa_numerique
   type_demande_peb?: string;
   reference_tipasa?: string;
-  urgence?: boolean;
+  gobi_version_moins_365_usd?: string;
+  acq_responsable_courriel?: string;
   
   // tbl_requete_acq (Requête Accessibilité)
   type_requete?: string;

@@ -447,10 +447,14 @@
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Urgence</span>
-                    <span class="badge" [ngClass]="item.urgence ? 'bg-danger' : 'bg-secondary'">
-                      {{ item.urgence ? 'Oui' : 'Non' }}
-                    </span>
+                    <span class="itd-field__label">GOBI version &lt; 365 USD ?</span>
+                    <span class="itd-field__value">{{ val(item.gobi_version_moins_365_usd) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
                   </div>
                 </div>
               </ng-container>

@@ -489,7 +489,7 @@
           </div>
           <!-- Précision demande — pleine largeur -->
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label">
                   <span class="text-danger">*</span> Précision de la demande
@@ -502,9 +502,6 @@
                 <div class="invalid-feedback">La précision de la demande est obligatoire</div>
               </div>
             </div>
-          </div>
-          <!-- Numéro OCLC + Date début abonnement = 2 × col-md-4 -->
-          <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label">Numéro OCLC</label>
@@ -518,8 +515,9 @@
               </div>
             </div>
           </div>
-          <!-- Usager à aviser lors de l'activation -->
-          <div class="row">
+          <!-- Usager à aviser lors de l'activation (visible si Format = Électronique) -->
+          <div class="row"
+               *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Usager à aviser lors de l'activation</label>
@@ -530,6 +528,7 @@
                 <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">
                   Courriel invalide.
                 </div>
+                <small class="text-muted">Notifier lors de l'activation de la ressource</small>
               </div>
             </div>
           </div>
@@ -729,7 +728,6 @@
               </h5>
             </div>
           </div>
-          <!-- 4 × col-md-3 = 12 -->
           <div class="row">
             <div class="col-md-3">
               <div class="mb-3">
@@ -750,14 +748,26 @@
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Urgence</label>
-                <select class="form-select form-control" formControlName="urgence">
-                  <option [ngValue]="false">Non</option>
-                  <option [ngValue]="true">Oui</option>
+                <label class="form-label">Sur GOBI, version &lt; 365 USD offerte ?</label>
+                <select class="form-select form-control" formControlName="gobi_version_moins_365_usd">
+                  <option value="Ne s'applique pas">Ne s'applique pas</option>
+                  <option value="Oui">Oui</option>
+                  <option value="Non">Non</option>
                 </select>
               </div>
             </div>
-
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">ACQ : Responsable (courriel)</label>
+                <input type="email" class="form-control" formControlName="acq_responsable_courriel"
+                       appEmailMask
+                       [class.is-invalid]="hasError('acq_responsable_courriel', 'email')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">
+                  Courriel invalide.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

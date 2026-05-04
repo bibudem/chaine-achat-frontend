@@ -126,7 +126,8 @@ export class ItemFormulaireComponent implements OnInit {
       auteur: ['', Validators.maxLength(500)],
       type_demande_peb: [''],
       reference_tipasa: [''],
-      urgence: [false],
+      gobi_version_moins_365_usd: ["Ne s'applique pas"],
+      acq_responsable_courriel: ['', [Validators.maxLength(255), Validators.email]],
       type_requete: [''],
       description_requete: [''],
       action_demandee: [''],
@@ -203,7 +204,7 @@ export class ItemFormulaireComponent implements OnInit {
       'date_debut_abonnement', 'type_monographie', 'projets_speciaux',
       'format_electronique', 'reserve_cours', 'reserve_cours_sigle',
       'reserve_cours_session', 'reserve_cours_enseignant', 'bordereau_imprime',
-      'type_demande_peb', 'reference_tipasa', 'urgence',
+      'type_demande_peb', 'reference_tipasa', 'gobi_version_moins_365_usd', 'acq_responsable_courriel',
       'type_requete', 'description_requete', 'action_demandee',
       // Requête Accessibilité
       'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
@@ -454,9 +455,10 @@ export class ItemFormulaireComponent implements OnInit {
         };
       case 'PEB Tipasa numérique':
         return {
-          type_demande_peb:   formData.type_demande_peb,
-          reference_tipasa:   formData.reference_tipasa,
-          urgence:            formData.urgence,
+          type_demande_peb:           formData.type_demande_peb,
+          reference_tipasa:           formData.reference_tipasa,
+          gobi_version_moins_365_usd: formData.gobi_version_moins_365_usd,
+          acq_responsable_courriel:   formData.acq_responsable_courriel,
         };
       case 'Requête ACQ Accessibilité':
         return {
