@@ -75,10 +75,9 @@ statusOptions = [
     'Archives de monographies'
   ];
 
-  // Options pour le type de monographie
-  typeMonographieOptions = [
+  // Sous-types pour le groupe Monographie
+  readonly sousTypesMonographie: string[] = [
     'Livre',
-    'CD-Rom/DVD-Rom',
     'Enregistrement sonore',
     'Film',
     'Matériel didactique',
@@ -136,7 +135,6 @@ statusOptions = [
     { value: 'Nouvel achat unique',         label: 'Nouvel achat unique' },
     { value: 'Modification et CCOL',        label: 'Modification et CCOL' },
     { value: 'Nouvel abonnement',           label: 'Nouvel abonnement' },
-    { value: 'Springer',                    label: 'Springer' },
     { value: 'PEB Tipasa numérique',        label: 'PEB Tipasa numérique' },
     { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
     { value: 'Requête ACQ Accessibilité',   label: 'Requête Accessibilité' },

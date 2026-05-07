@@ -333,7 +333,7 @@
             <div class="row g-3">
 
               <!-- Modification CCOL -->
-              <ng-container *ngIf="item.formulaire_type === 'Modification CCOL'">
+              <ng-container *ngIf="item.formulaire_type === 'Modification et CCOL'">
                 <div class="col-md-4">
                   <div class="itd-field">
                     <span class="itd-field__label">Numéro OCLC</span>
@@ -384,22 +384,46 @@
 
               <!-- Nouvel achat unique -->
               <ng-container *ngIf="item.formulaire_type === 'Nouvel achat unique'">
-                <div class="col-md-3">
+                <div class="col-md-2" *ngIf="item.quantite">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Quantité</span>
+                    <span class="itd-field__value fw-semibold">{{ item.quantite }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.projets_speciaux && item.projets_speciaux !== 'Ne s\'applique pas'">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Projet spécial</span>
+                    <span class="itd-field__value">{{ item.projets_speciaux }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.type_monographie">
                   <div class="itd-field">
                     <span class="itd-field__label">Type monographie</span>
                     <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" *ngIf="item.format_electronique">
                   <div class="itd-field">
                     <span class="itd-field__label">Format électronique</span>
                     <span class="itd-field__value">{{ val(item.format_electronique) }}</span>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" *ngIf="item.bordereau_imprime">
                   <div class="itd-field">
                     <span class="itd-field__label">Bordereau imprimé</span>
                     <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_aviser_reservation">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Usager à aviser — Réservation</span>
+                    <span class="itd-field__value">{{ val(item.usager_aviser_reservation) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_aviser_activation">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Usager à aviser — Activation</span>
+                    <span class="itd-field__value">{{ val(item.usager_aviser_activation) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.reserve_cours">
@@ -435,8 +459,8 @@
               <ng-container *ngIf="item.formulaire_type === 'PEB Tipasa numérique'">
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Type de demande</span>
-                    <span class="itd-field__value">{{ val(item.type_demande_peb) }}</span>
+                    <span class="itd-field__label">Livre vu sur GOBI / Leslibraires.ca ?</span>
+                    <span class="itd-field__value">{{ val(item.gobi_vu_format_numerique) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -461,50 +485,193 @@
 
               <!-- Requête ACQ -->
               <ng-container *ngIf="item.formulaire_type === 'Requête ACQ Accessibilité'">
-                <div class="col-md-4">
+                <div class="col-md-3" *ngIf="item.type_monographie">
                   <div class="itd-field">
-                    <span class="itd-field__label">Type de requête</span>
-                    <span class="itd-field__value">{{ val(item.type_requete) }}</span>
+                    <span class="itd-field__label">Type de monographie</span>
+                    <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3" *ngIf="item.reference_usager">
                   <div class="itd-field">
-                    <span class="itd-field__label">Description</span>
-                    <span class="itd-note">{{ val(item.description_requete) }}</span>
+                    <span class="itd-field__label">Référence usager</span>
+                    <span class="itd-field__value font-monospace">{{ val(item.reference_usager) }}</span>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5" *ngIf="item.besoin_specifique_format">
                   <div class="itd-field">
-                    <span class="itd-field__label">Action demandée</span>
-                    <span class="itd-note">{{ val(item.action_demandee) }}</span>
+                    <span class="itd-field__label">Besoin spécifique (format)</span>
+                    <span class="itd-field__value">{{ val(item.besoin_specifique_format) }}</span>
                   </div>
                 </div>
-              </ng-container>
-
-              <!-- Springer -->
-              <ng-container *ngIf="item.formulaire_type === 'Springer'">
-                <div class="col-md-3">
+                <div class="col-md-4" *ngIf="item.fournisseur_contacte_sans_succes">
                   <div class="itd-field">
-                    <span class="itd-field__label">Quantité</span>
-                    <span class="itd-field__value fw-semibold fs-5">{{ val(item.quantite) }}</span>
+                    <span class="itd-field__label">Fournisseur contacté sans succès</span>
+                    <span class="itd-field__value">{{ val(item.fournisseur_contacte_sans_succes) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.exemplaire_detenu">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Exemplaire détenu</span>
+                    <span class="itd-field__value">{{ val(item.exemplaire_detenu) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.verification_caeb">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Vérification CAEB</span>
+                    <span class="itd-field__value">{{ val(item.verification_caeb) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.verification_sqla">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Vérification SQLA</span>
+                    <span class="itd-field__value">{{ val(item.verification_sqla) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.verification_emma">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Vérification EMMA</span>
+                    <span class="itd-field__value">{{ val(item.verification_emma) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.permalien_sofia">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Permalien SOFIA</span>
+                    <span class="itd-field__value">
+                      <a [href]="item.permalien_sofia" target="_blank" rel="noopener">{{ val(item.permalien_sofia) }}</a>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.acq_responsable_courriel">
+                  <div class="itd-field">
+                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.acq_numerisation_recommandee">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Numérisation recommandée</span>
+                    <span class="itd-field__value">{{ val(item.acq_numerisation_recommandee) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.acq_date_demande_editeur">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Date demande à l'éditeur</span>
+                    <span class="itd-field__value">{{ val(item.acq_date_demande_editeur) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.acq_date_livraison_estimee">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Date livraison estimée</span>
+                    <span class="itd-field__value">{{ val(item.acq_date_livraison_estimee) }}</span>
                   </div>
                 </div>
               </ng-container>
 
               <!-- Suggestion d'achat -->
-              <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat'">
+              <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat' || item.formulaire_type === 'Suggestion d\'achat - Usager'">
                 <div class="col-md-4" *ngIf="item.auteur">
                   <div class="itd-field">
                     <span class="itd-field__label">Auteur(rice)</span>
                     <span class="itd-field__value">{{ val(item.auteur) }}</span>
                   </div>
                 </div>
+                <div class="col-md-4" *ngIf="item.acq_isbn">
+                  <div class="itd-field">
+                    <span class="itd-field__label">ISBN (suggestion)</span>
+                    <span class="itd-field__value font-monospace">{{ val(item.acq_isbn) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.date_requise_cours">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Requis pour cours</span>
+                    <span class="itd-field__value">{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_statut">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Statut de l'usager</span>
+                    <span class="itd-field__value">{{ val(item.usager_statut) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_faculte">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Faculté / Département</span>
+                    <span class="itd-field__value">{{ val(item.usager_faculte) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_courriel">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Courriel de l'usager</span>
+                    <span class="itd-field__value">{{ val(item.usager_courriel) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.bibliothecaire_disciplinaire">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Bibliothécaire disciplinaire</span>
+                    <span class="itd-field__value">{{ val(item.bibliothecaire_disciplinaire) }}</span>
+                  </div>
+                </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Aviser lors de la réservation</span>
+                    <span class="itd-field__label">Aviser — Réservation</span>
                     <span class="badge" [ngClass]="item.aviser_reservation ? 'bg-success' : 'bg-secondary'">
                       {{ item.aviser_reservation ? 'Oui' : 'Non' }}
                     </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Aviser — Réception</span>
+                    <span class="badge" [ngClass]="item.aviser_reception ? 'bg-success' : 'bg-secondary'">
+                      {{ item.aviser_reception ? 'Oui' : 'Non' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.bordereau_imprime">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Bordereau imprimé</span>
+                    <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.reserve_cours">
+                  <div class="itd-field">
+                    <span class="itd-field__label">En réserve de cours</span>
+                    <span class="badge bg-info text-dark">Oui</span>
+                    <span class="itd-field__value ms-2" *ngIf="item.reserve_cours_sigle">
+                      {{ item.reserve_cours_sigle }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.acq_responsable_courriel">
+                  <div class="itd-field">
+                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Suggestion transmise TECHDOC</span>
+                    <span class="badge" [ngClass]="item.techdoc_suggestion_transmise ? 'bg-success' : 'bg-secondary'">
+                      {{ item.techdoc_suggestion_transmise ? 'Oui' : 'Non' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.usager_nom">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Nom de l'usager</span>
+                    <span class="itd-field__value">{{ val(item.usager_nom) }}</span>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.note_usager">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Notes et commentaires de l'usager</span>
+                    <span class="itd-note">{{ item.note_usager }}</span>
+                  </div>
+                </div>
+                <div class="col-12" *ngIf="item.acq_raison_annulation">
+                  <div class="itd-field">
+                    <span class="itd-field__label">Raison d'annulation</span>
+                    <span class="itd-note">{{ item.acq_raison_annulation }}</span>
                   </div>
                 </div>
               </ng-container>
@@ -515,7 +682,7 @@
 
         <!-- ── Section : Notes ───────────────────────────────── -->
         <div class="itd-card"
-             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm">
+             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm !== undefined || item.suivi_acq || item.note_acq || item.bibliotheque_note_interne">
           <div class="itd-card__header">
             <i class="bi bi-sticky me-2"></i>Notes &amp; Catalogage
           </div>
@@ -529,6 +696,12 @@
                   </span>
                 </div>
               </div>
+              <div class="col-md-3" *ngIf="item.suivi_acq">
+                <div class="itd-field">
+                  <span class="itd-field__label">ACQ : Suivi de la demande</span>
+                  <span class="badge bg-secondary">{{ item.suivi_acq }}</span>
+                </div>
+              </div>
               <div class="col-md-6" *ngIf="item.note_dtdm">
                 <div class="itd-field">
                   <span class="itd-field__label">Note DTDM (Catalogage)</span>
@@ -539,6 +712,18 @@
                 <div class="itd-field">
                   <span class="itd-field__label">Note / Commentaire bibliothèque</span>
                   <span class="itd-note">{{ item.note_commentaire }}</span>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="item.note_acq">
+                <div class="itd-field">
+                  <span class="itd-field__label">Acquisitions : Note / Commentaire</span>
+                  <span class="itd-note">{{ item.note_acq }}</span>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="item.bibliotheque_note_interne">
+                <div class="itd-field">
+                  <span class="itd-field__label">Bibliothèque — Note interne</span>
+                  <span class="itd-note">{{ item.bibliotheque_note_interne }}</span>
                 </div>
               </div>
             </div>

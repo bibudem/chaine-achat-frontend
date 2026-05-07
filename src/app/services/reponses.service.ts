@@ -148,30 +148,6 @@ export class ReponsesService {
   }
 
   // ──────────────────────────────────────────────────────────
-  // SPRINGER
-  // Composant : springer.component.ts
-  // Route     : POST /reponses/springer
-  // ──────────────────────────────────────────────────────────
-  envoyerSpringer(payload: {
-    baseData:     Record<string, any>;
-    specificData: Record<string, any>;
-  }): Observable<any> {
-    const body = {
-      type_formulaire: 'Springer',
-      usager_nom:      this.getNomSession(),
-      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
-      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
-      reponses: {
-        baseData:     payload.baseData,
-        specificData: payload.specificData
-      }
-    };
-    return this.http
-      .post(`${this.baseUrl}/springer`, body, this.httpOptions)
-      .pipe(catchError(this.handleError('envoyerSpringer')));
-  }
-
-  // ──────────────────────────────────────────────────────────
   // LECTURE (commun)
   // ──────────────────────────────────────────────────────────
   lister(type?: string, page = 1, limit = 20): Observable<any> {

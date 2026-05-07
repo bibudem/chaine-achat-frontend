@@ -59,8 +59,7 @@ export class FaqComponent {
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#1B5E6E;margin-right:6px;vertical-align:middle"></span><strong style="color:#1B5E6E">Teal</strong> — Nouvel achat unique</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#0369A1;margin-right:6px;vertical-align:middle"></span><strong style="color:#0369A1">Cyan</strong> — PEB Tipasa numérique</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#37424D;margin-right:6px;vertical-align:middle"></span><strong style="color:#37424D">Gris foncé</strong> — Requête ACQ</li>
-          <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#9A3412;margin-right:6px;vertical-align:middle"></span><strong style="color:#9A3412">Terracotta</strong> — Springer</li>
-          <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#C8872A;margin-right:6px;vertical-align:middle"></span><strong style="color:#C8872A">Ambre</strong> — Suggestion d'achat</li>
+<li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#C8872A;margin-right:6px;vertical-align:middle"></span><strong style="color:#C8872A">Ambre</strong> — Suggestion d'achat</li>
         </ul>
         Ces couleurs sont cohérentes dans le tableau de bord (icônes et barres de répartition), la liste des demandes (badges) et les filtres.`,
       answer: '',

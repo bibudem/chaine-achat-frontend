@@ -31,6 +31,9 @@ export interface Item {
   projet_special?: string;
   statut_bibliotheque?: string;
   statut_acq?: string;
+  suivi_acq?: string;
+  note_acq?: string;
+  bibliotheque_note_interne?: string;
   source_information?: string;
   note_commentaire?: string;
   id_ressource?: string;
@@ -67,16 +70,13 @@ export interface Item {
   bordereau_imprime?: string;
   
   // tbl_peb_tipasa_numerique
-  type_demande_peb?: string;
   reference_tipasa?: string;
+  gobi_vu_format_numerique?: string;
   gobi_version_moins_365_usd?: string;
   acq_responsable_courriel?: string;
   
   // tbl_requete_acq (Requête Accessibilité)
-  type_requete?: string;
   reference_usager?: string;
-  description_requete?: string;
-  action_demandee?: string;
   besoin_specifique_format?: string;
   permalien_sofia?: string;
   fournisseur_contacte_sans_succes?: string;
@@ -100,6 +100,11 @@ export interface Item {
   aviser_reservation?: boolean;
   aviser_reception?: boolean;
   date_requise_cours?: string;
+  usager_nom?: string;
+  note_usager?: string;
+  techdoc_suggestion_transmise?: boolean;
+  acq_raison_annulation?: string;
+  acq_isbn?: string;
 
   // Champs usager à aviser (Nouvel achat unique, Nouvel abonnement)
   usager_aviser_reservation?: string;
@@ -319,11 +324,10 @@ export class ItemFormulaireService {
     if (formattedItem.urgence !== undefined) {
       formattedItem.urgence = Boolean(formattedItem.urgence);
     }
-    if (formattedItem.recommandation !== undefined) {
-      formattedItem.recommandation = Boolean(formattedItem.recommandation);
+    if (formattedItem.techdoc_suggestion_transmise !== undefined) {
+      formattedItem.techdoc_suggestion_transmise = Boolean(formattedItem.techdoc_suggestion_transmise);
     }
-
-    // Vider les chaînes vides → null
+// Vider les chaînes vides → null
     Object.keys(formattedItem).forEach(key => {
       if (formattedItem[key] === '') {
         formattedItem[key] = null;

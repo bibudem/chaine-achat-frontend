@@ -52,12 +52,7 @@
   --acces-mid:   #7B3DB8;
   --acces-light: #F3EAFB;
 
-  /* ── Springer (formulaire usager — vert nature) ─────────── */
-  --springer-dark:  #1B5E20;
-  --springer-mid:   #388E3C;
-  --springer-light: #E8F5E9;
-
-  /* ── Statut ACQ (backoffice admin — indigo) ──────────────── */
+/* ── Statut ACQ (backoffice admin — indigo) ──────────────── */
   --acq-dark:      #3730A3;
   --acq-mid:       #4F46E5;
   --acq-light:     #EDE9FE;
@@ -1374,7 +1369,6 @@ select.typeahead, select.tt-query, select.tt-hint {
 .badge-type--achat    { background: #D9F0EE; color: #1B5E6E; border: 1px solid rgba(42,144,134,.3); }  /* Achat unique — Teal     */
 .badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }   /* PEB Tipasa — Cyan       */
 .badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }   /* Requête ACQ — Gris foncé */
-.badge-type--springer { background: #FEE8E0; color: #7C2D12; border: 1px solid rgba(154,52,18,.3); }   /* Springer — Terracotta   */
 .badge-type--suggest  { background: #FDF3E3; color: #7B4A15; border: 1px solid rgba(200,135,42,.3); }  /* Suggestion — Ambre      */
 .badge-type--autre    { background: var(--light-gray);       color: var(--medium-gray); }               /* Autre — Neutre          */
 

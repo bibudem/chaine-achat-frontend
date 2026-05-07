@@ -62,7 +62,7 @@
                 <span class="text-danger">*</span> Type de demande
               </label>
               <select class="form-select form-control" formControlName="formulaire_type"
-                      [class.is-invalid]="hasError('formulaire_type', 'required')"
+                      [class.is-invalid]="isInvalid('formulaire_type')"
                       [ngClass]="{'fw-bold': itemForm.get('formulaire_type')?.value}">
                 <option value="">Sélectionnez</option>
                 <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
@@ -79,7 +79,7 @@
             <div class="mb-3">
               <label class="form-label">Titre du document <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="titre_document"
-                     [class.is-invalid]="hasError('titre_document', 'required')"
+                     [class.is-invalid]="isInvalid('titre_document')"
                      placeholder="Titre complet du document">
               <div class="invalid-feedback" *ngIf="hasError('titre_document', 'required')">
                 Le titre du document est obligatoire
@@ -90,7 +90,7 @@
             <div class="mb-3">
               <label class="form-label">Demandeur <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="demandeur"
-                     [class.is-invalid]="hasError('demandeur', 'required')"
+                     [class.is-invalid]="isInvalid('demandeur')"
                      placeholder="Nom du demandeur">
               <div class="invalid-feedback" *ngIf="hasError('demandeur', 'required')">
                 Le demandeur est obligatoire
@@ -112,7 +112,7 @@
             <div class="mb-3">
               <label class="form-label">Éditeur <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="editeur"
-                     [class.is-invalid]="hasError('editeur', 'required')"
+                     [class.is-invalid]="isInvalid('editeur')"
                      placeholder="Nom de l'éditeur">
               <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">L'éditeur est obligatoire</div>
             </div>
@@ -122,10 +122,12 @@
               <label class="form-label">ISBN/ISSN <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
                      appIsbnMask #isbnMask="appIsbnMask"
-                     [class.is-invalid]="hasError('isbn_issn', 'required') || isbnMask.wasStripped"
+                     [class.is-invalid]="isInvalid('isbn_issn') || isbnMask.wasStripped"
                      placeholder="Ex: 9780306406157">
-              <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required') && !isbnMask.wasStripped">L'ISBN/ISSN est obligatoire</div>
-              <div class="invalid-feedback" *ngIf="isbnMask.wasStripped">Format attendu : chiffres uniquement</div>
+              <div class="invalid-feedback">
+                <ng-container *ngIf="hasError('isbn_issn', 'required') && !isbnMask.wasStripped">L'ISBN/ISSN est obligatoire</ng-container>
+                <ng-container *ngIf="isbnMask.wasStripped">Format attendu : chiffres uniquement</ng-container>
+              </div>
             </div>
           </div>
           <!-- Date publication : absente pour Nouvel abonnement et Springer -->
@@ -144,7 +146,7 @@
             <div class="mb-3">
               <label class="form-label">Bibliothèque <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="bibliotheque"
-                      [class.is-invalid]="hasError('bibliotheque', 'required')">
+                      [class.is-invalid]="isInvalid('bibliotheque')">
                 <option value="">Sélectionnez une bibliothèque</option>
                 <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
               </select>
@@ -155,7 +157,7 @@
             <div class="mb-3">
               <label class="form-label">Catégorie de document <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="categorie_document"
-                      [class.is-invalid]="hasError('categorie_document', 'required')">
+                      [class.is-invalid]="isInvalid('categorie_document')">
                 <option value="">Sélectionnez</option>
                 <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
               </select>
@@ -166,7 +168,7 @@
             <div class="mb-3">
               <label class="form-label">Type de traitement <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="format_support"
-                      [class.is-invalid]="hasError('format_support', 'required')">
+                      [class.is-invalid]="isInvalid('format_support')">
                 <option value="">Sélectionnez</option>
                 <option value="Imprimé/support physique">Imprimé/support physique</option>
                 <option value="Électronique">Électronique</option>
@@ -286,7 +288,7 @@
                     <label class="form-label">Courriel</label>
                     <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
                            appEmailMask
-                           [class.is-invalid]="hasError('personne_a_aviser_courriel', 'email')"
+                           [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                            placeholder="courriel@exemple.com">
                     <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
                       Courriel invalide.
@@ -305,13 +307,10 @@
               <label class="form-label">Fonds budgétaire <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="fonds_budgetaire"
                      appFondsBudgetaireMask
-                     [class.is-invalid]="hasError('fonds_budgetaire', 'required') || hasError('fonds_budgetaire', 'pattern')"
+                     [class.is-invalid]="isInvalid('fonds_budgetaire')"
                      placeholder="Ex : PE-001">
-              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
+              <div class="invalid-feedback">
                 Le fonds budgétaire est obligatoire
-              </div>
-              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'pattern')">
-                Format attendu : AA-### (ex : PE-001, MO-260)
               </div>
             </div>
           </div>
@@ -365,8 +364,14 @@
             <div class="mb-3">
               <label class="form-label">Source d'information <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="source_information"
-                     [class.is-invalid]="hasError('source_information', 'required')">
+                     [class.is-invalid]="isInvalid('source_information')">
               <div class="invalid-feedback" *ngIf="hasError('source_information', 'required')">La source d'information est obligatoire</div>
+              <div class="form-text" *ngIf="isPEBTipasaNumerique(); else sourceInfoDefault">
+                Pour que la demande soit traitée aux ACQ, le livre numérique désiré doit être disponible sur GOBI ou Leslibraires.ca.
+              </div>
+              <ng-template #sourceInfoDefault>
+                <div class="form-text">Inscrire l'URL où l'information bibliographique, le prix et la disponibilité ont été repérés (éditeurs, libraires).</div>
+              </ng-template>
             </div>
           </div>
           <div class="col-md-2">
@@ -375,7 +380,7 @@
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
-                      [class.is-invalid]="hasError('prix_cad', 'required')"
+                      [class.is-invalid]="isInvalid('prix_cad')"
                       min="0" step="0.01" placeholder="0.00">
                 <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">Le prix est obligatoire</div>
               </div>
@@ -385,7 +390,7 @@
             <div class="mb-3">
               <label class="form-label">Devise originale <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="devise_originale"
-                      [class.is-invalid]="hasError('devise_originale', 'required')">
+                      [class.is-invalid]="isInvalid('devise_originale')">
                 <option value="">--</option>
                 <option value="CAD">CAD</option>
                 <option value="USD">USD</option>
@@ -401,7 +406,7 @@
             <div class="mb-3">
               <label class="form-label">Prix (devise originale) <span class="text-danger">*</span></label>
               <input type="number" class="form-control" formControlName="prix_devise_originale"
-                    [class.is-invalid]="hasError('prix_devise_originale', 'required')"
+                    [class.is-invalid]="isInvalid('prix_devise_originale')"
                     min="0" step="0.01" placeholder="0.00">
               <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">Le prix est obligatoire</div>
             </div>
@@ -489,26 +494,26 @@
           </div>
           <!-- Précision demande — pleine largeur -->
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">
                   <span class="text-danger">*</span> Précision de la demande
                 </label>
                 <select class="form-select form-control" formControlName="precision_demande"
-                        [class.is-invalid]="hasError('precision_demande', 'required')">
+                        [class.is-invalid]="isInvalid('precision_demande')">
                   <option value="">Sélectionnez</option>
                   <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
                 </select>
                 <div class="invalid-feedback">La précision de la demande est obligatoire</div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Numéro OCLC</label>
                 <input type="text" class="form-control" formControlName="numero_oclc" placeholder="Ex: ocm12345678">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Date de début d'abonnement</label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement">
@@ -523,11 +528,9 @@
                 <label class="form-label">Usager à aviser lors de l'activation</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
-                       [class.is-invalid]="hasError('usager_aviser_activation', 'email')"
+                       [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">
-                  Courriel invalide.
-                </div>
+                <div class="invalid-feedback">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de l'activation de la ressource</small>
               </div>
             </div>
@@ -551,7 +554,7 @@
                   <span class="text-danger">*</span> Date de début d'abonnement
                 </label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement"
-                       [class.is-invalid]="hasError('date_debut_abonnement', 'required')">
+                       [class.is-invalid]="isInvalid('date_debut_abonnement')">
                 <div class="invalid-feedback">La date de début d'abonnement est obligatoire</div>
               </div>
             </div>
@@ -560,7 +563,10 @@
                 <label class="form-label">Type de monographie</label>
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">Sélectionnez</option>
-                  <option *ngFor="let t of options.typeMonographieOptions" [value]="t">{{ t }}</option>
+                  <optgroup label="Monographie">
+                    <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
+                  </optgroup>
+                  <option value="Série">Série</option>
                 </select>
               </div>
             </div>
@@ -573,11 +579,9 @@
                 <label class="form-label">Usager à aviser — Réservation</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_reservation"
                        appEmailMask
-                       [class.is-invalid]="hasError('usager_aviser_reservation', 'email')"
+                       [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">
-                  Courriel invalide.
-                </div>
+                <div class="invalid-feedback">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -616,9 +620,11 @@
                 <label class="form-label"><span class="text-danger">*</span> Quantité</label>
                 <input type="number" class="form-control" formControlName="quantite"
                        min="1" step="1" placeholder="1"
-                       [class.is-invalid]="hasError('quantite', 'required') || hasError('quantite', 'min')">
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'required')">La quantité est obligatoire</div>
-                <div class="invalid-feedback" *ngIf="hasError('quantite', 'min')">La quantité doit être ≥ 1</div>
+                       [class.is-invalid]="isInvalid('quantite')">
+                <div class="invalid-feedback">
+                  <ng-container *ngIf="hasError('quantite', 'required')">La quantité est obligatoire</ng-container>
+                  <ng-container *ngIf="hasError('quantite', 'min')">La quantité doit être ≥ 1</ng-container>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
@@ -638,7 +644,10 @@
                 <label class="form-label">Type de monographie</label>
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">Sélectionnez</option>
-                  <option *ngFor="let t of options.typeMonographieOptions" [value]="t">{{ t }}</option>
+                  <optgroup label="Monographie">
+                    <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
+                  </optgroup>
+                  <option value="Série">Série</option>
                 </select>
               </div>
             </div>
@@ -690,11 +699,9 @@
                 <label class="form-label">Usager à aviser — Réservation</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_reservation"
                        appEmailMask
-                       [class.is-invalid]="hasError('usager_aviser_reservation', 'email')"
+                       [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">
-                  Courriel invalide.
-                </div>
+                <div class="invalid-feedback">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -709,11 +716,9 @@
                 </label>
                 <input type="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
-                       [class.is-invalid]="hasError('usager_aviser_activation', 'email')"
+                       [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">
-                  Courriel invalide.
-                </div>
+                <div class="invalid-feedback">Courriel invalide.</div>
               </div>
             </div>
           </div>
@@ -729,24 +734,28 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-5">
               <div class="mb-3">
-                <label class="form-label">Type de demande PEB</label>
-                <select class="form-select form-control" formControlName="type_demande_peb">
+                <label class="form-label">
+                  Avez-vous vu le livre en format numérique sur GOBI (Ebsco) ou Leslibraires.ca ?
+                  <span class="text-danger">*</span>
+                </label>
+                <select class="form-select form-control" formControlName="gobi_vu_format_numerique"
+                        [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
                   <option value="">Sélectionnez</option>
-                  <option value="Prêt">Prêt</option>
-                  <option value="Copie">Copie</option>
-                  <option value="Numérique">Numérique</option>
+                  <option value="Oui">Oui</option>
+                  <option value="Non">Non</option>
                 </select>
+                <div class="invalid-feedback">Ce champ est obligatoire.</div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Référence Tipasa</label>
                 <input type="text" class="form-control" formControlName="reference_tipasa" placeholder="Numéro de référence">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Sur GOBI, version &lt; 365 USD offerte ?</label>
                 <select class="form-select form-control" formControlName="gobi_version_moins_365_usd">
@@ -761,11 +770,9 @@
                 <label class="form-label">ACQ : Responsable (courriel)</label>
                 <input type="email" class="form-control" formControlName="acq_responsable_courriel"
                        appEmailMask
-                       [class.is-invalid]="hasError('acq_responsable_courriel', 'email')"
+                       [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">
-                  Courriel invalide.
-                </div>
+                <div class="invalid-feedback">Courriel invalide.</div>
               </div>
             </div>
           </div>
@@ -773,84 +780,52 @@
 
         <!-- ===== REQUÊTE ACCESSIBILITÉ ===== -->
         <div *ngIf="isRequeteAccessibilite()">
-          <div class="row mb-4">
+          <div class="row mb-3">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
                 <i class="bi bi-universal-access me-2"></i>Requête ACQ Accessibilité
               </h5>
             </div>
           </div>
-          <!-- 4 × col-md-3 = 12 -->
+
+          <!-- Identification : référence + besoin + permalien -->
           <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Type de requête</label>
-                <select class="form-select form-control" formControlName="type_requete"
-                        [class.is-invalid]="hasError('type_requete', 'required')">
-                  <option value="">Sélectionnez</option>
-                  <option value="Information">Information</option>
-                  <option value="Modification">Modification</option>
-                  <option value="Annulation">Annulation</option>
-                  <option value="Autre">Autre</option>
-                </select>
-                <div class="invalid-feedback">Le type de requête est obligatoire</div>
-              </div>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md">
               <div class="mb-3">
                 <label class="form-label">Référence usager</label>
-                <input type="text" class="form-control" formControlName="reference_usager">
+                <input type="text" class="form-control" formControlName="reference_usager"
+                       placeholder="Identification interne Accessibilité">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
               <div class="mb-3">
-                <label class="form-label">Besoin spécifique (format)</label>
-                <select class="form-select form-control" formControlName="besoin_specifique_format">
+                <label class="form-label">Besoin spécifique (format) <span class="text-danger">*</span></label>
+                <select class="form-select form-control" formControlName="besoin_specifique_format"
+                        [class.is-invalid]="isInvalid('besoin_specifique_format')">
                   <option value="">Sélectionnez</option>
                   <option *ngFor="let b of besoinsFormat" [value]="b">{{ b }}</option>
                 </select>
+                <div class="invalid-feedback">Ce champ est obligatoire.</div>
               </div>
             </div>
-          </div>
-          <!-- 2 × col-md-6 = 12 -->
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Description de la requête</label>
-                <textarea class="form-control" formControlName="description_requete" rows="2"
-                          placeholder="Décrivez votre requête en détail"></textarea>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Action demandée</label>
-                <textarea class="form-control" formControlName="action_demandee" rows="2"
-                          placeholder="Quelle action souhaitez-vous?"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-8">
+            <div class="col-md">
               <div class="mb-3">
                 <label class="form-label">Permalien SOFIA</label>
                 <input type="url" class="form-control" formControlName="permalien_sofia"
                        placeholder="https://...">
               </div>
             </div>
-          </div>
-          <!-- Type de monographie : visible si Catégorie = Monographie -->
-          <div class="row" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
-            <div class="col-md-6">
+            <!-- Type de monographie : visible si Catégorie = Monographie -->
+            <div class="col-md" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
               <div class="mb-3">
                 <label class="form-label">Type de monographie</label>
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">Sélectionnez</option>
-                  <option *ngFor="let t of options.typeMonographieOptions" [value]="t">{{ t }}</option>
+                  <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
                 </select>
               </div>
             </div>
           </div>
-
           <!-- Vérifications Accessibilité -->
           <div class="row mt-3">
             <div class="col-12">
@@ -859,7 +834,7 @@
               </h6>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
+          <!-- col-md-4 + 4×col-md-2 = 12 -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
@@ -870,7 +845,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Exemplaire détenu</label>
                 <select class="form-select form-control" formControlName="exemplaire_detenu">
@@ -881,10 +856,7 @@
                 </select>
               </div>
             </div>
-          </div>
-          <!-- 3 × col-md-4 = 12 -->
-          <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Vérification CAEB</label>
                 <select class="form-select form-control" formControlName="verification_caeb">
@@ -893,7 +865,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Vérification SQLA</label>
                 <select class="form-select form-control" formControlName="verification_sqla">
@@ -902,7 +874,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">Vérification EMMA</label>
                 <select class="form-select form-control" formControlName="verification_emma">
@@ -921,9 +893,9 @@
               </h6>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
+          <!-- 4×col-md-3 = 12 -->
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Numérisation recommandée</label>
                 <select class="form-select form-control" formControlName="acq_numerisation_recommandee">
@@ -932,73 +904,70 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Date demande à l'éditeur</label>
                 <input type="date" class="form-control" formControlName="acq_date_demande_editeur">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">Date livraison estimée</label>
                 <input type="date" class="form-control" formControlName="acq_date_livraison_estimee">
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- ===== SPRINGER ===== -->
-        <div *ngIf="isSpringer()">
-          <div class="row mb-4">
-            <div class="col-12">
-              <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-book me-2"></i>Springer
-              </h5>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">ACQ : Responsable (courriel)</label>
+                <input type="email" class="form-control" formControlName="acq_responsable_courriel"
+                       appEmailMask
+                       [class.is-invalid]="isInvalid('acq_responsable_courriel')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback">Courriel invalide.</div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- ===== SUGGESTION D'ACHAT ===== -->
         <div *ngIf="isSuggestionAchat()">
-          <div class="row mb-4">
+          <div class="row mb-3">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
                 <i class="bi bi-lightbulb me-2"></i>Suggestion d'Achat
               </h5>
             </div>
           </div>
-          <!-- Auteur col-md-6 + Date cours col-md-3 + Projet spécial col-md-3 = 12 -->
+
+          <!-- R1 : Auteur · Date cours · ISBN -->
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Auteur(rice)</label>
-                <textarea class="form-control" formControlName="auteur" rows="2"
-                          placeholder="Saisie libre — max 500 car."></textarea>
+                <label class="form-label"><span class="text-danger">*</span> Auteur(rice)</label>
+                <input type="text" class="form-control" formControlName="auteur"
+                       [class.is-invalid]="isInvalid('auteur')"
+                       placeholder="Saisie libre — max 500 car.">
+                <div class="invalid-feedback">L'auteur est obligatoire</div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">Requis pour un cours (date)</label>
+                <input type="date" class="form-control" formControlName="date_requise_cours">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Document requis pour un cours</label>
-                <input type="date" class="form-control" formControlName="date_requise_cours">
+                <label class="form-label">ISBN (suggestion)</label>
+                <input type="text" class="form-control" formControlName="acq_isbn"
+                       placeholder="Ex: 9782070360024">
               </div>
             </div>
-          </div>
-
-          <!-- Séparateur : Informations sur l'usager -->
-          <div class="row mt-3">
-            <div class="col-12">
-              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-                <i class="bi bi-person me-1"></i>Informations sur l'usager
-              </h6>
-            </div>
-          </div>
-          <!-- 3 × col-md-4 = 12 -->
-          <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Statut de l'usager</label>
+                <label class="form-label"><span class="text-danger">*</span> Statut</label>
                 <select class="form-select form-control" formControlName="usager_statut"
-                        [class.is-invalid]="hasError('usager_statut', 'required')">
+                        [class.is-invalid]="isInvalid('usager_statut')">
                   <option value="">Sélectionnez</option>
                   <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
                   <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
@@ -1009,67 +978,145 @@
                   <option value="Personnel">Personnel</option>
                   <option value="Autre">Autre</option>
                 </select>
-                <div class="invalid-feedback">Le statut de l'usager est obligatoire</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Faculté / Département</label>
-                <input type="text" class="form-control" formControlName="usager_faculte"
-                       [class.is-invalid]="hasError('usager_faculte', 'required')"
-                       placeholder="Ex: Faculté des sciences">
-                <div class="invalid-feedback">La faculté / département est obligatoire</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Courriel de l'usager</label>
-                <input type="email" class="form-control" formControlName="usager_courriel"
-                       [class.is-invalid]="hasError('usager_courriel', 'required') || hasError('usager_courriel', 'email')"
-                       placeholder="nom@universite.ca">
-                <div class="invalid-feedback" *ngIf="hasError('usager_courriel', 'required')">Le courriel est obligatoire</div>
-                <div class="invalid-feedback" *ngIf="hasError('usager_courriel', 'email')">Veuillez entrer un courriel valide</div>
+                <div class="invalid-feedback">Obligatoire</div>
               </div>
             </div>
           </div>
 
-          <!-- Séparateur : Bibliothécaire & Avis -->
-          <div class="row mt-2">
-            <div class="col-12">
-              <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-                <i class="bi bi-bell me-1"></i>Bibliothécaire et notifications
-              </h6>
+          <!-- R2 : Statut · Faculté · Courriel usager -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Nom de l'usager</label>
+                <input type="text" class="form-control" formControlName="usager_nom"
+                       placeholder="Prénom Nom">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label"><span class="text-danger">*</span> Courriel usager</label>
+                <input type="email" class="form-control" formControlName="usager_courriel"
+                       [class.is-invalid]="isInvalid('usager_courriel')"
+                       placeholder="nom@umontreal.ca">
+                <div class="invalid-feedback">
+                  <ng-container *ngIf="hasError('usager_courriel', 'required')">Obligatoire</ng-container>
+                  <ng-container *ngIf="hasError('usager_courriel', 'email')">Courriel invalide</ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label"><span class="text-danger">*</span> Usager: Faculté / Département</label>
+                <input type="text" class="form-control" formControlName="usager_faculte"
+                       [class.is-invalid]="isInvalid('usager_faculte')"
+                       placeholder="Ex: Faculté des sciences">
+                <div class="invalid-feedback">Obligatoire</div>
+              </div>
+            </div>
+            
+           
+          </div>
+          <!-- R3 : Biblio disc. · Aviser réserv. · Aviser récept. · Bordereau -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Notes et commentaires de l'usager</label>
+                <textarea class="form-control" formControlName="note_usager" rows="2"
+                          placeholder="Remarques ou précisions de l'usager..."></textarea>
+              </div>
+            </div>
+            
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">Bordereau imprimé</label>
+                <select class="form-select form-control" formControlName="bordereau_imprime">
+                  <option value="Non">Non</option>
+                  <option value="Oui">Oui</option>
+                  <option value="Partiellement reçu">Partiellement reçu</option>
+                </select>
+              </div>
+            </div>
+             <div class="col-md ml-4">
+              <div class="mb-3">
+                <label class="form-label">Réserve de cours</label>
+                <div class="form-check mt-1 ml-4">
+                  <input class="form-check-input" type="checkbox" formControlName="reserve_cours"
+                         id="reserve_cours_sugg">
+                  <label class="form-check-label" for="reserve_cours_sugg">Oui</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md" *ngIf="itemForm.get('reserve_cours')?.value">
+              <div class="mb-3">
+                <label class="form-label">Sigle du cours</label>
+                <input type="text" class="form-control" formControlName="reserve_cours_sigle"
+                       placeholder="Ex: INFO-4200">
+              </div>
+            </div>
+            <div class="col-md ml-4">
+              <div class="mb-3">
+                <label class="form-label">Transmise à TECHDOC</label>
+                <div class="form-check mt-1 ml-4">
+                  <input class="form-check-input" type="checkbox" formControlName="techdoc_suggestion_transmise"
+                         id="techdoc_suggestion_transmise">
+                  <label class="form-check-label" for="techdoc_suggestion_transmise">Oui</label>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- col-md-4 + col-md-5 + col-md-3 = 12 -->
+
+          <!-- R5 : Nom usager · Courriel ACQ · Notes et commentaires usager -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> Bibliothécaire disciplinaire</label>
                 <input type="email" class="form-control" formControlName="bibliothecaire_disciplinaire"
-                       [class.is-invalid]="hasError('bibliothecaire_disciplinaire', 'required') || hasError('bibliothecaire_disciplinaire', 'email')"
-                       placeholder="courriel@universite.ca">
-                <div class="invalid-feedback" *ngIf="hasError('bibliothecaire_disciplinaire', 'required')">Le bibliothécaire disciplinaire est obligatoire</div>
-                <div class="invalid-feedback" *ngIf="hasError('bibliothecaire_disciplinaire', 'email')">Veuillez entrer un courriel valide</div>
+                       [class.is-invalid]="isInvalid('bibliothecaire_disciplinaire')"
+                       placeholder="courriel@umontreal.ca">
+                <div class="invalid-feedback">
+                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'required')">Obligatoire</ng-container>
+                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'email')">Courriel invalide</ng-container>
+                </div>
               </div>
             </div>
-            <div class="col-md-5">
+             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Aviser lors de la mise en réservation</label>
+                <label class="form-label">Courriel responsable ACQ</label>
+                <input type="email" class="form-control" formControlName="acq_responsable_courriel"
+                       [class.is-invalid]="isInvalid('acq_responsable_courriel')"
+                       placeholder="prenom.nom@umontreal.ca">
+                <div class="invalid-feedback">Courriel invalide.</div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">Aviser — réservation</label>
                 <select class="form-select form-control" formControlName="aviser_reservation">
                   <option [ngValue]="true">Oui</option>
                   <option [ngValue]="false">Non</option>
                 </select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Aviser à la réception</label>
+                <label class="form-label">Aviser — réception</label>
                 <select class="form-select form-control" formControlName="aviser_reception">
                   <option [ngValue]="true">Oui</option>
                   <option [ngValue]="false">Non</option>
                 </select>
-                <small class="text-muted">Notifier l'usager à la réception du document</small>
+              </div>
+            </div>
+           
+            
+          </div>
+
+          <!-- R6 : Raison annulation -->
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-3">
+                <label class="form-label">Raison d'annulation</label>
+                <textarea class="form-control" formControlName="acq_raison_annulation" rows="2"
+                          placeholder="Motif si la suggestion est refusée ou annulée..."></textarea>
               </div>
             </div>
           </div>

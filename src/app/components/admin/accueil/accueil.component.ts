@@ -62,7 +62,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ─── Catalogue types (toutes périodes) ─── */
   readonly allTypes: string[] = [
     'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-    'PEB Tipasa numérique', 'Requête ACQ Accessibilité', 'Springer', "Suggestion d'achat - Usager"
+    'PEB Tipasa numérique', 'Requête ACQ Accessibilité', "Suggestion d'achat - Usager"
   ];
   typeAllTimeCounts: Record<string, number> = {};
   isLoadingTypeCounts = true;
@@ -73,8 +73,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
     'Modification CCOL':     'Modification d\'une notice dans le catalogue collectif',
     'PEB Tipasa numérique':  'Prêt entre bibliothèques via la plateforme Tipasa',
     'Requête ACQ Accessibilité': 'Demande adressée directement aux acquisitions',
-    'Springer':              'Commande dans le cadre du programme Springer',
-    "Suggestion d'achat - Usager": 'Suggestion soumise par un usager de la bibliothèque',
+"Suggestion d'achat - Usager": 'Suggestion soumise par un usager de la bibliothèque',
   };
 
   readonly chartColors = {
@@ -262,8 +261,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
       case 'Modification CCOL':    return 'bi bi-pencil-square';
       case 'PEB Tipasa numérique': return 'bi bi-link-45deg';
       case 'Requête ACQ Accessibilité': return 'bi bi-question-circle';
-      case 'Springer':             return 'bi bi-journal-bookmark';
-      case "Suggestion d'achat - Usager": return 'bi bi-lightbulb';
+case "Suggestion d'achat - Usager": return 'bi bi-lightbulb';
       default:                     return 'bi bi-file-earmark-text';
     }
   }

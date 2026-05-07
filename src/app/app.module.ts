@@ -61,7 +61,6 @@ import { RequeteAccessibiliteComponent } from './components/usager/pages/requete
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { ReponsesDetailComponent } from './components/admin/reponses/reponses-detail/reponses-detail.component';
 import { FaqComponent } from './components/faq/faq.component';
-import { SpringerComponent } from './components/usager/pages/springer/springer.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +90,6 @@ import { SpringerComponent } from './components/usager/pages/springer/springer.c
     ReponsesListComponent,
     ReponsesDetailComponent,
     FaqComponent,
-    SpringerComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective
