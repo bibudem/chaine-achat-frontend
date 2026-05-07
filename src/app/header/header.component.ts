@@ -3,6 +3,7 @@ import {AuthService} from "../services/auth.service";
 import {TranslateService} from "@ngx-translate/core";
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class HeaderComponent {
   flagChoix:string= 'flag-icon-fr';
 
   currentDate = new Date();
+  isProduction = environment.production;
 
   constructor(public authService: AuthService,
               private translate: TranslateService,
