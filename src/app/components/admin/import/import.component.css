@@ -194,8 +194,10 @@
   margin-bottom: .7rem;
 }
 
-.imp-format-card__section-head--req { color: var(--import-red); }
-.imp-format-card__section-head--opt { color: var(--text-gray); }
+.imp-format-card__section-head--req      { color: var(--import-red); }
+.imp-format-card__section-head--opt      { color: var(--text-gray); }
+.imp-format-card__section-head--commun   { color: #0057ac; }
+.imp-format-card__section-head--specific { color: #1B5E6E; }
 
 /* Liste de colonnes numérotées */
 .imp-col-list {
@@ -244,6 +246,13 @@
   color:     var(--success-green);
   font-size: .9rem;
   flex-shrink: 0;
+}
+
+.imp-col-item__opt {
+  color:       var(--text-gray);
+  font-size:   .9rem;
+  flex-shrink: 0;
+  opacity:     .5;
 }
 
 /* ── Dropzone ────────────────────────────────────────────────────── */

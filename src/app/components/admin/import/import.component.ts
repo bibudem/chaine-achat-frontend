@@ -13,6 +13,19 @@ import {
 
 type Step = 'select' | 'notice' | 'upload' | 'preview' | 'result';
 
+// Champs présents dans tbl_items (buildBaseData) — communs à tous les types
+const CHAMPS_COMMUNS_IMPORT = new Set<string>([
+  'titre_document', 'sous_titre', 'isbn_issn', 'editeur', 'date_publication',
+  'categorie_document', 'format_support', 'bibliotheque', 'localisation_emplacement',
+  'demandeur', 'fournisseur', 'priorite_demande',
+  'fonds_budgetaire', 'fonds_sn_projet', 'source_information',
+  'prix_cad', 'devise_originale', 'prix_devise_originale',
+  'nombre_utilisateurs', 'lien_plateforme', 'nombre_titres_inclus', 'periode_couverte',
+  'note_commentaire', 'creation_notice_dtdm', 'note_dtdm',
+  'statut_bibliotheque', 'statut_acq', 'format_pret_numerique',
+  'personne_a_aviser', 'personne_a_aviser_nom', 'personne_a_aviser_courriel'
+]);
+
 @Component({
   selector:    'app-import',
   templateUrl: './import.component.html',
@@ -102,7 +115,6 @@ export class ImportComponent implements OnDestroy {
     if (t.includes('suggestion'))  return '#C8872A';
     if (t.includes('ccol'))        return '#3730A3';
     if (t.includes('abonnement'))  return '#6D28D9';
-    if (t.includes('springer'))    return '#9A3412';
     if (t.includes('peb'))         return '#0369A1';
     if (t.includes('acq'))         return '#B91C1C';
     if (t.includes('achat'))       return '#1B5E6E';
@@ -300,6 +312,14 @@ export class ImportComponent implements OnDestroy {
 
   get optionalColumns(): ColumnInfo[] {
     return this.selectedType?.columns.filter((c: ColumnInfo) => !c.required) ?? [];
+  }
+
+  get communColumns(): ColumnInfo[] {
+    return this.selectedType?.columns.filter(c => CHAMPS_COMMUNS_IMPORT.has(c.name)) ?? [];
+  }
+
+  get specificColumns(): ColumnInfo[] {
+    return this.selectedType?.columns.filter(c => !CHAMPS_COMMUNS_IMPORT.has(c.name)) ?? [];
   }
 
   get fileSizeLabel(): string {

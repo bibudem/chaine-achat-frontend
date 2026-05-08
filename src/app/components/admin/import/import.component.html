@@ -111,32 +111,46 @@
           </div>
           <div class="imp-format-card__divider"></div>
           <div class="imp-format-card__cols">
+
+            <!-- Champs communs -->
             <div class="imp-format-card__section">
-              <div class="imp-format-card__section-head imp-format-card__section-head--req">
-                <i class="bi bi-check2-circle"></i>
-                {{ 'import.etape2.col-obligatoires' | translate }}
+              <div class="imp-format-card__section-head imp-format-card__section-head--commun">
+                <i class="bi bi-grid-3x3-gap"></i>
+                Champs communs (tous formulaires)
               </div>
               <div class="imp-col-list">
-                <div *ngFor="let col of requiredColumns; let i = index" class="imp-col-item imp-col-item--req">
+                <div *ngFor="let col of communColumns; let i = index"
+                     class="imp-col-item" [class.imp-col-item--req]="col.required">
                   <span class="imp-col-item__num">{{ i + 1 }}</span>
                   <span class="imp-col-item__name">{{ col.name }}</span>
-                  <i class="bi bi-check2 imp-col-item__check"></i>
+                  <i *ngIf="col.required"  class="bi bi-check2 imp-col-item__check"></i>
+                  <i *ngIf="!col.required" class="bi bi-dash imp-col-item__opt"></i>
                 </div>
               </div>
             </div>
+
             <div class="imp-format-card__sep"></div>
+
+            <!-- Champs spécifiques -->
             <div class="imp-format-card__section">
-              <div class="imp-format-card__section-head imp-format-card__section-head--opt">
-                <i class="bi bi-dash-circle"></i>
-                {{ 'import.etape2.col-facultatives' | translate }}
+              <div class="imp-format-card__section-head imp-format-card__section-head--specific">
+                <i [class]="selectedType.icon"></i>
+                Champs spécifiques — {{ selectedType.label }}
               </div>
               <div class="imp-col-list">
-                <div *ngFor="let col of optionalColumns; let i = index" class="imp-col-item">
-                  <span class="imp-col-item__num">{{ requiredColumns.length + i + 1 }}</span>
+                <div *ngFor="let col of specificColumns; let i = index"
+                     class="imp-col-item" [class.imp-col-item--req]="col.required">
+                  <span class="imp-col-item__num">{{ communColumns.length + i + 1 }}</span>
                   <span class="imp-col-item__name">{{ col.name }}</span>
+                  <i *ngIf="col.required"  class="bi bi-check2 imp-col-item__check"></i>
+                  <i *ngIf="!col.required" class="bi bi-dash imp-col-item__opt"></i>
+                </div>
+                <div *ngIf="specificColumns.length === 0" class="text-muted small fst-italic ps-1 py-1">
+                  Aucun champ spécifique pour ce type.
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>

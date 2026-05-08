@@ -6,6 +6,57 @@ import { MatSort } from "@angular/material/sort";
 import { Router } from "@angular/router";
 import { RapportsService, FiltresRapport, ApiResponse } from '../../../services/rapports.service';
 
+// Champs présents dans tbl_items — visibles quel que soit le type de formulaire filtré
+const CHAMPS_COMMUNS = new Set<string>([
+  'item_id', 'formulaire_type', 'titre_document', 'sous_titre', 'isbn_issn',
+  'editeur', 'date_publication', 'categorie_document', 'format_support',
+  'bibliotheque', 'localisation_emplacement', 'projet_special', 'creation_notice_dtdm',
+  'fonds_budgetaire', 'fonds_sn_projet', 'fournisseur', 'source_information',
+  'prix_cad', 'devise_originale', 'prix_devise_originale', 'periode_couverte', 'nombre_titres_inclus',
+  'nombre_utilisateurs', 'format_pret_numerique', 'lien_plateforme',
+  'demandeur', 'personne_a_aviser_activation', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
+  'statut_bibliotheque', 'statut_acq', 'priorite_demande',
+  'collection', 'catalogage', 'categorie_depense', 'note_catalogueur_droit',
+  'type_demande_peb', 'urgence', 'type_requete', 'description_requete', 'action_demandee',
+  'public_cible', 'recommandation', 'justification',
+  'note_dtdm', 'note_commentaire', 'suivi_acq', 'note_acq', 'bibliotheque_note_interne',
+  'utilisateur_modification', 'date_creation', 'date_modification'
+]);
+
+// Champs spécifiques à chaque type de formulaire (tables dédiées)
+const CHAMPS_PAR_TYPE: Record<string, string[]> = {
+  'Modification et CCOL': [
+    'precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation'
+  ],
+  'Nouvel abonnement': [
+    'date_debut_abonnement', 'usager_aviser_reservation', 'type_monographie'
+  ],
+  'Nouvel achat unique': [
+    'id_ressource', 'projets_speciaux', 'format_electronique', 'quantite',
+    'reserve_cours_session', 'reserve_cours_enseignant',
+    'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime',
+    'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie'
+  ],
+  'PEB Tipasa numérique': [
+    'reference_tipasa', 'gobi_vu_format_numerique', 'gobi_version_moins_365_usd',
+    'acq_responsable_courriel'
+  ],
+  'Requête ACQ Accessibilité': [
+    'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
+    'fournisseur_contacte_sans_succes', 'exemplaire_detenu',
+    'verification_caeb', 'verification_sqla', 'verification_emma',
+    'acq_numerisation_recommandee', 'acq_date_demande_editeur', 'acq_date_livraison_estimee',
+    'type_monographie', 'acq_responsable_courriel'
+  ],
+  "Suggestion d'achat - Usager": [
+    'auteur', 'usager_nom', 'usager_statut', 'usager_faculte', 'usager_courriel',
+    'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
+    'date_requise_cours', 'note_usager', 'techdoc_suggestion_transmise',
+    'acq_raison_annulation', 'acq_isbn',
+    'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime', 'acq_responsable_courriel'
+  ]
+};
+
 interface TypeRapport {
   id: 'detaille' | 'par-type' | 'par-bibliotheque' | 'par-demandeur' | 'mensuel' | 'par-statut';
   nom: string;
@@ -30,9 +81,17 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Colonnes
   champsTitre: any = {};
-  champsDisponibles: string[] = [];
+  private tousLesChamps: string[] = [];
   colonnesSelectionnees: string[] = [];
   colonneSearch = '';
+
+  get champsDisponibles(): string[] {
+    const selectedTypes = this.selectedMap['formulaire_type'] ?? [];
+    if (!selectedTypes.length) return this.tousLesChamps;
+    const allowed = new Set<string>(CHAMPS_COMMUNS);
+    selectedTypes.forEach(type => (CHAMPS_PAR_TYPE[type] ?? []).forEach(f => allowed.add(f)));
+    return this.tousLesChamps.filter(c => allowed.has(c));
+  }
 
   // Type rapport
   rapportSelectionneId: TypeRapport['id'] = 'detaille';
@@ -162,10 +221,27 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Filtre multi-select (type, bibliothèque, priorité)
   onCheckChange(filterId: string, value: string, event: any): void {
     if (!this.selectedMap[filterId]) this.selectedMap[filterId] = [];
+
     if (event.target.checked) {
       this.selectedMap[filterId] = [...this.selectedMap[filterId], value];
+
+      if (filterId === 'formulaire_type') {
+        const specifics = CHAMPS_PAR_TYPE[value] ?? [];
+        const toAdd = specifics.filter(f => !this.colonnesSelectionnees.includes(f));
+        if (toAdd.length) this.colonnesSelectionnees = [...this.colonnesSelectionnees, ...toAdd];
+      }
     } else {
       this.selectedMap[filterId] = this.selectedMap[filterId].filter(v => v !== value);
+
+      if (filterId === 'formulaire_type') {
+        const remainingTypes = this.selectedMap[filterId];
+        const stillNeeded = new Set<string>(CHAMPS_COMMUNS);
+        remainingTypes.forEach(t => (CHAMPS_PAR_TYPE[t] ?? []).forEach(f => stillNeeded.add(f)));
+        const deselectedSpecifics = new Set(CHAMPS_PAR_TYPE[value] ?? []);
+        this.colonnesSelectionnees = this.colonnesSelectionnees.filter(
+          c => !deselectedSpecifics.has(c) || stillNeeded.has(c)
+        );
+      }
     }
     this.chargerApercu();
   }
@@ -200,8 +276,8 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private initTitreChamps(): void {
     this.translate.get('labels-rapport').subscribe(res => {
-      this.champsTitre      = res;
-      this.champsDisponibles = Object.keys(res);
+      this.champsTitre   = res;
+      this.tousLesChamps = Object.keys(res);
     });
   }
 

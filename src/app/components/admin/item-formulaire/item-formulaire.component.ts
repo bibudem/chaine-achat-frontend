@@ -340,7 +340,16 @@ export class ItemFormulaireComponent implements OnInit {
   async onSubmit(): Promise<void> {
     if (this.itemForm.invalid) {
       this.markFormGroupTouched();
-      this.dialogService.showWarning('Veuillez remplir tous les champs obligatoires');
+      const specificInvalidFields = [
+        'precision_demande', 'date_debut_abonnement', 'gobi_vu_format_numerique',
+        'besoin_specifique_format', 'quantite', 'auteur', 'usager_statut',
+        'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
+      ];
+      const hasSpecificError = specificInvalidFields.some(f => this.itemForm.get(f)?.invalid);
+      if (hasSpecificError && this.activeTab === 'base') {
+        this.setActiveTab('specifique');
+      }
+      this.dialogService.showWarning('Veuillez remplir tous les champs obligatoires.');
       return;
     }
 

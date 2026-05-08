@@ -11,7 +11,7 @@
           <button class="btn btn-outline-secondary me-2 btn-sm" (click)="onReturn()">
             <i class="bi bi-arrow-left"></i> Retour
           </button>
-          <button class="btn btn-success btn-sm" (click)="onSubmit()" [disabled]="submitting || itemForm.invalid">
+          <button class="btn btn-success btn-sm" (click)="onSubmit()" [disabled]="submitting">
             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
             {{ isEditMode ? 'Enregistrer' : 'Créer' }}
           </button>
@@ -122,12 +122,12 @@
               <label class="form-label">ISBN/ISSN <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
                      appIsbnMask #isbnMask="appIsbnMask"
-                     [class.is-invalid]="isInvalid('isbn_issn') || isbnMask.wasStripped"
+                     [class.is-invalid]="isInvalid('isbn_issn')"
                      placeholder="Ex: 9780306406157">
-              <div class="invalid-feedback">
-                <ng-container *ngIf="hasError('isbn_issn', 'required') && !isbnMask.wasStripped">L'ISBN/ISSN est obligatoire</ng-container>
-                <ng-container *ngIf="isbnMask.wasStripped">Format attendu : chiffres uniquement</ng-container>
-              </div>
+              <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required')">L'ISBN/ISSN est obligatoire</div>
+              <small class="text-muted" *ngIf="isbnMask.wasStripped">
+                <i class="bi bi-info-circle me-1"></i>Tirets et caractères non numériques retirés automatiquement.
+              </small>
             </div>
           </div>
           <!-- Date publication : absente pour Nouvel abonnement et Springer -->
@@ -309,7 +309,7 @@
                      appFondsBudgetaireMask
                      [class.is-invalid]="isInvalid('fonds_budgetaire')"
                      placeholder="Ex : PE-001">
-              <div class="invalid-feedback">
+              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
                 Le fonds budgétaire est obligatoire
               </div>
             </div>
@@ -504,7 +504,7 @@
                   <option value="">Sélectionnez</option>
                   <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
                 </select>
-                <div class="invalid-feedback">La précision de la demande est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('precision_demande', 'required')">La précision de la demande est obligatoire</div>
               </div>
             </div>
             <div class="col-md-3">
@@ -530,7 +530,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de l'activation de la ressource</small>
               </div>
             </div>
@@ -555,7 +555,7 @@
                 </label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement"
                        [class.is-invalid]="isInvalid('date_debut_abonnement')">
-                <div class="invalid-feedback">La date de début d'abonnement est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('date_debut_abonnement', 'required')">La date de début d'abonnement est obligatoire</div>
               </div>
             </div>
             <div class="col-md-6" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
@@ -581,7 +581,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -701,7 +701,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">Courriel invalide.</div>
                 <small class="text-muted">Notifier lors de la mise en réservation</small>
               </div>
             </div>
@@ -718,7 +718,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">Courriel invalide.</div>
               </div>
             </div>
           </div>
@@ -746,7 +746,7 @@
                   <option value="Oui">Oui</option>
                   <option value="Non">Non</option>
                 </select>
-                <div class="invalid-feedback">Ce champ est obligatoire.</div>
+                <div class="invalid-feedback" *ngIf="hasError('gobi_vu_format_numerique', 'required')">Ce champ est obligatoire.</div>
               </div>
             </div>
             <div class="col-md-2">
@@ -772,7 +772,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
               </div>
             </div>
           </div>
@@ -805,7 +805,7 @@
                   <option value="">Sélectionnez</option>
                   <option *ngFor="let b of besoinsFormat" [value]="b">{{ b }}</option>
                 </select>
-                <div class="invalid-feedback">Ce champ est obligatoire.</div>
+                <div class="invalid-feedback" *ngIf="hasError('besoin_specifique_format', 'required')">Ce champ est obligatoire.</div>
               </div>
             </div>
             <div class="col-md">
@@ -923,7 +923,7 @@
                        appEmailMask
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
               </div>
             </div>
           </div>
@@ -947,7 +947,7 @@
                 <input type="text" class="form-control" formControlName="auteur"
                        [class.is-invalid]="isInvalid('auteur')"
                        placeholder="Saisie libre — max 500 car.">
-                <div class="invalid-feedback">L'auteur est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">L'auteur est obligatoire</div>
               </div>
             </div>
             <div class="col-md-2">
@@ -978,7 +978,7 @@
                   <option value="Personnel">Personnel</option>
                   <option value="Autre">Autre</option>
                 </select>
-                <div class="invalid-feedback">Obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_statut', 'required')">Obligatoire</div>
               </div>
             </div>
           </div>
@@ -1010,9 +1010,9 @@
                 <input type="text" class="form-control" formControlName="usager_faculte"
                        [class.is-invalid]="isInvalid('usager_faculte')"
                        placeholder="Ex: Faculté des sciences">
-                <div class="invalid-feedback">Obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_faculte', 'required')">Obligatoire</div>
               </div>
-            </div>       
+            </div>
           </div>
           <!-- R3 : Biblio disc. · Aviser réserv. · Aviser récept. · Bordereau -->
           <div class="row">
@@ -1083,7 +1083,7 @@
                 <input type="email" class="form-control" formControlName="acq_responsable_courriel"
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="prenom.nom@umontreal.ca">
-                <div class="invalid-feedback">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
               </div>
             </div>
             <div class="col-md-2">
@@ -1144,7 +1144,7 @@
               Champs spécifiques <i class="bi bi-arrow-right ms-1"></i>
             </button>
             <button type="button" class="btn btn-success" (click)="onSubmit()"
-                    [disabled]="submitting || itemForm.invalid">
+                    [disabled]="submitting">
               <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
               <i class="bi bi-check-lg me-1" *ngIf="!submitting"></i>
               {{ isEditMode ? 'Modifier l\'item' : 'Créer l\'item' }}

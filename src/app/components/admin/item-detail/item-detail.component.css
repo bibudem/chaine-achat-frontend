@@ -204,6 +204,14 @@
   line-height:   1.55;
 }
 
+/* ── Badges booléens (Oui/Non) — taille réduite au contenu ──────── */
+.itd-field .badge {
+  align-self: flex-start;
+  width:      fit-content;
+  font-size:  .72rem;
+  padding:    .2em .55em;
+}
+
 /* ── Bande d'info ────────────────────────────────────────────────── */
 .itd-infoband {
   background:    var(--light-gray, #E7EBEE);
