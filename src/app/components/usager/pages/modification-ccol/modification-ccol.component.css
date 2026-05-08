@@ -71,7 +71,6 @@
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--ccol-dark);
-  transform:  translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 .btn-primary:disabled {

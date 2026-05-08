@@ -202,7 +202,7 @@
           <i class="fas fa-list-alt"></i>Précision de la demande
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label required">Type de demande</label>
             <select formControlName="precision_demande" class="form-select"
                     [class.is-invalid]="isInvalid('precision_demande')">
@@ -212,6 +212,12 @@
             <div *ngIf="isInvalid('precision_demande')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>La précision de la demande est requise.
             </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Catalogue</label>
+            <input type="text" formControlName="catalogue" class="form-control"
+                   placeholder="Notes de catalogue">
+            <small class="form-text">Max 200 caractères</small>
           </div>
 
           <div class="col-md-4">
@@ -231,13 +237,6 @@
             <input type="text" formControlName="periode_couverte" class="form-control"
                    placeholder="Ex : 1996-2000">
             <small class="form-text">Spécifique CCOL et Modification</small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Catalogue</label>
-            <input type="text" formControlName="catalogue" class="form-control"
-                   placeholder="Notes de catalogue">
-            <small class="form-text">Max 200 caractères</small>
           </div>
         </div>
       </div>
@@ -344,7 +343,7 @@
           <i class="fas fa-dollar-sign"></i>Finances
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label required">Devise</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
@@ -356,7 +355,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label required">Prix en devise originale</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
@@ -370,7 +369,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label required">Prix en CAD (calculé)</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
@@ -384,7 +383,7 @@
             <small class="form-text">Converti automatiquement selon la devise sélectionnée</small>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-3">
             <label class="form-label">Fonds SN – No de projet</label>
             <input type="text" formControlName="fonds_sn_projet" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_sn_projet')"

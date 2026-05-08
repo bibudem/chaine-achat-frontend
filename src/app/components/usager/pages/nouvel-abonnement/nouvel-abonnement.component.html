@@ -143,7 +143,7 @@
                    placeholder="Sous-titre (optionnel)">
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">Éditeur / Fournisseur</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
@@ -153,7 +153,7 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">ISBN / ISSN</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
@@ -165,7 +165,7 @@
             <small class="form-text">Les tirets sont automatiquement supprimés</small>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">Catégorie de document</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -242,13 +242,13 @@
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <label class="form-label">Nombre de titres inclus</label>
                   <input type="number" formControlName="nombre_titres_inclus" class="form-control"
                          min="1" step="1" placeholder="Ex: 50">
                   <small class="form-text">Titres ou volumes inclus dans cet abonnement</small>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <label class="form-label">Nombre d'utilisateurs</label>
                   <select formControlName="nombre_utilisateurs" class="form-select">
                     <option value="Accès illimité">Accès illimité</option>
@@ -257,7 +257,7 @@
                     <option value="Autre">Autre</option>
                   </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label class="form-label required">Lien vers la plateforme</label>
                   <input type="url" formControlName="lien_plateforme" class="form-control"
                          [class.is-invalid]="isInvalid('lien_plateforme')"

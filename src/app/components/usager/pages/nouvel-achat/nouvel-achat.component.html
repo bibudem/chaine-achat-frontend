@@ -99,7 +99,7 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-8">
             <label class="form-label required">Bibliothèque</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -172,7 +172,7 @@
             <small class="form-text">Les tirets sont automatiquement supprimés</small>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md">
             <label class="form-label required">Date de publication</label>
             <input type="text" formControlName="date_publication" class="form-control"
                    [class.is-invalid]="isInvalid('date_publication')"
@@ -182,7 +182,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md">
             <label class="form-label required">Catégorie de document</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -194,7 +194,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md">
             <label class="form-label required">Source d'information</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
@@ -205,7 +205,7 @@
             <small class="form-text">URL où l'information a été trouvée</small>
           </div>
 
-          <div class="col-md-4" *ngIf="showMonographie">
+          <div class="col-md" *ngIf="showMonographie">
             <label class="form-label">Type de monographie</label>
             <select formControlName="type_monographie" class="form-select">
               <option value="">— Sélectionnez —</option>
@@ -214,7 +214,7 @@
             <small class="form-text">Visible si catégorie = Monographie</small>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md">
             <label class="form-label required">Quantité</label>
             <input type="number" formControlName="quantite" class="form-control"
                    [class.is-invalid]="isInvalid('quantite')"
