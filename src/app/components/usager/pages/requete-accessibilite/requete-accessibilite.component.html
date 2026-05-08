@@ -1,5 +1,5 @@
 <!-- ============================================================
-     app-requete-accessibilite — Requête Accessibilité
+     app-requete-accessibilite — Requête ACQ Accessibilité
      ============================================================ -->
 
 <div class="form-page">
@@ -11,7 +11,7 @@
         <i class="bi bi-universal-access"></i>
       </div>
       <div>
-        <h1 class="form-header__title">Requête Accessibilité</h1>
+        <h1 class="form-header__title">Requête ACQ Accessibilité</h1>
         <p class="form-header__subtitle">
           Demandes d'acquisition et de modification pour les ressources accessibles
         </p>
@@ -89,7 +89,7 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label class="form-label required">Bibliothèque</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -101,33 +101,27 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">Fonds budgétaire</label>
             <input type="text" formControlName="fonds_budgetaire" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_budgetaire')"
                    placeholder="Ex : MO-005">
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Requis (max 200 caractères).
+              <i class="fas fa-exclamation-triangle me-1"></i>Requis (format ex : MO-005).
             </div>
           </div>
 
-          <div class="col-12">
-            <label class="form-label required">Priorité de la demande</label>
-            <div class="btn-group w-100" role="group">
-              <button type="button" class="btn btn-priorite"
-                      *ngFor="let p of priorites"
-                      [class.btn-priorite--active]="form.get('priorite_demande')?.value === p"
-                      [class.btn-priorite--urgent]="p === 'Urgent'"
-                      [class.btn-priorite--prioritaire]="p === 'Prioritaire'"
-                      (click)="form.patchValue({ priorite_demande: p })">
-                <i class="fas me-1"
-                   [class.fa-clock]="p === 'Régulier'"
-                   [class.fa-exclamation]="p === 'Prioritaire'"
-                   [class.fa-fire]="p === 'Urgent'"></i>
-                {{ p }}
-              </button>
-            </div>
-            <small class="form-text">Par défaut : Urgent pour les requêtes d'accessibilité</small>
+          <div class="col-md-3">
+            <label class="form-label required">Priorité</label>
+            <select formControlName="priorite_demande" class="form-select priorite-select"
+                    [ngClass]="{
+                      'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
+                      'priorite--prioritaire': form.get('priorite_demande')?.value === 'Prioritaire',
+                      'priorite--urgent':      form.get('priorite_demande')?.value === 'Urgent'
+                    }"
+                    [class.is-invalid]="isInvalid('priorite_demande')">
+              <option *ngFor="let p of priorites" [value]="p">{{ p }}</option>
+            </select>
           </div>
         </div>
       </div>
@@ -173,17 +167,11 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">ID de ressource</label>
-            <input type="text" formControlName="id_ressource" class="form-control"
-                   placeholder="Identifiant interne (max 100 car.)">
-          </div>
-
-          <div class="col-md-4">
             <label class="form-label">Date de publication</label>
             <input type="date" formControlName="date_publication" class="form-control">
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label required">Catégorie de document</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -195,7 +183,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Permalien Sofia</label>
             <input type="url" formControlName="permalien_sofia" class="form-control"
                    [class.is-invalid]="isInvalid('permalien_sofia')"
@@ -215,21 +203,9 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">Type de requête</label>
-            <select formControlName="type_requete" class="form-select"
-                    [class.is-invalid]="isInvalid('type_requete')">
-              <option value="">— Sélectionnez —</option>
-              <option *ngFor="let t of typesRequete" [value]="t">{{ t }}</option>
-            </select>
-            <div *ngIf="isInvalid('type_requete')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Le type de requête est requis.
-            </div>
-          </div>
-
-          <div class="col-md-6">
             <label class="form-label">Référence usager</label>
             <input type="text" formControlName="reference_usager" class="form-control"
-                   placeholder="Identifiant interne pour le suivi avec l'usager">
+                   placeholder="Identification interne Accessibilité">
             <small class="form-text">Référence Accessibilité (optionnel)</small>
           </div>
 
@@ -245,21 +221,8 @@
             <label class="form-label">Fournisseur déjà contacté, sans succès</label>
             <select formControlName="fournisseur_contacte_sans_succes" class="form-select">
               <option value="">— (Vide) —</option>
-              <option value="OUI">OUI</option>
-              <option value="NON">NON</option>
+              <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
             </select>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Description de la requête</label>
-            <textarea formControlName="description_requete" class="form-control" rows="3"
-                      placeholder="Décrivez la requête d'accessibilité en détail…"></textarea>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Action demandée</label>
-            <textarea formControlName="action_demandee" class="form-control" rows="3"
-                      placeholder="Précisez l'action souhaitée…"></textarea>
           </div>
         </div>
       </div>
@@ -272,7 +235,7 @@
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Format / Support</label>
-            <div class="btn-group w-100" role="group">
+            <div class="format-chips">
               <button type="button" class="btn btn-format"
                       [class.btn-format--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
                       (click)="form.patchValue({ format_support: 'Imprimé/support physique' })">
@@ -303,12 +266,13 @@
                   </select>
                   <small class="form-text">Spécifique au formulaire Accessibilité</small>
                 </div>
+
                 <div class="col-md-6">
-                  <label class="form-label">Usager à aviser lors de l'activation</label>
-                  <input type="email" formControlName="personne_a_aviser_activation" class="form-control"
-                         [class.is-invalid]="isInvalid('personne_a_aviser_activation')"
+                  <label class="form-label">Courriel de l'usager à aviser lors de l'activation</label>
+                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
+                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                          placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('personne_a_aviser_activation')" class="invalid-feedback">
+                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
                     <i class="fas fa-exclamation-triangle me-1"></i>Courriel valide requis.
                   </div>
                   <small class="form-text">Courriel de l'usager à notifier (optionnel)</small>
@@ -326,18 +290,12 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Exemplaire papier détenu</label>
-            <select formControlName="exemplaire_papier_detenu" class="form-select">
+            <label class="form-label">Exemplaire détenu</label>
+            <select formControlName="exemplaire_detenu" class="form-select">
               <option value="">— Sélectionnez —</option>
-              <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Exemplaire électronique détenu</label>
-            <select formControlName="exemplaire_electronique_detenu" class="form-select">
-              <option value="">— Sélectionnez —</option>
-              <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+              <option value="Imprimé">Imprimé</option>
+              <option value="Électronique">Électronique</option>
+              <option value="Ne s'applique pas">Ne s'applique pas</option>
             </select>
           </div>
 
@@ -367,48 +325,61 @@
         </div>
       </div>
 
-      <!-- SECTION 6 — ACQUISITIONS -->
+      <!-- SECTION 6 — FINANCES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-shopping-cart"></i>Acquisitions
+          <i class="fas fa-dollar-sign"></i>Finances
         </h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Numérisation recommandée (ACQ)</label>
-            <select formControlName="acq_numerisation_recommandee" class="form-select">
-              <option value="">— Sélectionnez —</option>
-              <option value="OUI">OUI</option>
-              <option value="Ne s'applique pas">Ne s'applique pas</option>
+            <label class="form-label required">Devise</label>
+            <select formControlName="devise_originale" class="form-select"
+                    [class.is-invalid]="isInvalid('devise_originale')">
+              <option value="">— Devise —</option>
+              <option *ngFor="let d of devises" [value]="d">{{ d }}</option>
             </select>
+            <div *ngIf="isInvalid('devise_originale')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>La devise est requise.
+            </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Date de la demande chez l'éditeur</label>
-            <input type="date" formControlName="acq_date_demande_editeur" class="form-control">
+            <label class="form-label required">Prix en devise originale</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" min="0.01" step="0.01"
+                     formControlName="prix_devise_originale" class="form-control"
+                     [class.is-invalid]="isInvalid('prix_devise_originale')"
+                     placeholder="0.00">
+            </div>
+            <div *ngIf="isInvalid('prix_devise_originale')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Prix requis (> 0).
+            </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Date estimée de la livraison</label>
-            <input type="date" formControlName="acq_date_livraison_estimee" class="form-control">
+            <label class="form-label required">Prix en CAD (calculé)</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" formControlName="prix_cad" class="form-control"
+                     [class.is-invalid]="isInvalid('prix_cad')"
+                     readonly placeholder="Converti automatiquement">
+            </div>
+            <div *ngIf="isInvalid('prix_cad')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Entrez la devise et le prix.
+            </div>
+            <small class="form-text">Converti automatiquement selon la devise sélectionnée</small>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 7 — INFORMATIONS COMPLÉMENTAIRES -->
+      <!-- SECTION 7 — SOURCE ET NOTES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-info-circle"></i>Informations complémentaires
+          <i class="fas fa-info-circle"></i>Source et notes
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label">Projets spéciaux</label>
-            <select formControlName="projet_special" class="form-select">
-              <option value="">— Aucun —</option>
-              <option *ngFor="let p of projetsSpeciaux" [value]="p">{{ p }}</option>
-            </select>
-          </div>
-
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Fonds SN – No de projet</label>
             <input type="text" formControlName="fonds_sn_projet" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_sn_projet')"
@@ -418,7 +389,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Source d'information (URL)</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"

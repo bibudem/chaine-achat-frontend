@@ -27,23 +27,16 @@
   outline:      none                               !important;
 }
 
-/* ── Boutons segmentés ─────────────────────────────────────── */
-.btn-group.w-100 .btn-format:hover,
-.btn-group.w-100 .btn-priorite:hover {
-  background: var(--acces-light);
-  color:      var(--acces-mid);
+/* ── Chips de format ────────────────────────────────────────── */
+.btn-format:hover {
+  background:   var(--acces-light);
+  color:        var(--acces-mid);
+  border-color: var(--acces-mid);
 }
 .btn-format--active {
   background:   var(--acces-mid) !important;
   border-color: var(--acces-mid) !important;
   color:        #fff             !important;
-  z-index: 1;
-}
-.btn-priorite--active {
-  background:   var(--acces-mid) !important;
-  border-color: var(--acces-mid) !important;
-  color:        #fff             !important;
-  z-index: 1;
 }
 
 /* ── Interrupteur ──────────────────────────────────────────── */

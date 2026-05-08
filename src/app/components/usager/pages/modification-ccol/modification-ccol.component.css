@@ -33,16 +33,16 @@
   cursor:     default;
 }
 
-/* ── Boutons segmentés ─────────────────────────────────────── */
-.btn-group.w-100 .btn-format:hover {
-  background: var(--ccol-light);
-  color:      var(--ccol-mid);
+/* ── Chips de format ────────────────────────────────────────── */
+.btn-format:hover {
+  background:   var(--ccol-light);
+  color:        var(--ccol-mid);
+  border-color: var(--ccol-mid);
 }
 .btn-format--active {
   background:   var(--ccol-mid) !important;
   border-color: var(--ccol-mid) !important;
   color:        #fff            !important;
-  z-index: 1;
 }
 
 /* ── Interrupteur ──────────────────────────────────────────── */

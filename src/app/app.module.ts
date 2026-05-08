@@ -58,9 +58,11 @@ import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 import { ModificationCcolComponent } from './components/usager/pages/modification-ccol/modification-ccol.component';
 import { RequeteAccessibiliteComponent } from './components/usager/pages/requete-accessibilite/requete-accessibilite.component';
+import { NouvelAbonnementComponent } from './components/usager/pages/nouvel-abonnement/nouvel-abonnement.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { ReponsesDetailComponent } from './components/admin/reponses/reponses-detail/reponses-detail.component';
 import { FaqComponent } from './components/faq/faq.component';
+import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 
 @NgModule({
   declarations: [
@@ -87,9 +89,11 @@ import { FaqComponent } from './components/faq/faq.component';
     NouvelAchatComponent,
     ModificationCcolComponent,
     RequeteAccessibiliteComponent,
+    NouvelAbonnementComponent,
     ReponsesListComponent,
     ReponsesDetailComponent,
     FaqComponent,
+    PebTipasaNumeriqueComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective

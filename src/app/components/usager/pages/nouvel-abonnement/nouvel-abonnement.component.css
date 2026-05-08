@@ -1,0 +1,99 @@
+/* ============================================================
+   nouvel-abonnement.component.css
+   ACCENT : violet abonnement (--abo-*)
+   Structure, responsive et composants partagés → css_udem.css
+   ============================================================ */
+
+:host {
+  --abo-light: #ede9fe;
+  --abo-mid:   #6d28d9;
+  --abo-dark:  #4c1d95;
+}
+
+/* ── Gradient d'en-tête ────────────────────────────────────── */
+.form-header {
+  background: var(--dark-gray);
+  border-bottom: 5px solid var(--abo-mid);
+}
+
+/* ── Titre de section ──────────────────────────────────────── */
+.form-section__title {
+  border-bottom: 2px solid var(--abo-light);
+}
+.form-section__title i { color: var(--abo-mid); }
+
+/* ── Focus ring violet sur les champs ──────────────────────── */
+.form-control,
+.form-select {
+  min-height: 42px !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--abo-mid) !important;
+  box-shadow:   0 0 0 3px rgba(109, 40, 217, 0.15) !important;
+  outline:      none !important;
+}
+
+/* ── Champs en lecture seule ───────────────────────────────── */
+.form-control[readonly] {
+  background: var(--abo-light) !important;
+  color:      var(--text-gray) !important;
+  cursor:     default;
+}
+
+/* ── Préfixe monétaire ($) ─────────────────────────────────── */
+.input-group-text {
+  background: var(--abo-light);
+  color:      var(--abo-mid);
+}
+
+/* ── Chips de format ────────────────────────────────────────── */
+.btn-format:hover {
+  background:   var(--abo-light);
+  color:        var(--abo-mid);
+  border-color: var(--abo-mid);
+}
+.btn-format--active {
+  background:   var(--abo-mid) !important;
+  border-color: var(--abo-mid) !important;
+  color:        var(--white)   !important;
+}
+
+/* ── Zone conditionnelle électronique ───────────────────────── */
+.electronique-fields {
+  background:    var(--abo-light);
+  border:        1px solid rgba(109, 40, 217, 0.2);
+  border-radius: 8px;
+  padding:       16px 18px 8px;
+  margin-top:    8px;
+}
+
+/* ── Barre d'actions ───────────────────────────────────────── */
+.form-actions { border-top: 2px solid var(--abo-light); }
+
+/* ── Bouton soumettre ──────────────────────────────────────── */
+.btn-primary {
+  background: var(--abo-mid);
+  color:      var(--white);
+  border:     none;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--abo-dark);
+  transform:  translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:disabled {
+  opacity:    0.55;
+  cursor:     not-allowed;
+  transform:  none  !important;
+  box-shadow: none  !important;
+}
+
+/* ── Écran de confirmation ──────────────────────────────────── */
+.confirmation-detail { background: var(--abo-light); }
+.confirmation-detail__label i { color: var(--abo-mid); }
+
+.confirmation-icon--abonnement {
+  background: linear-gradient(135deg, var(--abo-mid), var(--abo-dark));
+  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.28);
+}

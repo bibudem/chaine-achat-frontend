@@ -100,6 +100,30 @@ export class ReponsesService {
   }
 
   // ──────────────────────────────────────────────────────────
+  // NOUVEL ABONNEMENT
+  // Composant : nouvel-abonnement.component.ts
+  // Route     : POST /reponses/nouvel-abonnement
+  // ──────────────────────────────────────────────────────────
+  envoyerNouvelAbonnement(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body = {
+      type_formulaire: 'Nouvel abonnement',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/nouvel-abonnement`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerNouvelAbonnement')));
+  }
+
+  // ──────────────────────────────────────────────────────────
   // REQUÊTE ACCESSIBILITÉ
   // Composant : requete-accessibilite.component.ts
   // Route     : POST /reponses/requete-accessibilite
@@ -145,6 +169,30 @@ export class ReponsesService {
     return this.http
       .post(`${this.baseUrl}/modification-ccol`, body, this.httpOptions)
       .pipe(catchError(this.handleError('envoyerModificationCcol')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // PEB TIPASA NUMÉRIQUE
+  // Composant : peb-tipasa-numerique.component.ts
+  // Route     : POST /reponses/peb-tipasa
+  // ──────────────────────────────────────────────────────────
+  envoyerPebTipasa(payload: {
+    baseData:     Record<string, any>;
+    specificData: Record<string, any>;
+  }): Observable<any> {
+    const body = {
+      type_formulaire: 'PEB Tipasa numérique',
+      usager_nom:      this.getNomSession(),
+      usager_courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+      usager_statut:   sessionStorage.getItem('groupeAdmin')   ?? '',
+      reponses: {
+        baseData:     payload.baseData,
+        specificData: payload.specificData
+      }
+    };
+    return this.http
+      .post(`${this.baseUrl}/peb-tipasa`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerPebTipasa')));
   }
 
   // ──────────────────────────────────────────────────────────

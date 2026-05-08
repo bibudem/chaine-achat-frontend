@@ -19,7 +19,9 @@ import { ImportComponent } from './components/admin/import/import.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 import { ModificationCcolComponent } from './components/usager/pages/modification-ccol/modification-ccol.component';
 import { RequeteAccessibiliteComponent } from './components/usager/pages/requete-accessibilite/requete-accessibilite.component';
+import { NouvelAbonnementComponent } from './components/usager/pages/nouvel-abonnement/nouvel-abonnement.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
+import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -43,6 +45,8 @@ const routes: Routes = [
       { path: 'nouvel-achat', component: NouvelAchatComponent },
       { path: 'modification-ccol', component: ModificationCcolComponent },
       { path: 'requete-accessibilite', component: RequeteAccessibiliteComponent },
+      { path: 'nouvel-abonnement', component: NouvelAbonnementComponent },
+      { path: 'peb-tipasa-numerique', component: PebTipasaNumeriqueComponent },
     ]
   },
   { path: 'page-not-found', component: PageNotFoundComponent  },

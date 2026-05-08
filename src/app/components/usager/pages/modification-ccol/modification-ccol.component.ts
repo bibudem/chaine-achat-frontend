@@ -43,10 +43,8 @@ export class ModificationCcolComponent implements OnInit {
     'Complément de collection'
   ];
 
-  projetsSpeciaux: string[] = [
-    'Premiers peuples', 'Collection bien-être', 'Mini-école de santé',
-    "Soutien à l'Ukraine", 'Transition vers le numérique', "Ne s'applique pas"
-  ];
+  priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
+  devises: string[] = ['CAD', 'USD', 'EUR', 'GBP', 'CHF'];
 
   derniereTitre        = '';
   derniereBibliotheque = '';
@@ -59,76 +57,88 @@ export class ModificationCcolComponent implements OnInit {
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
-    const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
+    const statut   = sessionStorage.getItem('groupeAdmin')   ?? '';
 
     this.form = this.fb.group({
 
       /* ── Identification ── */
-      nom:                          [nom,      Validators.required],
-      statut:                       [statut],
-      courriel:                     [courriel, [Validators.required, Validators.email]],
-      bibliotheque:                 ['',       Validators.required],
-      fonds_budgetaire:             ['',       [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      nom:                  [nom,      Validators.required],
+      statut:               [statut],
+      courriel:             [courriel, [Validators.required, Validators.email]],
+      bibliotheque:         ['',       Validators.required],
+      fonds_budgetaire:     ['',       [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      priorite_demande:     ['Urgent', Validators.required],
 
       /* ── Document / Abonnement ── */
-      titre_document:               ['', [Validators.required, Validators.maxLength(500)]],
-      sous_titre:                   ['', Validators.maxLength(500)],
-      editeur:                      ['', Validators.maxLength(300)],
-      isbn_issn:                    ['', [Validators.required, this.isbnValidator]],
-      id_ressource:                 ['', Validators.maxLength(100)],
-      date_publication:             [''],
-      categorie_document:           ['', Validators.required],
+      titre_document:       ['', [Validators.required, Validators.maxLength(500)]],
+      sous_titre:           ['', Validators.maxLength(500)],
+      editeur:              ['', Validators.maxLength(300)],
+      isbn_issn:            ['', [Validators.required, this.isbnValidator]],
+      date_publication:     [''],
+      categorie_document:   ['', Validators.required],
 
-      /* ── Précision de la demande (spécifique CCOL) ── */
-      precision_demande:            ['', Validators.required],
-      numero_oclc:                  [''],
-      date_debut_abonnement:        [''],
-      collection:                   [''],
-      periode_couverte:             [''],
-      catalogage:                   [''],
+      /* ── Précision de la demande ── */
+      precision_demande:     ['', Validators.required],
+      numero_oclc:           [''],
+      date_debut_abonnement: [''],
+      periode_couverte:      [''],
+      catalogue:             ['', Validators.maxLength(200)],
 
       /* ── Format et support ── */
-      format_support:               ['Imprimé/support physique', Validators.required],
-      localisation_emplacement:     [''],
-      creation_notice_dtdm:         [true],
-      lien_plateforme:              [''],
-      nombre_utilisateurs:          ['Accès illimité'],
-      nombre_titres_inclus:         [null, Validators.min(1)],
-      personne_a_aviser_activation: [{ value: '', disabled: true }, Validators.email],
+      format_support:           ['Imprimé/support physique', Validators.required],
+      localisation_emplacement: [''],
+      creation_notice_dtdm:     [true],
+      lien_plateforme:          [''],
+      nombre_utilisateurs:      ['Accès illimité'],
+      nombre_titres_inclus:     [null, Validators.min(1)],
+      usager_aviser_activation: [{ value: '', disabled: true }, Validators.email],
+
+      /* ── Finances ── */
+      devise_originale:      ['',   Validators.required],
+      prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
+      prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
 
       /* ── Informations complémentaires ── */
-      projet_special:               [''],
-      fonds_sn_projet:              ['', Validators.maxLength(50)],
-      source_information:           ['', [Validators.required, Validators.pattern('https?://.+')]],
+      fonds_sn_projet:    ['', Validators.maxLength(50)],
+      source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
 
       /* ── Notes ── */
-      note_commentaire:             ['', Validators.maxLength(1000)],
+      note_commentaire: ['', Validators.maxLength(1000)],
     });
 
-    // Format — champs conditionnels + création notice
     this.form.get('format_support')!.valueChanges.subscribe(val => {
       this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
       this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
 
-      const lien     = this.form.get('lien_plateforme')!;
-      const personne = this.form.get('personne_a_aviser_activation')!;
+      const lien   = this.form.get('lien_plateforme')!;
+      const aviser = this.form.get('usager_aviser_activation')!;
 
-      // Création de notice TDM : OUI par défaut sauf si format pur Électronique
       this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
 
       if (this.showElectronique) {
         lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
-        personne.enable();
+        aviser.enable();
       } else {
         lien.clearValidators();
-        personne.disable();
+        aviser.disable();
       }
       lien.updateValueAndValidity();
-      personne.updateValueAndValidity();
+      aviser.updateValueAndValidity();
     });
+
+    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
+    this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
   }
 
-  // Validateur ISBN / ISSN — tirets refusés (auto-supprimés à la saisie)
+  private convertirPrix(): void {
+    const prix   = this.form.get('prix_devise_originale')?.value;
+    const devise = this.form.get('devise_originale')?.value;
+    if (!prix || !devise) return;
+    const taux: { [k: string]: number } = { USD: 1.368, EUR: 1.48, GBP: 1.73, CHF: 1.52 };
+    const prixCAD = devise === 'CAD' ? prix : prix * (taux[devise] || 1);
+    this.form.get('prix_cad')?.setValue(parseFloat(prixCAD.toFixed(2)), { emitEvent: false });
+  }
+
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) return null;
@@ -162,6 +172,7 @@ export class ModificationCcolComponent implements OnInit {
     this.showElectronique = false;
     this.showImprime      = true;
     this.form.reset({
+      priorite_demande:     'Urgent',
       format_support:       'Imprimé/support physique',
       nombre_utilisateurs:  'Accès illimité',
       creation_notice_dtdm: true,
@@ -180,38 +191,39 @@ export class ModificationCcolComponent implements OnInit {
 
     const payload = {
       baseData: {
-        formulaire_type:              'Modification et CCOL',
-        demandeur:                    v.nom,
-        personne_a_aviser_activation: this.showElectronique ? v.personne_a_aviser_activation : null,
-        bibliotheque:                 v.bibliotheque,
-        fonds_budgetaire:             v.fonds_budgetaire,
-        titre_document:               v.titre_document,
-        sous_titre:                   v.sous_titre,
-        editeur:                      v.editeur,
-        isbn_issn:                    v.isbn_issn,
-        id_ressource:                 v.id_ressource,
-        date_publication:             v.date_publication,
-        categorie_document:           v.categorie_document,
-        format_support:               v.format_support,
-        localisation_emplacement:     this.showImprime ? v.localisation_emplacement : null,
-        creation_notice_dtdm:         v.creation_notice_dtdm,
-        lien_plateforme:              this.showElectronique ? v.lien_plateforme : null,
-        nombre_utilisateurs:          this.showElectronique ? v.nombre_utilisateurs : null,
-        nombre_titres_inclus:         this.showElectronique ? v.nombre_titres_inclus : null,
-        projet_special:               v.projet_special,
-        fonds_sn_projet:              v.fonds_sn_projet,
-        source_information:           v.source_information,
-        note_commentaire:             v.note_commentaire,
-        periode_couverte:             v.periode_couverte,
-        statut_bibliotheque:          'Saisie en cours - En attente',
-        statut_acq:                   'En attente',
+        formulaire_type:          'Modification et CCOL',
+        demandeur:                v.nom,
+        bibliotheque:             v.bibliotheque,
+        fonds_budgetaire:         v.fonds_budgetaire,
+        priorite_demande:         v.priorite_demande,
+        titre_document:           v.titre_document,
+        sous_titre:               v.sous_titre,
+        editeur:                  v.editeur,
+        isbn_issn:                v.isbn_issn,
+        date_publication:         v.date_publication,
+        categorie_document:       v.categorie_document,
+        format_support:           v.format_support,
+        localisation_emplacement: this.showImprime     ? v.localisation_emplacement : null,
+        creation_notice_dtdm:     v.creation_notice_dtdm,
+        lien_plateforme:          this.showElectronique ? v.lien_plateforme          : null,
+        nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
+        nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
+        catalogue:                v.catalogue,
+        prix_cad:                 v.prix_cad,
+        devise_originale:         v.devise_originale,
+        prix_devise_originale:    v.prix_devise_originale,
+        periode_couverte:         v.periode_couverte,
+        fonds_sn_projet:          v.fonds_sn_projet,
+        source_information:       v.source_information,
+        note_commentaire:         v.note_commentaire,
+        statut_bibliotheque:      'Saisie en cours - En attente',
+        statut_acq:               'En attente',
       },
       specificData: {
-        precision_demande:     v.precision_demande,
-        numero_oclc:           v.numero_oclc,
-        date_debut_abonnement: v.date_debut_abonnement,
-        collection:            v.collection,
-        catalogage:            v.catalogage,
+        precision_demande:        v.precision_demande,
+        numero_oclc:              v.numero_oclc,
+        date_debut_abonnement:    v.date_debut_abonnement,
+        usager_aviser_activation: this.showElectronique ? v.usager_aviser_activation : null,
       },
     };
 

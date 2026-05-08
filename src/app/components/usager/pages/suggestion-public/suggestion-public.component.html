@@ -114,7 +114,7 @@
               <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide ou obligatoire.
             </div>
             <div class="form-check mt-2">
-              <input class="form-check-input ml-2" type="checkbox"
+              <input class="form-check-input" type="checkbox"
                      formControlName="copieCourriel" id="copieCourriel">
               <label class="form-check-label small" for="copieCourriel">
                 M'envoyer une copie de la demande
@@ -122,25 +122,26 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">Catégorie d'usager</label>
             <select formControlName="statut" class="form-select"
                     [class.is-invalid]="submitted && f['statut'].invalid">
               <option value="">— Faites un choix —</option>
-              <option>Étudiant-e 1er cycle</option>
-              <option>Étudiant-e 2e cycle</option>
-              <option>Étudiant-e 3e cycle</option>
-              <option>Professeur-e</option>
-              <option>Chargé-e de cours</option>
-              <option>Professeur-e retraité</option>
-              <option>Personnel</option>
+              <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
+              <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
+              <option value="Étudiant 3e cycle">Étudiant 3e cycle</option>
+              <option value="Professeur">Professeur</option>
+              <option value="Chargé de cours">Chargé de cours</option>
+              <option value="Chercheur">Chercheur</option>
+              <option value="Personnel">Personnel</option>
+              <option value="Autre">Autre</option>
             </select>
             <div *ngIf="submitted && f['statut'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">Faculté / Département</label>
             <input type="text" formControlName="usager_faculte" class="form-control"
                    [class.is-invalid]="submitted && f['usager_faculte'].invalid"
@@ -148,6 +149,21 @@
             <div *ngIf="submitted && f['usager_faculte'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
             </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label required">Priorité</label>
+            <select formControlName="priorite_demande" class="form-select priorite-select"
+                    [ngClass]="{
+                      'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
+                      'priorite--prioritaire': form.get('priorite_demande')?.value === 'Prioritaire',
+                      'priorite--urgent':      form.get('priorite_demande')?.value === 'Urgent'
+                    }"
+                    [class.is-invalid]="submitted && f['priorite_demande'].invalid">
+              <option value="Régulier">Régulier</option>
+              <option value="Prioritaire">Prioritaire</option>
+              <option value="Urgent">Urgent</option>
+            </select>
           </div>
 
           <div class="col-md-6">
@@ -177,24 +193,6 @@
               Courriel du ou de la bibliothécaire responsable de votre discipline
             </small>
           </div>
-
-          <div class="col-12">
-            <label class="form-label required">Priorité de la demande</label>
-            <div class="btn-group w-100" role="group">
-              <button type="button" class="btn btn-priorite"
-                      *ngFor="let p of priorites"
-                      [class.btn-priorite--active]="form.get('priorite_demande')?.value === p"
-                      [class.btn-priorite--urgent]="p === 'Urgent'"
-                      [class.btn-priorite--prioritaire]="p === 'Prioritaire'"
-                      (click)="form.patchValue({ priorite_demande: p })">
-                <i class="fas me-1"
-                   [class.fa-clock]="p === 'Régulier'"
-                   [class.fa-exclamation]="p === 'Prioritaire'"
-                   [class.fa-fire]="p === 'Urgent'"></i>
-                {{ p }}
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -208,11 +206,11 @@
             <label class="form-label">Type de document</label>
             <select formControlName="categorie_document" class="form-select">
               <option value="">— Faites un choix —</option>
-              <option>Livre</option>
-              <option>Périodique</option>
-              <option>Document audiovisuel</option>
-              <option>Base de données</option>
-              <option>Autre</option>
+              <option value="Monographie">Livre</option>
+              <option value="Périodique">Périodique</option>
+              <option value="Base de données">Base de données</option>
+              <option value="Archives de périodiques">Archives de périodiques</option>
+              <option value="Archives de monographies">Archives de monographies</option>
             </select>
             <small class="form-text">Nature du document suggéré</small>
           </div>
@@ -244,7 +242,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label" [ngClass]="{ 'required': showElectronique }">Source internet (URL)</label>
+            <label class="form-label">Source internet (URL)</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="submitted && f['source_information'].invalid"
                    placeholder="https://...">
@@ -254,21 +252,14 @@
             <small class="form-text">Lien vers la fiche du document (éditeur, librairie, etc.)</small>
           </div>
 
-          <div class="col-md-3">
-            <label class="form-label">Édition</label>
-            <input type="text" formControlName="edition" class="form-control"
-                   placeholder="Ex : 2e édition, 3e tirage">
-            <small class="form-text">Numéro ou description de l'édition</small>
-          </div>
-
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label">Date de publication</label>
             <input type="text" formControlName="date_publication" class="form-control"
                    placeholder="Ex : 2024">
             <small class="form-text">Date de publication en ligne ou imprimée</small>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">ISBN / ISSN</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="submitted && f['isbn_issn'].invalid"
@@ -280,44 +271,19 @@
             <small class="form-text">Les tirets sont automatiquement supprimés</small>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label">Format / Support</label>
             <select formControlName="format_support" class="form-select">
               <option value="">— Faites un choix —</option>
-              <option>Imprimé / support physique</option>
-              <option>Électronique</option>
+              <option value="Imprimé/support physique">Imprimé / support physique</option>
+              <option value="Électronique">Électronique</option>
+              <option value="Imprimé et électronique">Imprimé et électronique</option>
             </select>
-          </div>
-
-          <div class="col-12" *ngIf="showElectronique">
-            <div class="electronique-fields">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">Format électronique</label>
-                  <select formControlName="format_electronique" class="form-select">
-                    <option value="">— Faites un choix —</option>
-                    <option>PDF</option>
-                    <option>EPUB</option>
-                    <option>Web</option>
-                    <option>Autre</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Accès</label>
-                  <select formControlName="acces_electronique" class="form-select">
-                    <option value="">— Faites un choix —</option>
-                    <option>Accès illimité</option>
-                    <option>Accès limité dans le temps</option>
-                    <option>Accès par nombre d'usagers</option>
-                  </select>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div class="col-12">
             <label class="form-label">Notes et commentaires</label>
-            <textarea formControlName="note_commentaire" class="form-control" rows="4"
+            <textarea formControlName="note_usager" class="form-control" rows="4"
                       placeholder="Justification de votre demande, informations complémentaires…"></textarea>
           </div>
         </div>

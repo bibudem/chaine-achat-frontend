@@ -1,5 +1,5 @@
 <!-- ============================================================
-     app-modification-ccol — Modification et CCOL
+     app-peb-tipasa-numerique — PEB Tipasa numérique
      ============================================================ -->
 
 <div class="form-page">
@@ -8,24 +8,24 @@
     <!-- ══ EN-TÊTE ══════════════════════════════════════════ -->
     <div class="form-header">
       <div class="form-header__icon">
-        <i class="bi bi-pencil-square"></i>
+        <i class="bi bi-share"></i>
       </div>
       <div>
-        <h1 class="form-header__title">Modification et CCOL</h1>
+        <h1 class="form-header__title">PEB Tipasa numérique</h1>
         <p class="form-header__subtitle">
-          Modifications d'abonnements, compléments de collection et demandes CCOL
+          Demande d'achat d'un livre numérique en remplacement d'un prêt entre bibliothèques
         </p>
       </div>
     </div>
 
     <!-- ══ ÉCRAN DE CONFIRMATION ════════════════════════════ -->
     <div *ngIf="success" class="confirmation-screen">
-      <div class="confirmation-icon confirmation-icon--ccol">
+      <div class="confirmation-icon confirmation-icon--peb">
         <i class="fas fa-check"></i>
       </div>
       <h2 class="confirmation-title">Demande soumise !</h2>
       <p class="confirmation-message">
-        Votre demande de modification a bien été transmise à l'équipe des Acquisitions.<br>
+        Votre demande PEB Tipasa numérique a bien été transmise à l'équipe des Acquisitions.<br>
         Elle sera traitée dans les meilleurs délais.
       </p>
       <div class="confirmation-details">
@@ -89,7 +89,7 @@
             </div>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-4">
             <label class="form-label required">Bibliothèque</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -107,12 +107,11 @@
                    [class.is-invalid]="isInvalid('fonds_budgetaire')"
                    placeholder="Ex : MO-005">
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Requis (max 200 caractères).
+              <i class="fas fa-exclamation-triangle me-1"></i>Requis (format ex : MO-005).
             </div>
-            <small class="form-text">Ex : MO-005, SN-080, PE-001</small>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">Priorité</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
@@ -127,17 +126,17 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DOCUMENT / ABONNEMENT -->
+      <!-- SECTION 2 — DOCUMENT -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>Document / Abonnement
+          <i class="fas fa-book-open"></i>Document
         </h2>
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Titre du document</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
-                   placeholder="Titre complet du document ou de l'abonnement">
+                   placeholder="Titre complet du livre numérique">
             <div *ngIf="isInvalid('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Le titre est requis (max 500 caractères).
             </div>
@@ -183,8 +182,42 @@
               <i class="fas fa-exclamation-triangle me-1"></i>La catégorie est requise.
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 — DISPONIBILITÉ NUMÉRIQUE -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-laptop"></i>Disponibilité numérique
+        </h2>
+        <div class="row g-3">
 
           <div class="col-md-6">
+            <label class="form-label required">
+              Le livre est-il disponible en format numérique sur GOBI (EBSCO) ou Leslibraires.ca ?
+            </label>
+            <select formControlName="gobi_vu_format_numerique" class="form-select"
+                    [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
+              <option value="">— Sélectionnez —</option>
+              <option *ngFor="let r of gobiBooleans" [value]="r">{{ r }}</option>
+            </select>
+            <div *ngIf="isInvalid('gobi_vu_format_numerique')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+            </div>
+            <small class="form-text">
+              Pour qu'une demande soit traitée aux Acquisitions, le livre numérique doit être
+              disponible sur GOBI ou Leslibraires.ca.
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Référence Tipasa</label>
+            <input type="text" formControlName="reference_tipasa" class="form-control"
+                   placeholder="Numéro de référence">
+            <small class="form-text">Numéro de votre demande dans Tipasa</small>
+          </div>
+
+          <div class="col-md-3">
             <label class="form-label required">Source d'information</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
@@ -192,53 +225,9 @@
             <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>URL valide requise.
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION 3 — PRÉCISION DE LA DEMANDE -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="fas fa-list-alt"></i>Précision de la demande
-        </h2>
-        <div class="row g-3">
-          <div class="col-12">
-            <label class="form-label required">Type de demande</label>
-            <select formControlName="precision_demande" class="form-select"
-                    [class.is-invalid]="isInvalid('precision_demande')">
-              <option value="">— Sélectionnez le type de modification —</option>
-              <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
-            </select>
-            <div *ngIf="isInvalid('precision_demande')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>La précision de la demande est requise.
-            </div>
+            <small class="form-text">Lien GOBI ou Leslibraires.ca vers le titre</small>
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label">Numéro OCLC</label>
-            <input type="text" formControlName="numero_oclc" class="form-control"
-                   placeholder="Ex : ocn12345678">
-            <small class="form-text">Abonnement en cours</small>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Date de début d'abonnement</label>
-            <input type="date" formControlName="date_debut_abonnement" class="form-control">
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Période couverte</label>
-            <input type="text" formControlName="periode_couverte" class="form-control"
-                   placeholder="Ex : 1996-2000">
-            <small class="form-text">Spécifique CCOL et Modification</small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Catalogue</label>
-            <input type="text" formControlName="catalogue" class="form-control"
-                   placeholder="Notes de catalogue">
-            <small class="form-text">Max 200 caractères</small>
-          </div>
         </div>
       </div>
 
@@ -269,8 +258,8 @@
             </div>
           </div>
 
-          <!-- Création de notice TDM — toujours visible, valeur auto-ajustée -->
-          <div class="col-md-6">
+          <!-- Création de notice TDM — visible si non Électronique pur -->
+          <div class="col-md-6" *ngIf="showImprime">
             <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox"
                      formControlName="creation_notice_dtdm"
@@ -279,7 +268,6 @@
                 Création de notice TDM (Acquisitions)
               </label>
             </div>
-            <small class="form-text">Activé par défaut pour les formats imprimés</small>
           </div>
 
           <!-- Localisation — visible si Imprimé -->
@@ -287,7 +275,6 @@
             <label class="form-label">Localisation / Emplacement</label>
             <input type="text" formControlName="localisation_emplacement" class="form-control"
                    placeholder="Ex : Salle de lecture, Magasin">
-            <small class="form-text">Visible si Format = Imprimé</small>
           </div>
 
           <!-- Champs électroniques -->
@@ -295,42 +282,21 @@
             <div class="electronique-fields">
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label required">Lien vers la plateforme</label>
-                  <input type="url" formControlName="lien_plateforme" class="form-control"
-                         [class.is-invalid]="isInvalid('lien_plateforme')"
-                         placeholder="https://...">
-                  <div *ngIf="isInvalid('lien_plateforme')" class="invalid-feedback">
-                    <i class="fas fa-exclamation-triangle me-1"></i>URL requise.
-                  </div>
-                  <small class="form-text">Ex : EBSCO, Elsevier, Oxford…</small>
-                </div>
-
-                <div class="col-md-4">
-                  <label class="form-label">Nombre d'utilisateurs</label>
-                  <select formControlName="nombre_utilisateurs" class="form-select">
-                    <option value="Accès illimité">Accès illimité</option>
-                    <option value="Un seul usager">Un seul usager</option>
-                    <option value="Trois usagers simultanés">Trois usagers simultanés</option>
-                    <option value="Autre">Autre</option>
-                  </select>
-                </div>
-
-                <div class="col-md-4">
                   <label class="form-label">Nombre de titres inclus</label>
                   <input type="number" min="1" formControlName="nombre_titres_inclus"
-                         class="form-control" placeholder="Ex : 50">
+                         class="form-control" placeholder="Ex : 1">
                   <small class="form-text">Entier ≥ 1</small>
                 </div>
 
-                <div class="col-md-6">
-                  <label class="form-label">Usager à aviser lors de l'activation</label>
-                  <input type="email" formControlName="usager_aviser_activation" class="form-control"
-                         [class.is-invalid]="isInvalid('usager_aviser_activation')"
+                <div class="col-md-8">
+                  <label class="form-label">Courriel de l'usager à aviser</label>
+                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
+                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                          placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('usager_aviser_activation')" class="invalid-feedback">
+                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
                     <i class="fas fa-exclamation-triangle me-1"></i>Courriel valide requis.
                   </div>
-                  <small class="form-text">Courriel de l'usager à notifier (optionnel)</small>
+                  <small class="form-text">L'usager qui a fait la demande PEB originale (optionnel)</small>
                 </div>
               </div>
             </div>
@@ -383,16 +349,6 @@
             </div>
             <small class="form-text">Converti automatiquement selon la devise sélectionnée</small>
           </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Fonds SN – No de projet</label>
-            <input type="text" formControlName="fonds_sn_projet" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_sn_projet')"
-                   placeholder="Ex : SN-001">
-            <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Max 50 caractères.
-            </div>
-          </div>
         </div>
       </div>
 
@@ -406,7 +362,7 @@
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
                       rows="4"
-                      placeholder="Informations complémentaires sur la modification demandée…"></textarea>
+                      placeholder="Informations complémentaires…"></textarea>
             <div *ngIf="isInvalid('note_commentaire')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Maximum 1000 caractères.
             </div>

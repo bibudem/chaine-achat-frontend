@@ -111,22 +111,19 @@
             </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label required">Priorité de la demande</label>
-            <div class="btn-group w-100" role="group">
-              <button type="button" class="btn btn-priorite"
-                      *ngFor="let p of priorites"
-                      [class.btn-priorite--active]="form.get('priorite_demande')?.value === p"
-                      [class.btn-priorite--urgent]="p === 'Urgent'"
-                      [class.btn-priorite--prioritaire]="p === 'Prioritaire'"
-                      (click)="form.patchValue({ priorite_demande: p })">
-                <i class="fas me-1"
-                   [class.fa-clock]="p === 'Régulier'"
-                   [class.fa-exclamation]="p === 'Prioritaire'"
-                   [class.fa-fire]="p === 'Urgent'"></i>
-                {{ p }}
-              </button>
-            </div>
+          <div class="col-md-4">
+            <label class="form-label required">Priorité</label>
+            <select formControlName="priorite_demande" class="form-select priorite-select"
+                    [ngClass]="{
+                      'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
+                      'priorite--prioritaire': form.get('priorite_demande')?.value === 'Prioritaire',
+                      'priorite--urgent':      form.get('priorite_demande')?.value === 'Urgent'
+                    }"
+                    [class.is-invalid]="isInvalid('priorite_demande')">
+              <option value="Régulier">Régulier</option>
+              <option value="Prioritaire">Prioritaire</option>
+              <option value="Urgent">Urgent</option>
+            </select>
           </div>
         </div>
       </div>
@@ -216,6 +213,19 @@
             </select>
             <small class="form-text">Visible si catégorie = Monographie</small>
           </div>
+
+          <div class="col-md-4">
+            <label class="form-label required">Quantité</label>
+            <input type="number" formControlName="quantite" class="form-control"
+                   [class.is-invalid]="isInvalid('quantite')"
+                   min="1" step="1" placeholder="1">
+            <div *ngIf="isInvalid('quantite')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>
+              <ng-container *ngIf="f['quantite'].errors?.['required']">La quantité est requise.</ng-container>
+              <ng-container *ngIf="f['quantite'].errors?.['min']">La quantité doit être au moins 1.</ng-container>
+            </div>
+            <small class="form-text">Nombre d'exemplaires souhaités</small>
+          </div>
         </div>
       </div>
 
@@ -227,7 +237,7 @@
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Format / Support</label>
-            <div class="btn-group w-100" role="group">
+            <div class="format-chips">
               <button type="button" class="btn btn-format"
                       [class.btn-format--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
                       (click)="form.patchValue({ format_support: 'Imprimé/support physique' })">

@@ -1,5 +1,5 @@
 <!-- ============================================================
-     app-modification-ccol — Modification et CCOL
+     app-nouvel-abonnement — Nouvel abonnement
      ============================================================ -->
 
 <div class="form-page">
@@ -8,30 +8,30 @@
     <!-- ══ EN-TÊTE ══════════════════════════════════════════ -->
     <div class="form-header">
       <div class="form-header__icon">
-        <i class="bi bi-pencil-square"></i>
+        <i class="bi bi-newspaper"></i>
       </div>
       <div>
-        <h1 class="form-header__title">Modification et CCOL</h1>
+        <h1 class="form-header__title">Nouvel abonnement</h1>
         <p class="form-header__subtitle">
-          Modifications d'abonnements, compléments de collection et demandes CCOL
+          Demande de souscription à une ressource périodique ou sérielle
         </p>
       </div>
     </div>
 
     <!-- ══ ÉCRAN DE CONFIRMATION ════════════════════════════ -->
     <div *ngIf="success" class="confirmation-screen">
-      <div class="confirmation-icon confirmation-icon--ccol">
+      <div class="confirmation-icon confirmation-icon--abonnement">
         <i class="fas fa-check"></i>
       </div>
       <h2 class="confirmation-title">Demande soumise !</h2>
       <p class="confirmation-message">
-        Votre demande de modification a bien été transmise à l'équipe des Acquisitions.<br>
-        Elle sera traitée dans les meilleurs délais.
+        Votre demande d'abonnement a bien été transmise à l'équipe des Acquisitions.<br>
+        Vous recevrez une confirmation par courriel dès qu'elle aura été traitée.
       </p>
       <div class="confirmation-details">
         <div class="confirmation-detail" *ngIf="derniereTitre">
           <span class="confirmation-detail__label">
-            <i class="fas fa-book me-1"></i>Document
+            <i class="fas fa-book me-1"></i>Document demandé
           </span>
           <span class="confirmation-detail__value">{{ derniereTitre }}</span>
         </div>
@@ -40,6 +40,12 @@
             <i class="fas fa-university me-1"></i>Bibliothèque
           </span>
           <span class="confirmation-detail__value">{{ derniereBibliotheque }}</span>
+        </div>
+        <div class="confirmation-detail" *ngIf="dernierPrixCAD">
+          <span class="confirmation-detail__label">
+            <i class="fas fa-dollar-sign me-1"></i>Prix estimé
+          </span>
+          <span class="confirmation-detail__value">{{ dernierPrixCAD | currency:'CAD':'symbol':'1.2-2' }}</span>
         </div>
       </div>
       <div class="confirmation-actions">
@@ -76,7 +82,6 @@
             <div *ngIf="isInvalid('nom')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Le nom est requis.
             </div>
-            <small class="form-text">Personnel en bibliothèque responsable de la saisie</small>
           </div>
 
           <div class="col-md-6">
@@ -89,7 +94,7 @@
             </div>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-8">
             <label class="form-label required">Bibliothèque</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -102,17 +107,6 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">Fonds budgétaire</label>
-            <input type="text" formControlName="fonds_budgetaire" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   placeholder="Ex : MO-005">
-            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Requis (max 200 caractères).
-            </div>
-            <small class="form-text">Ex : MO-005, SN-080, PE-001</small>
-          </div>
-
-          <div class="col-md-3">
             <label class="form-label required">Priorité</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
@@ -127,17 +121,17 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DOCUMENT / ABONNEMENT -->
+      <!-- SECTION 2 — INFORMATIONS BIBLIOGRAPHIQUES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>Document / Abonnement
+          <i class="fas fa-book-open"></i>Informations bibliographiques
         </h2>
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label required">Titre du document</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
-                   placeholder="Titre complet du document ou de l'abonnement">
+                   placeholder="Titre complet de la ressource">
             <div *ngIf="isInvalid('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Le titre est requis (max 500 caractères).
             </div>
@@ -149,27 +143,26 @@
                    placeholder="Sous-titre (optionnel)">
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label">Éditeur</label>
+          <div class="col-md-6">
+            <label class="form-label required">Éditeur / Fournisseur</label>
             <input type="text" formControlName="editeur" class="form-control"
-                   placeholder="Maison d'édition">
+                   [class.is-invalid]="isInvalid('editeur')"
+                   placeholder="Nom de l'éditeur ou du fournisseur">
+            <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>L'éditeur est requis.
+            </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label required">ISBN / ISSN</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
-                   placeholder="Ex : 9782070360024"
+                   placeholder="Ex: 00280836"
                    (input)="stripDashes($event)">
             <div *ngIf="isInvalid('isbn_issn')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Format ISBN / ISSN invalide (sans tirets).
             </div>
             <small class="form-text">Les tirets sont automatiquement supprimés</small>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Date de publication</label>
-            <input type="date" formControlName="date_publication" class="form-control">
           </div>
 
           <div class="col-md-6">
@@ -184,60 +177,36 @@
             </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label required">Source d'information</label>
-            <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="isInvalid('source_information')"
-                   placeholder="https://...">
-            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>URL valide requise.
-            </div>
+          <div class="col-md-6" *ngIf="showMonographie">
+            <label class="form-label">Type de monographie</label>
+            <select formControlName="type_monographie" class="form-select">
+              <option value="">— Sélectionnez —</option>
+              <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
+            </select>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 3 — PRÉCISION DE LA DEMANDE -->
+      <!-- SECTION 3 — ABONNEMENT -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-list-alt"></i>Précision de la demande
+          <i class="fas fa-calendar-alt"></i>Détails de l'abonnement
         </h2>
         <div class="row g-3">
-          <div class="col-12">
-            <label class="form-label required">Type de demande</label>
-            <select formControlName="precision_demande" class="form-select"
-                    [class.is-invalid]="isInvalid('precision_demande')">
-              <option value="">— Sélectionnez le type de modification —</option>
-              <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
-            </select>
-            <div *ngIf="isInvalid('precision_demande')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>La précision de la demande est requise.
+          <div class="col-md-4">
+            <label class="form-label required">Date de début d'abonnement</label>
+            <input type="date" formControlName="date_debut_abonnement" class="form-control"
+                   [class.is-invalid]="isInvalid('date_debut_abonnement')">
+            <div *ngIf="isInvalid('date_debut_abonnement')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>La date de début est requise.
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Numéro OCLC</label>
-            <input type="text" formControlName="numero_oclc" class="form-control"
-                   placeholder="Ex : ocn12345678">
-            <small class="form-text">Abonnement en cours</small>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Date de début d'abonnement</label>
-            <input type="date" formControlName="date_debut_abonnement" class="form-control">
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Période couverte</label>
             <input type="text" formControlName="periode_couverte" class="form-control"
-                   placeholder="Ex : 1996-2000">
-            <small class="form-text">Spécifique CCOL et Modification</small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Catalogue</label>
-            <input type="text" formControlName="catalogue" class="form-control"
-                   placeholder="Notes de catalogue">
-            <small class="form-text">Max 200 caractères</small>
+                   placeholder="Ex: 2024 ou 2020-2025">
+            <small class="form-text">Années ou volumes couverts par l'abonnement</small>
           </div>
         </div>
       </div>
@@ -269,42 +238,16 @@
             </div>
           </div>
 
-          <!-- Création de notice TDM — toujours visible, valeur auto-ajustée -->
-          <div class="col-md-6">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox"
-                     formControlName="creation_notice_dtdm"
-                     id="creationNoticeCheck" role="switch">
-              <label class="form-check-label" for="creationNoticeCheck">
-                Création de notice TDM (Acquisitions)
-              </label>
-            </div>
-            <small class="form-text">Activé par défaut pour les formats imprimés</small>
-          </div>
-
-          <!-- Localisation — visible si Imprimé -->
-          <div class="col-md-6" *ngIf="showImprime">
-            <label class="form-label">Localisation / Emplacement</label>
-            <input type="text" formControlName="localisation_emplacement" class="form-control"
-                   placeholder="Ex : Salle de lecture, Magasin">
-            <small class="form-text">Visible si Format = Imprimé</small>
-          </div>
-
-          <!-- Champs électroniques -->
+          <!-- Champs électronique / mixte -->
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label required">Lien vers la plateforme</label>
-                  <input type="url" formControlName="lien_plateforme" class="form-control"
-                         [class.is-invalid]="isInvalid('lien_plateforme')"
-                         placeholder="https://...">
-                  <div *ngIf="isInvalid('lien_plateforme')" class="invalid-feedback">
-                    <i class="fas fa-exclamation-triangle me-1"></i>URL requise.
-                  </div>
-                  <small class="form-text">Ex : EBSCO, Elsevier, Oxford…</small>
+                  <label class="form-label">Nombre de titres inclus</label>
+                  <input type="number" formControlName="nombre_titres_inclus" class="form-control"
+                         min="1" step="1" placeholder="Ex: 50">
+                  <small class="form-text">Titres ou volumes inclus dans cet abonnement</small>
                 </div>
-
                 <div class="col-md-4">
                   <label class="form-label">Nombre d'utilisateurs</label>
                   <select formControlName="nombre_utilisateurs" class="form-select">
@@ -314,99 +257,123 @@
                     <option value="Autre">Autre</option>
                   </select>
                 </div>
-
                 <div class="col-md-4">
-                  <label class="form-label">Nombre de titres inclus</label>
-                  <input type="number" min="1" formControlName="nombre_titres_inclus"
-                         class="form-control" placeholder="Ex : 50">
-                  <small class="form-text">Entier ≥ 1</small>
+                  <label class="form-label required">Lien vers la plateforme</label>
+                  <input type="url" formControlName="lien_plateforme" class="form-control"
+                         [class.is-invalid]="isInvalid('lien_plateforme')"
+                         placeholder="https://...">
+                  <div *ngIf="isInvalid('lien_plateforme')" class="invalid-feedback">
+                    <i class="fas fa-exclamation-triangle me-1"></i>URL requise.
+                  </div>
+                  <small class="form-text">Ex : EBSCO, Elsevier, Springer…</small>
                 </div>
+              </div>
 
+              <!-- Personne à aviser lors de l'activation -->
+              <div class="row g-3 mt-1">
                 <div class="col-md-6">
                   <label class="form-label">Usager à aviser lors de l'activation</label>
-                  <input type="email" formControlName="usager_aviser_activation" class="form-control"
-                         [class.is-invalid]="isInvalid('usager_aviser_activation')"
+                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
+                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                          placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('usager_aviser_activation')" class="invalid-feedback">
+                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
                     <i class="fas fa-exclamation-triangle me-1"></i>Courriel valide requis.
                   </div>
-                  <small class="form-text">Courriel de l'usager à notifier (optionnel)</small>
+                  <small class="form-text">Courriel à notifier lors de l'activation de la ressource (optionnel)</small>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- Usager à aviser — Imprimé / Mixte -->
+          <div class="col-md-6" *ngIf="showImprime">
+            <label class="form-label">Usager à aviser — Réservation</label>
+            <input type="email" formControlName="usager_aviser_reservation" class="form-control"
+                   [class.is-invalid]="isInvalid('usager_aviser_reservation')"
+                   placeholder="courriel@umontreal.ca">
+            <div *ngIf="isInvalid('usager_aviser_reservation')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Courriel valide requis.
+            </div>
+            <small class="form-text">Courriel à notifier lors de la mise en réservation (optionnel)</small>
+          </div>
         </div>
       </div>
 
-      <!-- SECTION 5 — FINANCES -->
+      <!-- SECTION 5 — INFORMATIONS FINANCIÈRES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-dollar-sign"></i>Finances
+          <i class="fas fa-coins"></i>Informations financières
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label required">Devise</label>
+          <div class="col-md-3">
+            <label class="form-label required">Devise originale</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
-              <option value="">— Devise —</option>
-              <option *ngFor="let d of devises" [value]="d">{{ d }}</option>
+              <option value="">— Sélectionnez —</option>
+              <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
             </select>
             <div *ngIf="isInvalid('devise_originale')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>La devise est requise.
             </div>
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label required">Prix en devise originale</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" min="0.01" step="0.01"
-                     formControlName="prix_devise_originale" class="form-control"
-                     [class.is-invalid]="isInvalid('prix_devise_originale')"
-                     placeholder="0.00">
-            </div>
+          <div class="col-md-3">
+            <label class="form-label required">Prix (devise originale)</label>
+            <input type="number" step="0.01" min="0"
+                   formControlName="prix_devise_originale" class="form-control"
+                   [class.is-invalid]="isInvalid('prix_devise_originale')"
+                   placeholder="0.00">
             <div *ngIf="isInvalid('prix_devise_originale')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Prix requis (> 0).
+              <i class="fas fa-exclamation-triangle me-1"></i>Prix valide requis.
             </div>
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label required">Prix en CAD (calculé)</label>
+          <div class="col-md-3">
+            <label class="form-label required">Prix en CAD</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
-              <input type="number" formControlName="prix_cad" class="form-control"
-                     [class.is-invalid]="isInvalid('prix_cad')"
-                     readonly placeholder="Converti automatiquement">
+              <input type="number" step="0.01" formControlName="prix_cad"
+                     class="form-control" [class.is-invalid]="isInvalid('prix_cad')"
+                     placeholder="0.00" readonly>
             </div>
-            <div *ngIf="isInvalid('prix_cad')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Entrez la devise et le prix.
-            </div>
-            <small class="form-text">Converti automatiquement selon la devise sélectionnée</small>
+            <small class="form-text">Calculé automatiquement</small>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label">Fonds SN – No de projet</label>
-            <input type="text" formControlName="fonds_sn_projet" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_sn_projet')"
-                   placeholder="Ex : SN-001">
-            <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Max 50 caractères.
+          <div class="col-md-3">
+            <label class="form-label required">Fonds budgétaire</label>
+            <input type="text" formControlName="fonds_budgetaire" class="form-control"
+                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
+                   placeholder="Ex : PE-001, AB-120">
+            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>Format requis : ex. PE-001 (2-4 lettres + tiret + chiffres).
             </div>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 6 — NOTE / COMMENTAIRE -->
+      <!-- SECTION 6 — SOURCE ET NOTES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-comment-dots"></i>Note / Commentaire
+          <i class="fas fa-link"></i>Source et notes
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <div class="col-md-6">
+            <label class="form-label required">Source d'information</label>
+            <input type="url" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="isInvalid('source_information')"
+                   placeholder="https://...">
+            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>URL valide requise.
+            </div>
+            <small class="form-text">URL où le prix et la disponibilité ont été vérifiés (éditeur, libraire)</small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Note / Commentaire</label>
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
-                      rows="4"
-                      placeholder="Informations complémentaires sur la modification demandée…"></textarea>
+                      rows="3"
+                      placeholder="Remarques ou précisions relatives à cet abonnement…"></textarea>
             <div *ngIf="isInvalid('note_commentaire')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Maximum 1000 caractères.
             </div>
@@ -423,11 +390,11 @@
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="onReset()"
                 [disabled]="isLoading">
-          <i class="fas fa-times"></i>Annuler
+          <i class="fas fa-times me-1"></i>Annuler
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <i *ngIf="!isLoading" class="fas fa-paper-plane"></i>
+          <i *ngIf="!isLoading" class="fas fa-paper-plane me-1"></i>
           {{ isLoading ? 'Envoi en cours…' : 'Soumettre la demande' }}
         </button>
       </div>

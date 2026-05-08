@@ -42,25 +42,16 @@
   color:      var(--suggest-mid);
 }
 
-/* ── Boutons segmentés — état actif (ambre) ────────────────── */
-.btn-group.w-100 .btn-format:hover,
-.btn-group.w-100 .btn-priorite:hover {
-  background: var(--suggest-light);
-  color:      var(--suggest-mid);
+/* ── Chips de format ────────────────────────────────────────── */
+.btn-format:hover {
+  background:   var(--suggest-light);
+  color:        var(--suggest-mid);
+  border-color: var(--suggest-mid);
 }
-
 .btn-format--active {
   background:   var(--suggest-mid) !important;
   border-color: var(--suggest-mid) !important;
   color:        var(--white)       !important;
-  z-index: 1;
-}
-
-.btn-priorite--active {
-  background:   var(--suggest-mid) !important;
-  border-color: var(--suggest-mid) !important;
-  color:        var(--white)       !important;
-  z-index: 1;
 }
 
 /* ── Interrupteur — couleur cochée ─────────────────────────── */

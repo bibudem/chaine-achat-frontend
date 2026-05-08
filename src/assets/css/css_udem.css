@@ -2105,38 +2105,36 @@ body.sidebar-open { overflow: hidden; }
   /* background et color : dans le composant selon la couleur d'accent */
 }
 
-/* Boutons de sélection segmentés (format, priorité) */
-.btn-group.w-100 .btn-format,
-.btn-group.w-100 .btn-priorite {
-  flex:        1;
-  font-family: 'Figtree', sans-serif;
-  font-weight: 500;
-  border:      1px solid var(--light-gray);
-  background:  var(--white);
-  color:       var(--text-gray);
-  transition:  all 0.15s ease;
-  cursor:      pointer;
+/* Chips de sélection de format — boutons autonomes (pas de btn-group) */
+.format-chips {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       8px;
 }
-.btn-group.w-100 .btn-format   { padding: 10px 8px; font-size: 0.88rem; }
-.btn-group.w-100 .btn-priorite { padding: 9px 4px;  font-size: 0.85rem; }
-
-.btn-group.w-100 .btn-format:first-child,
-.btn-group.w-100 .btn-priorite:first-child { border-radius: 8px 0 0 8px; }
-
-.btn-group.w-100 .btn-format:last-child,
-.btn-group.w-100 .btn-priorite:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
-
-.btn-group.w-100 .btn-priorite:not(:first-child):not(:last-child) { border-left: none; }
-
-/* États urgent et prioritaire (couleurs sémantiques communes aux deux formulaires) */
-.btn-priorite--urgent.btn-priorite--active {
-  background:   var(--danger-red) !important;
-  border-color: var(--danger-red) !important;
+.btn-format {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        8px 18px;
+  border-radius:  6px;
+  border:         2px solid var(--light-gray);
+  background:     var(--white);
+  font-family:    'Figtree', sans-serif;
+  font-weight:    500;
+  font-size:      0.875rem;
+  color:          var(--text-gray);
+  cursor:         pointer;
+  white-space:    nowrap;
+  transition:     all 0.15s ease;
 }
-.btn-priorite--prioritaire.btn-priorite--active {
-  background:   var(--warning-orange) !important;
-  border-color: var(--warning-orange) !important;
+
+/* Select de priorité — bordure gauche colorée selon la valeur */
+.priorite-select {
+  border-left-width: 4px !important;
+  padding-left:      10px !important;
 }
+.priorite-select.priorite--regulier    { border-left-color: #22c55e !important; }
+.priorite-select.priorite--prioritaire { border-left-color: #f97316 !important; }
+.priorite-select.priorite--urgent      { border-left-color: #ef4444 !important; }
 
 /* Interrupteur toggle */
 .form-check.form-switch {
@@ -2199,8 +2197,7 @@ body.sidebar-open { overflow: hidden; }
   .form-section { padding: 18px 16px 14px; }
   .form-actions { padding: 14px 16px; }
   .badge--primary { display: none; }
-  .btn-group.w-100 .btn-format,
-  .btn-group.w-100 .btn-priorite { font-size: 0.8rem; padding: 9px 4px; }
+  .btn-format { font-size: 0.8rem; padding: 7px 12px; }
 }
 @media (max-width: 480px) {
   .form-header__title    { font-size: 1.05rem; }

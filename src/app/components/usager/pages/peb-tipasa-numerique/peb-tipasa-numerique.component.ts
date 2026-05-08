@@ -3,18 +3,18 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
-  selector: 'app-requete-accessibilite',
-  templateUrl: './requete-accessibilite.component.html',
-  styleUrls: ['./requete-accessibilite.component.css']
+  selector: 'app-peb-tipasa-numerique',
+  templateUrl: './peb-tipasa-numerique.component.html',
+  styleUrls: ['./peb-tipasa-numerique.component.css']
 })
-export class RequeteAccessibiliteComponent implements OnInit {
+export class PebTipasaNumeriqueComponent implements OnInit {
   form!: FormGroup;
   submitted        = false;
   success          = false;
   error            = false;
   isLoading        = false;
-  showElectronique = false;
-  showImprime      = true;
+  showElectronique = true;
+  showImprime      = false;
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -31,17 +31,9 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
-  besoinsFormat: string[] = [
-    "Électronique : écrire à l'éditeur pour version numérique gratuite",
-    'Électronique : acheter licence institutionnelle standard + version numérique gratuite',
-    'Électronique : acheter licence institutionnelle standard',
-    'Imprimé/support physique : acheter exemplaires + version numérique gratuite',
-    "Imprimé/support physique : acheter exemplaire sans version numérique"
-  ];
-
-  readonly OUI_NON_NA = ['OUI', 'NON', "Ne s'applique pas"];
-
   devises: string[] = ['CAD', 'USD', 'EUR', 'GBP', 'CHF'];
+
+  gobiBooleans: string[] = ['Oui', 'Non'];
 
   derniereTitre        = '';
   derniereBibliotheque = '';
@@ -64,7 +56,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       courriel:         [courriel,     [Validators.required, Validators.email]],
       bibliotheque:     ['',           Validators.required],
       fonds_budgetaire: ['',           [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
-      priorite_demande: ['Urgent',     Validators.required],
+      priorite_demande: ['Régulier',   Validators.required],
 
       /* ── Document ── */
       titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
@@ -74,20 +66,16 @@ export class RequeteAccessibiliteComponent implements OnInit {
       date_publication:   [''],
       categorie_document: ['', Validators.required],
 
-      /* ── Requête Accessibilité (spécifique) ── */
-      reference_usager:                 [''],
-      besoin_specifique_format:         [''],
-      permalien_sofia:                  ['', Validators.pattern('https?://.+')],
-      fournisseur_contacte_sans_succes: [''],
-      exemplaire_detenu:                [''],
-      verification_caeb:                [''],
-      verification_sqla:                [''],
-      verification_emma:                [''],
+      /* ── Disponibilité numérique (spécifique PEB Tipasa) ── */
+      gobi_vu_format_numerique: ['', Validators.required],
+      reference_tipasa:         [''],
 
       /* ── Format et support ── */
-      format_support:             ['Imprimé/support physique', Validators.required],
-      format_pret_numerique:      ["Ne s'applique pas"],
-      personne_a_aviser_courriel: [{ value: '', disabled: true }, Validators.email],
+      format_support:            ['Électronique', Validators.required],
+      creation_notice_dtdm:      [false],
+      localisation_emplacement:  [''],
+      nombre_titres_inclus:      [null, Validators.min(1)],
+      personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
 
       /* ── Finances ── */
       devise_originale:      ['',   Validators.required],
@@ -95,18 +83,14 @@ export class RequeteAccessibiliteComponent implements OnInit {
       prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
 
       /* ── Source et notes ── */
-      fonds_sn_projet:    ['', Validators.maxLength(50)],
-      source_information: ['', Validators.pattern('https?://.+')],
+      source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
       note_commentaire:   ['', Validators.maxLength(1000)],
     });
 
     this.form.get('format_support')!.valueChanges.subscribe(val => {
       this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
       this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
-
-      const aviser = this.form.get('personne_a_aviser_courriel')!;
-      this.showElectronique ? aviser.enable() : aviser.disable();
-      aviser.updateValueAndValidity();
+      this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
     });
 
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
@@ -152,12 +136,12 @@ export class RequeteAccessibiliteComponent implements OnInit {
     this.submitted        = false;
     this.success          = false;
     this.error            = false;
-    this.showElectronique = false;
-    this.showImprime      = true;
+    this.showElectronique = true;
+    this.showImprime      = false;
     this.form.reset({
-      priorite_demande:      'Urgent',
-      format_support:        'Imprimé/support physique',
-      format_pret_numerique: "Ne s'applique pas",
+      priorite_demande:     'Régulier',
+      format_support:       'Électronique',
+      creation_notice_dtdm: false,
     });
   }
 
@@ -173,9 +157,8 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
     const payload = {
       baseData: {
-        formulaire_type:            'Requête ACQ Accessibilité',
+        formulaire_type:            'PEB Tipasa numérique',
         demandeur:                  v.nom,
-        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         bibliotheque:               v.bibliotheque,
         fonds_budgetaire:           v.fonds_budgetaire,
         priorite_demande:           v.priorite_demande,
@@ -186,34 +169,27 @@ export class RequeteAccessibiliteComponent implements OnInit {
         date_publication:           v.date_publication,
         categorie_document:         v.categorie_document,
         format_support:             v.format_support,
-        format_pret_numerique:      this.showElectronique ? v.format_pret_numerique : null,
+        localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
+        creation_notice_dtdm:       v.creation_notice_dtdm,
+        nombre_titres_inclus:       this.showElectronique ? v.nombre_titres_inclus       : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         prix_cad:                   v.prix_cad,
         devise_originale:           v.devise_originale,
         prix_devise_originale:      v.prix_devise_originale,
-        fonds_sn_projet:            v.fonds_sn_projet,
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
         statut_bibliotheque:        'Saisie en cours - En attente',
         statut_acq:                 'En attente',
       },
       specificData: {
-        reference_usager:                 v.reference_usager,
-        besoin_specifique_format:         v.besoin_specifique_format,
-        permalien_sofia:                  v.permalien_sofia,
-        fournisseur_contacte_sans_succes: v.fournisseur_contacte_sans_succes,
-        exemplaire_detenu:                v.exemplaire_detenu,
-        verification_caeb:                v.verification_caeb,
-        verification_sqla:                v.verification_sqla,
-        verification_emma:                v.verification_emma,
-        acq_numerisation_recommandee:     null,
-        acq_date_demande_editeur:         null,
-        acq_date_livraison_estimee:       null,
-        acq_responsable_courriel:         null,
-        type_monographie:                 null,
+        reference_tipasa:           v.reference_tipasa,
+        gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
+        gobi_version_moins_365_usd: "Ne s'applique pas",
+        acq_responsable_courriel:   null,
       },
     };
 
-    this.reponsesService.envoyerRequeteAccessibilite(payload).subscribe({
+    this.reponsesService.envoyerPebTipasa(payload).subscribe({
       next: () => {
         this.success   = true;
         this.isLoading = false;

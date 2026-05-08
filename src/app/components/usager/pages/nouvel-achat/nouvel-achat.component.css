@@ -42,25 +42,16 @@
   color:      var(--achat-mid);
 }
 
-/* ── Boutons segmentés — état actif (teal) ─────────────────── */
-.btn-group.w-100 .btn-format:hover,
-.btn-group.w-100 .btn-priorite:hover {
-  background: var(--achat-light);
-  color:      var(--achat-mid);
+/* ── Chips de format ────────────────────────────────────────── */
+.btn-format:hover {
+  background:   var(--achat-light);
+  color:        var(--achat-mid);
+  border-color: var(--achat-mid);
 }
-
 .btn-format--active {
   background:   var(--achat-mid) !important;
   border-color: var(--achat-mid) !important;
   color:        var(--white)     !important;
-  z-index: 1;
-}
-
-.btn-priorite--active {
-  background:   var(--achat-mid) !important;
-  border-color: var(--achat-mid) !important;
-  color:        var(--white)     !important;
-  z-index: 1;
 }
 
 /* ── Interrupteur (réserve de cours) — couleur cochée ──────── */
