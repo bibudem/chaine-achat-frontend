@@ -25,7 +25,7 @@
 
   <!-- Filtres -->
   <div class="row mb-4 g-2">
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <div class="input-group">
         <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control bib-input-icon"
@@ -59,8 +59,14 @@
       </select>
     </div>
     <div class="col-6 col-md-2">
-      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser">
-        <i class="bi bi-arrow-clockwise me-1"></i>Réinit.
+      <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
+        <option value="">ACQ : Suivi de la demande</option>
+        <option *ngFor="let suivi of options.dircolAcqSuiviOptions" [value]="suivi">{{ suivi }}</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-1">
+      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser les filtres">
+        <i class="bi bi-arrow-clockwise"></i>
       </button>
     </div>
   </div>
@@ -105,6 +111,9 @@
                   <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
                     Statut <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
                   </th>
+                  <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
+                    Suivi ACQ <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
+                  </th>
                   <th class="col-date sortable-col" (click)="sortBy('date_creation')">
                     Date <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
                   </th>
@@ -147,6 +156,12 @@
                         ACQ: {{ item.statut_acq }}
                       </span>
                     </div>
+                  </td>
+                  <td class="col-suivi">
+                    <span *ngIf="item.suivi_acq; else noSuivi" class="badge badge-statut-acq align-self-start">
+                      {{ item.suivi_acq }}
+                    </span>
+                    <ng-template #noSuivi><span class="text-muted">—</span></ng-template>
                   </td>
                   <td class="col-date">{{ formatDate(item.date_creation) }}</td>
                   <td class="col-actions text-center">
@@ -203,6 +218,10 @@
                     <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
                     <span *ngIf="item.statut_acq" class="badge badge-statut-acq">ACQ: {{ item.statut_acq }}</span>
                   </div>
+                </div>
+                <div class="item-card__row" *ngIf="item.suivi_acq">
+                  <span class="item-card__label">Suivi ACQ</span>
+                  <span class="badge badge-statut-acq">{{ item.suivi_acq }}</span>
                 </div>
                 <div class="item-card__row">
                   <span class="item-card__label">Date</span>

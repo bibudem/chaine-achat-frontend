@@ -8,10 +8,10 @@
 
 /* Couleurs sémantiques des formulaires usager dans le menu */
 .preview-icon--achat          { background: var(--achat-dark)    !important; } /* Vert émeraude — Nouvel achat unique    */
-.preview-icon--abonnement     { background: #6d28d9              !important; } /* Violet        — Nouvel abonnement     */
-.preview-icon--ccol           { background: var(--ccol-mid)      !important; } /* Bleu acier    — Modification et CCOL  */
-.preview-icon--peb            { background: #0891b2              !important; } /* Teal cyan     — PEB Tipasa numérique  */
-.preview-icon--accessibilite  { background: #7C3AED              !important; } /* Violet foncé  — Requête Accessibilité */
+.preview-icon--abonnement     { background: var(--type-violet)              !important; } /* Violet        — Nouvel abonnement     */
+.preview-icon--ccol           { background: var(--acq-dark)      !important; } /* Bleu acier    — Modification et CCOL  */
+.preview-icon--peb            { background: var(--type-cyan)             !important; } /* Teal cyan     — PEB Tipasa numérique  */
+.preview-icon--accessibilite  { background: var(--text-gray)             !important; } /* Violet foncé  — Requête Accessibilité */
 .preview-icon--suggest        { background: var(--suggest-mid)   !important; } /* Ambre doré    — Suggestion d'achat    */
 .typing {
   position: relative;

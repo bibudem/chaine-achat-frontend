@@ -19,6 +19,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   searchTerm           = '';
   selectedBibliotheque = '';
   selectedStatut       = '';
+  selectedSuiviAcq     = '';
   selectedFormulaireType = '';
 
   currentPage  = 1;
@@ -68,6 +69,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       search:          this.searchTerm         || undefined,
       bibliotheque:    this.selectedBibliotheque || undefined,
       statut:          this.selectedStatut       || undefined,
+      suivi_acq:       this.selectedSuiviAcq     || undefined,
       formulaire_type: this.selectedFormulaireType || undefined,
       sort:  this.sortColumn,
       order: this.sortDirection
@@ -130,6 +132,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.searchTerm             = '';
     this.selectedBibliotheque   = '';
     this.selectedStatut         = '';
+    this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
     this.sortColumn             = 'date_creation';
     this.sortDirection          = 'desc';

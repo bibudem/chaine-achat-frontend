@@ -4,13 +4,14 @@
 .items-table { table-layout: fixed; width: 100%; }
 
 .col-id        { width: 5%;  }
-.col-titre     { width: 20%; }
-.col-type      { width: 15%; }
-.col-isbn      { width: 10%; }
-.col-demandeur { width: 10%; }
-.col-bib       { width: 10%; }
+.col-titre     { width: 18%; }
+.col-type      { width: 12%; }
+.col-isbn      { width: 9%;  }
+.col-demandeur { width: 9%;  }
+.col-bib       { width: 9%;  }
 .col-statut    { width: 10%; }
-.col-date      { width: 10%; }
+.col-suivi     { width: 10%; }
+.col-date      { width: 8%;  }
 .col-actions   { width: 10%; }
 
 /* Cellules : hauteur extensible, texte qui wrappe */
@@ -44,6 +45,7 @@
 @media (max-width: 991px) {
   .items-table { table-layout: auto; }
   .col-isbn    { display: none; }
+  .col-suivi   { display: none; }
   .col-titre   { width: auto; }
   .col-type    { width: 100px; }
   .col-demandeur { width: 100px; }

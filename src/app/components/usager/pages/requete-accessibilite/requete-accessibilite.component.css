@@ -6,7 +6,7 @@
 /* ── Gradient d'en-tête ────────────────────────────────────── */
 .form-header {
   background: var(--dark-gray);
-  border-bottom: 5px solid var(--acces-mid);
+  border-bottom: 5px solid var(--border-gray);
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -22,7 +22,7 @@
 }
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--acces-mid)                  !important;
+  border-color: var(--border-gray)                  !important;
   box-shadow:   0 0 0 3px rgba(123, 61, 184, 0.15) !important;
   outline:      none                               !important;
 }
@@ -30,19 +30,19 @@
 /* ── Chips de format ────────────────────────────────────────── */
 .btn-format:hover {
   background:   var(--acces-light);
-  color:        var(--acces-mid);
-  border-color: var(--acces-mid);
+  color:        var(--border-gray);
+  border-color: var(--border-gray);
 }
 .btn-format--active {
-  background:   var(--acces-mid) !important;
-  border-color: var(--acces-mid) !important;
+  background:   var(--text-gray) !important;
+  border-color: var(--text-gray) !important;
   color:        #fff             !important;
 }
 
 /* ── Interrupteur ──────────────────────────────────────────── */
 .form-switch .form-check-input:checked {
-  background-color: var(--acces-mid);
-  border-color:     var(--acces-mid);
+  background-color: var(--text-gray);
+  border-color:     var(--text-gray);
 }
 
 /* ── Zone conditionnelle électronique ──────────────────────── */
@@ -77,9 +77,9 @@
 
 /* ── Confirmation ──────────────────────────────────────────── */
 .confirmation-detail { background: var(--acces-light); }
-.confirmation-detail__label i { color: var(--acces-mid); }
+.confirmation-detail__label i { color: var(--text-gray); }
 
 .confirmation-icon--acces {
-  background: linear-gradient(135deg, var(--acces-mid), var(--acces-dark));
+  background:  var(--text-gray);
   box-shadow: 0 4px 16px rgba(123, 61, 184, 0.28);
 }

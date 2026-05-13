@@ -169,6 +169,7 @@ export class ItemFormulaireService {
     search?: string;
     bibliotheque?: string;
     statut?: string;
+    suivi_acq?: string;
     formulaire_type?: string;
     sort?: string;
     order?: 'asc' | 'desc';
@@ -180,6 +181,7 @@ export class ItemFormulaireService {
     if (opts.search)          p = p.set('search',          opts.search);
     if (opts.bibliotheque)    p = p.set('bibliotheque',    opts.bibliotheque);
     if (opts.statut)          p = p.set('statut',          opts.statut);
+    if (opts.suivi_acq)       p = p.set('suivi_acq',       opts.suivi_acq);
     if (opts.formulaire_type) p = p.set('formulaire_type', opts.formulaire_type);
     if (opts.sort)            p = p.set('sort',            opts.sort);
     if (opts.order)           p = p.set('order',           opts.order);

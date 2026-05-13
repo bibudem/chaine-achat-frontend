@@ -418,7 +418,7 @@
 
 .catalog-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 14px;
+  padding: 18px 20px;
   border-bottom: 1px solid var(--extra-light-blue, #E5F0F8);
   cursor: pointer; transition: background .15s;
 }
@@ -430,7 +430,7 @@
   display: flex; align-items: center; justify-content: center;
   border-radius: 7px;
   color: white;
-  font-size: 0.82rem;
+  font-size: 1rem;
   transition: filter .15s;
 }
 .catalog-row:hover .catalog-row__icon { filter: brightness(0.82); }
