@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {CanActivate, RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AccueilComponent } from './components/admin/accueil/accueil.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from "./services/auth-guard.service";
@@ -22,6 +22,7 @@ import { RequeteAccessibiliteComponent } from './components/usager/pages/requete
 import { NouvelAbonnementComponent } from './components/usager/pages/nouvel-abonnement/nouvel-abonnement.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
+import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'items/details/:id', component: ItemDetailComponent },
   { path: 'items/:id', component: ItemFormulaireComponent },
   { path: 'items', component: ItemsListComponent },
+  { path: 'acq-decision', component: AcqDecisionComponent, canActivate: [AuthGuard] },
   { path: 'rapport', component: RapportsComponent },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Reponse } from '../../../../services/reponses.service';
 
@@ -18,12 +19,22 @@ export class ReponsesDetailComponent implements OnInit {
   // État de copie
   copyFeedback: string | null = null;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     if (this.reponse) {
       this.jsonFormatted = JSON.stringify(this.reponse.reponses, null, 2);
     }
+  }
+
+  creerItem(): void {
+    this.activeModal.close();
+    this.router.navigate(['/items/nouveau'], {
+      state: { fromReponse: this.reponse }
+    });
   }
 
   /**

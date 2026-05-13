@@ -11,10 +11,10 @@ import { Inject } from "@angular/core";
 import {DOCUMENT} from "@angular/common";
 @Injectable()
 export class AuthService {
-  isLoggedIn: boolean = false; // L'utilisateur est-il connecté ?
+  // Persisté via sessionStorage pour survivre aux rechargements de page
+  isLoggedIn: boolean = sessionStorage.getItem('role') !== null && sessionStorage.getItem('role') !== '';
 
-
-  redirectUrl: string| undefined='/accueil'; // où rediriger l'utilisateur après l'authentification ?
+  redirectUrl: string | undefined = '/accueil';
 
   // @ts-ignore
   public user: User = {};

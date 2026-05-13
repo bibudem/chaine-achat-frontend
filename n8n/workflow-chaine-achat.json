@@ -1,0 +1,374 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuration — modifier ici ET dans les nœuds Code\n\n```\n// ── EMAIL ADMIN (nœud ⚙️ Email Admin) ────────────\n// LOCAL\nFE_URL      = http://localhost:4200\nADMIN_EMAIL = acq@bib.umontreal.ca\nFROM_EMAIL  = chaine-achat@bib.umontreal.ca\n// PRODUCTION\nFE_URL      = https://acq.bib.umontreal.ca\n\n// ── EMAIL USAGER (nœud ⚙️ Email Usager) ──────────\n// LOCAL / PRODUCTION\nFROM_EMAIL  = chaine-achat@bib.umontreal.ca\n```\n\n**SMTP** → Credential `MailHog Local`\nHost : `host.docker.internal` · Port : `1025` · SSL : off",
+        "height": 424,
+        "width": 480,
+        "color": 5
+      },
+      "id": "99fbaf35-2aee-4e2c-bb48-68391a26b545",
+      "name": "📋 Configuration",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nouvel-achat",
+        "options": {}
+      },
+      "id": "61ae8647-8611-44dc-b6bf-fa276120d8ee",
+      "name": "WH — Nouvel achat",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        2272
+      ],
+      "webhookId": "a8f5c536-de58-4e01-b622-e571abcaaa66"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nouvel-abonnement",
+        "options": {}
+      },
+      "id": "2b9a5963-602c-42e5-825d-8f49ee781f37",
+      "name": "WH — Nouvel abonnement",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        2416
+      ],
+      "webhookId": "1cffc035-9b5d-4309-bb53-1601780da6c3"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "suggestion",
+        "options": {}
+      },
+      "id": "d68c35b4-d4a3-4a92-ab66-02677663603e",
+      "name": "WH — Suggestion",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        2560
+      ],
+      "webhookId": "a30fd7d1-6c04-4a56-8bac-716b8db93e5b"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "modification-ccol",
+        "options": {}
+      },
+      "id": "d2b38742-2b2b-47f0-8d5f-7cbaa5cbe8f3",
+      "name": "WH — Modification CCOL",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        2688
+      ],
+      "webhookId": "47dfe822-b991-4366-9acc-a587e2d554ba"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "peb-tipasa",
+        "options": {}
+      },
+      "id": "bc262540-5c31-4097-8de2-4a6c44291e32",
+      "name": "WH — PEB Tipasa",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        2832
+      ],
+      "webhookId": "26867aa4-81f7-4973-a9b2-d4030cf8e1a9"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "requete-accessibilite",
+        "options": {}
+      },
+      "id": "4f820d48-c91a-46bc-947e-3e1925004d5c",
+      "name": "WH — Accessibilité",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        2976
+      ],
+      "webhookId": "b4ccfcad-d1b9-420b-b728-a3212c864339"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== ⚙️ CONFIGURATION — MODIFIER ICI POUR LA MIGRATION EN PRODUCTION =====\nvar FE_URL      = 'http://localhost:4200';\nvar ADMIN_EMAIL = 'acq@bib.umontreal.ca';\nvar FROM_EMAIL  = 'chaine-achat@bib.umontreal.ca';\n// =============================================================================\n\nvar TYPE_MAP = {\n  \"Suggestion d'achat - Usager\": { label: \"Suggestion d'achat\",       color: '#7B4A15' },\n  'Nouvel achat unique':          { label: 'Nouvel achat unique',       color: '#1B5E6E' },\n  'Nouvel abonnement':            { label: 'Nouvel abonnement',         color: '#4C1D95' },\n  'Modification et CCOL':         { label: 'Modification et CCOL',      color: '#3730A3' },\n  'PEB Tipasa num\\u00e9rique':         { label: 'PEB Tipasa num\\u00e9rique',      color: '#3730A3' },\n  'Requ\\u00eate ACQ Accessibilit\\u00e9':   { label: 'Requ\\u00eate ACQ Accessibilit\\u00e9', color: '#37424D' }\n};\n\nvar inp = $input.first().json;\nvar d   = inp.body || inp;\nvar ti  = TYPE_MAP[d.type_formulaire] || { label: d.type_formulaire || 'Inconnu', color: '#37474F' };\nvar id  = d.id || d.reponse_id || '?';\n\n// Structure backend (plate) : { baseData: {...}, specificData: {...} }\n// Structure frontend (imbriqu\\u00e9e) : { reponses: { baseData: {...}, specificData: {...} } }\nvar bd = d.baseData\n      || (d.reponses && d.reponses.baseData ? d.reponses.baseData : (d.reponses || {}));\nvar sd = d.specificData\n      || (d.reponses && d.reponses.specificData ? d.reponses.specificData : {});\n\n// demandeur = champ formulaire ; usager_nom = admin connect\\u00e9 (fallback)\nvar nom      = bd.demandeur    || d.usager_nom      || bd.nom      || '\\u2014';\nvar courriel = bd.courriel     || d.usager_courriel || '\\u2014';\nvar statut   = bd.statut       || d.usager_statut   || '\\u2014';\nvar titre    = bd.titre_document || d.titre_document || '\\u2014';\nvar auteur   = bd.auteur  || sd.auteur  || null;\nvar editeur  = bd.editeur || sd.editeur || '\\u2014';\nvar isbn     = bd.isbn_issn || sd.isbn_issn || '\\u2014';\nvar prio     = bd.priorite_demande || '\\u2014';\nvar prixCad  = bd.prix_cad || sd.prix_cad || null;\nvar fonds    = bd.fonds_budgetaire || sd.fonds_budgetaire || null;\nvar note     = bd.note_commentaire || bd.note_usager || null;\nvar biblio   = bd.bibliotheque || '\\u2014';\nvar acqLink  = FE_URL + '/acq-decision?id=' + id;\nvar c        = ti.color;\n\nvar now = new Date().toLocaleString('fr-CA', {\n  timeZone: 'America/Toronto',\n  year: 'numeric', month: 'long', day: 'numeric',\n  hour: '2-digit', minute: '2-digit'\n});\n\nvar badge = function(p) {\n  var lp = (p || '').toLowerCase();\n  if (lp === 'urgent')      return \"<span style='background:#fdecea;color:#b72600;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700'>URGENT</span>\";\n  if (lp === 'prioritaire') return \"<span style='background:#fff3e0;color:#e65100;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700'>PRIORITAIRE</span>\";\n  return \"<span style='background:#e8f5e9;color:#2e7d32;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700'>R\\u00c9GULIER</span>\";\n};\n\nvar data = [\n  ['R\\u00e9f.',         '#' + id],\n  ['Date',         now],\n  ['Demandeur',    nom],\n  ['Courriel',     courriel],\n  ['Statut',       statut],\n  ['Biblioth\\u00e8que',  biblio],\n  ['Titre',        '<strong>' + titre + '</strong>'],\n  [auteur ? 'Auteur' : '\\u00c9diteur', auteur || editeur],\n  ['ISBN / ISSN',  isbn],\n  ['Priorit\\u00e9',     badge(prio)]\n];\nif (prixCad) data.push(['Prix CAD', '$' + prixCad]);\nif (fonds)   data.push(['Fonds',    fonds]);\nif (note)    data.push(['Note',     '<em>' + note + '</em>']);\n\nvar rows = '';\ndata.forEach(function(r) {\n  rows += \"<tr>\" +\n    \"<td style='padding:9px 0;border-bottom:1px solid #eaedf0;color:#607386;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;width:155px;vertical-align:top'>\" + r[0] + \"</td>\" +\n    \"<td style='padding:9px 0 9px 16px;border-bottom:1px solid #eaedf0;color:#343a40;font-size:14px'>\" + r[1] + \"</td>\" +\n    \"</tr>\";\n});\n\nvar html =\n  \"<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>Nouvelle demande</title></head>\" +\n  \"<body style='margin:0;padding:0;background:#f0f2f5;font-family:Segoe UI,Arial,sans-serif'>\" +\n  \"<table width='100%' cellpadding='0' cellspacing='0' style='background:#f0f2f5;padding:32px 16px'><tr><td align='center'>\" +\n  \"<table width='640' cellpadding='0' cellspacing='0' style='max-width:640px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.10)'>\" +\n\"<tr><td style='background:#1E2631;padding:28px 36px 0;border-bottom:4px solid \" + c + \"'>\" +\n\"<p style='margin:0 0 5px;color:rgba(255,255,255,.50);font-size:10px;text-transform:uppercase;letter-spacing:1.4px'>Nouvelle demande \\u2014 Biblioth\\u00e8ques UdeM</p>\" +\n\"<h1 style='margin:0 0 5px;color:#fff;font-size:20px;font-weight:600'>\" + ti.label + \"</h1>\" +\n\"<p style='margin:0 0 20px;color:rgba(255,255,255,.55);font-size:12px'>Cha\\u00eene d\\u2019acquisitions \\u2014 R\\u00e9f. <strong style=\\\"color:rgba(255,255,255,.75)\\\">#\" + id + \"</strong></p>\" +\n\"</td></tr>\" +\n  \"<tr><td style='padding:26px 36px 8px'>\" +\n  \"<p style='margin:0 0 18px;color:#607386;font-size:13px'>Un formulaire a \\u00e9t\\u00e9 soumis et requ\\u00e9rit votre traitement.</p>\" +\n  \"<table width='100%' cellpadding='0' cellspacing='0'>\" + rows + \"</table>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='padding:24px 36px 30px;text-align:center'>\" +\n  \"<p style='margin:0 0 16px;color:#9DABB9;font-size:12px'>Acc\\u00e9der au formulaire de d\\u00e9cision ACQ :</p>\" +\n  \"<a href='\" + acqLink + \"' style='display:inline-block;background:\" + c + \";color:#fff;padding:14px 40px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px'>Traiter la demande &#8594;</a>\" +\n  \"<p style='font-size:11px;color:#c0c8d0;margin:12px 0 0;word-break:break-all'>\" + acqLink + \"</p>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='background:#f8f9fa;padding:14px 36px;text-align:center;border-top:1px solid #eaedf0'>\" +\n  \"<p style='margin:0;font-size:11px;color:#9DABB9'>Biblioth\\u00e8ques \\u2014 Universit\\u00e9 de Montr\\u00e9al &nbsp;&middot;&nbsp; Syst\\u00e8me de gestion des acquisitions<br>Ce courriel est g\\u00e9n\\u00e9r\\u00e9 automatiquement.</p>\" +\n  \"</td></tr></table></td></tr></table></body></html>\";\n\nreturn [{ json: {\n  ADMIN_EMAIL: ADMIN_EMAIL,\n  FROM_EMAIL: FROM_EMAIL,\n  emailSubject: '[ACQ UdeM] ' + ti.label + ' \\u2014 ' + titre.substring(0, 55) + ' | #' + id,\n  emailHtml: html\n} }];"
+      },
+      "id": "628dcdb6-0625-496d-ba1b-ced5b739cb58",
+      "name": "⚙️ Email Admin",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        2624
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $json.FROM_EMAIL }}",
+        "toEmail": "={{ $json.ADMIN_EMAIL }}",
+        "subject": "={{ $json.emailSubject }}",
+        "emailFormat": "both",
+        "html": "={{ $json.emailHtml }}",
+        "options": {}
+      },
+      "id": "92dcad17-04ac-4d9c-8e38-ee9bd746f0f7",
+      "name": "Envoyer email — Admin",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        416,
+        2624
+      ],
+      "webhookId": "3aca5509-a141-4386-bc3a-7b8d76088d06",
+      "credentials": {
+        "smtp": {
+          "id": "vwndz2bOXGY88axL",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "acq-decision",
+        "options": {}
+      },
+      "id": "cd33b294-2657-40c8-8e3e-ce0e588938be",
+      "name": "WH — Décision ACQ",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        3104
+      ],
+      "webhookId": "c2a12ceb-b327-4e62-b4f6-c671b94e2b04"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== ⚙️ CONFIGURATION — MODIFIER ICI POUR LA MIGRATION EN PRODUCTION =====\nvar FROM_EMAIL = 'chaine-achat@bib.umontreal.ca';\n// =============================================================================\n\nvar TYPE_MAP = {\n  \"Suggestion d'achat - Usager\": { label: \"Suggestion d'achat\",       color: '#9B6B1A' },\n  'Nouvel achat unique':          { label: 'Nouvel achat unique',       color: '#2A9086' },\n  'Nouvel abonnement':            { label: 'Nouvel abonnement',         color: '#1B6B50' },\n  'Modification et CCOL':         { label: 'Modification et CCOL',      color: '#3730A3' },\n  'PEB Tipasa num\\u00e9rique':         { label: 'PEB Tipasa num\\u00e9rique',      color: '#C04A00' },\n  'Requ\\u00eate ACQ Accessibilit\\u00e9':   { label: 'Requ\\u00eate ACQ Accessibilit\\u00e9', color: '#5B3D8A' }\n};\n\nvar inp       = $input.first().json;\nvar d         = inp.body || inp;\nvar typeKey   = d.type_formulaire || 'Inconnu';\nvar ti        = TYPE_MAP[typeKey] || { label: typeKey, color: '#1E2631' };\nvar id        = d.reponse_id || '?';\nvar userEmail = d.usager_courriel || '';\nvar userNom   = d.usager_nom || 'Madame/Monsieur';\nvar titre     = d.titre_document || '\\u2014';\nvar suiviAcq  = d.suivi_acq || '\\u2014';\nvar noteAcq   = d.note_acq || null;\nvar c         = ti.color;\n\nvar noteRow = '';\nif (noteAcq) {\n  noteRow =\n    \"<tr><td style='padding:13px 18px;background:#f8f9fa;border-top:1px solid #eaedf0'>\" +\n    \"<p style='margin:0 0 3px;color:#607386;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:500'>Note / Commentaire</p>\" +\n    \"<p style='margin:0;color:#607386;font-size:13px;font-style:italic'>\" + noteAcq + \"</p>\" +\n    \"</td></tr>\";\n}\n\nvar html =\n  \"<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>Votre demande est prise en consid\\u00e9ration</title></head>\" +\n  \"<body style='margin:0;padding:0;background:#f0f2f5;font-family:Segoe UI,Arial,sans-serif'>\" +\n  \"<table width='100%' cellpadding='0' cellspacing='0' style='background:#f0f2f5;padding:32px 16px'><tr><td align='center'>\" +\n  \"<table width='620' cellpadding='0' cellspacing='0' style='max-width:620px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)'>\" +\n\n  \"<tr><td style='background:#1E2631;padding:28px 36px 0;border-bottom:4px solid \" + c + \"'>\" +\n  \"<p style='margin:0 0 5px;color:rgba(255,255,255,.50);font-size:10px;text-transform:uppercase;letter-spacing:1.4px'>Biblioth\\u00e8ques \\u2014 Universit\\u00e9 de Montr\\u00e9al</p>\" +\n  \"<h1 style='margin:0 0 20px;color:#fff;font-size:20px;font-weight:600'>Votre demande est prise en consid\\u00e9ration</h1>\" +\n  \"</td></tr>\" +\n\n  \"<tr><td style='padding:26px 36px 8px'>\" +\n  \"<p style='margin:0 0 4px;color:#343a40;font-size:14px;line-height:1.6'>Bonjour <strong>\" + userNom + \"</strong>,</p>\" +\n  \"<p style='margin:0 0 22px;color:#607386;font-size:13px;line-height:1.6'>Nous avons bien re\\u00e7u et trait\\u00e9 votre demande d\\u2019acquisition. Voici le r\\u00e9sum\\u00e9 du traitement\\u00a0:</p>\" +\n\n  \"<table width='100%' cellpadding='0' cellspacing='0' style='border:1px solid #eaedf0;border-radius:8px;overflow:hidden;margin-bottom:22px'>\" +\n  \"<tr><td style='padding:13px 18px;border-bottom:1px solid #eaedf0;background:#f8f9fa'>\" +\n  \"<p style='margin:0 0 3px;color:#607386;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:500'>Type de formulaire</p>\" +\n  \"<p style='margin:0;color:\" + c + \";font-size:13px;font-weight:500'>\" + ti.label + \"</p>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='padding:13px 18px;border-bottom:1px solid #eaedf0;background:#f8f9fa'>\" +\n  \"<p style='margin:0 0 3px;color:#607386;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:500'>Document demand\\u00e9</p>\" +\n  \"<p style='margin:0;color:#343a40;font-size:13px;font-weight:500'>\" + titre + \"</p>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='padding:13px 18px;\" + (noteAcq ? 'border-bottom:1px solid #eaedf0;' : '') + \"background:#f8f9fa'>\" +\n  \"<p style='margin:0 0 3px;color:#607386;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:500'>ACQ \\u2014 Suivi de la demande</p>\" +\n  \"<p style='margin:0;color:#343a40;font-size:13px;font-weight:500'>\" + suiviAcq + \"</p>\" +\n  \"</td></tr>\" +\n  noteRow +\n  \"</table>\" +\n\n  \"<p style='margin:0 0 24px;color:#9DABB9;font-size:12px;line-height:1.6'>Pour toute question, veuillez contacter le Service des acquisitions de votre biblioth\\u00e8que.</p>\" +\n  \"</td></tr>\" +\n\n  \"<tr><td style='background:#f8f9fa;padding:12px 36px;text-align:center;border-top:1px solid #eaedf0'>\" +\n  \"<p style='margin:0;font-size:11px;color:#9DABB9'>Biblioth\\u00e8ques \\u2014 Universit\\u00e9 de Montr\\u00e9al &nbsp;&middot;&nbsp; Syst\\u00e8me de gestion des acquisitions<br>Ce courriel est g\\u00e9n\\u00e9r\\u00e9 automatiquement.</p>\" +\n  \"</td></tr></table></td></tr></table></body></html>\";\n\nreturn [{ json: {\n  FROM_EMAIL: FROM_EMAIL,\n  userEmail: userEmail,\n  emailSubject: '[Biblioth\\u00e8ques UdeM] Votre demande est prise en consid\\u00e9ration \\u2014 ' + titre.substring(0, 50),\n  emailHtml: html\n} }];"
+      },
+      "id": "b3058220-5dfa-4042-8ab7-e700e7da2130",
+      "name": "⚙️ Email Usager",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        3104
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $json.FROM_EMAIL }}",
+        "toEmail": "={{ $json.userEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "emailFormat": "both",
+        "html": "={{ $json.emailHtml }}",
+        "options": {}
+      },
+      "id": "eaa42a74-8f33-4532-8850-8e34928e85ac",
+      "name": "Envoyer email — Usager",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        416,
+        3104
+      ],
+      "webhookId": "8499d2fb-adfa-463e-b346-7253ef4d1a4e",
+      "credentials": {
+        "smtp": {
+          "id": "vwndz2bOXGY88axL",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "WH — Nouvel achat": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Nouvel abonnement": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Suggestion": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Modification CCOL": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — PEB Tipasa": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Accessibilité": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Email Admin": {
+      "main": [
+        [
+          {
+            "node": "Envoyer email — Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Décision ACQ": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Usager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Email Usager": {
+      "main": [
+        [
+          {
+            "node": "Envoyer email — Usager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "WH — Nouvel achat": [
+      {
+        "headers": {
+          "accept": "application/json, text/plain, */*",
+          "content-type": "application/json",
+          "user-agent": "axios/1.15.2",
+          "content-length": "1286",
+          "accept-encoding": "gzip, compress, deflate, br",
+          "host": "host.docker.internal:5678",
+          "connection": "close"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "id": 111,
+          "type_formulaire": "Nouvel achat unique",
+          "usager_nom": "Système Administrateur",
+          "usager_courriel": "nataliapanfilii@yahoo.com",
+          "usager_statut": "Gestionnaire",
+          "baseData": {
+            "formulaire_type": "Nouvel achat unique",
+            "demandeur": "Émilie Dupont",
+            "bibliotheque": "Musique",
+            "priorite_demande": "Régulier",
+            "titre_document": "Introduction à la psychologie sociale",
+            "sous_titre": "Théories contemporaines",
+            "editeur": "Jean-Pierre Gagnon",
+            "isbn_issn": "9782123456789",
+            "date_publication": "2023-06-15",
+            "source_information": "https://www.example.com/livre-introduction-psychologie",
+            "categorie_document": "Archives de périodiques",
+            "format_support": "Imprimé/support physique",
+            "format_pret_numerique": "Ne s'applique pas",
+            "nombre_utilisateurs": null,
+            "lien_plateforme": null,
+            "prix_cad": 39.99,
+            "devise_originale": "CAD",
+            "prix_devise_originale": 39.99,
+            "fonds_budgetaire": "MO-123",
+            "note_commentaire": "Avez-vous d'autres exemplaires disponibles?",
+            "statut_bibliotheque": "Saisie en cours en bibliothèque",
+            "statut_acq": "En attente"
+          },
+          "specificData": {
+            "type_monographie": null,
+            "format_electronique": null,
+            "quantite": 1,
+            "usager_aviser_reservation": "josee.boucher@umontreal.ca",
+            "usager_aviser_activation": null,
+            "reserve_cours": false,
+            "reserve_cours_sigle": null,
+            "reserve_cours_session": null,
+            "reserve_cours_enseignant": null
+          }
+        },
+        "webhookUrl": "http://localhost:5678/webhook/nouvel-achat",
+        "executionMode": "production"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e9d9102868a6b22648cfbc39e8d3686eb431e01dac8497f3ebbbee02d9e6ab21"
+  }
+}

@@ -40,19 +40,6 @@
           <p class="text-muted mb-0">{{ formatDate(reponse?.dateA || '') }}</p>
         </div>
 
-        <div class="col-md-6 mb-0">
-          <label class="form-label">{{ 'reponses.meta_statut_approbation' | translate }}</label>
-          <p class="mb-0">
-            <span class="badge" 
-                  [ngClass]="'bg-' + (reponse?.statut_approbation === 'approuve' ? 'success' : reponse?.statut_approbation === 'refuse' ? 'danger' : 'warning')">
-              {{ reponse?.statut_approbation }}
-            </span>
-          </p>
-        </div>
-        <div class="col-md-6 mb-0" *ngIf="reponse?.commentaire_admin">
-          <label class="form-label">{{ 'reponses.meta_commentaire' | translate }}</label>
-          <p class="text-muted mb-0">{{ reponse?.commentaire_admin }}</p>
-        </div>
       </div>
     </div>
   </div>
@@ -104,11 +91,18 @@
 
 <!-- Footer avec boutons ──────────────────────────────────────── -->
 <div class="modal-footer">
-  <button 
-    type="button" 
-    class="btn btn-secondary btn-sm" 
+  <button
+    type="button"
+    class="btn btn-secondary btn-sm"
     (click)="activeModal.dismiss()">
     {{ 'reponses.btn_fermer' | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-warning btn-sm"
+    (click)="creerItem()"
+    title="Ouvrir le formulaire item pré-rempli avec cette réponse">
+    <i class="bi bi-file-earmark-plus me-1"></i>Créer un item
   </button>
   <button 
     type="button" 

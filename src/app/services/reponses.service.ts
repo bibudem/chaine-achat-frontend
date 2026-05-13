@@ -31,10 +31,6 @@ export interface Reponse {
   usager_statut: string;
   reponses: any;
   dateA: string;
-  statut_approbation: string;
-  courriel_admin: string | null;
-  date_traitement: string | null;
-  commentaire_admin: string | null;
 }
 
 export interface PaginatedResponse {

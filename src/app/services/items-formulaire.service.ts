@@ -109,6 +109,7 @@ export interface Item {
   // Champs usager à aviser (Nouvel achat unique, Nouvel abonnement)
   usager_aviser_reservation?: string;
   usager_aviser_activation?: string;
+
 }
 
 export interface ApiResponse<T> {

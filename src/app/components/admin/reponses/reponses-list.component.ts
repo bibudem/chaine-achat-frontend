@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ReponsesService, Reponse, PaginatedResponse } from '../../../services/reponses.service';
-import { DialogService } from '../../../services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
 import { PageEvent } from '@angular/material/paginator';
 
 export type SortDirection = 'asc' | 'desc' | '';
@@ -13,85 +11,132 @@ export type SortDirection = 'asc' | 'desc' | '';
 })
 export class ReponsesListComponent implements OnInit {
 
-  // ── Données et état ────────────────────────────────────────
   reponses: Reponse[] = [];
   filteredReponses: Reponse[] = [];
   loading = false;
   errorMessage: string | null = null;
   decisionMessage: { type: string; texte: string } | null = null;
 
-  // ── Détails affichés ───────────────────────────────────────
   expandedId: number | null = null;
   expandedReponse: Reponse | null = null;
-  jsonFormatted: string = '';
+  jsonFormatted = '';
   activeTab: 'formatted' | 'json' = 'formatted';
   copyFeedback: string | null = null;
 
-  // ── Pagination ─────────────────────────────────────────────
   currentPage = 1;
   pageSize = 20;
   totalItems = 0;
   pageSizeOptions = [10, 20, 50, 100];
 
-  // ── Filtres ────────────────────────────────────────────────
   selectedType = '';
-  selectedStatut = '';
+  searchText = '';
 
-  // ── Filtres par colonne ────────────────────────────────────
-  columnFilters = {
-    usager_nom: '',
-    usager_courriel: '',
-    type_formulaire: ''
-  };
-
-  // ── Tri ─────────────────────────────────────────────────────
-  sortColumn: keyof Reponse | '' = '';
+  sortColumn = '';
   sortDirection: SortDirection = '';
 
   formTypes = [
-    { value: '', label: 'Tous les types' },
-    { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
-    { value: 'Nouvel achat unique', label: 'Nouvel achat unique' }
+    { value: '',                              label: 'Tous les types' },
+    { value: "Suggestion d'achat - Usager",   label: "Suggestion d'achat — Usager" },
+    { value: 'Nouvel achat unique',            label: 'Nouvel achat unique' },
+    { value: 'Nouvel abonnement',              label: 'Nouvel abonnement' },
+    { value: 'Requête ACQ Accessibilité',      label: 'Requête ACQ Accessibilité' },
+    { value: 'Modification et CCOL',           label: 'Modification et CCOL' },
+    { value: 'PEB Tipasa numérique',           label: 'PEB Tipasa numérique' },
   ];
 
-  statuts = [
-    { value: '', label: 'Tous les statuts' },
-    { value: 'en_attente', label: 'En attente' },
-    { value: 'approuve', label: 'Approuvé' },
-    { value: 'refuse', label: 'Refusé' }
-  ];
-
-  // ── Colonnes du tableau ────────────────────────────────────
-  displayedColumns: string[] = [
-    'id',
-    'type_formulaire',
-    'usager_nom',
-    'usager_courriel',
-    'dateA',
-    'statut_approbation',
-    'actions'
-  ];
+  private readonly fieldLabels: Record<string, string> = {
+    titre_document:           'Titre du document',
+    sous_titre:               'Sous-titre',
+    editeur:                  'Éditeur',
+    isbn_issn:                'ISBN / ISSN',
+    date_publication:         'Date de publication',
+    categorie_document:       'Catégorie',
+    format_support:           'Format / Support',
+    fonds_budgetaire:         'Fonds budgétaire',
+    fonds_sn_projet:          'Fonds SN — No projet',
+    bibliotheque:             'Bibliothèque',
+    demandeur:                'Demandeur',
+    source_information:       "Source d'information",
+    prix_cad:                 'Prix total (CAD)',
+    devise_originale:         'Devise originale',
+    prix_devise_originale:    'Prix devise originale',
+    periode_couverte:         'Période couverte',
+    nombre_titres_inclus:     'Nb titres inclus',
+    nombre_utilisateurs:      "Nb d'utilisateurs",
+    lien_plateforme:          'Lien plateforme',
+    format_pret_numerique:    'Format PrêtNumérique',
+    localisation_emplacement: 'Localisation / Emplacement',
+    creation_notice_dtdm:     'Création notice TDM',
+    statut_bibliotheque:      'Statut bibliothèque',
+    statut_acq:               'Statut ACQ',
+    suivi_acq:                'Suivi ACQ',
+    note_commentaire:         'Note bibliothèque',
+    note_dtdm:                'Note TDM',
+    note_acq:                 'Note ACQ',
+    bibliotheque_note_interne:'Note interne bibliothèque',
+    catalogue:                'Catalogue',
+    priorite_demande:         'Priorité',
+    auteur:                   'Auteur(rice)',
+    usager_statut:            "Statut de l'usager",
+    usager_faculte:           'Faculté / Département',
+    usager_courriel:          'Courriel usager',
+    usager_nom:               'Nom usager',
+    bibliothecaire_disciplinaire: 'Bibliothécaire disciplinaire',
+    aviser_reservation:       'Aviser — Réservation',
+    aviser_reception:         'Aviser — Réception',
+    date_requise_cours:       'Requis pour cours',
+    reserve_cours:            'Réserve de cours',
+    reserve_cours_sigle:      'Sigle du cours',
+    reserve_cours_session:    'Session',
+    reserve_cours_enseignant: 'Enseignant(e)',
+    quantite:                 'Quantité',
+    bordereau_imprime:        'Bordereau imprimé',
+    projets_speciaux:         'Projet spécial',
+    gobi_vu_format_numerique: 'Vu sur GOBI / Leslibraires.ca',
+    gobi_version_moins_365_usd: 'GOBI version < 365 USD',
+    reference_tipasa:         'Référence Tipasa',
+    precision_demande:        'Précision de la demande',
+    date_debut_abonnement:    "Date début d'abonnement",
+    type_monographie:         'Type de monographie',
+    besoin_specifique_format: 'Besoin spécifique (format)',
+    acq_responsable_courriel: 'ACQ — Responsable (courriel)',
+    acq_numerisation_recommandee: 'Numérisation recommandée',
+    acq_date_demande_editeur: "Date demande à l'éditeur",
+    acq_date_livraison_estimee: 'Date livraison estimée',
+    note_usager:              "Notes de l'usager",
+    acq_raison_annulation:    "Raison d'annulation",
+    acq_isbn:                 'ISBN (suggestion)',
+    techdoc_suggestion_transmise: 'Transmise à TECHDOC',
+    reference_usager:         'Référence usager',
+    permalien_sofia:          'Permalien SOFIA',
+    fournisseur_contacte_sans_succes: 'Fournisseur contacté sans succès',
+    exemplaire_detenu:        'Exemplaire détenu',
+    verification_caeb:        'Vérification CAEB',
+    verification_sqla:        'Vérification SQLA',
+    verification_emma:        'Vérification EMMA',
+    id_ressource:             'ID de ressource',
+    personne_a_aviser_nom:    'Personne à aviser — Nom',
+    personne_a_aviser_courriel: 'Personne à aviser — Courriel',
+    numero_oclc:              'Numéro OCLC',
+    usager_aviser_reservation:'Usager à aviser — Réservation',
+    usager_aviser_activation: "Usager à aviser — Activation",
+  };
 
   constructor(
-    private reponsesService: ReponsesService,
-    private dialogService: DialogService,
-    private translate: TranslateService
+    private reponsesService: ReponsesService
   ) {}
 
   ngOnInit(): void {
     this.loadReponses();
   }
 
-  /**
-   * Charge les réponses depuis le service
-   */
   loadReponses(): void {
     this.loading = true;
     this.errorMessage = null;
 
     this.reponsesService.getAll(
       this.selectedType || undefined,
-      this.selectedStatut || undefined,
+      undefined,
       this.currentPage,
       this.pageSize
     ).subscribe({
@@ -101,114 +146,74 @@ export class ReponsesListComponent implements OnInit {
         this.applyClientFiltering();
         this.loading = false;
       },
-      error: (error) => {
-        console.error('❌ Erreur chargement reponses:', error);
+      error: () => {
         this.errorMessage = 'Erreur lors du chargement des réponses';
         this.loading = false;
       }
     });
   }
 
-  /**
-   * Applique les filtres côté client (par colonne)
-   */
   applyClientFiltering(): void {
     this.filteredReponses = this.reponses.filter(r => {
-      // Filtrer par nom
-      if (this.columnFilters.usager_nom &&
-          !r.usager_nom.toLowerCase().includes(this.columnFilters.usager_nom.toLowerCase())) {
-        return false;
-      }
-      // Filtrer par email
-      if (this.columnFilters.usager_courriel &&
-          !r.usager_courriel.toLowerCase().includes(this.columnFilters.usager_courriel.toLowerCase())) {
-        return false;
-      }
-      // Filtrer par type
-      if (this.columnFilters.type_formulaire &&
-          !r.type_formulaire.toLowerCase().includes(this.columnFilters.type_formulaire.toLowerCase())) {
-        return false;
+      if (this.searchText) {
+        const s = this.searchText.toLowerCase();
+        if (!r.usager_nom?.toLowerCase().includes(s) &&
+            !r.usager_courriel?.toLowerCase().includes(s)) {
+          return false;
+        }
       }
       return true;
     });
-
-    // Appliquer le tri
     this.applySorting();
   }
 
-  /**
-   * Applique le tri aux données filtrées
-   */
+  onSearchChange(): void {
+    this.applyClientFiltering();
+  }
+
   applySorting(): void {
-    if (!this.sortColumn || !this.sortDirection) {
-      return;
-    }
-
+    if (!this.sortColumn || !this.sortDirection) return;
     this.filteredReponses.sort((a, b) => {
-      const valueA = a[this.sortColumn as keyof Reponse];
-      const valueB = b[this.sortColumn as keyof Reponse];
-
-      let comparison = 0;
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        comparison = valueA.localeCompare(valueB);
-      } else if (typeof valueA === 'number' && typeof valueB === 'number') {
-        comparison = valueA - valueB;
+      const va = (a as any)[this.sortColumn];
+      const vb = (b as any)[this.sortColumn];
+      let cmp = 0;
+      if (typeof va === 'string' && typeof vb === 'string') {
+        cmp = va.localeCompare(vb);
+      } else if (typeof va === 'number' && typeof vb === 'number') {
+        cmp = va - vb;
       } else {
-        comparison = String(valueA).localeCompare(String(valueB));
+        cmp = String(va).localeCompare(String(vb));
       }
-
-      return this.sortDirection === 'asc' ? comparison : -comparison;
+      return this.sortDirection === 'asc' ? cmp : -cmp;
     });
   }
 
-  /**
-   * Change le tri d'une colonne
-   */
-  toggleSort(column: keyof Reponse): void {
+  toggleSort(column: string): void {
     if (this.sortColumn === column) {
-      // Basculer la direction
-      if (this.sortDirection === 'asc') {
-        this.sortDirection = 'desc';
-      } else if (this.sortDirection === 'desc') {
-        this.sortDirection = '';
-        this.sortColumn = '';
-      }
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc'
+                         : this.sortDirection === 'desc' ? '' : 'asc';
+      if (!this.sortDirection) this.sortColumn = '';
     } else {
-      // Nouvelle colonne
       this.sortColumn = column;
       this.sortDirection = 'asc';
     }
     this.applySorting();
   }
 
-  /**
-   * Gère le changement de page
-   */
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     this.loadReponses();
   }
 
-  /**
-   * Applique les filtres serveur et recharge
-   */
   applyFilters(): void {
     this.currentPage = 1;
     this.loadReponses();
   }
 
-  /**
-   * Réinitialise les filtres
-   */
   resetFilters(): void {
     this.selectedType = '';
-    this.selectedStatut = '';
-    this.columnFilters = {
-      usager_nom: '',
-      usager_courriel: '',
-      type_formulaire: ''
-    };
+    this.searchText = '';
     this.sortColumn = '';
     this.sortDirection = '';
     this.currentPage = 1;
@@ -217,16 +222,11 @@ export class ReponsesListComponent implements OnInit {
     this.loadReponses();
   }
 
-  /**
-   * Affiche/masque les détails d'une réponse
-   */
   toggleDetails(reponse: Reponse): void {
     if (this.expandedId === reponse.id) {
-      // Fermer
       this.expandedId = null;
       this.expandedReponse = null;
     } else {
-      // Ouvrir
       this.expandedId = reponse.id;
       this.expandedReponse = reponse;
       this.jsonFormatted = JSON.stringify(reponse.reponses, null, 2);
@@ -235,130 +235,90 @@ export class ReponsesListComponent implements OnInit {
     }
   }
 
-  /**
-   * Formate la date
-   */
-  formatDate(dateString: string): string {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('fr-FR');
+  // ── Formatage dates ───────────────────────────────────────────────
+  formatDate(dateString: string | null): string {
+    if (!dateString) return '—';
+    return new Date(dateString).toLocaleDateString('fr-CA');
   }
 
-  /**
-   * Retourne la classe Bootstrap pour le statut
-   */
-  getStatutBadgeClass(statut: string): string {
-    switch (statut) {
-      case 'approuve':
-        return 'badge-success';
-      case 'refuse':
-        return 'badge-danger';
-      case 'en_attente':
-        return 'badge-warning';
-      default:
-        return 'badge-secondary';
-    }
+  formatDateTime(dateString: string | null): string {
+    if (!dateString) return '—';
+    const d = new Date(dateString);
+    return d.toLocaleDateString('fr-CA') + ' ' +
+           d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
 
-  /**
-   * Retourne l'icône de tri pour une colonne
-   */
-  getSortIcon(column: keyof Reponse): string {
+  // ── Icône de tri ──────────────────────────────────────────────────
+  getSortIcon(column: string): string {
     if (this.sortColumn !== column) return 'arrow-down-up';
     return this.sortDirection === 'asc' ? 'arrow-up' : 'arrow-down';
   }
 
-  /**
-   * Copie le JSON dans le presse-papiers
-   */
-  copyToClipboard(): void {
-    if (this.expandedReponse) {
-      const textToCopy = JSON.stringify(this.expandedReponse.reponses, null, 2);
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        this.copyFeedback = 'Copié !';
-        setTimeout(() => {
-          this.copyFeedback = null;
-        }, 2000);
-      });
+  // ── Données du formulaire ─────────────────────────────────────────
+  getSections(reponses: any): { label: string; fields: { key: string; value: any }[] }[] {
+    if (!reponses || typeof reponses !== 'object') return [];
+    const sections: { label: string; fields: { key: string; value: any }[] }[] = [];
+    const topLevelSections = ['baseData', 'specificData'];
+
+    if (reponses.baseData && typeof reponses.baseData === 'object') {
+      const fields = Object.entries(reponses.baseData)
+        .filter(([, v]) => v !== null && v !== undefined && v !== '')
+        .map(([k, v]) => ({ key: k, value: v }));
+      if (fields.length) sections.push({ label: 'Données de base', fields });
     }
+
+    if (reponses.specificData && typeof reponses.specificData === 'object') {
+      const fields = Object.entries(reponses.specificData)
+        .filter(([, v]) => v !== null && v !== undefined && v !== '')
+        .map(([k, v]) => ({ key: k, value: v }));
+      if (fields.length) sections.push({ label: 'Données spécifiques', fields });
+    }
+
+    const otherFields = Object.entries(reponses)
+      .filter(([k, v]) => !topLevelSections.includes(k) && v !== null && v !== undefined && v !== '')
+      .map(([k, v]) => ({ key: k, value: v }));
+    if (otherFields.length) sections.push({ label: 'Données du formulaire', fields: otherFields });
+
+    return sections;
   }
 
-  /**
-   * Télécharge le JSON
-   */
-  downloadJson(): void {
-    if (this.expandedReponse) {
-      const dataStr = JSON.stringify(this.expandedReponse.reponses, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `reponse_${this.expandedReponse.id}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-    }
+  humanizeKey(key: string): string {
+    return this.fieldLabels[key] ||
+           key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
-  /**
-   * Vérifie si une valeur est un objet
-   */
   isObject(value: any): boolean {
     return typeof value === 'object' && value !== null;
   }
 
-  /**
-   * Applatit les objets imbriqués pour les afficher comme des champs distincts
-   */
-  flattenObject(obj: any, prefix = ''): { key: string; value: any }[] {
-    const result: { key: string; value: any }[] = [];
-    
-    if (!obj || typeof obj !== 'object') {
-      return result;
-    }
-
-    Object.keys(obj).forEach(key => {
-      const fullKey = prefix ? `${prefix}.${key}` : key;
-      const value = obj[key];
-
-      if (value === null || value === undefined) {
-        result.push({ key: fullKey, value: '-' });
-      } else if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object') {
-        // Si c'est un tableau d'objets, afficher en JSON
-        result.push({ key: fullKey, value: value });
-      } else if (typeof value === 'object' && !Array.isArray(value)) {
-        // Si c'est un objet imbriqué, l'aplatir récursivement
-        result.push(...this.flattenObject(value, fullKey));
-      } else {
-        result.push({ key: fullKey, value: value });
-      }
-    });
-
-    return result;
-  }
-
-  /**
-   * Affiche la valeur de manière lisible
-   */
   formatValue(value: any): string {
-    if (value === null || value === undefined) return '-';
+    if (value === null || value === undefined) return '—';
     if (typeof value === 'boolean') return value ? 'Oui' : 'Non';
     if (Array.isArray(value)) {
-      // Si c'est un tableau d'objets, afficher en JSON
-      if (value.length > 0 && typeof value[0] === 'object') {
-        return JSON.stringify(value, null, 2);
-      }
+      if (value.length > 0 && typeof value[0] === 'object') return JSON.stringify(value, null, 2);
       return value.join(', ');
     }
-    if (typeof value === 'object') {
-      // Si c'est un objet, l'afficher en JSON formaté
-      return JSON.stringify(value, null, 2);
-    }
+    if (typeof value === 'object') return JSON.stringify(value, null, 2);
     return String(value);
   }
 
-  /**
-   * Retourne les données formatées
-   */
-  getFormattedData(): any {
-    return this.expandedReponse?.reponses || {};
+  // ── Presse-papiers / téléchargement ──────────────────────────────
+  copyToClipboard(): void {
+    if (!this.expandedReponse) return;
+    navigator.clipboard.writeText(JSON.stringify(this.expandedReponse.reponses, null, 2)).then(() => {
+      this.copyFeedback = 'Copié !';
+      setTimeout(() => { this.copyFeedback = null; }, 2000);
+    });
+  }
+
+  downloadJson(): void {
+    if (!this.expandedReponse) return;
+    const blob = new Blob([JSON.stringify(this.expandedReponse.reponses, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reponse_${this.expandedReponse.id}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 }

@@ -1,0 +1,122 @@
+/* ============================================================
+   acq-decision.component.css
+   ACCENT : indigo ACQ (variables --acq-*)
+   Structure, responsive et composants partagés → css_udem.css
+   ============================================================ */
+.form-page{
+  padding-left:5%;
+  padding-right: 5%;
+}
+
+/* ── Gradient d'en-tête ────────────────────────────────────── */
+.form-header {
+  background: var( --dark-gray);
+  border-bottom: 2px solid var( --light-blue);
+  margin-top: 5%;
+}
+
+/* ── Section résumé demande — fond légèrement distinct ─────── */
+.form-section--item-summary {
+  background: #f8f9fb;
+}
+
+/* ── Titre de section ──────────────────────────────────────── */
+.form-section__title {
+  border-bottom: 1px solid var(--acq-light);
+}
+.form-section__title i { color: var( --light-blue); }
+
+/* ── Focus ring indigo sur les champs ──────────────────────── */
+.form-control:focus,
+.form-select:focus {
+  border-color: var( --light-blue) !important;
+  box-shadow:   0 0 0 3px rgba(255, 193, 7, 0.15) !important;
+  outline:      none !important;
+}
+
+/* ── Barre d'actions ───────────────────────────────────────── */
+.form-actions { border-top: 1px solid var(--light-gray); }
+
+/* ── Bouton soumettre ──────────────────────────────────────── */
+.btn-primary {
+  background: var( --light-blue);
+  color:      var(--white);
+  border:     none;
+}
+.btn-primary:hover:not(:disabled) {
+  background:  var(--acq-dark);
+  transform:   translateY(-1px);
+  box-shadow:  var(--shadow-md);
+}
+.btn-primary:disabled {
+  opacity:    0.55;
+  cursor:     not-allowed;
+  transform:  none  !important;
+  box-shadow: none  !important;
+}
+
+/* ── Alertes ───────────────────────────────────────────────── */
+.alert--info {
+  background:    var(--acq-light);
+  border-left:   3px solid var(--acq-mid);
+  color:         var(--acq-dark);
+  border-radius: 6px;
+  padding:       10px 14px;
+  font-size:     0.875rem;
+}
+.alert--danger {
+  background:    var(--warning-light);
+  border-left:   3px solid var(--danger-red);
+  color:         var(--danger-red);
+  border-radius: 6px;
+  padding:       10px 14px;
+  font-size:     0.875rem;
+}
+
+/* ── Écran de confirmation — surcharges couleur ACQ ────────── */
+.confirmation-detail { background: var(--acq-light); }
+.confirmation-detail__label i { color: var(--acq-mid); }
+
+.confirmation-icon--acq {
+  background: linear-gradient(135deg, var(--acq-mid), var(--acq-dark));
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25);
+}
+
+/* ── En-tête de la modal ───────────────────────────────────── */
+.modal-header {
+  background:    #f8f9fb;
+  border-bottom: 1px solid var(--light-gray);
+  padding:       14px 20px;
+}
+.modal-title {
+  font-size:   0.95rem;
+  font-weight: 600;
+  color:       var(--primary-blue);
+}
+.modal-footer {
+  background:  #f8f9fb;
+  border-top:  1px solid var(--light-gray);
+  padding:     12px 20px;
+}
+
+/* ── Tableau détails (modal Voir tout) ─────────────────────── */
+.detail-table th,
+.detail-table td {
+  padding:         .5rem .9rem;
+  vertical-align:  middle;
+  font-size:       .875rem;
+  border-color:    var(--light-gray);
+}
+.detail-table th {
+  width:       38%;
+  color:       var(--text-gray);
+  font-weight: 600;
+  background:  #f8f9fb;
+  white-space: nowrap;
+  font-size:   0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.detail-table td { color: var(--medium-gray); }
+.detail-table tbody tr:first-child th,
+.detail-table tbody tr:first-child td { border-top: none; }

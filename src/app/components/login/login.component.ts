@@ -1,7 +1,6 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'login',
@@ -38,9 +37,8 @@ export class LoginComponent implements OnInit {
           if (this.authService.isLoggedIn) {
             // Récupère l'URL de redirection depuis le service d'authentification
             // Si aucune redirection n'a été définis, redirige l'utilisateur vers la page d'accueil.
-            let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/login';
-            // Redirige l'utilisateur
-            this.router.navigate([redirect]);
+            const redirect = this.authService.redirectUrl || '/accueil';
+            this.router.navigateByUrl(redirect);
           } else {
             //alert('logout11')
             this.logout()

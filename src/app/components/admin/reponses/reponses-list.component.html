@@ -1,206 +1,189 @@
 <div class="container-fluid p-4 mt-5 bg-white">
-  <!-- En-tête ──────────────────────────────────────────────────── -->
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <h2 class="mb-0">{{ 'reponses.titre' | translate }}</h2>
-      <p class="text-muted small mt-1">{{ 'reponses.sous_titre' | translate }}</p>
+
+  <!-- En-tête ──────────────────────────────────────────────────────── -->
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h2 class="h4 mb-0">Réponses aux formulaires</h2>
+      <p class="text-muted small mt-1 mb-0">Consulter et gérer les soumissions des formulaires usagers</p>
     </div>
+    <span class="badge bg-secondary fs-6" *ngIf="!loading">
+      {{ totalItems }} réponse{{ totalItems !== 1 ? 's' : '' }}
+    </span>
   </div>
 
-  <!-- Messages d'alerte ───────────────────────────────────────── -->
-  <div *ngIf="decisionMessage" class="alert alert-{{ decisionMessage.type }} alert-dismissible fade show" role="alert">
+  <!-- Alertes ──────────────────────────────────────────────────────── -->
+  <div *ngIf="decisionMessage"
+       class="alert alert-{{ decisionMessage.type }} alert-dismissible fade show py-2" role="alert">
     {{ decisionMessage.texte }}
     <button type="button" class="btn-close" (click)="decisionMessage = null"></button>
   </div>
-
-  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ errorMessage }}
+  <div *ngIf="errorMessage"
+       class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+    <i class="bi bi-exclamation-triangle me-1"></i>{{ errorMessage }}
     <button type="button" class="btn-close" (click)="errorMessage = null"></button>
   </div>
 
-  <!-- Filtres principaux ──────────────────────────────────────── -->
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label class="form-label small fw-bold">{{ 'reponses.filtre_type' | translate }}</label>
+  <!-- Filtres ──────────────────────────────────────────────────────── -->
+  <div class="row g-2 mb-3 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label small fw-semibold mb-1">Type de formulaire</label>
       <select class="form-select form-select-sm" [(ngModel)]="selectedType">
         <option *ngFor="let t of formTypes" [value]="t.value">{{ t.label }}</option>
       </select>
     </div>
-
-    <div class="col-md-4">
-      <label class="form-label small fw-bold">{{ 'reponses.filtre_statut' | translate }}</label>
-      <select class="form-select form-select-sm" [(ngModel)]="selectedStatut">
-        <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
-      </select>
+    <div class="col-md-5">
+      <label class="form-label small fw-semibold mb-1">Recherche rapide</label>
+      <input type="text" class="form-control form-control-sm"
+             [(ngModel)]="searchText"
+             (ngModelChange)="onSearchChange()"
+             placeholder="Filtrer par nom ou courriel...">
     </div>
-
-    <div class="col-md-4 d-flex align-items-end gap-2">
+    <div class="col-md-4 d-flex gap-2">
       <button class="btn btn-sm btn-primary" (click)="applyFilters()">
-        <i class="bi bi-funnel me-1"></i>{{ 'reponses.appliquer' | translate }}
+        <i class="bi bi-funnel me-1"></i>Filtrer
       </button>
-      <button class="btn btn-sm btn-secondary" (click)="resetFilters()">
-        <i class="bi bi-arrow-clockwise me-1"></i>{{ 'reponses.reinitialiser' | translate }}
+      <button class="btn btn-sm btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
       </button>
     </div>
   </div>
 
-  <!-- Tableau ─────────────────────────────────────────────────── -->
-  <div class="table-container p-2">
-    <div *ngIf="loading" class="text-center p-5">
-      <div class="spinner-border spinner-border-sm text-primary" role="status">
-        <span class="visually-hidden">Chargement...</span>
-      </div>
-      <p class="mt-2 small">{{ 'reponses.chargement' | translate }}</p>
-    </div>
+  <!-- Chargement ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+    <p class="mt-2 small text-muted">Chargement...</p>
+  </div>
 
-    <div *ngIf="!loading && filteredReponses.length === 0" class="alert alert-info m-0">
-      {{ 'reponses.aucune_reponse' | translate }}
-    </div>
+  <!-- Vide ─────────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && filteredReponses.length === 0" class="text-center py-5">
+    <i class="bi bi-inbox display-4 text-muted d-block mb-2"></i>
+    <p class="text-muted mb-0">Aucune réponse trouvée</p>
+  </div>
 
-    <table *ngIf="!loading && filteredReponses.length > 0" class="table table-sm table-bordered">
-      <thead>
+  <!-- Tableau ──────────────────────────────────────────────────────── -->
+  <div class="table-responsive" *ngIf="!loading && filteredReponses.length > 0">
+    <table class="table table-sm table-hover table-bordered align-middle mb-0">
+      <thead class="table-light">
         <tr>
-          <!-- ID -->
-          <th style="width: 5%;">
-            <div class="th-header" (click)="toggleSort('id')">
-              {{ 'reponses.col_id' | translate }}
-              <i class="bi" [ngClass]="'bi-' + getSortIcon('id')" *ngIf="sortColumn === 'id'"></i>
+          <th style="width:4%">
+            <div class="th-header" (click)="toggleSort('id')">#
+              <i class="bi ms-1" [ngClass]="'bi-' + getSortIcon('id')" *ngIf="sortColumn === 'id'"></i>
             </div>
           </th>
-
-          <!-- Type -->
-          <th style="width: 25%;">
-            <div class="th-header" (click)="toggleSort('type_formulaire')">
-              {{ 'reponses.col_type' | translate }}
-              <i class="bi" [ngClass]="'bi-' + getSortIcon('type_formulaire')" *ngIf="sortColumn === 'type_formulaire'"></i>
+          <th style="width:26%">
+            <div class="th-header" (click)="toggleSort('type_formulaire')">Type
+              <i class="bi ms-1" [ngClass]="'bi-' + getSortIcon('type_formulaire')"
+                 *ngIf="sortColumn === 'type_formulaire'"></i>
             </div>
           </th>
-
-          <!-- Nom -->
-          <th style="width: 15%;">
-            <div class="th-header" (click)="toggleSort('usager_nom')">
-              {{ 'reponses.col_nom' | translate }}
-              <i class="bi" [ngClass]="'bi-' + getSortIcon('usager_nom')" *ngIf="sortColumn === 'usager_nom'"></i>
+          <th style="width:18%">
+            <div class="th-header" (click)="toggleSort('usager_nom')">Demandeur
+              <i class="bi ms-1" [ngClass]="'bi-' + getSortIcon('usager_nom')"
+                 *ngIf="sortColumn === 'usager_nom'"></i>
             </div>
           </th>
-
-          <!-- Email -->
-          <th style="width: 20%;">
-            <div class="th-header">{{ 'reponses.col_email' | translate }}</div>
-          </th>
-
-          <!-- Date -->
-          <th style="width: 15%;">
-            <div class="th-header" (click)="toggleSort('dateA')">
-              {{ 'reponses.col_date' | translate }}
-              <i class="bi" [ngClass]="'bi-' + getSortIcon('dateA')" *ngIf="sortColumn === 'dateA'"></i>
+          <th style="width:20%">Courriel</th>
+          <th style="width:14%">
+            <div class="th-header" (click)="toggleSort('dateA')">Soumis le
+              <i class="bi ms-1" [ngClass]="'bi-' + getSortIcon('dateA')" *ngIf="sortColumn === 'dateA'"></i>
             </div>
           </th>
-
-          <!-- Statut -->
-          <th style="width: 10%;">
-            <div class="th-header" (click)="toggleSort('statut_approbation')">
-              {{ 'reponses.col_statut' | translate }}
-              <i class="bi" [ngClass]="'bi-' + getSortIcon('statut_approbation')" *ngIf="sortColumn === 'statut_approbation'"></i>
-            </div>
+          <th style="width:6%" class="text-center">
+            <i class="bi bi-chevron-expand text-muted"></i>
           </th>
-
-          <!-- Actions -->
-          <th style="width: 10%;" class="text-center">{{ 'reponses.col_actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let reponse of filteredReponses">
-          <tr>
-            <td class="small"><strong>#{{ reponse.id }}</strong></td>
-            <td class="small">{{ reponse.type_formulaire }}</td>
-            <td class="small">{{ reponse.usager_nom }}</td>
-            <td class="small text-muted">{{ reponse.usager_courriel }}</td>
-            <td class="small">{{ formatDate(reponse.dateA) }}</td>
-            <td class="text-center">
-              <span  [ngClass]="'badge ' + getStatutBadgeClass(reponse.statut_approbation)">
-                <small>{{ reponse.statut_approbation }}</small>
+
+          <!-- Ligne principale -->
+          <tr [class.row-expanded]="expandedId === reponse.id">
+            <td class="text-muted small">#{{ reponse.id }}</td>
+            <td>
+              <span class="badge bg-light text-dark border small fw-normal">
+                {{ reponse.type_formulaire }}
               </span>
             </td>
+            <td class="small fw-semibold">{{ reponse.usager_nom || '—' }}</td>
+            <td class="small text-muted">{{ reponse.usager_courriel || '—' }}</td>
+            <td class="small text-nowrap">{{ formatDate(reponse.dateA) }}</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-primary" 
+              <button class="btn btn-sm"
+                      [class]="expandedId === reponse.id ? 'btn-dark' : 'btn-outline-secondary'"
                       (click)="toggleDetails(reponse)"
-                      [class.active]="expandedId === reponse.id"
-                      title="{{ 'reponses.btn_details' | translate }}">
+                      title="Voir les détails">
                 <i class="bi" [ngClass]="expandedId === reponse.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
               </button>
             </td>
           </tr>
-          <!-- Ligne d'expansion pour afficher les détails -->
+
+          <!-- Panneau d'expansion ──────────────────────────────────── -->
           <tr *ngIf="expandedId === reponse.id && expandedReponse" class="expanded-row">
-            <td [attr.colspan]="7">
-              <div class="expansion-panel bg-white">
-                <!-- En-tête avec infos générales -->
-                <div class="panel-header">
-                  <h5 class="mb-0">{{ 'reponses.detail_titre' | translate }} - #{{ expandedReponse.id }}</h5>
+            <td colspan="6" class="p-0">
+              <div class="expansion-panel">
+
+                <!-- En-tête panneau -->
+                <div class="panel-header d-flex justify-content-between align-items-center">
+                  <div>
+                    <span class="text-muted small me-2">#{{ expandedReponse.id }}</span>
+                    <strong>{{ expandedReponse.type_formulaire }}</strong>
+                  </div>
+                  <span class="badge bg-light text-dark border small">
+                    {{ expandedReponse.usager_statut || '—' }}
+                  </span>
                 </div>
 
-                <!-- Infos générales -->
+                <!-- Infos soumission -->
                 <div class="info-grid">
                   <div class="info-item">
-                    <label>{{ 'reponses.meta_type' | translate }}</label>
-                    <span>{{ expandedReponse.type_formulaire }}</span>
+                    <label><i class="bi bi-person me-1"></i>Demandeur</label>
+                    <span>{{ expandedReponse.usager_nom || '—' }}</span>
                   </div>
                   <div class="info-item">
-                    <label>{{ 'reponses.meta_nom' | translate }}</label>
-                    <span>{{ expandedReponse.usager_nom }}</span>
+                    <label><i class="bi bi-envelope me-1"></i>Courriel</label>
+                    <span>{{ expandedReponse.usager_courriel || '—' }}</span>
                   </div>
                   <div class="info-item">
-                    <label>{{ 'reponses.meta_email' | translate }}</label>
-                    <span>{{ expandedReponse.usager_courriel }}</span>
+                    <label><i class="bi bi-person-badge me-1"></i>Statut usager</label>
+                    <span>{{ expandedReponse.usager_statut || '—' }}</span>
                   </div>
                   <div class="info-item">
-                    <label>{{ 'reponses.meta_date' | translate }}</label>
-                    <span>{{ formatDate(expandedReponse.dateA) }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>{{ 'reponses.meta_statut_approbation' | translate }}</label>
-                    <span class="badge" [ngClass]="'badge-' + getStatutBadgeClass(expandedReponse.statut_approbation)">
-                      {{ expandedReponse.statut_approbation }}
-                    </span>
+                    <label><i class="bi bi-calendar me-1"></i>Soumis le</label>
+                    <span>{{ formatDateTime(expandedReponse.dateA) }}</span>
                   </div>
                 </div>
 
-                <!-- Onglets -->
+                <!-- Onglets données formulaire -->
                 <div class="tabs-container">
                   <div class="tabs-header">
-                    <button class="tab-btn" 
-                            [class.active]="activeTab === 'formatted'"
+                    <button class="tab-btn" [class.active]="activeTab === 'formatted'"
                             (click)="activeTab = 'formatted'">
-                      <i class="bi bi-list me-1"></i>{{ 'reponses.tab_lisible' | translate }}
+                      <i class="bi bi-list-ul me-1"></i>Données du formulaire
                     </button>
-                    <button class="tab-btn" 
-                            [class.active]="activeTab === 'json'"
+                    <button class="tab-btn" [class.active]="activeTab === 'json'"
                             (click)="activeTab = 'json'">
-                      <i class="bi bi-code me-1"></i>JSON
+                      <i class="bi bi-code me-1"></i>JSON brut
                     </button>
                   </div>
 
-                  <!-- Vue lisible -->
-                  <div *ngIf="activeTab === 'formatted'" class="tab-content formatted-view">
-                    <div *ngFor="let item of flattenObject(expandedReponse.reponses)" 
-                         class="field-item"
-                         [class.nested]="item.key.includes('.')">
-                      <label class="field-label" [class.nested-label]="item.key.includes('.')">
-                        <ng-container *ngIf="item.key.includes('.')">
-                          <span class="nested-arrow">→</span>
-                        </ng-container>
-                        {{ item.key }}
-                      </label>
-                      <div class="field-value">
-                        <ng-container *ngIf="isObject(item.value) && isObject(item.value)">
-                          <pre>{{ formatValue(item.value) }}</pre>
-                        </ng-container>
-                        <ng-container *ngIf="!isObject(item.value)">
-                          {{ formatValue(item.value) }}
-                        </ng-container>
+                  <!-- Vue structurée -->
+                  <div *ngIf="activeTab === 'formatted'" class="tab-content pt-2">
+                    <ng-container *ngFor="let section of getSections(expandedReponse.reponses)">
+                      <div class="section-header">{{ section.label }}</div>
+                      <div class="formatted-view mb-3">
+                        <div *ngFor="let item of section.fields" class="field-item">
+                          <label class="field-label">{{ humanizeKey(item.key) }}</label>
+                          <div class="field-value">
+                            <pre *ngIf="isObject(item.value)">{{ formatValue(item.value) }}</pre>
+                            <span *ngIf="!isObject(item.value)">{{ formatValue(item.value) }}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </ng-container>
+                    <p *ngIf="getSections(expandedReponse.reponses).length === 0"
+                       class="text-muted small fst-italic p-2 mb-0">
+                      Aucune donnée de formulaire disponible
+                    </p>
                   </div>
 
                   <!-- Vue JSON -->
@@ -209,29 +192,31 @@
                   </div>
                 </div>
 
-                <!-- Actions -->
+                <!-- Pied panneau -->
                 <div class="panel-footer">
-                  <button class="btn btn-sm btn-secondary" (click)="toggleDetails(reponse)">
+                  <button class="btn btn-sm btn-outline-secondary" (click)="toggleDetails(reponse)">
                     <i class="bi bi-x me-1"></i>Fermer
                   </button>
-                  <button class="btn btn-sm btn-primary" (click)="copyToClipboard()">
-                    <i class="bi bi-copy me-1"></i>{{ 'reponses.btn_copier' | translate }}
-                    <small *ngIf="copyFeedback" class="ms-2">{{ copyFeedback }}</small>
+                  <button class="btn btn-sm btn-outline-primary" (click)="copyToClipboard()">
+                    <i class="bi bi-copy me-1"></i>Copier JSON
+                    <small *ngIf="copyFeedback" class="ms-1 text-success fw-semibold">{{ copyFeedback }}</small>
                   </button>
-                  <button class="btn btn-sm btn-success" (click)="downloadJson()">
-                    <i class="bi bi-download me-1"></i>{{ 'reponses.btn_telecharger' | translate }}
+                  <button class="btn btn-sm btn-outline-success" (click)="downloadJson()">
+                    <i class="bi bi-download me-1"></i>Télécharger JSON
                   </button>
                 </div>
+
               </div>
             </td>
           </tr>
+
         </ng-container>
       </tbody>
     </table>
   </div>
 
-  <!-- Pagination ──────────────────────────────────────────────── -->
-  <div *ngIf="!loading && filteredReponses.length > 0" class="mt-3">
+  <!-- Pagination ───────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && totalItems > pageSize" class="mt-3">
     <mat-paginator
       [length]="totalItems"
       [pageSize]="pageSize"
@@ -240,4 +225,5 @@
       showFirstLastButtons>
     </mat-paginator>
   </div>
+
 </div>

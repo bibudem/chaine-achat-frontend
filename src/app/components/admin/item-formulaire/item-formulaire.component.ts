@@ -67,6 +67,30 @@ export class ItemFormulaireComponent implements OnInit {
     this.itemForm.get('formulaire_type')?.valueChanges.subscribe(value => {
       this.onFormulaireTypeChange(value);
     });
+
+    const state = history.state as any;
+    if (!this.isEditMode && state?.fromReponse) {
+      this.prefillFromReponse(state.fromReponse);
+    }
+  }
+
+  private prefillFromReponse(reponse: any): void {
+    const r = reponse.reponses || {};
+    const baseData = r.baseData || {};
+    const specificData = r.specificData || {};
+
+    // Déclenche onFormulaireTypeChange → applique les validateurs du bon type
+    this.itemForm.patchValue({ formulaire_type: reponse.type_formulaire });
+
+    // Pré-remplit tous les champs sans déclencher un second reset
+    this.itemForm.patchValue({
+      demandeur: reponse.usager_nom,
+      usager_nom: reponse.usager_nom,
+      usager_courriel: reponse.usager_courriel,
+      usager_statut: reponse.usager_statut,
+      ...baseData,
+      ...specificData
+    }, { emitEvent: false });
   }
 
   createForm(): FormGroup {
@@ -152,7 +176,8 @@ export class ItemFormulaireComponent implements OnInit {
       note_usager: [''],
       techdoc_suggestion_transmise: [false],
       acq_raison_annulation: [''],
-      acq_isbn: ['', Validators.maxLength(50)]
+      acq_isbn: ['', Validators.maxLength(50)],
+
     });
   }
 
@@ -441,6 +466,7 @@ export class ItemFormulaireComponent implements OnInit {
       nombre_utilisateurs: formData.nombre_utilisateurs,
       lien_plateforme: formData.lien_plateforme,
       format_pret_numerique: formData.format_pret_numerique,
+
     };
   }
 

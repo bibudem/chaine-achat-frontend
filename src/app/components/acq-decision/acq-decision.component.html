@@ -1,0 +1,276 @@
+<div class="form-page">
+  <div class="form-container">
+
+    <!-- ── En-tête ── -->
+    <div class="form-header">
+      <div class="form-header__icon">
+        <i class="bi" [ngClass]="item ? typeIcon : 'bi-clipboard-check'"></i>
+      </div>
+      <div>
+        <h1 class="form-header__title">
+          {{ item ? (item.formulaire_type || 'Décision ACQ') : 'Décision ACQ' }}
+        </h1>
+        <p class="form-header__subtitle">
+          Demande&nbsp;#{{ itemId }}<span *ngIf="item?.priorite_demande"> · {{ item!.priorite_demande }}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Chargement ── -->
+    <div *ngIf="loadingItem" class="form-section text-center py-5">
+      <div class="spinner-border text-secondary" role="status"></div>
+      <p class="mt-3 text-muted small">Chargement de la demande...</p>
+    </div>
+
+    <ng-container *ngIf="!loadingItem">
+
+      <!-- ── Résumé de la demande ── -->
+      <div class="form-section form-section--item-summary" *ngIf="item">
+        <h2 class="form-section__title">
+          <i class="bi bi-file-text"></i>Demande
+        </h2>
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div>
+            <div class="fw-semibold lh-sm">{{ item.titre_document }}</div>
+            <div class="text-muted small mt-1">
+              <i class="bi bi-person me-1"></i>{{ item.demandeur }}
+              <span *ngIf="item.bibliotheque" class="ms-3">
+                <i class="bi bi-building me-1"></i>{{ item.bibliotheque }}
+              </span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary flex-shrink-0"
+                  (click)="showDetailModal = true">
+            <i class="bi bi-eye me-1"></i>Voir tout
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Formulaire décision ── -->
+      <form [formGroup]="form" (ngSubmit)="submitForm()" *ngIf="!successMessage" novalidate>
+
+        <div class="form-section">
+          <h2 class="form-section__title">
+            <i class="bi bi-clipboard-check"></i>Décision ACQ
+          </h2>
+
+          <!-- Info : nouvel item -->
+          <div *ngIf="item && !itemExisteDansItems" class="alert alert--info mb-3">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Nouvelle demande</strong> — L'item sera créé dans la gestion des acquisitions lors de l'enregistrement.
+          </div>
+
+          <!-- Erreur -->
+          <div *ngIf="errorMessage" class="alert alert--danger mb-3">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="suivi_acq" class="form-label">
+                ACQ : Suivi de la demande <span class="text-danger">*</span>
+              </label>
+              <select id="suivi_acq" formControlName="suivi_acq" class="form-select">
+                <option value="" disabled>— Sélectionnez un suivi —</option>
+                <option *ngFor="let o of options.dircolAcqSuiviOptions" [value]="o">{{ o }}</option>
+              </select>
+              <small class="text-danger"
+                *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
+                Ce champ est obligatoire
+              </small>
+            </div>
+
+            <div class="col-12">
+              <label for="note_acq" class="form-label">Note / Commentaire</label>
+              <textarea id="note_acq" formControlName="note_acq" rows="4"
+                        class="form-control"
+                        placeholder="Ajoutez une note ou un commentaire (optionnel)..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="submitting || form.invalid">
+            <span *ngIf="!submitting">
+              <i class="bi bi-check-circle me-2"></i>Enregistrer la décision
+            </span>
+            <span *ngIf="submitting">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Enregistrement...
+            </span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- ── Confirmation ── -->
+      <div *ngIf="successMessage" class="confirmation-screen">
+        <div class="confirmation-icon confirmation-icon--acq">
+          <i class="bi bi-check-lg"></i>
+        </div>
+        <h2 class="confirmation-title">Décision enregistrée !</h2>
+        <p class="confirmation-message">Redirection vers la liste des items en cours…</p>
+        <div class="confirmation-details" *ngIf="item">
+          <div class="confirmation-detail">
+            <div class="confirmation-detail__label">
+              <i class="bi bi-file-text"></i>Demande
+            </div>
+            <div class="confirmation-detail__value">{{ item.titre_document }}</div>
+          </div>
+          <div class="confirmation-detail">
+            <div class="confirmation-detail__label">
+              <i class="bi bi-clipboard-check"></i>Suivi ACQ
+            </div>
+            <div class="confirmation-detail__value">{{ form.get('suivi_acq')?.value }}</div>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     Modal — Détails complets de la demande
+══════════════════════════════════════════ -->
+<ng-container *ngIf="item && showDetailModal">
+
+  <div class="modal-backdrop fade show" (click)="showDetailModal = false"></div>
+
+  <div class="modal fade show d-block" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+
+        <div class="modal-header">
+          <h5 class="modal-title">{{ item.formulaire_type }} — Demande #{{ itemId }}</h5>
+          <button type="button" class="btn-close" (click)="showDetailModal = false"></button>
+        </div>
+
+        <div class="modal-body p-0">
+          <table class="table table-sm table-hover mb-0 detail-table">
+            <tbody>
+
+              <tr>
+                <th>Titre</th>
+                <td class="fw-semibold">
+                  {{ item.titre_document }}
+                  <span *ngIf="item.sous_titre" class="d-block fw-normal text-muted small">{{ item.sous_titre }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th>Demandeur</th>
+                <td>{{ item.demandeur || '—' }}</td>
+              </tr>
+              <tr>
+                <th>Bibliothèque</th>
+                <td>{{ item.bibliotheque || '—' }}</td>
+              </tr>
+              <tr *ngIf="item.categorie_document">
+                <th>Catégorie</th>
+                <td>{{ item.categorie_document }}</td>
+              </tr>
+              <tr *ngIf="item.format_support">
+                <th>Type de traitement</th>
+                <td>{{ item.format_support }}</td>
+              </tr>
+              <tr *ngIf="item.priorite_demande">
+                <th>Priorité</th>
+                <td>
+                  <span class="badge"
+                    [ngClass]="{
+                      'bg-danger':            item.priorite_demande === 'Urgent',
+                      'bg-warning text-dark': item.priorite_demande === 'Prioritaire',
+                      'bg-secondary':         item.priorite_demande === 'Régulier'
+                    }">{{ item.priorite_demande }}</span>
+                </td>
+              </tr>
+
+              <ng-container *ngIf="isSuggestion">
+                <tr *ngIf="item.auteur"><th>Auteur(rice)</th><td>{{ item.auteur }}</td></tr>
+                <tr *ngIf="item.usager_statut"><th>Statut usager</th><td>{{ item.usager_statut }}</td></tr>
+                <tr *ngIf="item.usager_faculte"><th>Faculté / Département</th><td>{{ item.usager_faculte }}</td></tr>
+                <tr *ngIf="item.usager_courriel"><th>Courriel usager</th><td>{{ item.usager_courriel }}</td></tr>
+                <tr *ngIf="item.date_requise_cours"><th>Requis pour cours</th><td>{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</td></tr>
+              </ng-container>
+
+              <tr *ngIf="item.editeur"><th>Éditeur</th><td>{{ item.editeur }}</td></tr>
+              <tr *ngIf="item.isbn_issn"><th>ISBN / ISSN</th><td>{{ item.isbn_issn }}</td></tr>
+              <tr *ngIf="item.date_publication"><th>Date de publication</th><td>{{ item.date_publication | date:'yyyy-MM-dd' }}</td></tr>
+
+              <tr *ngIf="item.fonds_budgetaire"><th>Fonds budgétaire</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
+              <tr *ngIf="item.fonds_sn_projet"><th>Fonds SN — No projet</th><td>{{ item.fonds_sn_projet }}</td></tr>
+              <tr *ngIf="item.periode_couverte"><th>Période couverte</th><td>{{ item.periode_couverte }}</td></tr>
+              <tr *ngIf="item.source_information"><th>Source d'information</th><td>{{ item.source_information }}</td></tr>
+              <tr *ngIf="item.prix_cad"><th>Prix (CAD)</th><td class="fw-semibold text-success">{{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}</td></tr>
+              <tr *ngIf="item.devise_originale"><th>Devise originale</th><td>{{ item.devise_originale }}</td></tr>
+              <tr *ngIf="item.prix_devise_originale"><th>Prix (devise orig.)</th><td>{{ item.prix_devise_originale }}</td></tr>
+
+              <tr *ngIf="item.localisation_emplacement"><th>Localisation</th><td>{{ item.localisation_emplacement }}</td></tr>
+              <tr *ngIf="item.nombre_titres_inclus"><th>Titres inclus</th><td>{{ item.nombre_titres_inclus }}</td></tr>
+              <tr *ngIf="item.nombre_utilisateurs"><th>Nb utilisateurs</th><td>{{ item.nombre_utilisateurs }}</td></tr>
+              <tr *ngIf="item.format_pret_numerique"><th>Format PrêtNumérique</th><td>{{ item.format_pret_numerique }}</td></tr>
+              <tr *ngIf="item.lien_plateforme"><th>Lien plateforme</th><td><a [href]="item.lien_plateforme" target="_blank" rel="noopener noreferrer">{{ item.lien_plateforme }}</a></td></tr>
+              <tr *ngIf="item.personne_a_aviser_nom"><th>Personne à aviser</th><td>{{ item.personne_a_aviser_nom }}</td></tr>
+              <tr *ngIf="item.personne_a_aviser_courriel"><th>Courriel (à aviser)</th><td>{{ item.personne_a_aviser_courriel }}</td></tr>
+              <tr *ngIf="item.usager_aviser_reservation"><th>Aviser — Réservation</th><td>{{ item.usager_aviser_reservation }}</td></tr>
+              <tr *ngIf="item.usager_aviser_activation"><th>Aviser — Activation</th><td>{{ item.usager_aviser_activation }}</td></tr>
+
+              <ng-container *ngIf="isNouvelAchat">
+                <tr *ngIf="item.quantite"><th>Quantité</th><td>{{ item.quantite }}</td></tr>
+                <tr *ngIf="item.projets_speciaux"><th>Projet spécial</th><td>{{ item.projets_speciaux }}</td></tr>
+                <tr *ngIf="item.type_monographie"><th>Type monographie</th><td>{{ item.type_monographie }}</td></tr>
+                <tr *ngIf="item.reserve_cours">
+                  <th>Réserve de cours</th>
+                  <td>
+                    {{ item.reserve_cours_sigle || 'Oui' }}
+                    <span *ngIf="item.reserve_cours_session"> — {{ item.reserve_cours_session }}</span>
+                    <span *ngIf="item.reserve_cours_enseignant" class="d-block text-muted small">{{ item.reserve_cours_enseignant }}</span>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="isModificationCcol">
+                <tr *ngIf="item.precision_demande"><th>Précision de la demande</th><td>{{ item.precision_demande }}</td></tr>
+                <tr *ngIf="item.numero_oclc"><th>Numéro OCLC</th><td>{{ item.numero_oclc }}</td></tr>
+                <tr *ngIf="item.date_debut_abonnement"><th>Date début abonnement</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isNouvelAbonnement">
+                <tr *ngIf="item.date_debut_abonnement"><th>Date début abonnement</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
+                <tr *ngIf="item.type_monographie"><th>Type monographie</th><td>{{ item.type_monographie }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isPebTipasa">
+                <tr *ngIf="item.gobi_vu_format_numerique"><th>Vu sur GOBI numérique</th><td>{{ item.gobi_vu_format_numerique }}</td></tr>
+                <tr *ngIf="item.gobi_version_moins_365_usd"><th>Version &lt; 365 USD</th><td>{{ item.gobi_version_moins_365_usd }}</td></tr>
+                <tr *ngIf="item.reference_tipasa"><th>Référence Tipasa</th><td>{{ item.reference_tipasa }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isAccessibilite">
+                <tr *ngIf="item.reference_usager"><th>Référence usager</th><td>{{ item.reference_usager }}</td></tr>
+                <tr *ngIf="item.besoin_specifique_format"><th>Besoin spécifique (format)</th><td>{{ item.besoin_specifique_format }}</td></tr>
+                <tr *ngIf="item.permalien_sofia"><th>Permalien SOFIA</th><td><a [href]="item.permalien_sofia" target="_blank" rel="noopener noreferrer">{{ item.permalien_sofia }}</a></td></tr>
+                <tr *ngIf="item.type_monographie"><th>Type monographie</th><td>{{ item.type_monographie }}</td></tr>
+                <tr *ngIf="item.exemplaire_detenu"><th>Exemplaire détenu</th><td>{{ item.exemplaire_detenu }}</td></tr>
+                <tr *ngIf="item.fournisseur_contacte_sans_succes"><th>Fournisseur contacté</th><td>{{ item.fournisseur_contacte_sans_succes }}</td></tr>
+                <tr *ngIf="item.verification_caeb"><th>Vérification CAEB</th><td>{{ item.verification_caeb }}</td></tr>
+                <tr *ngIf="item.verification_sqla"><th>Vérification SQLA</th><td>{{ item.verification_sqla }}</td></tr>
+                <tr *ngIf="item.verification_emma"><th>Vérification EMMA</th><td>{{ item.verification_emma }}</td></tr>
+              </ng-container>
+
+              <tr *ngIf="item.note_commentaire"><th>Note / Commentaire</th><td class="fst-italic text-muted">{{ item.note_commentaire }}</td></tr>
+              <tr *ngIf="isSuggestion && item.note_usager"><th>Note usager</th><td class="fst-italic text-muted">{{ item.note_usager }}</td></tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" (click)="showDetailModal = false">Fermer</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-container>
