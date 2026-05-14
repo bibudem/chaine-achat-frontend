@@ -7,12 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Préconnexions DNS/TLS anticipées — doivent précéder les <link> de polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- ✅ Masque le shell admin AVANT Angular sur les routes /usager -->
+  <!-- Roboto (Angular Material) — display=swap : affiche le texte immédiatement avec la police de secours -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Material Icons — chargement non bloquant via media="print" → "all" au onload
+       Évite de retarder le premier rendu pour des icônes non critiques -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></noscript>
+
+  <!-- Bootstrap Icons : intégré dans le bundle Angular via angular.json (node_modules/bootstrap-icons)
+       L'ancienne référence CDN créait un double chargement bloquant — supprimée -->
+
+  <!-- Masque le shell admin avant l'initialisation d'Angular sur les routes /usager -->
   <script>
     if (window.location.pathname.startsWith('/usager')) {
       document.documentElement.classList.add('usager-route');

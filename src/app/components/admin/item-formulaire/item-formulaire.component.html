@@ -564,10 +564,7 @@
                 <label class="form-label">Type de monographie</label>
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">Sélectionnez</option>
-                  <optgroup label="Monographie">
                     <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
-                  </optgroup>
-                  <option value="Série">Série</option>
                 </select>
               </div>
             </div>
