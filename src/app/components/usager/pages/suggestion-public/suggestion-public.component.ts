@@ -18,11 +18,12 @@ export class SuggestionPublicComponent implements OnInit {
   derniereTitre    = '';
   derniereCourriel = '';
 
+  /* Synchronisé avec ListeChoixOptions.bibliothequeOptions (admin) */
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Droit', 'Du Parc',
     'Hubert-Reeves', 'Kinésiologie', 'L.S.H.', 'Livres rares',
     'Mathématiques-Informatique', 'Médecine vétérinaire', 'Musique',
-    "Marguerite-d'Youville", 'Santé', 'Service Accessibilité', 'TGD', 'TEST-DRIN'
+    "Marguerite-d'Youville", 'Santé', 'Service Accessibilité', 'TGD',
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
@@ -46,8 +47,8 @@ export class SuggestionPublicComponent implements OnInit {
       courriel:                     [courriel, [Validators.required, Validators.email]],
       copieCourriel:                [true],
       bibliotheque:                 ['',       Validators.required],
-      priorite_demande:             ['Urgent', Validators.required],
-      bibliothecaire_disciplinaire: ['',       [Validators.required, Validators.email]],
+      priorite_demande:             ['Régulier', Validators.required],
+      bibliothecaire_disciplinaire: ['',        [Validators.required, Validators.email]],
 
       /* ── Description ── */
       categorie_document:           [''],
@@ -68,13 +69,18 @@ export class SuggestionPublicComponent implements OnInit {
       date_requise_cours:           [''],
       reserve_cours:                [false],
       reserve_cours_sigle:          [{ value: '', disabled: true }],
+      reserve_cours_session:        [{ value: '', disabled: true }],
+      reserve_cours_enseignant:     [{ value: '', disabled: true }],
     });
 
     this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
       this.showSigleCours = val;
-      val
-        ? this.form.get('reserve_cours_sigle')!.enable()
-        : this.form.get('reserve_cours_sigle')!.disable();
+      const toggle = (ctrl: string) => val
+        ? this.form.get(ctrl)!.enable()
+        : this.form.get(ctrl)!.disable();
+      toggle('reserve_cours_sigle');
+      toggle('reserve_cours_session');
+      toggle('reserve_cours_enseignant');
     });
   }
 
@@ -105,7 +111,7 @@ export class SuggestionPublicComponent implements OnInit {
     this.error          = false;
     this.showSigleCours = false;
     this.form.reset({
-      priorite_demande:   'Urgent',
+      priorite_demande:   'Régulier',
       copieCourriel:      true,
       aviser_reservation: false,
       aviser_reception:   false,
@@ -125,6 +131,7 @@ export class SuggestionPublicComponent implements OnInit {
 
     const payload = {
       /* Identification */
+      demandeur:                    v.nom,         /* requis dans item-formulaire */
       usager_nom:                   v.nom,
       usager_statut:                v.statut,
       usager_faculte:               v.usager_faculte,
@@ -151,7 +158,9 @@ export class SuggestionPublicComponent implements OnInit {
       /* Enseignant */
       date_requise_cours:           v.date_requise_cours || null,
       reserve_cours:                v.reserve_cours,
-      reserve_cours_sigle:          v.reserve_cours ? v.reserve_cours_sigle : null,
+      reserve_cours_sigle:          v.reserve_cours ? v.reserve_cours_sigle    : null,
+      reserve_cours_session:        v.reserve_cours ? v.reserve_cours_session  : null,
+      reserve_cours_enseignant:     v.reserve_cours ? v.reserve_cours_enseignant : null,
 
       /* Champs admin — valeurs par défaut */
       bordereau_imprime:            'Non',

@@ -113,15 +113,7 @@
             <div *ngIf="submitted && f['courriel'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide ou obligatoire.
             </div>
-            <div class="form-check mt-2">
-              <input class="form-check-input" type="checkbox"
-                     formControlName="copieCourriel" id="copieCourriel">
-              <label class="form-check-label small" for="copieCourriel">
-                M'envoyer une copie de la demande
-              </label>
-            </div>
           </div>
-
           <div class="col-md-4">
             <label class="form-label required">Catégorie d'usager</label>
             <select formControlName="statut" class="form-select"
@@ -254,8 +246,7 @@
 
           <div class="col-md-4">
             <label class="form-label">Date de publication</label>
-            <input type="text" formControlName="date_publication" class="form-control"
-                   placeholder="Ex : 2024">
+            <input type="date" formControlName="date_publication" class="form-control">
             <small class="form-text">Date de publication en ligne ou imprimée</small>
           </div>
 
@@ -347,10 +338,20 @@
           <div class="col-12" *ngIf="showSigleCours">
             <div class="reserve-cours-fields">
               <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label">Sigle du cours</label>
                   <input type="text" formControlName="reserve_cours_sigle" class="form-control"
                          placeholder="Ex : INF1234">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Session</label>
+                  <input type="text" formControlName="reserve_cours_session" class="form-control"
+                         placeholder="Ex : Automne 2025">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Enseignant(e)</label>
+                  <input type="text" formControlName="reserve_cours_enseignant" class="form-control"
+                         placeholder="Prénom Nom">
                 </div>
               </div>
             </div>

@@ -135,7 +135,8 @@
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
               <label class="form-label">Date de publication</label>
-              <input type="date" class="form-control" formControlName="date_publication">
+              <input type="text" class="form-control" formControlName="date_publication"
+                     placeholder="Ex : 2024-06-15 ou 2024">
             </div>
           </div>
         </div>
