@@ -208,6 +208,26 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return this.calculatePercentage(this.totals.en_attente, this.totals.total_items);
   }
 
+  /* Dérivés de byPriority (déjà chargé pour le donut) */
+  get urgentCount(): number {
+    return this.byPriority.find(p =>
+      p.priorite?.toLowerCase().includes('urgent')
+    )?.count ?? 0;
+  }
+
+  get prioritaireCount(): number {
+    return this.byPriority.find(p =>
+      p.priorite?.toLowerCase().includes('prioritaire')
+    )?.count ?? 0;
+  }
+
+  get regulierCount(): number {
+    return this.byPriority.find(p =>
+      p.priorite?.toLowerCase().includes('régulier') ||
+      p.priorite?.toLowerCase().includes('regulier')
+    )?.count ?? 0;
+  }
+
   get periodLabel(): string {
     switch (this._selectedPeriod) {
       case '30days': return '30 derniers jours';

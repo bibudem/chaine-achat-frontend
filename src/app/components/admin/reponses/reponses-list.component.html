@@ -100,7 +100,7 @@
           <tr [class.row-expanded]="expandedId === reponse.id">
             <td class="text-muted small">#{{ reponse.id }}</td>
             <td>
-              <span class="badge bg-light text-dark border small fw-normal">
+              <span class="badge" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
                 {{ reponse.type_formulaire }}
               </span>
             </td>

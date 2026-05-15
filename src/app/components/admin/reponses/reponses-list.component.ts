@@ -248,6 +248,19 @@ export class ReponsesListComponent implements OnInit {
            d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
 
+  // ── Badge couleur par type de formulaire ─────────────────────────
+  getTypeBadgeClass(type: string | undefined): string {
+    const t = (type ?? '').toLowerCase();
+    if (t.includes('suggestion'))  return 'badge-type--suggest';
+    if (t.includes('ccol'))        return 'badge-type--ccol';
+    if (t.includes('abonnement'))  return 'badge-type--abo';
+    if (t.includes('springer'))    return 'badge-type--springer';
+    if (t.includes('peb'))         return 'badge-type--peb';
+    if (t.includes('acq'))         return 'badge-type--acq';
+    if (t.includes('achat'))       return 'badge-type--achat';
+    return 'badge-type--autre';
+  }
+
   // ── Icône de tri ──────────────────────────────────────────────────
   getSortIcon(column: string): string {
     if (this.sortColumn !== column) return 'arrow-down-up';

@@ -145,12 +145,12 @@
 
     <div class="sc sc--orange">
       <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.en_traitement) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(totals.en_attente) }} attente</span>
+        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(urgentCount) }}</span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(prioritaireCount) }} prioritaires</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">En traitement</span>
+        <span class="sc__lbl">Demandes urgentes</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,10 10,16 22,12 34,18 46,14 56,20 64,16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -159,12 +159,12 @@
 
     <div class="sc sc--teal">
       <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.termines) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ completionRate }}% réussite</span>
+        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(regulierCount) }}</span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ calculatePercentage(regulierCount, totals.total_items) }}% du total</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">Terminées</span>
+        <span class="sc__lbl">Priorité régulière</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
