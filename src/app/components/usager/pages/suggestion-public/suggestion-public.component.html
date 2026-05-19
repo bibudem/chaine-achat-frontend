@@ -11,9 +11,9 @@
         <i class="bi bi-lightbulb"></i>
       </div>
       <div>
-        <h1 class="form-header__title">Suggestion d'achat</h1>
+        <h1 class="form-header__title">{{ 'form-suggestion.titre' | translate }}</h1>
         <p class="form-header__subtitle">
-          Proposez un document que vous souhaitez voir acquis par les bibliothèques
+          {{ 'form-suggestion.sous-titre' | translate }}
         </p>
       </div>
     </div>
@@ -22,21 +22,18 @@
     <div class="alert alert-warning mb-3" *ngIf="!success">
       <i class="fas fa-lightbulb me-2"></i>
       <div>
-        <strong>À noter avant de soumettre votre suggestion</strong>
+        <strong>{{ 'form-suggestion.notice-titre' | translate }}</strong>
         <ol class="mt-2 mb-0">
           <li>
-            Vérifiez dans
+            {{ 'form-suggestion.notice-1' | translate }}
             <a href="https://umontreal.on.worldcat.org/discovery?lang=fr" target="_blank">
-              Sofia <i class="fas fa-external-link-alt"></i>
+              {{ 'form-suggestion.notice-1-sofia' | translate }} <i class="fas fa-external-link-alt"></i>
             </a>
-            que le document n'est pas déjà dans notre collection.
+            {{ 'form-suggestion.notice-1-fin' | translate }}
           </li>
-          <li>Faites une seule demande par formulaire.</li>
-          <li>
-            Votre suggestion sera analysée avec soin. La décision dépend de la
-            politique de développement de la collection et du budget disponible.
-          </li>
-          <li>À moins d'indication contraire, l'édition acquise sera la plus récente.</li>
+          <li>{{ 'form-suggestion.notice-2' | translate }}</li>
+          <li>{{ 'form-suggestion.notice-3' | translate }}</li>
+          <li>{{ 'form-suggestion.notice-4' | translate }}</li>
         </ol>
       </div>
     </div>
@@ -47,22 +44,22 @@
         <i class="fas fa-check"></i>
       </div>
 
-      <h2 class="confirmation-title">Suggestion envoyée !</h2>
+      <h2 class="confirmation-title">{{ 'form-suggestion.confirmation-titre' | translate }}</h2>
       <p class="confirmation-message">
-        Votre suggestion a bien été reçue par l'équipe des bibliothèques.<br>
-        Elle sera analysée avec soin dans les meilleurs délais.
+        {{ 'form-suggestion.confirmation-message' | translate }}<br>
+        {{ 'form-suggestion.confirmation-analysee' | translate }}
       </p>
 
       <div class="confirmation-details">
         <div class="confirmation-detail" *ngIf="derniereTitre">
           <span class="confirmation-detail__label">
-            <i class="fas fa-book me-1"></i>Document suggéré
+            <i class="fas fa-book me-1"></i>{{ 'forms-usager.label-document-suggere' | translate }}
           </span>
           <span class="confirmation-detail__value">{{ derniereTitre }}</span>
         </div>
         <div class="confirmation-detail" *ngIf="derniereCourriel">
           <span class="confirmation-detail__label">
-            <i class="fas fa-envelope me-1"></i>Confirmation envoyée à
+            <i class="fas fa-envelope me-1"></i>{{ 'form-suggestion.label-confirmation-envoyee' | translate }}
           </span>
           <span class="confirmation-detail__value">{{ derniereCourriel }}</span>
         </div>
@@ -71,7 +68,7 @@
       <div class="confirmation-actions">
         <button type="button" class="btn btn-primary" (click)="onReset()">
           <i class="fas fa-plus-circle"></i>
-          Faire une autre suggestion
+          {{ 'forms-usager.faire-autre-suggestion' | translate }}
         </button>
       </div>
     </div>
@@ -80,8 +77,8 @@
     <div *ngIf="error" class="alert alert--danger">
       <i class="fas fa-exclamation-circle"></i>
       <div>
-        <strong>Une erreur est survenue.</strong><br>
-        Veuillez réessayer ou contacter
+        <strong>{{ 'forms-usager.erreur-titre' | translate }}</strong><br>
+        {{ 'forms-usager.erreur-contact' | translate }}
         <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
       </div>
     </div>
@@ -92,33 +89,33 @@
       <!-- SECTION 1 — IDENTIFICATION -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-user"></i>Identification
+          <i class="fas fa-user"></i>{{ 'forms-usager.section-identification' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">Nom</label>
+            <label class="form-label required">{{ 'forms-usager.nom' | translate }}</label>
             <input type="text" formControlName="nom" class="form-control"
                    [class.is-invalid]="submitted && f['nom'].invalid"
-                   placeholder="Votre nom complet">
+                   [placeholder]="'forms-usager.nom-demandeur' | translate">
             <div *ngIf="submitted && f['nom'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">Courriel</label>
+            <label class="form-label required">{{ 'forms-usager.courriel' | translate }}</label>
             <input type="email" formControlName="courriel" class="form-control"
                    [class.is-invalid]="submitted && f['courriel'].invalid"
-                   placeholder="prenom.nom@umontreal.ca">
+                   [placeholder]="'forms-usager.courriel-placeholder' | translate">
             <div *ngIf="submitted && f['courriel'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Courriel invalide ou obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-invalide' | translate }}
             </div>
           </div>
           <div class="col-md-4">
-            <label class="form-label required">Catégorie d'usager</label>
+            <label class="form-label required">{{ 'form-suggestion.categorie-usager' | translate }}</label>
             <select formControlName="statut" class="form-select"
                     [class.is-invalid]="submitted && f['statut'].invalid">
-              <option value="">— Faites un choix —</option>
+              <option value="">{{ 'form-suggestion.faites-choix' | translate }}</option>
               <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
               <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
               <option value="Étudiant 3e cycle">Étudiant 3e cycle</option>
@@ -129,22 +126,22 @@
               <option value="Autre">Autre</option>
             </select>
             <div *ngIf="submitted && f['statut'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">Faculté / Département</label>
+            <label class="form-label required">{{ 'form-suggestion.faculte' | translate }}</label>
             <input type="text" formControlName="usager_faculte" class="form-control"
                    [class.is-invalid]="submitted && f['usager_faculte'].invalid"
                    placeholder="Ex : Faculté des sciences">
             <div *ngIf="submitted && f['usager_faculte'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">Priorité</label>
+            <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
                       'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
@@ -159,31 +156,27 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">Bibliothèque</label>
+            <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="submitted && f['bibliotheque'].invalid">
-              <option value="">— Sélectionnez —</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let b of bibliotheques" [value]="b">{{ b }}</option>
             </select>
             <div *ngIf="submitted && f['bibliotheque'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
-            <small class="form-text">
-              Bibliothèque correspondant à votre Faculté / Département
-            </small>
+            <small class="form-text">{{ 'forms-usager.bibliotheque-hint' | translate }}</small>
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">Bibliothécaire disciplinaire</label>
+            <label class="form-label required">{{ 'form-suggestion.bibliothecaire-disc' | translate }}</label>
             <input type="email" formControlName="bibliothecaire_disciplinaire" class="form-control"
                    [class.is-invalid]="submitted && f['bibliothecaire_disciplinaire'].invalid"
                    placeholder="courriel@umontreal.ca">
             <div *ngIf="submitted && f['bibliothecaire_disciplinaire'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Courriel obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-obligatoire' | translate }}
             </div>
-            <small class="form-text">
-              Courriel du ou de la bibliothécaire responsable de votre discipline
-            </small>
+            <small class="form-text">{{ 'form-suggestion.bibliothecaire-hint' | translate }}</small>
           </div>
         </div>
       </div>
@@ -191,91 +184,91 @@
       <!-- SECTION 2 — DESCRIPTION -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>Description de la suggestion
+          <i class="fas fa-book-open"></i>{{ 'form-suggestion.section-description' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Type de document</label>
+            <label class="form-label">{{ 'form-suggestion.type-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select">
-              <option value="">— Faites un choix —</option>
-              <option value="Monographie">Livre</option>
-              <option value="Périodique">Périodique</option>
-              <option value="Base de données">Base de données</option>
-              <option value="Archives de périodiques">Archives de périodiques</option>
-              <option value="Archives de monographies">Archives de monographies</option>
+              <option value="">{{ 'form-suggestion.faites-choix' | translate }}</option>
+              <option value="Monographie">{{ 'form-suggestion.livre' | translate }}</option>
+              <option value="Périodique">{{ 'form-suggestion.periodique' | translate }}</option>
+              <option value="Base de données">{{ 'form-suggestion.base-donnees' | translate }}</option>
+              <option value="Archives de périodiques">{{ 'form-suggestion.archives-periodiques' | translate }}</option>
+              <option value="Archives de monographies">{{ 'form-suggestion.archives-monographies' | translate }}</option>
             </select>
-            <small class="form-text">Nature du document suggéré</small>
+            <small class="form-text">{{ 'form-suggestion.type-doc-hint' | translate }}</small>
           </div>
 
           <div class="col-8">
-            <label class="form-label required">Titre du document</label>
+            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="submitted && f['titre_document'].invalid"
                    placeholder="Titre complet du document suggéré">
             <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">Auteur ou autrice</label>
+            <label class="form-label required">{{ 'form-suggestion.auteur-autrice' | translate }}</label>
             <input type="text" formControlName="auteur" class="form-control"
                    [class.is-invalid]="submitted && f['auteur'].invalid"
-                   placeholder="Nom de l'auteur ou de l'autrice">
+                   [placeholder]="'form-suggestion.auteur-placeholder' | translate">
             <div *ngIf="submitted && f['auteur'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Ce champ est obligatoire.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.auteur-required' | translate }}
             </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Éditeur du document</label>
+            <label class="form-label">{{ 'form-suggestion.editeur-document' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
-                   placeholder="Maison d'édition">
+                   [placeholder]="'form-suggestion.editeur-placeholder' | translate">
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Source internet (URL)</label>
+            <label class="form-label">{{ 'form-suggestion.source-internet' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="submitted && f['source_information'].invalid"
                    placeholder="https://...">
             <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>URL invalide.
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.source-invalid' | translate }}
             </div>
-            <small class="form-text">Lien vers la fiche du document (éditeur, librairie, etc.)</small>
+            <small class="form-text">{{ 'form-suggestion.source-hint' | translate }}</small>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Date de publication</label>
+            <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="date" formControlName="date_publication" class="form-control">
-            <small class="form-text">Date de publication en ligne ou imprimée</small>
+            <small class="form-text">{{ 'form-suggestion.date-publication-hint' | translate }}</small>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">ISBN / ISSN</label>
+            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="submitted && f['isbn_issn'].invalid"
                    placeholder="Ex : 9782070360024"
                    (input)="stripDashes($event)">
             <div *ngIf="submitted && f['isbn_issn'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>Format ISBN / ISSN invalide (sans tirets).
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
             </div>
-            <small class="form-text">Les tirets sont automatiquement supprimés</small>
+            <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Format / Support</label>
+            <label class="form-label">{{ 'form-suggestion.format-support' | translate }}</label>
             <select formControlName="format_support" class="form-select">
-              <option value="">— Faites un choix —</option>
-              <option value="Imprimé/support physique">Imprimé / support physique</option>
-              <option value="Électronique">Électronique</option>
-              <option value="Imprimé et électronique">Imprimé et électronique</option>
+              <option value="">{{ 'form-suggestion.faites-choix' | translate }}</option>
+              <option value="Imprimé/support physique">{{ 'forms-usager.imprime-physique' | translate }}</option>
+              <option value="Électronique">{{ 'forms-usager.electronique' | translate }}</option>
+              <option value="Imprimé et électronique">{{ 'forms-usager.imprime-et-electronique' | translate }}</option>
             </select>
           </div>
 
           <div class="col-12">
-            <label class="form-label">Notes et commentaires</label>
+            <label class="form-label">{{ 'form-suggestion.notes-commentaires' | translate }}</label>
             <textarea formControlName="note_usager" class="form-control" rows="4"
-                      placeholder="Justification de votre demande, informations complémentaires…"></textarea>
+                      [placeholder]="'form-suggestion.notes-placeholder' | translate"></textarea>
           </div>
         </div>
       </div>
@@ -283,7 +276,7 @@
       <!-- SECTION 3 — RÉSERVATION -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-bookmark"></i>Réservation
+          <i class="fas fa-bookmark"></i>{{ 'form-suggestion.section-reservation' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
@@ -292,10 +285,10 @@
                      formControlName="aviser_reservation"
                      id="aviserReservationCheck" role="switch">
               <label class="form-check-label" for="aviserReservationCheck">
-                Réserver le document à son arrivée
+                {{ 'form-suggestion.reserver-document' | translate }}
               </label>
             </div>
-            <small class="form-text">Vous serez avisé(e) lorsque le document sera mis en réservation</small>
+            <small class="form-text">{{ 'form-suggestion.reserver-hint' | translate }}</small>
           </div>
 
           <div class="col-md-6">
@@ -304,10 +297,10 @@
                      formControlName="aviser_reception"
                      id="aviserReceptionCheck" role="switch">
               <label class="form-check-label" for="aviserReceptionCheck">
-                Aviser à la réception
+                {{ 'form-suggestion.aviser-reception' | translate }}
               </label>
             </div>
-            <small class="form-text">Vous serez avisé(e) lorsque le document sera reçu en bibliothèque</small>
+            <small class="form-text">{{ 'form-suggestion.aviser-reception-hint' | translate }}</small>
           </div>
         </div>
       </div>
@@ -315,13 +308,13 @@
       <!-- SECTION 4 — ENSEIGNANT -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-chalkboard-teacher"></i>Section réservée au corps enseignant
+          <i class="fas fa-chalkboard-teacher"></i>{{ 'form-suggestion.section-enseignant' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label">Document requis pour un cours en date du</label>
+            <label class="form-label">{{ 'form-suggestion.requis-cours' | translate }}</label>
             <input type="date" formControlName="date_requise_cours" class="form-control">
-            <small class="form-text">Laisser vide si non applicable</small>
+            <small class="form-text">{{ 'form-suggestion.requis-cours-hint' | translate }}</small>
           </div>
 
           <div class="col-12">
@@ -330,7 +323,7 @@
                      formControlName="reserve_cours"
                      id="mettreReserveCheck" role="switch">
               <label class="form-check-label" for="mettreReserveCheck">
-                Mettre le document à la réserve de cours
+                {{ 'form-suggestion.mettre-reserve' | translate }}
               </label>
             </div>
           </div>
@@ -339,17 +332,17 @@
             <div class="reserve-cours-fields">
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label">Sigle du cours</label>
+                  <label class="form-label">{{ 'form-suggestion.sigle-cours' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_sigle" class="form-control"
                          placeholder="Ex : INF1234">
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label">Session</label>
+                  <label class="form-label">{{ 'form-suggestion.session' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_session" class="form-control"
                          placeholder="Ex : Automne 2025">
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label">Enseignant(e)</label>
+                  <label class="form-label">{{ 'form-suggestion.enseignant' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_enseignant" class="form-control"
                          placeholder="Prénom Nom">
                 </div>
@@ -363,12 +356,12 @@
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="onReset()"
                 [disabled]="isLoading">
-          <i class="fas fa-redo"></i>Recommencer
+          <i class="fas fa-redo"></i>{{ 'forms-usager.btn-recommencer' | translate }}
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isLoading" class="fas fa-paper-plane"></i>
-          {{ isLoading ? 'Envoi en cours…' : 'Envoyer la suggestion' }}
+          {{ isLoading ? ('forms-usager.envoi-en-cours' | translate) : ('forms-usager.btn-envoyer-suggestion' | translate) }}
         </button>
       </div>
 

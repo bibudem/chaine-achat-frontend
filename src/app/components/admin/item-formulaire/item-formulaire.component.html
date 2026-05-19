@@ -4,16 +4,16 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h1 class="h3 mb-1">{{ isEditMode ? 'Modifier l\'item' : 'Ajouter un nouvel item' }}</h1>
+          <h1 class="h3 mb-1">{{ isEditMode ? ('item-formulaire.titre-modifier' | translate) : ('item-formulaire.titre-ajouter' | translate) }}</h1>
           <p class="text-muted mb-0" *ngIf="itemId">ID: {{ itemId }}</p>
         </div>
         <div>
           <button class="btn btn-outline-secondary me-2 btn-sm" (click)="onReturn()">
-            <i class="bi bi-arrow-left"></i> Retour
+            <i class="bi bi-arrow-left"></i> {{ 'item-formulaire.retour' | translate }}
           </button>
           <button class="btn btn-success btn-sm" (click)="onSubmit()" [disabled]="submitting">
             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEditMode ? 'Enregistrer' : 'Créer' }}
+            {{ isEditMode ? ('item-formulaire.enregistrer' | translate) : ('item-formulaire.creer' | translate) }}
           </button>
         </div>
       </div>
@@ -26,7 +26,7 @@
     <div class="spinner-border" role="status">
       <span class="visually-hidden"></span>
     </div>
-    <p class="mt-2">Chargement...</p>
+    <p class="mt-2">{{ 'item-formulaire.chargement' | translate }}</p>
   </div>
 
   <!-- Formulaire -->
@@ -37,13 +37,13 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link" [class.active]="activeTab === 'base'"
                 type="button" (click)="setActiveTab('base')">
-          Informations de base
+          {{ 'item-formulaire.onglet-base' | translate }}
         </button>
       </li>
       <li class="nav-item" role="presentation" *ngIf="hasSpecificFields()">
         <button class="nav-link" [class.active]="activeTab === 'specifique'"
                 type="button" (click)="setActiveTab('specifique')">
-          Champs spécifiques
+          {{ 'item-formulaire.onglet-specifique' | translate }}
         </button>
       </li>
     </ul>
@@ -54,135 +54,133 @@
       <!-- ========== ONGLET 1: INFORMATIONS DE BASE ========== -->
       <div class="tab-pane" [class.show]="activeTab === 'base'" [class.active]="activeTab === 'base'">
 
-        <!-- Rangée 1 : Identité (obligatoires) — col-md-3 / col-md-6 / col-md-3 = 12 -->
+        <!-- Rangée 1 : Identité (obligatoires) -->
         <div class="row mt-3">
           <div class="col-md-4">
             <div class="mb-3">
               <label class="form-label">
-                <span class="text-danger">*</span> Type de demande
+                <span class="text-danger">*</span> {{ 'item-formulaire.type-demande' | translate }}
               </label>
               <select class="form-select form-control" formControlName="formulaire_type"
                       [class.is-invalid]="isInvalid('formulaire_type')"
                       [ngClass]="{'fw-bold': itemForm.get('formulaire_type')?.value}">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
               </select>
               <div class="invalid-feedback" *ngIf="hasError('formulaire_type', 'required')">
-                Le type de demande est obligatoire
+                {{ 'item-formulaire.type-demande-required' | translate }}
               </div>
               <small class="text-muted" *ngIf="isEditMode">
-                <i class="bi bi-info-circle me-1"></i>Le type de demande ne peut pas être modifié
+                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.type-demande-info' | translate }}
               </small>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Titre du document <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.titre-document' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="titre_document"
                      [class.is-invalid]="isInvalid('titre_document')"
-                     placeholder="Titre complet du document">
+                     [placeholder]="'item-formulaire.titre-document-placeholder' | translate">
               <div class="invalid-feedback" *ngIf="hasError('titre_document', 'required')">
-                Le titre du document est obligatoire
+                {{ 'item-formulaire.titre-document-required' | translate }}
               </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Demandeur <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.demandeur' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="demandeur"
                      [class.is-invalid]="isInvalid('demandeur')"
-                     placeholder="Nom du demandeur">
+                     [placeholder]="'item-formulaire.demandeur-placeholder' | translate">
               <div class="invalid-feedback" *ngIf="hasError('demandeur', 'required')">
-                Le demandeur est obligatoire
+                {{ 'item-formulaire.demandeur-required' | translate }}
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Rangée 2 : Bibliographique — col-md-4 / col-md-4 / col-md-2 / col-md-2 = 12 -->
+        <!-- Rangée 2 : Bibliographique -->
         <div class="row">
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Sous-titre</label>
+              <label class="form-label">{{ 'item-formulaire.sous-titre' | translate }}</label>
               <input type="text" class="form-control" formControlName="sous_titre"
-                     placeholder="Sous-titre du document">
+                     [placeholder]="'item-formulaire.sous-titre-placeholder' | translate">
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Éditeur <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.editeur' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="editeur"
                      [class.is-invalid]="isInvalid('editeur')"
-                     placeholder="Nom de l'éditeur">
-              <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">L'éditeur est obligatoire</div>
+                     [placeholder]="'item-formulaire.editeur-placeholder' | translate">
+              <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">{{ 'item-formulaire.editeur-required' | translate }}</div>
             </div>
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">ISBN/ISSN <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.isbn-issn' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
                      appIsbnMask #isbnMask="appIsbnMask"
                      [class.is-invalid]="isInvalid('isbn_issn')"
                      placeholder="Ex: 9780306406157">
-              <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required')">L'ISBN/ISSN est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required')">{{ 'item-formulaire.isbn-issn-required' | translate }}</div>
               <small class="text-muted" *ngIf="isbnMask.wasStripped">
-                <i class="bi bi-info-circle me-1"></i>Tirets et caractères non numériques retirés automatiquement.
+                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.isbn-retire' | translate }}
               </small>
             </div>
           </div>
-          <!-- Date publication : absente pour Nouvel abonnement et Springer -->
           <div class="col-md-2"
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
-              <label class="form-label">Date de publication</label>
+              <label class="form-label">{{ 'item-formulaire.date-publication' | translate }}</label>
               <input type="text" class="form-control" formControlName="date_publication"
-                     placeholder="Ex : 2024-06-15 ou 2024">
+                     [placeholder]="'item-formulaire.date-publication-placeholder' | translate">
             </div>
           </div>
         </div>
 
-        <!-- Rangée 3 : Classification — col-md auto (égal), s'adapte au nombre de champs visibles -->
+        <!-- Rangée 3 : Classification -->
         <div class="row">
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Bibliothèque <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.bibliotheque' | translate }} <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="bibliotheque"
                       [class.is-invalid]="isInvalid('bibliotheque')">
-                <option value="">Sélectionnez une bibliothèque</option>
+                <option value="">{{ 'item-formulaire.bibliotheque-placeholder' | translate }}</option>
                 <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
               </select>
-              <div class="invalid-feedback" *ngIf="hasError('bibliotheque', 'required')">La bibliothèque est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('bibliotheque', 'required')">{{ 'item-formulaire.bibliotheque-required' | translate }}</div>
             </div>
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Catégorie de document <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.categorie-document' | translate }} <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="categorie_document"
                       [class.is-invalid]="isInvalid('categorie_document')">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
               </select>
-              <div class="invalid-feedback" *ngIf="hasError('categorie_document', 'required')">La catégorie est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('categorie_document', 'required')">{{ 'item-formulaire.categorie-required' | translate }}</div>
             </div>
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Type de traitement <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.type-traitement' | translate }} <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="format_support"
                       [class.is-invalid]="isInvalid('format_support')">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option value="Imprimé/support physique">Imprimé/support physique</option>
                 <option value="Électronique">Électronique</option>
                 <option value="Imprimé et électronique">Imprimé et électronique</option>
               </select>
-              <div class="invalid-feedback" *ngIf="hasError('format_support', 'required')">Le format/support est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('format_support', 'required')">{{ 'item-formulaire.format-required' | translate }}</div>
             </div>
           </div>
-          <!-- Priorité : absente pour Nouvel abonnement, Modification CCOL, Springer -->
           <div class="col-md"
                *ngIf="selectedFormulaireType && (isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()) ">
             <div class="mb-3">
-              <label class="form-label">Priorité de la demande</label>
+              <label class="form-label">{{ 'item-formulaire.priorite' | translate }}</label>
               <select class="form-select form-control" formControlName="priorite_demande">
                 <option *ngFor="let priorite of options.prioriteOptions" [value]="priorite.value">{{ priorite.label }}</option>
               </select>
@@ -190,53 +188,49 @@
           </div>
         </div>
 
-        <!-- Section : Support et accès (visible si type de demande + format sélectionnés) -->
+        <!-- Section : Support et accès -->
         <div class="row mb-3 bg-light rounded p-2" *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value">
           <div class="col-12 mb-2">
             <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-0">
-              <i class="bi bi-layers me-1"></i>Support et accès
+              <i class="bi bi-layers me-1"></i>{{ 'item-formulaire.section-support' | translate }}
             </h6>
           </div>
 
-          <!-- Imprimé : Localisation / Emplacement -->
           <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value == 'Imprimé/support physique'">
             <div class="mb-3">
-              <label class="form-label">Localisation / Emplacement</label>
+              <label class="form-label">{{ 'item-formulaire.localisation' | translate }}</label>
               <input type="text" class="form-control" formControlName="localisation_emplacement">
             </div>
           </div>
 
-          <!-- Imprimé / Mixte : Création de notice TDM -->
           <div class="col-md-2"
                *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value !== 'Électronique'">
             <div class="mb-3">
-              <label class="form-label">Création de notice TDM</label>
+              <label class="form-label">{{ 'item-formulaire.creation-notice' | translate }}</label>
               <select class="form-select form-control" formControlName="creation_notice_dtdm">
-                <option [ngValue]="true">Oui</option>
-                <option [ngValue]="false">Non</option>
+                <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
+                <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
               </select>
             </div>
           </div>
 
-          <!-- Électronique / Mixte : Nombre de titres inclus -->
           <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
             <div class="mb-3">
-              <label class="form-label">Nombre de titres inclus</label>
+              <label class="form-label">{{ 'item-formulaire.nb-titres' | translate }}</label>
               <input type="number" class="form-control" formControlName="nombre_titres_inclus"
                      min="1" step="1" placeholder="Ex: 25">
-              <small class="text-muted">Titres ou volumes inclus dans cet achat</small>
+              <small class="text-muted">{{ 'item-formulaire.nb-titres-hint' | translate }}</small>
             </div>
           </div>
 
-          <!-- Électronique : Nombre d'utilisateurs (absent pour PEB Tipasa) -->
           <div class="col-md"
                *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
             <div class="mb-3">
-              <label class="form-label">Nombre d'utilisateurs</label>
+              <label class="form-label">{{ 'item-formulaire.nb-utilisateurs' | translate }}</label>
               <select class="form-select form-control" formControlName="nombre_utilisateurs">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option value="Un seul usager">Un seul usager</option>
                 <option value="Trois usagers simultanés">Trois usagers simultanés</option>
                 <option value="Accès illimité">Accès illimité</option>
@@ -245,13 +239,12 @@
             </div>
           </div>
 
-          <!-- Électronique : Format PrêtNumérique (Nouvel achat unique + Accessibilité) -->
           <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value === 'Électronique' && (isNouvelAchatUnique() || isRequeteAccessibilite())">
             <div class="mb-3">
-              <label class="form-label">Format PrêtNumérique</label>
+              <label class="form-label">{{ 'item-formulaire.format-pret' | translate }}</label>
               <select class="form-select form-control" formControlName="format_pret_numerique">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option value="PDF">PDF</option>
                 <option value="EPUB">EPUB</option>
                 <option value="Ne s'applique pas">Ne s'applique pas</option>
@@ -259,40 +252,38 @@
             </div>
           </div>
 
-          <!-- Électronique : Lien plateforme (absent pour PEB, Accessibilité, Suggestion d'achat) -->
           <div class="col-md"
                *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique' && (isNouvelAchatUnique() || isModificationCCOL() || isNouvelAbonnement())">
             <div class="mb-3">
-              <label class="form-label">Lien vers la plateforme</label>
+              <label class="form-label">{{ 'item-formulaire.lien-plateforme' | translate }}</label>
               <input type="url" class="form-control" formControlName="lien_plateforme"
                      placeholder="https://...">
             </div>
           </div>
 
-          <!-- Électronique : Personne à aviser lors de l'activation (Nom + Courriel regroupés) -->
           <div class="col-12 mt-1"
                *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
             <div class="border-top pt-2">
               <small class="text-muted fw-semibold d-block mb-2">
-                <i class="bi bi-bell me-1"></i>Personne à aviser lors de l'activation
+                <i class="bi bi-bell me-1"></i>{{ 'item-formulaire.personne-aviser-section' | translate }}
               </small>
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-2">
-                    <label class="form-label">Nom</label>
+                    <label class="form-label">{{ 'item-formulaire.nom' | translate }}</label>
                     <input type="text" class="form-control" formControlName="personne_a_aviser_nom"
-                           placeholder="Prénom Nom">
+                           [placeholder]="'item-formulaire.nom-placeholder' | translate">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-2">
-                    <label class="form-label">Courriel</label>
+                    <label class="form-label">{{ 'item-formulaire.courriel' | translate }}</label>
                     <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
                            appEmailMask
                            [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                            placeholder="courriel@exemple.com">
                     <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
-                      Courriel invalide.
+                      {{ 'item-formulaire.courriel-invalide' | translate }}
                     </div>
                   </div>
                 </div>
@@ -305,34 +296,33 @@
         <div class="row">
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Fonds budgétaire <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="fonds_budgetaire"
                      appFondsBudgetaireMask
                      [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                     placeholder="Ex : PE-001">
+                     [placeholder]="'item-formulaire.fonds-budgetaire-placeholder' | translate">
               <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
-                Le fonds budgétaire est obligatoire
+                {{ 'item-formulaire.fonds-budgetaire-required' | translate }}
               </div>
             </div>
           </div>
           <div class="col-md" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() ">
             <div class="mb-3">
-              <label class="form-label">Fonds SN - No de projet</label>
+              <label class="form-label">{{ 'item-formulaire.fonds-sn' | translate }}</label>
               <input type="text" class="form-control" formControlName="fonds_sn_projet">
             </div>
           </div>
-          <!-- Période couverte : spécifique Nouvel achat unique et Modification CCOL -->
           <div class="col-md-2"
                *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
             <div class="mb-3">
-              <label class="form-label">Période couverte</label>
+              <label class="form-label">{{ 'item-formulaire.periode-couverte' | translate }}</label>
               <input type="text" class="form-control" formControlName="periode_couverte"
-                    placeholder="Ex: 1996-2000">
+                    [placeholder]="'item-formulaire.periode-placeholder' | translate">
             </div>
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">Bibliothèque : Statut de la demande</label>
+              <label class="form-label">{{ 'item-formulaire.statut-bib' | translate }}</label>
               <select class="form-select form-control" formControlName="statut_bibliotheque">
                 <option *ngFor="let statut of options.statusOptions" [value]="statut">
                   {{ statut }}
@@ -342,9 +332,9 @@
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">ACQ : Statut de la demande </label>
+              <label class="form-label">{{ 'item-formulaire.statut-acq' | translate }}</label>
               <select class="form-select form-control" formControlName="statut_acq">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">
                   {{ statut }}
                 </option>
@@ -357,39 +347,39 @@
         <div class="row mb-3">
           <div class="col-md-3">
             <div class="mb-3">
-              <label class="form-label">Catalogage</label>
+              <label class="form-label">{{ 'item-formulaire.catalogage' | translate }}</label>
               <input type="text" class="form-control" formControlName="catalogue">
             </div>
           </div>
           <div class="col-md-3">
             <div class="mb-3">
-              <label class="form-label">Source d'information <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.source-info' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="source_information"
                      [class.is-invalid]="isInvalid('source_information')">
-              <div class="invalid-feedback" *ngIf="hasError('source_information', 'required')">La source d'information est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('source_information', 'required')">{{ 'item-formulaire.source-info-required' | translate }}</div>
               <div class="form-text" *ngIf="isPEBTipasaNumerique(); else sourceInfoDefault">
-                Pour que la demande soit traitée aux ACQ, le livre numérique désiré doit être disponible sur GOBI ou Leslibraires.ca.
+                {{ 'item-formulaire.source-info-peb' | translate }}
               </div>
               <ng-template #sourceInfoDefault>
-                <div class="form-text">Inscrire l'URL où l'information bibliographique, le prix et la disponibilité ont été repérés (éditeurs, libraires).</div>
+                <div class="form-text">{{ 'item-formulaire.source-info-default' | translate }}</div>
               </ng-template>
             </div>
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Prix total (CAD) <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }} <span class="text-danger">*</span></label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
                       [class.is-invalid]="isInvalid('prix_cad')"
                       min="0" step="0.01" placeholder="0.00">
-                <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">Le prix est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
               </div>
             </div>
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Devise originale <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger">*</span></label>
               <select class="form-select form-control" formControlName="devise_originale"
                       [class.is-invalid]="isInvalid('devise_originale')">
                 <option value="">--</option>
@@ -400,78 +390,78 @@
                 <option value="CHF">CHF</option>
                 <option value="Autre">Autre</option>
               </select>
-              <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">La devise est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">{{ 'item-formulaire.devise-required' | translate }}</div>
             </div>
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">Prix (devise originale) <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }} <span class="text-danger">*</span></label>
               <input type="number" class="form-control" formControlName="prix_devise_originale"
                     [class.is-invalid]="isInvalid('prix_devise_originale')"
                     min="0" step="0.01" placeholder="0.00">
-              <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">Le prix est obligatoire</div>
+              <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
             </div>
           </div>
         </div>
+
         <!-- Notes bibliothèque et TDM -->
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">TDM: Note / OCN</label>
+              <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
               <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Bibliothèque : Note / Commentaire / Question</label>
+              <label class="form-label">{{ 'item-formulaire.note-bib' | translate }}</label>
               <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
             </div>
           </div>
         </div>
 
-        <!-- Champs ACQ — suivi, note ACQ et note interne bibliothèque -->
+        <!-- Champs ACQ -->
         <div class="row mb-3 p-2 bg-light rounded">
           <div class="col-12 mb-2">
             <h6 class="text-muted small fw-semibold mb-0">
-              <i class="bi bi-building me-1"></i>Acquisitions
+              <i class="bi bi-building me-1"></i>{{ 'item-formulaire.section-acq' | translate }}
             </h6>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">ACQ : Suivi de la demande</label>
+              <label class="form-label">{{ 'item-formulaire.suivi-acq' | translate }}</label>
               <select class="form-select form-control" formControlName="suivi_acq">
-                <option value="">Sélectionnez</option>
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                 <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
               </select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Acquisitions: Note / Commentaire</label>
+              <label class="form-label">{{ 'item-formulaire.note-acq' | translate }}</label>
               <textarea class="form-control" formControlName="note_acq" rows="3"
-                        placeholder="Note / Commentaire Acquisitions"></textarea>
+                        [placeholder]="'item-formulaire.note-acq-placeholder' | translate"></textarea>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">Bibliothèque - Note interne</label>
+              <label class="form-label">{{ 'item-formulaire.note-interne' | translate }}</label>
               <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="3"
-                        placeholder="Note interne bibliothèque"></textarea>
+                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
             </div>
           </div>
-
         </div>
 
         <!-- Métadonnées (lecture seule si édition) -->
         <div *ngIf="isEditMode" class="row mb-3 mt-5">
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label text-dark">Date de création: {{itemForm.get('date_creation')?.value | date:'yyyy-MM-dd HH:mm'}}</label>
+              <label class="form-label text-dark">{{ 'item-formulaire.date-creation' | translate }} {{itemForm.get('date_creation')?.value | date:'yyyy-MM-dd HH:mm'}}</label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3 text-end">
-              <label class="form-label text-warning">Dernière modification: {{itemForm.get('date_modification')?.value | date:'yyyy-MM-dd HH:mm'}}</label>
+              <label class="form-label text-warning">{{ 'item-formulaire.derniere-modif' | translate }} {{itemForm.get('date_modification')?.value | date:'yyyy-MM-dd HH:mm'}}</label>
             </div>
           </div>
         </div>
@@ -482,7 +472,7 @@
 
         <div *ngIf="!selectedFormulaireType" class="alert alert-info">
           <i class="bi bi-info-circle me-2"></i>
-          Veuillez d'abord sélectionner un type de formulaire dans l'onglet "Informations de base"
+          {{ 'item-formulaire.info-type-requis' | translate }}
         </div>
 
         <!-- ===== MODIFICATION CCOL ===== -->
@@ -490,50 +480,48 @@
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-pencil-square me-2"></i>Modification CCOL
+                <i class="bi bi-pencil-square me-2"></i>{{ 'item-formulaire.section-modification-ccol' | translate }}
               </h5>
             </div>
           </div>
-          <!-- Précision demande — pleine largeur -->
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">
-                  <span class="text-danger">*</span> Précision de la demande
+                  <span class="text-danger">*</span> {{ 'item-formulaire.precision-demande' | translate }}
                 </label>
                 <select class="form-select form-control" formControlName="precision_demande"
                         [class.is-invalid]="isInvalid('precision_demande')">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
                 </select>
-                <div class="invalid-feedback" *ngIf="hasError('precision_demande', 'required')">La précision de la demande est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('precision_demande', 'required')">{{ 'item-formulaire.precision-required' | translate }}</div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Numéro OCLC</label>
-                <input type="text" class="form-control" formControlName="numero_oclc" placeholder="Ex: ocm12345678">
+                <label class="form-label">{{ 'item-formulaire.numero-oclc' | translate }}</label>
+                <input type="text" class="form-control" formControlName="numero_oclc" [placeholder]="'item-formulaire.numero-oclc-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Date de début d'abonnement</label>
+                <label class="form-label">{{ 'item-formulaire.date-debut-abonnement' | translate }}</label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement">
               </div>
             </div>
           </div>
-          <!-- Usager à aviser lors de l'activation (visible si Format = Électronique) -->
           <div class="row"
                *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">Usager à aviser lors de l'activation</label>
+                <label class="form-label">{{ 'item-formulaire.usager-aviser-activation' | translate }}</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">Courriel invalide.</div>
-                <small class="text-muted">Notifier lors de l'activation de la ressource</small>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
+                <small class="text-muted">{{ 'item-formulaire.notifier-activation' | translate }}</small>
               </div>
             </div>
           </div>
@@ -544,44 +532,42 @@
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-calendar-check me-2"></i>Nouvel Abonnement
+                <i class="bi bi-calendar-check me-2"></i>{{ 'item-formulaire.section-nouvel-abonnement' | translate }}
               </h5>
             </div>
           </div>
-          <!-- Date début (col-md-6) + Type monographie conditionnel (col-md-6) = 12 -->
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">
-                  <span class="text-danger">*</span> Date de début d'abonnement
+                  <span class="text-danger">*</span> {{ 'item-formulaire.date-debut-abonnement' | translate }}
                 </label>
                 <input type="date" class="form-control" formControlName="date_debut_abonnement"
                        [class.is-invalid]="isInvalid('date_debut_abonnement')">
-                <div class="invalid-feedback" *ngIf="hasError('date_debut_abonnement', 'required')">La date de début d'abonnement est obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('date_debut_abonnement', 'required')">{{ 'item-formulaire.date-debut-abonnement-required' | translate }}</div>
               </div>
             </div>
             <div class="col-md-6" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
               <div class="mb-3">
-                <label class="form-label">Type de monographie</label>
+                <label class="form-label">{{ 'item-formulaire.type-monographie' | translate }}</label>
                 <select class="form-select form-control" formControlName="type_monographie">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                     <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
                 </select>
               </div>
             </div>
           </div>
-          <!-- Usager à aviser — Réservation (AJOUT, visible si Format = Imprimé) -->
           <div class="row"
                *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">Usager à aviser — Réservation</label>
+                <label class="form-label">{{ 'item-formulaire.usager-aviser-reservation' | translate }}</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_reservation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">Courriel invalide.</div>
-                <small class="text-muted">Notifier lors de la mise en réservation</small>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
+                <small class="text-muted">{{ 'item-formulaire.notifier-reservation' | translate }}</small>
               </div>
             </div>
           </div>
@@ -592,47 +578,46 @@
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-cart-plus me-2"></i>Nouvel Achat Unique
+                <i class="bi bi-cart-plus me-2"></i>{{ 'item-formulaire.section-nouvel-achat' | translate }}
               </h5>
             </div>
           </div>
-          <!-- 4 × col-md-3 = 12 -->
           <div class="row">
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Projet spécial</label>
+                <label class="form-label">{{ 'item-formulaire.projet-special' | translate }}</label>
                 <select class="form-select form-control" formControlName="projets_speciaux">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let projet of options.projetsSpeciauxOptions" [value]="projet">{{ projet }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">ID de ressource</label>
+                <label class="form-label">{{ 'item-formulaire.id-ressource' | translate }}</label>
                 <input type="text" class="form-control" formControlName="id_ressource"
-                       placeholder="Ex: BIB-2024-001">
+                       [placeholder]="'item-formulaire.id-ressource-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Quantité</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.quantite' | translate }}</label>
                 <input type="number" class="form-control" formControlName="quantite"
                        min="1" step="1" placeholder="1"
                        [class.is-invalid]="isInvalid('quantite')">
                 <div class="invalid-feedback">
-                  <ng-container *ngIf="hasError('quantite', 'required')">La quantité est obligatoire</ng-container>
-                  <ng-container *ngIf="hasError('quantite', 'min')">La quantité doit être ≥ 1</ng-container>
+                  <ng-container *ngIf="hasError('quantite', 'required')">{{ 'item-formulaire.quantite-required' | translate }}</ng-container>
+                  <ng-container *ngIf="hasError('quantite', 'min')">{{ 'item-formulaire.quantite-min' | translate }}</ng-container>
                 </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Bordereau imprimé</label>
+                <label class="form-label">{{ 'item-formulaire.bordereau-imprime' | translate }}</label>
                 <select class="form-select form-control" formControlName="bordereau_imprime">
-                  <option value="Non">Non</option>
-                  <option value="Oui">Oui</option>
-                  <option value="Partiellement reçu">Partiellement reçu</option>
+                  <option value="Non">{{ 'item-formulaire.non' | translate }}</option>
+                  <option value="Oui">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option value="Partiellement reçu">{{ 'item-formulaire.partiellement-recu' | translate }}</option>
                 </select>
               </div>
             </div>
@@ -640,9 +625,9 @@
           <div class="row" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">Type de monographie</label>
+                <label class="form-label">{{ 'item-formulaire.type-monographie' | translate }}</label>
                 <select class="form-select form-control" formControlName="type_monographie">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <optgroup label="Monographie">
                     <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
                   </optgroup>
@@ -656,28 +641,27 @@
               <div class="mb-3 ml-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" formControlName="reserve_cours" id="reserveCours">
-                  <label class="form-check-label" for="reserveCours">Réserve de cours</label>
+                  <label class="form-check-label" for="reserveCours">{{ 'item-formulaire.reserve-cours' | translate }}</label>
                 </div>
               </div>
             </div>
           </div>
-          <!-- 3 × col-md-4 = 12 -->
           <div class="row" *ngIf="itemForm.get('reserve_cours')?.value">
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Sigle du cours</label>
-                <input type="text" class="form-control" formControlName="reserve_cours_sigle" placeholder="Ex: INF1234">
+                <label class="form-label">{{ 'item-formulaire.sigle-cours' | translate }}</label>
+                <input type="text" class="form-control" formControlName="reserve_cours_sigle" [placeholder]="'item-formulaire.sigle-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Session</label>
-                <input type="text" class="form-control" formControlName="reserve_cours_session" placeholder="Ex: Automne 2024">
+                <label class="form-label">{{ 'item-formulaire.session' | translate }}</label>
+                <input type="text" class="form-control" formControlName="reserve_cours_session" [placeholder]="'item-formulaire.session-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Enseignant(e)</label>
+                <label class="form-label">{{ 'item-formulaire.enseignant' | translate }}</label>
                 <input type="text" class="form-control" formControlName="reserve_cours_enseignant">
               </div>
             </div>
@@ -687,37 +671,36 @@
           <div class="row mt-2">
             <div class="col-12">
               <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-                <i class="bi bi-person me-1"></i>Usager à aviser
+                <i class="bi bi-person me-1"></i>{{ 'item-formulaire.usager-aviser-section' | translate }}
               </h6>
             </div>
           </div>
-          <!-- 2 × col-md-6 = 12 -->
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">Usager à aviser — Réservation</label>
+                <label class="form-label">{{ 'item-formulaire.usager-aviser-reservation' | translate }}</label>
                 <input type="email" class="form-control" formControlName="usager_aviser_reservation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_reservation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">Courriel invalide.</div>
-                <small class="text-muted">Notifier lors de la mise en réservation</small>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
+                <small class="text-muted">{{ 'item-formulaire.notifier-reservation' | translate }}</small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">
-                  Usager à aviser lors de l'activation
+                  {{ 'item-formulaire.usager-aviser-activation' | translate }}
                   <span class="text-muted fw-normal small"
-                        *ngIf="itemForm.get('format_support')?.value === 'Électronique'"> (Électronique)</span>
+                        *ngIf="itemForm.get('format_support')?.value === 'Électronique'"> {{ 'item-formulaire.electronique-label' | translate }}</span>
                   <span class="text-muted fw-normal small"
-                        *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique'"> (Imprimé)</span>
+                        *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique'"> {{ 'item-formulaire.imprime-label' | translate }}</span>
                 </label>
                 <input type="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
               </div>
             </div>
           </div>
@@ -728,7 +711,7 @@
           <div class="row mb-4">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-share me-2"></i>PEB Tipasa Numérique
+                <i class="bi bi-share me-2"></i>{{ 'item-formulaire.section-peb' | translate }}
               </h5>
             </div>
           </div>
@@ -736,42 +719,42 @@
             <div class="col-md-5">
               <div class="mb-3">
                 <label class="form-label">
-                  Avez-vous vu le livre en format numérique sur GOBI (Ebsco) ou Leslibraires.ca ?
+                  {{ 'item-formulaire.gobi-numerique' | translate }}
                   <span class="text-danger">*</span>
                 </label>
                 <select class="form-select form-control" formControlName="gobi_vu_format_numerique"
                         [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
-                  <option value="">Sélectionnez</option>
-                  <option value="Oui">Oui</option>
-                  <option value="Non">Non</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                  <option value="Oui">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option value="Non">{{ 'item-formulaire.non' | translate }}</option>
                 </select>
-                <div class="invalid-feedback" *ngIf="hasError('gobi_vu_format_numerique', 'required')">Ce champ est obligatoire.</div>
+                <div class="invalid-feedback" *ngIf="hasError('gobi_vu_format_numerique', 'required')">{{ 'item-formulaire.gobi-required' | translate }}</div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Référence Tipasa</label>
-                <input type="text" class="form-control" formControlName="reference_tipasa" placeholder="Numéro de référence">
+                <label class="form-label">{{ 'item-formulaire.reference-tipasa' | translate }}</label>
+                <input type="text" class="form-control" formControlName="reference_tipasa" [placeholder]="'item-formulaire.reference-tipasa-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Sur GOBI, version &lt; 365 USD offerte ?</label>
+                <label class="form-label">{{ 'item-formulaire.gobi-365' | translate }}</label>
                 <select class="form-select form-control" formControlName="gobi_version_moins_365_usd">
                   <option value="Ne s'applique pas">Ne s'applique pas</option>
-                  <option value="Oui">Oui</option>
-                  <option value="Non">Non</option>
+                  <option value="Oui">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option value="Non">{{ 'item-formulaire.non' | translate }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">ACQ : Responsable (courriel)</label>
+                <label class="form-label">{{ 'item-formulaire.acq-responsable' | translate }}</label>
                 <input type="email" class="form-control" formControlName="acq_responsable_courriel"
                        appEmailMask
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
               </div>
             </div>
           </div>
@@ -782,73 +765,70 @@
           <div class="row mb-3">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-universal-access me-2"></i>Requête ACQ Accessibilité
+                <i class="bi bi-universal-access me-2"></i>{{ 'item-formulaire.section-accessibilite' | translate }}
               </h5>
             </div>
           </div>
 
-          <!-- Identification : référence + besoin + permalien -->
           <div class="row">
             <div class="col-md">
               <div class="mb-3">
-                <label class="form-label">Référence usager</label>
+                <label class="form-label">{{ 'item-formulaire.reference-usager' | translate }}</label>
                 <input type="text" class="form-control" formControlName="reference_usager"
-                       placeholder="Identification interne Accessibilité">
+                       [placeholder]="'item-formulaire.reference-usager-placeholder' | translate">
               </div>
             </div>
             <div class="col-md">
               <div class="mb-3">
-                <label class="form-label">Besoin spécifique (format) <span class="text-danger">*</span></label>
+                <label class="form-label">{{ 'item-formulaire.besoin-format' | translate }} <span class="text-danger">*</span></label>
                 <select class="form-select form-control" formControlName="besoin_specifique_format"
                         [class.is-invalid]="isInvalid('besoin_specifique_format')">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let b of besoinsFormat" [value]="b">{{ b }}</option>
                 </select>
-                <div class="invalid-feedback" *ngIf="hasError('besoin_specifique_format', 'required')">Ce champ est obligatoire.</div>
+                <div class="invalid-feedback" *ngIf="hasError('besoin_specifique_format', 'required')">{{ 'item-formulaire.besoin-required' | translate }}</div>
               </div>
             </div>
             <div class="col-md">
               <div class="mb-3">
-                <label class="form-label">Permalien SOFIA</label>
+                <label class="form-label">{{ 'item-formulaire.permalien-sofia' | translate }}</label>
                 <input type="url" class="form-control" formControlName="permalien_sofia"
                        placeholder="https://...">
               </div>
             </div>
-            <!-- Type de monographie : visible si Catégorie = Monographie -->
             <div class="col-md" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
               <div class="mb-3">
-                <label class="form-label">Type de monographie</label>
+                <label class="form-label">{{ 'item-formulaire.type-monographie' | translate }}</label>
                 <select class="form-select form-control" formControlName="type_monographie">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
                 </select>
               </div>
             </div>
           </div>
-          <!-- Vérifications Accessibilité -->
+
           <div class="row mt-3">
             <div class="col-12">
               <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-                <i class="bi bi-check2-square me-1"></i>Vérifications Accessibilité
+                <i class="bi bi-check2-square me-1"></i>{{ 'item-formulaire.section-verif' | translate }}
               </h6>
             </div>
           </div>
-          <!-- col-md-4 + 4×col-md-2 = 12 -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Fournisseur contacté sans succès</label>
+                <label class="form-label">{{ 'item-formulaire.fournisseur-contacte' | translate }}</label>
                 <select class="form-select form-control" formControlName="fournisseur_contacte_sans_succes">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Exemplaire détenu</label>
+                <label class="form-label">{{ 'item-formulaire.exemplaire-detenu' | translate }}</label>
                 <select class="form-select form-control" formControlName="exemplaire_detenu">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option value="Imprimé">Imprimé</option>
                   <option value="Électronique">Électronique</option>
                   <option value="Ne s'applique pas">Ne s'applique pas</option>
@@ -857,72 +837,70 @@
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Vérification CAEB</label>
+                <label class="form-label">{{ 'item-formulaire.caeb' | translate }}</label>
                 <select class="form-select form-control" formControlName="verification_caeb">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Vérification SQLA</label>
+                <label class="form-label">{{ 'item-formulaire.sqla' | translate }}</label>
                 <select class="form-select form-control" formControlName="verification_sqla">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Vérification EMMA</label>
+                <label class="form-label">{{ 'item-formulaire.emma' | translate }}</label>
                 <select class="form-select form-control" formControlName="verification_emma">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <!-- Acquisitions -->
           <div class="row mt-3">
             <div class="col-12">
               <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
-                <i class="bi bi-bag me-1"></i>Acquisitions
+                <i class="bi bi-bag me-1"></i>{{ 'item-formulaire.section-acquisitions' | translate }}
               </h6>
             </div>
           </div>
-          <!-- 4×col-md-3 = 12 -->
           <div class="row">
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Numérisation recommandée</label>
+                <label class="form-label">{{ 'item-formulaire.numerisation' | translate }}</label>
                 <select class="form-select form-control" formControlName="acq_numerisation_recommandee">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Date demande à l'éditeur</label>
+                <label class="form-label">{{ 'item-formulaire.date-editeur' | translate }}</label>
                 <input type="date" class="form-control" formControlName="acq_date_demande_editeur">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">Date livraison estimée</label>
+                <label class="form-label">{{ 'item-formulaire.date-livraison' | translate }}</label>
                 <input type="date" class="form-control" formControlName="acq_date_livraison_estimee">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">ACQ : Responsable (courriel)</label>
+                <label class="form-label">{{ 'item-formulaire.acq-responsable' | translate }}</label>
                 <input type="email" class="form-control" formControlName="acq_responsable_courriel"
                        appEmailMask
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
               </div>
             </div>
           </div>
@@ -933,41 +911,40 @@
           <div class="row mb-3">
             <div class="col-12">
               <h5 class="mb-3 pb-2 border-bottom">
-                <i class="bi bi-lightbulb me-2"></i>Suggestion d'Achat
+                <i class="bi bi-lightbulb me-2"></i>{{ 'item-formulaire.section-suggestion' | translate }}
               </h5>
             </div>
           </div>
 
-          <!-- R1 : Auteur · Date cours · ISBN -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Auteur(rice)</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.auteur' | translate }}</label>
                 <input type="text" class="form-control" formControlName="auteur"
                        [class.is-invalid]="isInvalid('auteur')"
-                       placeholder="Saisie libre — max 500 car.">
-                <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">L'auteur est obligatoire</div>
+                       [placeholder]="'item-formulaire.auteur-placeholder' | translate">
+                <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">{{ 'item-formulaire.auteur-required' | translate }}</div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Requis pour un cours (date)</label>
+                <label class="form-label">{{ 'item-formulaire.requis-cours' | translate }}</label>
                 <input type="date" class="form-control" formControlName="date_requise_cours">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">ISBN (suggestion)</label>
+                <label class="form-label">{{ 'item-formulaire.isbn-suggestion' | translate }}</label>
                 <input type="text" class="form-control" formControlName="acq_isbn"
-                       placeholder="Ex: 9782070360024">
+                       [placeholder]="'item-formulaire.isbn-placeholder' | translate">
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Statut</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.statut' | translate }}</label>
                 <select class="form-select form-control" formControlName="usager_statut"
                         [class.is-invalid]="isInvalid('usager_statut')">
-                  <option value="">Sélectionnez</option>
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
                   <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
                   <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
                   <option value="Étudiant 3e cycle">Étudiant 3e cycle</option>
@@ -977,143 +954,138 @@
                   <option value="Personnel">Personnel</option>
                   <option value="Autre">Autre</option>
                 </select>
-                <div class="invalid-feedback" *ngIf="hasError('usager_statut', 'required')">Obligatoire</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_statut', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</div>
               </div>
             </div>
           </div>
 
-          <!-- R2 : Statut · Faculté · Courriel usager -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Nom de l'usager</label>
+                <label class="form-label">{{ 'item-formulaire.nom-usager' | translate }}</label>
                 <input type="text" class="form-control" formControlName="usager_nom"
                        placeholder="Prénom Nom">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Courriel usager</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.courriel-usager' | translate }}</label>
                 <input type="email" class="form-control" formControlName="usager_courriel"
                        [class.is-invalid]="isInvalid('usager_courriel')"
                        placeholder="nom@umontreal.ca">
                 <div class="invalid-feedback">
-                  <ng-container *ngIf="hasError('usager_courriel', 'required')">Obligatoire</ng-container>
-                  <ng-container *ngIf="hasError('usager_courriel', 'email')">Courriel invalide</ng-container>
+                  <ng-container *ngIf="hasError('usager_courriel', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</ng-container>
+                  <ng-container *ngIf="hasError('usager_courriel', 'email')">{{ 'item-formulaire.courriel-invalide-msg' | translate }}</ng-container>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Usager: Faculté / Département</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.faculte' | translate }}</label>
                 <input type="text" class="form-control" formControlName="usager_faculte"
                        [class.is-invalid]="isInvalid('usager_faculte')"
-                       placeholder="Ex: Faculté des sciences">
-                <div class="invalid-feedback" *ngIf="hasError('usager_faculte', 'required')">Obligatoire</div>
+                       [placeholder]="'item-formulaire.faculte-placeholder' | translate">
+                <div class="invalid-feedback" *ngIf="hasError('usager_faculte', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</div>
               </div>
             </div>
           </div>
-          <!-- R3 : Biblio disc. · Aviser réserv. · Aviser récept. · Bordereau -->
+
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">Notes et commentaires de l'usager</label>
+                <label class="form-label">{{ 'item-formulaire.notes-usager' | translate }}</label>
                 <textarea class="form-control" formControlName="note_usager" rows="2"
-                          placeholder="Remarques ou précisions de l'usager..."></textarea>
+                          [placeholder]="'item-formulaire.notes-usager-placeholder' | translate"></textarea>
               </div>
             </div>
-            
+
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Bordereau imprimé</label>
+                <label class="form-label">{{ 'item-formulaire.bordereau-imprime' | translate }}</label>
                 <select class="form-select form-control" formControlName="bordereau_imprime">
-                  <option value="Non">Non</option>
-                  <option value="Oui">Oui</option>
-                  <option value="Partiellement reçu">Partiellement reçu</option>
+                  <option value="Non">{{ 'item-formulaire.non' | translate }}</option>
+                  <option value="Oui">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option value="Partiellement reçu">{{ 'item-formulaire.partiellement-recu' | translate }}</option>
                 </select>
               </div>
             </div>
              <div class="col-md ml-4">
               <div class="mb-3">
-                <label class="form-label">Réserve de cours</label>
+                <label class="form-label">{{ 'item-formulaire.reserve-cours' | translate }}</label>
                 <div class="form-check mt-1 ml-4">
                   <input class="form-check-input" type="checkbox" formControlName="reserve_cours"
                          id="reserve_cours_sugg">
-                  <label class="form-check-label" for="reserve_cours_sugg">Oui</label>
+                  <label class="form-check-label" for="reserve_cours_sugg">{{ 'item-formulaire.oui' | translate }}</label>
                 </div>
               </div>
             </div>
             <div class="col-md" *ngIf="itemForm.get('reserve_cours')?.value">
               <div class="mb-3">
-                <label class="form-label">Sigle du cours</label>
+                <label class="form-label">{{ 'item-formulaire.sigle-cours' | translate }}</label>
                 <input type="text" class="form-control" formControlName="reserve_cours_sigle"
                        placeholder="Ex: INFO-4200">
               </div>
             </div>
             <div class="col-md ml-4">
               <div class="mb-3">
-                <label class="form-label">Transmise à TECHDOC</label>
+                <label class="form-label">{{ 'item-formulaire.transmis-techdoc' | translate }}</label>
                 <div class="form-check mt-1 ml-4">
                   <input class="form-check-input" type="checkbox" formControlName="techdoc_suggestion_transmise"
                          id="techdoc_suggestion_transmise">
-                  <label class="form-check-label" for="techdoc_suggestion_transmise">Oui</label>
+                  <label class="form-check-label" for="techdoc_suggestion_transmise">{{ 'item-formulaire.oui' | translate }}</label>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- R5 : Nom usager · Courriel ACQ · Notes et commentaires usager -->
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> Bibliothécaire disciplinaire</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.bibliothecaire-disc' | translate }}</label>
                 <input type="email" class="form-control" formControlName="bibliothecaire_disciplinaire"
                        [class.is-invalid]="isInvalid('bibliothecaire_disciplinaire')"
                        placeholder="courriel@umontreal.ca">
                 <div class="invalid-feedback">
-                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'required')">Obligatoire</ng-container>
-                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'email')">Courriel invalide</ng-container>
+                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</ng-container>
+                  <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'email')">{{ 'item-formulaire.courriel-invalide-msg' | translate }}</ng-container>
                 </div>
               </div>
             </div>
              <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Courriel responsable ACQ</label>
+                <label class="form-label">{{ 'item-formulaire.courriel-acq' | translate }}</label>
                 <input type="email" class="form-control" formControlName="acq_responsable_courriel"
                        [class.is-invalid]="isInvalid('acq_responsable_courriel')"
                        placeholder="prenom.nom@umontreal.ca">
-                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">Courriel invalide.</div>
+                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Aviser — réservation</label>
+                <label class="form-label">{{ 'item-formulaire.aviser-reservation' | translate }}</label>
                 <select class="form-select form-control" formControlName="aviser_reservation">
-                  <option [ngValue]="true">Oui</option>
-                  <option [ngValue]="false">Non</option>
+                  <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">Aviser — réception</label>
+                <label class="form-label">{{ 'item-formulaire.aviser-reception' | translate }}</label>
                 <select class="form-select form-control" formControlName="aviser_reception">
-                  <option [ngValue]="true">Oui</option>
-                  <option [ngValue]="false">Non</option>
+                  <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
+                  <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
                 </select>
               </div>
             </div>
-           
-            
           </div>
 
-          <!-- R6 : Raison annulation -->
           <div class="row">
             <div class="col-12">
               <div class="mb-3">
-                <label class="form-label">Raison d'annulation</label>
+                <label class="form-label">{{ 'item-formulaire.raison-annulation' | translate }}</label>
                 <textarea class="form-control" formControlName="acq_raison_annulation" rows="2"
-                          placeholder="Motif si la suggestion est refusée ou annulée..."></textarea>
+                          [placeholder]="'item-formulaire.raison-placeholder' | translate"></textarea>
               </div>
             </div>
           </div>
@@ -1128,25 +1100,25 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
-              Annuler
+              {{ 'item-formulaire.annuler' | translate }}
             </button>
           </div>
           <div class="d-flex gap-2">
             <button type="button" class="btn btn-outline-primary"
                     *ngIf="activeTab === 'specifique' && selectedFormulaireType"
                     (click)="setActiveTab('base')">
-              <i class="bi bi-arrow-left me-1"></i> Retour aux infos de base
+              <i class="bi bi-arrow-left me-1"></i> {{ 'item-formulaire.retour-base' | translate }}
             </button>
             <button type="button" class="btn btn-primary"
                     *ngIf="activeTab === 'base' && hasSpecificFields()"
                     (click)="setActiveTab('specifique')">
-              Champs spécifiques <i class="bi bi-arrow-right ms-1"></i>
+              {{ 'item-formulaire.champs-specifiques-btn' | translate }} <i class="bi bi-arrow-right ms-1"></i>
             </button>
             <button type="button" class="btn btn-success" (click)="onSubmit()"
                     [disabled]="submitting">
               <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
               <i class="bi bi-check-lg me-1" *ngIf="!submitting"></i>
-              {{ isEditMode ? 'Modifier l\'item' : 'Créer l\'item' }}
+              {{ isEditMode ? ('item-formulaire.modifier-item' | translate) : ('item-formulaire.creer-item' | translate) }}
             </button>
           </div>
         </div>

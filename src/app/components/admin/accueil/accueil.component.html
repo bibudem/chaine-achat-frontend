@@ -4,8 +4,8 @@
   <!-- ── HEADER ───────────────────────────────────── -->
   <div class="db-header">
     <div>
-      <h1 class="db-title">Tableau de Bord</h1>
-      <p class="db-sub">Vue d'ensemble des demandes et statistiques</p>
+      <h1 class="db-title">{{ 'accueil.titre' | translate }}</h1>
+      <p class="db-sub">{{ 'accueil.sous-titre' | translate }}</p>
     </div>
     <div class="db-actions">
 
@@ -14,7 +14,7 @@
            [class.info-chip--open]="editingCard === 'repartition'"
            [class.info-chip--link]="!!acqConfig.repartitionUrl">
         <div class="info-chip__clickable" (click)="openRepartition($event)"
-             [title]="acqConfig.repartitionUrl ? 'Ouvrir le tableau de répartition' : ''">
+             [title]="acqConfig.repartitionUrl ? ('accueil.ouvrir-repartition' | translate) : ''">
           <div class="info-chip__icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 256 256" fill="currentColor">
               <path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/>
@@ -22,35 +22,35 @@
           </div>
           <div class="info-chip__body">
             <span class="info-chip__label">
-              Répartition ACQ
+              {{ 'accueil.repartition-acq' | translate }}
               <svg *ngIf="acqConfig.repartitionUrl" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 256 256" fill="currentColor" style="margin-left:3px;opacity:.6">
                 <path d="M224,104a8,8,0,0,1-16,0V59.32l-82.34,82.34a8,8,0,0,1-11.32-11.32L196.68,48H152a8,8,0,0,1,0-16h64a8,8,0,0,1,8,8Zm-40,24a8,8,0,0,0-8,8v72H48V80h72a8,8,0,0,0,0-16H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V136A8,8,0,0,0,184,128Z"/>
               </svg>
             </span>
-            <span class="info-chip__val">Mis à jour le {{ acqConfig.majDate }}</span>
+            <span class="info-chip__val">{{ 'accueil.mis-a-jour-le' | translate }} {{ acqConfig.majDate }}</span>
           </div>
         </div>
-        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('repartition')" title="Modifier">
+        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('repartition')" [title]="'accueil.modifier' | translate">
           <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'repartition'" class="info-chip__dropdown">
-          <p class="info-chip__dropdown-title">Répartition ACQ</p>
+          <p class="info-chip__dropdown-title">{{ 'accueil.repartition-acq' | translate }}</p>
           <div class="info-chip__field">
-            <label>Lien vers le fichier Excel</label>
+            <label>{{ 'accueil.lien-excel' | translate }}</label>
             <input class="form-control form-control-sm" [(ngModel)]="editConfig.repartitionUrl"
-                   placeholder="https://… ou chemin réseau">
+                   [placeholder]="'accueil.lien-excel-placeholder' | translate">
           </div>
           <div class="info-chip__field">
-            <label>Date de mise à jour</label>
+            <label>{{ 'accueil.date-maj' | translate }}</label>
             <input class="form-control form-control-sm" [(ngModel)]="editConfig.majDate"
-                   placeholder="ex. 2 septembre 2025">
+                   [placeholder]="'accueil.date-maj-placeholder' | translate">
           </div>
           <div class="info-chip__dropdown-actions">
             <button class="btn btn-sm btn-primary" (click)="saveConfig()" [disabled]="isSavingConfig">
               <span *ngIf="isSavingConfig" class="spinner-border spinner-border-sm me-1"></span>
-              {{ isSavingConfig ? 'Enregistrement…' : 'Enregistrer' }}
+              {{ isSavingConfig ? ('accueil.enregistrement' | translate) : ('accueil.enregistrer' | translate) }}
             </button>
-            <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()" [disabled]="isSavingConfig">Annuler</button>
+            <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()" [disabled]="isSavingConfig">{{ 'accueil.annuler' | translate }}</button>
           </div>
         </div>
       </div>
@@ -61,28 +61,28 @@
           <i class="bi bi-currency-dollar"></i>
         </div>
         <div class="info-chip__body">
-          <span class="info-chip__label">Taux USD · {{ acqConfig.tauxPeriode }}</span>
+          <span class="info-chip__label">{{ 'accueil.taux-usd' | translate }} · {{ acqConfig.tauxPeriode }}</span>
           <span class="info-chip__val info-chip__val--lg">{{ acqConfig.tauxRate }}</span>
         </div>
-        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('taux')" title="Modifier">
+        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('taux')" [title]="'accueil.modifier' | translate">
           <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'taux'" class="info-chip__dropdown">
-          <p class="info-chip__dropdown-title">Taux USD sécurisé</p>
+          <p class="info-chip__dropdown-title">{{ 'accueil.taux-usd-securise' | translate }}</p>
           <div class="info-chip__field">
-            <label>Taux</label>
-            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxRate" placeholder="ex. 1,368">
+            <label>{{ 'accueil.taux' | translate }}</label>
+            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxRate" [placeholder]="'accueil.taux-placeholder' | translate">
           </div>
           <div class="info-chip__field">
-            <label>Période</label>
-            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxPeriode" placeholder="ex. 2025–2026">
+            <label>{{ 'accueil.periode' | translate }}</label>
+            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxPeriode" [placeholder]="'accueil.periode-placeholder' | translate">
           </div>
           <div class="info-chip__dropdown-actions">
             <button class="btn btn-sm btn-primary" (click)="saveConfig()" [disabled]="isSavingConfig">
               <span *ngIf="isSavingConfig" class="spinner-border spinner-border-sm me-1"></span>
-              {{ isSavingConfig ? 'Enregistrement…' : 'Enregistrer' }}
+              {{ isSavingConfig ? ('accueil.enregistrement' | translate) : ('accueil.enregistrer' | translate) }}
             </button>
-            <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()" [disabled]="isSavingConfig">Annuler</button>
+            <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()" [disabled]="isSavingConfig">{{ 'accueil.annuler' | translate }}</button>
           </div>
         </div>
       </div>
@@ -91,14 +91,14 @@
       <div class="db-actions-sep"></div>
 
       <select class="form-select form-select-sm" [(ngModel)]="selectedPeriod" style="width:160px">
-        <option value="7days">7 derniers jours</option>
-        <option value="30days">30 derniers jours</option>
-        <option value="90days">90 derniers jours</option>
+        <option value="7days">{{ 'accueil.7-jours' | translate }}</option>
+        <option value="30days">{{ 'accueil.30-jours' | translate }}</option>
+        <option value="90days">{{ 'accueil.90-jours' | translate }}</option>
       </select>
       <button class="btn btn-outline-primary btn-sm db-refresh"
               (click)="refreshData()"
               [disabled]="isLoadingDashboard || isLoadingGraphs"
-              title="Actualiser">
+              [title]="'accueil.actualiser' | translate">
         <i class="bi bi-repeat"></i>
       </button>
     </div>
@@ -122,7 +122,7 @@
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">Total des demandes</span>
+        <span class="sc__lbl">{{ 'accueil.total-demandes' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,24 10,18 22,21 34,10 46,14 56,5 64,8" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -132,11 +132,11 @@
     <div class="sc sc--green">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.unique_demandeurs) }}</span>
-        <span class="sc__badge">Actifs</span>
+        <span class="sc__badge">{{ 'accueil.actifs' | translate }}</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">Demandeurs uniques</span>
+        <span class="sc__lbl">{{ 'accueil.demandeurs-uniques' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,26 10,20 22,16 34,18 46,10 56,7 64,4" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -146,11 +146,11 @@
     <div class="sc sc--orange">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(urgentCount) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(prioritaireCount) }} prioritaires</span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(prioritaireCount) }} {{ 'accueil.prioritaires' | translate }}</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">Demandes urgentes</span>
+        <span class="sc__lbl">{{ 'accueil.demandes-urgentes' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,10 10,16 22,12 34,18 46,14 56,20 64,16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -160,11 +160,11 @@
     <div class="sc sc--teal">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(regulierCount) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ calculatePercentage(regulierCount, totals.total_items) }}% du total</span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ calculatePercentage(regulierCount, totals.total_items) }}{{ 'accueil.du-total' | translate }}</span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">Priorité régulière</span>
+        <span class="sc__lbl">{{ 'accueil.priorite-reguliere' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -186,8 +186,8 @@
       <!-- Rangée 1 : Catalogue des types -->
       <div class="panel panel--catalog flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">Types de formulaire</span>
-          <span class="panel__sub">{{ allTypes.length }} types</span>
+          <span class="panel__title">{{ 'accueil.types-formulaire' | translate }}</span>
+          <span class="panel__sub">{{ allTypes.length }} {{ 'accueil.types' | translate }}</span>
         </div>
         <div class="panel__body panel__body--catalog">
           <div *ngIf="isLoadingTypeCounts" class="db-spinner">
@@ -219,8 +219,8 @@
       <!-- Rangée 1 : Répartition par type -->
       <div class="panel panel--types mb-3 flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">Répartition par type</span>
-          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">Voir tout &rarr;</button>
+          <span class="panel__title">{{ 'accueil.repartition-par-type' | translate }}</span>
+          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
         </div>
         <div class="panel__body">
 
@@ -253,14 +253,14 @@
             </div>
           </ng-container>
 
-          <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">Aucune donnée disponible</p>
+          <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
         </div>
       </div>
 
       <!-- Rangée 2 : Par bibliothèque -->
       <div class="panel panel--biblio flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">Par bibliothèque</span>
+          <span class="panel__title">{{ 'accueil.par-bibliotheque' | translate }}</span>
           <span class="panel__sub" *ngIf="!isLoadingGraphs">{{ periodLabel }}</span>
         </div>
         <div class="panel__body">
@@ -279,13 +279,13 @@
               </div>
               <div class="bib-info">
                 <span class="bib-info__name">{{ lib.bibliotheque }}</span>
-                <span class="bib-info__count">{{ formatNumber(lib.total) }} demandes</span>
+                <span class="bib-info__count">{{ formatNumber(lib.total) }} {{ 'accueil.demandes' | translate }}</span>
               </div>
               <span class="bib-total" [style.color]="getBibColor(i)">{{ formatNumber(lib.total) }}</span>
             </div>
           </ng-container>
 
-          <p *ngIf="!isLoadingGraphs && libraryStats.length === 0" class="db-empty">Aucune donnée disponible</p>
+          <p *ngIf="!isLoadingGraphs && libraryStats.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
         </div>
       </div>
 
@@ -297,8 +297,8 @@
       <!-- Rangée 1 : Priorités donut -->
       <div class="panel panel--priority mb-3 flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">Par priorité</span>
-          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ totals.total_items }} demandes</span>
+          <span class="panel__title">{{ 'accueil.par-priorite' | translate }}</span>
+          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ totals.total_items }} {{ 'accueil.demandes' | translate }}</span>
         </div>
         <div class="panel__body panel__body--donut">
 
@@ -310,7 +310,7 @@
             <div class="priority-donut" [style.background]="generateDonutGradient()">
               <div class="priority-donut__inner">
                 <span class="priority-donut__total">{{ totals.total_items }}</span>
-                <span class="priority-donut__label">Total</span>
+                <span class="priority-donut__label">{{ 'accueil.total' | translate }}</span>
               </div>
             </div>
             <div class="priority-legend">
@@ -325,12 +325,12 @@
             </div>
           </ng-container>
 
-          <p *ngIf="!isLoadingDashboard && byPriority.length === 0" class="db-empty">Aucune donnée</p>
+          <p *ngIf="!isLoadingDashboard && byPriority.length === 0" class="db-empty">{{ 'accueil.aucune-donnee-courte' | translate }}</p>
         </div>
       </div>
       <div  class="panel panel--statuts flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">Top 5 demandeurs</span>
+          <span class="panel__title">{{ 'accueil.top5-demandeurs' | translate }}</span>
           <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ periodLabel }}</span>
         </div>
         <div class="panel__body panel__body--main">
@@ -356,7 +356,7 @@
                 </span>
               </div>
             </ng-container>
-            <p *ngIf="topDemandeurs.length === 0" class="db-empty">Aucun demandeur</p>
+            <p *ngIf="topDemandeurs.length === 0" class="db-empty">{{ 'accueil.aucun-demandeur' | translate }}</p>
 
           </ng-container>
         </div>

@@ -12,11 +12,9 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  message: string = 'Vous êtes déconnecté.';
-  flagChoix:string= 'flag-icon-fr';
-
   currentDate = new Date();
   isProduction = environment.production;
+  currentLang: string = localStorage.getItem('lang') ?? 'fr';
 
   get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
@@ -28,31 +26,17 @@ export class HeaderComponent {
 
   ngOnInit(){
     this.translate.setDefaultLang('fr');
+    this.translate.use(this.currentLang);
   }
-  // Informe l'utilisateur sur son authentfication.
-  setMessage() {
-    this.message = this.authService.isLoggedIn ?
-      'Vous êtes connecté.' : 'Identifiant ou mot de passe incorrect.';
-  }
-  // Déconnecte l'utilisateur
+
   logout() {
     this.authService.logout();
   }
 
-  //fonction pour changer la langue
   switchLanguage(language: string) {
+    this.currentLang = language;
     this.translate.use(language);
-    this.flagChoix= 'flag-icon-'+language;
-    switch (language) {
-      case'fr':
-        this.flagChoix= 'flag-icon-'+language;
-        break;
-      case'en':
-        this.flagChoix= 'flag-icon-us';
-        break;
-      default:this.flagChoix= 'flag-icon-fr';
-        break;
-    }
+    localStorage.setItem('lang', language);
   }
 }
 

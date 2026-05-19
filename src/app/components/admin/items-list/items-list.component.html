@@ -5,11 +5,11 @@
     <div class="col-md-12">
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h1 class="h3 mb-2 mt-2">Gestion des demandes</h1>
-          <p class="text-muted mb-0">Liste des items enregistrés</p>
+          <h1 class="h3 mb-2 mt-2">{{ 'items.titre' | translate }}</h1>
+          <p class="text-muted mb-0">{{ 'items.sous-titre' | translate }}</p>
         </div>
         <button *ngIf="authService.canEdit" class="btn btn-primary" [routerLink]="['/items/nouveau']">
-          <i class="bi bi-plus-circle me-2"></i>Créer un item
+          <i class="bi bi-plus-circle me-2"></i>{{ 'items.creer' | translate }}
         </button>
       </div>
       <hr>
@@ -29,7 +29,7 @@
       <div class="input-group">
         <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control bib-input-icon"
-               placeholder="ID, titre, ISBN, demandeur..."
+               [placeholder]="'items.recherche-placeholder' | translate"
                [(ngModel)]="searchTerm"
                (keyup.enter)="onSearch()"
                (input)="onSearch()">
@@ -37,30 +37,30 @@
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
-        <option value="">Type formulaire</option>
+        <option value="">{{ 'items.type-formulaire-placeholder' | translate }}</option>
         <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
       </select>
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
-        <option value="">Toutes les bibliothèques</option>
+        <option value="">{{ 'items.toutes-bibliotheques' | translate }}</option>
         <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
       </select>
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="selectedStatut" (change)="onFilterChange()">
-        <option value="">Statut</option>
-        <optgroup label="Bibliothèque">
+        <option value="">{{ 'items.statut-placeholder' | translate }}</option>
+        <optgroup [label]="'items.groupe-bib' | translate">
           <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
         </optgroup>
-        <optgroup label="ACQ">
+        <optgroup [label]="'items.groupe-acq' | translate">
           <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">{{ statut }}</option>
         </optgroup>
       </select>
     </div>
     <div class="col-6 col-md-2">
       <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
-        <option value="">ACQ : Suivi de la demande</option>
+        <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
         <option *ngFor="let suivi of options.dircolAcqSuiviOptions" [value]="suivi">{{ suivi }}</option>
       </select>
     </div>
@@ -74,9 +74,9 @@
   <!-- Chargement -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Chargement...</span>
+      <span class="visually-hidden">{{ 'items.chargement' | translate }}</span>
     </div>
-    <p class="mt-2 text-muted">Chargement des données...</p>
+    <p class="mt-2 text-muted">{{ 'items.chargement-donnees' | translate }}</p>
   </div>
 
   <!-- Tableau -->
@@ -91,33 +91,33 @@
               <thead class="table-light">
                 <tr>
                   <th class="col-id sortable-col" (click)="sortBy('item_id')">
-                    ID <i class="bi {{ getSortIcon('item_id') }} ms-1"></i>
+                    {{ 'items.col-id' | translate }} <i class="bi {{ getSortIcon('item_id') }} ms-1"></i>
                   </th>
                   <th class="col-titre sortable-col" (click)="sortBy('titre_document')">
-                    Titre <i class="bi {{ getSortIcon('titre_document') }} ms-1"></i>
+                    {{ 'items.col-titre' | translate }} <i class="bi {{ getSortIcon('titre_document') }} ms-1"></i>
                   </th>
                   <th class="col-type sortable-col" (click)="sortBy('formulaire_type')">
-                    Type <i class="bi {{ getSortIcon('formulaire_type') }} ms-1"></i>
+                    {{ 'items.col-type' | translate }} <i class="bi {{ getSortIcon('formulaire_type') }} ms-1"></i>
                   </th>
                   <th class="col-isbn sortable-col" (click)="sortBy('isbn_issn')">
-                    ISBN/ISSN <i class="bi {{ getSortIcon('isbn_issn') }} ms-1"></i>
+                    {{ 'items.col-isbn' | translate }} <i class="bi {{ getSortIcon('isbn_issn') }} ms-1"></i>
                   </th>
                   <th class="col-demandeur sortable-col" (click)="sortBy('demandeur')">
-                    Demandeur <i class="bi {{ getSortIcon('demandeur') }} ms-1"></i>
+                    {{ 'items.col-demandeur' | translate }} <i class="bi {{ getSortIcon('demandeur') }} ms-1"></i>
                   </th>
                   <th class="col-bib sortable-col" (click)="sortBy('bibliotheque')">
-                    Bibliothèque <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
+                    {{ 'items.col-bib' | translate }} <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
-                    Statut <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
+                    {{ 'items.col-statut' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
-                    Suivi ACQ <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
+                    {{ 'items.col-suivi' | translate }} <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
                   </th>
                   <th class="col-date sortable-col" (click)="sortBy('date_creation')">
-                    Date <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
+                    {{ 'items.col-date' | translate }} <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
                   </th>
-                  <th class="col-actions text-center">Actions</th>
+                  <th class="col-actions text-center">{{ 'items.col-actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,7 +126,7 @@
                     <span class="fw-semibold text-muted">#{{ item.item_id }}</span>
                   </td>
                   <td class="col-titre">
-                    <div class="fw-semibold">{{ item.titre_document || 'Sans titre' }}</div>
+                    <div class="fw-semibold">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
                     <div class="small text-muted" *ngIf="item.format_support">
                       {{ getFormatSupport(item.format_support) }}
                     </div>
@@ -166,17 +166,17 @@
                   <td class="col-date">{{ formatDate(item.date_creation) }}</td>
                   <td class="col-actions text-center">
                     <div class="btn-group btn-group-sm" role="group">
-                      <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" title="Consulter">
+                      <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                         <i class="bi bi-eye"></i>
                       </button>
                       <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                              [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}" title="Décision ACQ">
+                              [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
-                      <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" title="Modifier">
+                      <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" title="Supprimer">
+                      <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
                         <i class="bi bi-trash"></i>
                       </button>
                     </div>
@@ -195,44 +195,44 @@
                   {{ item.formulaire_type }}
                 </span>
                 <div class="ms-auto btn-group btn-group-sm">
-                  <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" title="Consulter">
+                  <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                     <i class="bi bi-eye"></i>
                   </button>
                   <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                          [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}" title="Décision ACQ">
+                          [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
-                  <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" title="Modifier">
+                  <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
                     <i class="bi bi-pencil"></i>
                   </button>
-                  <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" title="Supprimer">
+                  <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </div>
-              <div class="item-card__title">{{ item.titre_document || 'Sans titre' }}</div>
+              <div class="item-card__title">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
               <div class="item-card__body">
                 <div class="item-card__row" *ngIf="item.demandeur">
-                  <span class="item-card__label">Demandeur</span>
+                  <span class="item-card__label">{{ 'items.col-demandeur' | translate }}</span>
                   <span>{{ item.demandeur }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.bibliotheque">
-                  <span class="item-card__label">Bibliothèque</span>
+                  <span class="item-card__label">{{ 'items.col-bib' | translate }}</span>
                   <span>{{ item.bibliotheque }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.statut_bibliotheque || item.statut_acq">
-                  <span class="item-card__label">Statut</span>
+                  <span class="item-card__label">{{ 'items.col-statut' | translate }}</span>
                   <div class="d-flex flex-wrap gap-1">
                     <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
                     <span *ngIf="item.statut_acq" class="badge badge-statut-acq">ACQ: {{ item.statut_acq }}</span>
                   </div>
                 </div>
                 <div class="item-card__row" *ngIf="item.suivi_acq">
-                  <span class="item-card__label">Suivi ACQ</span>
+                  <span class="item-card__label">{{ 'items.col-suivi' | translate }}</span>
                   <span class="badge badge-statut-acq">{{ item.suivi_acq }}</span>
                 </div>
                 <div class="item-card__row">
-                  <span class="item-card__label">Date</span>
+                  <span class="item-card__label">{{ 'items.col-date' | translate }}</span>
                   <span>{{ formatDate(item.date_creation) }}</span>
                 </div>
               </div>
@@ -245,10 +245,10 @@
       <!-- Aucun résultat -->
       <div *ngIf="total === 0" class="text-center py-5">
         <i class="bi bi-inbox display-1 text-muted"></i>
-        <h5 class="mt-3">Aucun item trouvé</h5>
-        <p class="text-muted">Essayez de modifier vos filtres ou créez un nouvel item</p>
+        <h5 class="mt-3">{{ 'items.aucun-item' | translate }}</h5>
+        <p class="text-muted">{{ 'items.aucun-item-desc' | translate }}</p>
         <button *ngIf="authService.canEdit" class="btn btn-primary mt-2" [routerLink]="['/items/nouveau']">
-          <i class="bi bi-plus-circle me-2"></i>Créer un nouvel item
+          <i class="bi bi-plus-circle me-2"></i>{{ 'items.creer-nouvel' | translate }}
         </button>
       </div>
 
@@ -256,14 +256,14 @@
       <div *ngIf="total > 0"
            class="pagination-wrapper d-flex justify-content-between align-items-center mt-0 mb-3">
         <div class="text-muted small">
-          Affichage de <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
-          à <strong>{{ getLastItemIndex() }}</strong>
-          sur <strong>{{ total }}</strong> items
+          {{ 'items.affichage-de' | translate }} <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
+          {{ 'items.a' | translate }} <strong>{{ getLastItemIndex() }}</strong>
+          {{ 'items.sur' | translate }} <strong>{{ total }}</strong> {{ 'items.items-count' | translate }}
         </div>
         <nav *ngIf="totalPages > 1" aria-label="Pagination">
           <ul class="pagination pagination-sm mb-0">
             <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="goToPage(1)" title="Première page">
+              <button class="page-link" (click)="goToPage(1)" [title]="'items.premiere-page' | translate">
                 <i class="bi bi-chevron-double-left"></i>
               </button>
             </li>
@@ -291,7 +291,7 @@
               </button>
             </li>
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="goToPage(totalPages)" title="Dernière page">
+              <button class="page-link" (click)="goToPage(totalPages)" [title]="'items.derniere-page' | translate">
                 <i class="bi bi-chevron-double-right"></i>
               </button>
             </li>

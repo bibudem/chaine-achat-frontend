@@ -17,34 +17,35 @@
         {{ 'app-title-dev' | translate}}
       </h4>
       <span *ngIf="isProduction" class="ml-3 font-weight-light titre-initial header-udem-prod">
-        Outil web de gestion des acquisitions et abonnements des bibliothèques
+        {{ 'header.sous-titre-prod' | translate }}
       </span>
 
     <ul class="navbar-nav navbar-nav-right ml-auto">
-       <!-- Date -->
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="javascript:;">
-              <i class="bi bi-calendar3"></i>
-              <span class="date-text">{{ currentDate | date:'dd MMM yyyy' }}</span>
-            </a>
-          </li>
-      <!--<li class="nav-item dropdown language-dropdown d-none d-sm-flex align-items-center">
-        <a class="nav-link d-flex align-items-center dropdown-toggle" id="LanguageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-          <span class="profile-text font-weight-normal" >{{ 'lngApp' | translate}}</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-left navbar-dropdown py-2" aria-labelledby="LanguageDropdown">
-          <a class="dropdown-item" (click)="switchLanguage('fr')">
-             {{ 'lngFr' | translate}} </a>
-          <a class="dropdown-item" (click)="switchLanguage('en')">
-             {{ 'lngEn' | translate}}</a>
+    <!-- Date -->
+      <li class="nav-item d-flex align-items-center">
+        <div class="date-card">
+          <span class="date-card-day">{{ currentDate | date:'dd' }}</span>
+          <div class="date-card-right">
+            <span class="date-card-month">{{ currentDate | date:'MMM' }}</span>
+            <span class="date-card-year">{{ currentDate | date:'yyyy' }}</span>
+          </div>
         </div>
-      </li>-->
-          <li class="nav-item dropdown mr-0">
-            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
+      </li>
+         <!-- Sélecteur de langue -->
+      <li class="nav-item d-flex align-items-center">
+        <div class="lang-toggle">
+          <i class="bi bi-globe lang-toggle__icon"></i>
+          <button class="lang-btn" [class.lang-btn--active]="currentLang === 'fr'" (click)="switchLanguage('fr')" title="Français">FR</button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn" [class.lang-btn--active]="currentLang === 'en'" (click)="switchLanguage('en')" title="English">EN</button>
+        </div>
+      </li>
+          <li class="nav-item dropdown d-flex align-items-center">
+            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i class="bi bi-grid-3x3-gap-fill"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Formulaires</p>
+              <p class="mb-0 font-weight-normal float-left dropdown-header">{{ 'header.formulaires' | translate }}</p>
               <a class="dropdown-item preview-item" routerLink="/usager/nouvel-achat" target="_blank">
                 <div class="preview-thumbnail">
                   <div class="preview-icon preview-icon--achat">
@@ -52,7 +53,7 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">Nouvel achat unique</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-achat' | translate }}</h5>
                 </div>
               </a>
               <a class="dropdown-item preview-item" routerLink="/usager/nouvel-abonnement" target="_blank">
@@ -62,7 +63,7 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">Nouvel abonnement</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-abonnement' | translate }}</h5>
                 </div>
               </a>
               <a class="dropdown-item preview-item" routerLink="/usager/modification-ccol" target="_blank">
@@ -72,7 +73,7 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">Modification et CCOL</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.modification-ccol' | translate }}</h5>
                 </div>
               </a>
               <a class="dropdown-item preview-item" routerLink="/usager/peb-tipasa-numerique" target="_blank">
@@ -82,7 +83,7 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">PEB Tipasa numérique</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.peb-tipasa' | translate }}</h5>
                 </div>
               </a>
               <a class="dropdown-item preview-item" routerLink="/usager/requete-accessibilite" target="_blank">
@@ -92,7 +93,7 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">Requête Accessibilité</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.accessibilite' | translate }}</h5>
                 </div>
               </a>
               <a class="dropdown-item preview-item" routerLink="/usager/suggestion-public" target="_blank">
@@ -102,15 +103,15 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">Suggestion d'achat</h5>
+                  <h5 class="font-weight-normal mt-1">{{ 'header.suggestion' | translate }}</h5>
                 </div>
               </a>
             </div>
           </li>
-      <li class="nav-item dropdown language-dropdown d-none d-sm-flex align-items-center">
-          <a class="nav-link d-flex align-items-center gap-2 dropdown-toggle" id="UserDropdown"  data-toggle="dropdown" aria-expanded="false" href="javascript:;">
-            <i class="bi bi-person-fill-check"></i>
-            <span class="date-text">{{prenomAdmin}} {{nomAdmin}}</span>
+      <li class="nav-item dropdown d-flex align-items-center">
+          <a class="nav-link d-flex align-items-center gap-2 dropdown-toggle" id="UserDropdown" data-toggle="dropdown" aria-expanded="false" href="javascript:;">
+            <i class="bi bi-person-circle"></i>
+            <span class="d-none d-sm-inline">{{prenomAdmin}} {{nomAdmin}}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown w-100" aria-labelledby="UserDropdown">
           <!--<a  class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"  ></i>{{groupeAdmin}}</a>-->

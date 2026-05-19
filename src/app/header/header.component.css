@@ -1,18 +1,142 @@
+.brand-logo { max-width: 200px; }
+
+/* ══════════════════════════════════════════════════════
+   NAV DROITE — Token visuel commun
+   Fond bleu très léger · bordure fine · pill shape · hover
+   ══════════════════════════════════════════════════════ */
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
-  box-shadow: none!important;
-  border-radius: 18px;
-}
-.brand-logo{
-  max-width: 200px;
+  box-shadow: none !important;
+  border-radius: 20px;
+  background: rgba(0, 64, 127, 0.07);
+  border: 1px solid rgba(0, 64, 127, 0.12) !important;
+  color: rgba(0, 64, 127, 0.75) !important;
+  padding: 5px 14px;
+  height: auto;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-/* Couleurs sémantiques des formulaires usager dans le menu */
-.preview-icon--achat          { background: var(--achat-dark)    !important; } /* Vert émeraude — Nouvel achat unique    */
-.preview-icon--abonnement     { background: var(--type-violet)              !important; } /* Violet        — Nouvel abonnement     */
-.preview-icon--ccol           { background: var(--acq-dark)      !important; } /* Bleu acier    — Modification et CCOL  */
-.preview-icon--peb            { background: var(--type-cyan)             !important; } /* Teal cyan     — PEB Tipasa numérique  */
-.preview-icon--accessibilite  { background: var(--text-gray)             !important; } /* Violet foncé  — Requête Accessibilité */
-.preview-icon--suggest        { background: var(--suggest-mid)   !important; } /* Ambre doré    — Suggestion d'achat    */
+/* Icon seul : padding symétrique + caret Bootstrap masqué */
+#notificationDropdown {
+  padding: 5px 11px;
+}
+#notificationDropdown::after {
+  display: none;
+}
+
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link i {
+  color: #2380D1;
+  font-size: 0.95rem;
+}
+
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link:hover,
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item.show .nav-link {
+  background: rgba(0, 64, 127, 0.13) !important;
+  border-color: rgba(0, 64, 127, 0.25) !important;
+  color: #00407F !important;
+}
+
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link:hover i,
+.navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item.show .nav-link i {
+  color: #00407F;
+}
+
+/* ── Sélecteur de langue ── */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 64, 127, 0.07);
+  border: 1px solid rgba(0, 64, 127, 0.12);
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 64, 127, 0.5);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 5px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.lang-btn:hover  { color: #00407F; }
+
+.lang-btn--active {
+  color: #fff;
+  background: #00407F;
+}
+
+.lang-sep {
+  color: rgba(0, 64, 127, 0.25);
+  font-size: 0.7rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.lang-toggle__icon {
+  color: #2380D1;
+  font-size: 0.8rem;
+  margin-right: 3px;
+}
+
+/* ── Mini carte calendrier ── */
+.date-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 64, 127, 0.07);
+  border: 1px solid rgba(0, 64, 127, 0.12);
+  border-radius: 20px;
+  padding: 4px 12px;
+  user-select: none;
+}
+
+.date-card-day {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #00407F;
+  line-height: 1;
+  padding-right: 8px;
+  border-right: 1px solid rgba(0, 64, 127, 0.2);
+}
+
+.date-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.date-card-month {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #00407F;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.date-card-year {
+  font-size: 0.6rem;
+  color: rgba(0, 64, 127, 0.55);
+  letter-spacing: 0.04em;
+}
+
+/* ── Couleurs sémantiques des formulaires (dropdown) ── */
+.preview-icon--achat         { background: var(--achat-dark)   !important; }
+.preview-icon--abonnement    { background: var(--type-violet)  !important; }
+.preview-icon--ccol          { background: var(--acq-dark)     !important; }
+.preview-icon--peb           { background: var(--type-cyan)    !important; }
+.preview-icon--accessibilite { background: var(--text-gray)    !important; }
+.preview-icon--suggest       { background: var(--suggest-mid)  !important; }
+
+/* ── Animation titre (env. dev) ── */
 .typing {
   position: relative;
   font-size: 1.2em;
@@ -28,13 +152,9 @@
   background: var(--white);
   animation: typing 3s steps(16) forwards, caret 1s infinite;
 }
-@keyframes typing {
-  to {
-    width: 0;
-  }
-}
-@keyframes caret {
-  50% {
-    color: red;
-  }
+@keyframes typing { to { width: 0; } }
+@keyframes caret  { 50% { color: red; } }
+
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown i {
+    margin-right: 0!important; 
 }

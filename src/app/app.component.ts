@@ -19,6 +19,8 @@ export class AppComponent implements OnInit {
     private router: Router
   ) {
     translate.setDefaultLang('fr');
+    const savedLang = localStorage.getItem('lang') ?? 'fr';
+    translate.use(savedLang);
 
     // Initialisation immédiate avant le premier rendu
     const path = window.location.pathname;

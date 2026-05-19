@@ -3,13 +3,13 @@
   <!-- ── LOADING ───────────────────────────────────────────── -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Chargement...</p>
+    <p class="mt-2 text-muted">{{ 'item-detail.chargement' | translate }}</p>
   </div>
 
   <!-- ── ITEM INTROUVABLE ──────────────────────────────────── -->
   <div *ngIf="!loading && !item" class="text-center py-5">
     <i class="bi bi-inbox display-1 text-muted"></i>
-    <p class="text-muted mt-3">Item introuvable.</p>
+    <p class="text-muted mt-3">{{ 'item-detail.introuvable' | translate }}</p>
   </div>
 
   <!-- ── CONTENU PRINCIPAL ─────────────────────────────────── -->
@@ -22,19 +22,19 @@
       <div class="itd-topbar__left">
         <div>
           <div class="itd-topbar__id">#{{ item.item_id }}</div>
-          <h1 class="itd-topbar__title mb-0">{{ item.titre_document || 'Sans titre' }}</h1>
+          <h1 class="itd-topbar__title mb-0">{{ item.titre_document || ('item-detail.introuvable' | translate) }}</h1>
         </div>
       </div>
       <div class="itd-topbar__actions">
         <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
-          <i class="bi bi-arrow-left"></i> Retour
+          <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
         <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
                 [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}">
-          <i class="bi bi-clipboard-check me-1"></i>Décision ACQ
+          <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
         <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
-          <i class="bi bi-pencil me-1"></i>Modifier
+          <i class="bi bi-pencil me-1"></i>{{ 'item-detail.modifier' | translate }}
         </button>
       </div>
     </div>
@@ -49,28 +49,28 @@
 
         <!-- Type & Priorité -->
         <div class="itd-sidebar__block">
-          <div class="itd-sidebar__label">Type de formulaire</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.type-formulaire' | translate }}</div>
           <span [class]="getTypeBadgeClass(item.formulaire_type)">
             {{ item.formulaire_type }}
           </span>
         </div>
 
         <div class="itd-sidebar__block">
-          <div class="itd-sidebar__label">Priorité</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.priorite' | translate }}</div>
           <span [class]="getPrioriteBadgeClass(item.priorite_demande) + ' itd-badge-lg'">
             {{ val(item.priorite_demande) }}
           </span>
         </div>
 
         <div class="itd-sidebar__block">
-          <div class="itd-sidebar__label">Statut bibliothèque</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.statut-bib' | translate }}</div>
           <span [class]="getStatutBadgeClass(item.statut_bibliotheque) + ' itd-badge-lg'">
             {{ val(item.statut_bibliotheque) }}
           </span>
         </div>
 
         <div class="itd-sidebar__block" *ngIf="item.statut_acq">
-          <div class="itd-sidebar__label">Statut ACQ</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.statut-acq' | translate }}</div>
           <span class="badge bg-secondary itd-badge-lg">{{ item.statut_acq }}</span>
         </div>
 
@@ -78,14 +78,14 @@
 
         <!-- Personnes -->
         <div class="itd-sidebar__block">
-          <div class="itd-sidebar__label">Demandeur</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.demandeur' | translate }}</div>
           <div class="itd-sidebar__value">
             <i class="bi bi-person me-1 text-muted"></i>{{ val(item.demandeur) }}
           </div>
         </div>
 
         <div class="itd-sidebar__block" *ngIf="item.personne_a_aviser_nom || item.personne_a_aviser_courriel">
-          <div class="itd-sidebar__label">Personne à aviser lors de l'activation</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.personne-aviser' | translate }}</div>
           <div class="itd-sidebar__value" *ngIf="item.personne_a_aviser_nom">
             <i class="bi bi-person me-1 text-muted"></i>{{ item.personne_a_aviser_nom }}
           </div>
@@ -98,19 +98,19 @@
 
         <!-- Localisation -->
         <div class="itd-sidebar__block">
-          <div class="itd-sidebar__label">Bibliothèque</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.bibliotheque' | translate }}</div>
           <div class="itd-sidebar__value">
             <i class="bi bi-building me-1 text-muted"></i>{{ val(item.bibliotheque) }}
           </div>
         </div>
 
         <div class="itd-sidebar__block" *ngIf="item.localisation_emplacement">
-          <div class="itd-sidebar__label">Localisation</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.localisation' | translate }}</div>
           <div class="itd-sidebar__value">{{ item.localisation_emplacement }}</div>
         </div>
 
         <div class="itd-sidebar__block" *ngIf="item.fonds_budgetaire">
-          <div class="itd-sidebar__label">Fonds budgétaire</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.fonds-budgetaire' | translate }}</div>
           <div class="itd-sidebar__value itd-sidebar__value--accent">
             <i class="bi bi-wallet2 me-1"></i>{{ item.fonds_budgetaire }}
           </div>
@@ -120,14 +120,14 @@
 
         <!-- Métadonnées -->
         <div class="itd-sidebar__meta">
-          <div class="itd-sidebar__label">Créé le</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.cree-le' | translate }}</div>
           <div class="itd-sidebar__value">{{ item.date_creation | date:'yyyy-MM-dd' }}</div>
         </div>
         <div class="itd-sidebar__meta" *ngIf="item.date_modification">
-          <div class="itd-sidebar__label">Modifié le</div>
+          <div class="itd-sidebar__label">{{ 'item-detail.modifie-le' | translate }}</div>
           <div class="itd-sidebar__value">{{ item.date_modification | date:'yyyy-MM-dd' }}</div>
           <div class="itd-sidebar__value text-muted small" *ngIf="item.utilisateur_modification">
-            par {{ item.utilisateur_modification }}
+            {{ 'item-detail.par' | translate }} {{ item.utilisateur_modification }}
           </div>
         </div>
 
@@ -139,58 +139,58 @@
         <!-- ── Section : Document ───────────────────────────── -->
         <div class="itd-card">
           <div class="itd-card__header">
-            <i class="bi bi-book me-2"></i>Informations sur le document
+            <i class="bi bi-book me-2"></i>{{ 'item-detail.section-document' | translate }}
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
 
               <div class="col-md-8">
                 <div class="itd-field">
-                  <span class="itd-field__label">Titre</span>
+                  <span class="itd-field__label">{{ 'item-detail.titre' | translate }}</span>
                   <span class="itd-field__value fw-semibold">{{ val(item.titre_document) }}</span>
                 </div>
               </div>
               <div class="col-md-4" *ngIf="item.sous_titre">
                 <div class="itd-field">
-                  <span class="itd-field__label">Sous-titre</span>
+                  <span class="itd-field__label">{{ 'item-detail.sous-titre' | translate }}</span>
                   <span class="itd-field__value">{{ item.sous_titre }}</span>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Éditeur</span>
+                  <span class="itd-field__label">{{ 'item-detail.editeur' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.editeur) }}</span>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="itd-field">
-                  <span class="itd-field__label">ISBN / ISSN</span>
+                  <span class="itd-field__label">{{ 'item-detail.isbn-issn' | translate }}</span>
                   <span class="itd-field__value font-monospace">{{ val(item.isbn_issn) }}</span>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="itd-field">
-                  <span class="itd-field__label">Date de publication</span>
+                  <span class="itd-field__label">{{ 'item-detail.date-publication' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.date_publication) }}</span>
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="itd-field">
-                  <span class="itd-field__label">ID Ressource</span>
+                  <span class="itd-field__label">{{ 'item-detail.id-ressource' | translate }}</span>
                   <span class="itd-field__value font-monospace small">{{ val(item.id_ressource) }}</span>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Catégorie</span>
+                  <span class="itd-field__label">{{ 'item-detail.categorie' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.categorie_document) }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Format / Support</span>
+                  <span class="itd-field__label">{{ 'item-detail.format-support' | translate }}</span>
                   <span class="itd-field__value">
                     <span class="badge" [ngClass]="isElectronique() ? 'bg-info text-white' : 'bg-secondary'">
                       {{ val(item.format_support) }}
@@ -200,7 +200,7 @@
               </div>
               <div class="col-md-4" *ngIf="item.catalogue">
                 <div class="itd-field">
-                  <span class="itd-field__label">Catalogue</span>
+                  <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
                   <span class="itd-field__value">{{ item.catalogue }}</span>
                 </div>
               </div>
@@ -212,14 +212,14 @@
         <!-- ── Section : Acquisition & Finances ─────────────── -->
         <div class="itd-card">
           <div class="itd-card__header">
-            <i class="bi bi-wallet2 me-2"></i>Acquisition &amp; Finances
+            <i class="bi bi-wallet2 me-2"></i>{{ 'item-detail.section-acquisition' | translate }}
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
 
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Fonds budgétaire</span>
+                  <span class="itd-field__label">{{ 'item-detail.fonds-budgetaire' | translate }}</span>
                   <span class="itd-field__value itd-field__value--accent fw-semibold">
                     {{ val(item.fonds_budgetaire) }}
                   </span>
@@ -227,30 +227,30 @@
               </div>
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Fonds SN – No projet</span>
+                  <span class="itd-field__label">{{ 'item-detail.fonds-sn' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.fonds_sn_projet) }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Projet spécial</span>
+                  <span class="itd-field__label">{{ 'item-detail.projet-special' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.projet_special) }}</span>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="itd-field">
-                  <span class="itd-field__label">Fournisseur</span>
+                  <span class="itd-field__label">{{ 'item-detail.fournisseur' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.fournisseur) }}</span>
                 </div>
               </div>
               <div class="col-md-8">
                 <div class="itd-field">
-                  <span class="itd-field__label">Source d'information</span>
+                  <span class="itd-field__label">{{ 'item-detail.source-info' | translate }}</span>
                   <span class="itd-field__value">
                     <a *ngIf="item.source_information; else noLink"
                        [href]="item.source_information" target="_blank">
-                      <i class="bi bi-box-arrow-up-right me-1"></i>Voir le lien
+                      <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'item-detail.voir-lien' | translate }}
                     </a>
                     <ng-template #noLink>—</ng-template>
                   </span>
@@ -264,7 +264,7 @@
                     <div class="row g-3">
                       <div class="col-md-3">
                         <div class="itd-field">
-                          <span class="itd-field__label">Prix total (CAD)</span>
+                          <span class="itd-field__label">{{ 'item-detail.prix-cad' | translate }}</span>
                           <span class="itd-field__value fw-semibold" style="color:var(--primary-green)">
                             {{ item.prix_cad ? '$' + item.prix_cad : '—' }}
                           </span>
@@ -272,25 +272,25 @@
                       </div>
                       <div class="col-md-2">
                         <div class="itd-field">
-                          <span class="itd-field__label">Devise</span>
+                          <span class="itd-field__label">{{ 'item-detail.devise' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.devise_originale) }}</span>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div class="itd-field">
-                          <span class="itd-field__label">Prix devise orig.</span>
+                          <span class="itd-field__label">{{ 'item-detail.prix-devise' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.prix_devise_originale) }}</span>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div class="itd-field">
-                          <span class="itd-field__label">Période couverte</span>
+                          <span class="itd-field__label">{{ 'item-detail.periode-couverte' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.periode_couverte) }}</span>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="itd-field">
-                          <span class="itd-field__label">Nb de titres inclus</span>
+                          <span class="itd-field__label">{{ 'item-detail.nb-titres' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.nombre_titres_inclus) }}</span>
                         </div>
                       </div>
@@ -303,21 +303,21 @@
               <ng-container *ngIf="isElectronique()">
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Nombre d'utilisateurs</span>
+                    <span class="itd-field__label">{{ 'item-detail.nb-utilisateurs' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.nombre_utilisateurs) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Format PrêtNumérique</span>
+                    <span class="itd-field__label">{{ 'item-detail.format-pret' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.format_pret_numerique) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.lien_plateforme">
                   <div class="itd-field">
-                    <span class="itd-field__label">Lien plateforme</span>
+                    <span class="itd-field__label">{{ 'item-detail.lien-plateforme' | translate }}</span>
                     <a [href]="item.lien_plateforme" target="_blank" class="itd-field__value">
-                      <i class="bi bi-box-arrow-up-right me-1"></i>Accéder
+                      <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'item-detail.acceder' | translate }}
                     </a>
                   </div>
                 </div>
@@ -331,7 +331,7 @@
         <div class="itd-card" *ngIf="hasSpecificData()">
           <div class="itd-card__header">
             <i class="bi bi-list-check me-2"></i>{{ item.formulaire_type }}
-            <span class="itd-card__header-sub ms-2">— champs spécifiques</span>
+            <span class="itd-card__header-sub ms-2">{{ 'item-detail.champs-specifiques' | translate }}</span>
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
@@ -340,25 +340,25 @@
               <ng-container *ngIf="item.formulaire_type === 'Modification et CCOL'">
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Numéro OCLC</span>
+                    <span class="itd-field__label">{{ 'item-detail.numero-oclc' | translate }}</span>
                     <span class="itd-field__value font-monospace">{{ val(item.numero_oclc) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Date début abonnement</span>
+                    <span class="itd-field__label">{{ 'item-detail.date-debut-abonnement' | translate }}</span>
                     <span class="itd-field__value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_aviser_activation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Usager à aviser — Activation</span>
+                    <span class="itd-field__label">{{ 'item-detail.usager-aviser-activation' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_aviser_activation) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.precision_demande">
                   <div class="itd-field">
-                    <span class="itd-field__label">Précision de la demande</span>
+                    <span class="itd-field__label">{{ 'item-detail.precision-demande' | translate }}</span>
                     <span class="itd-note">{{ item.precision_demande }}</span>
                   </div>
                 </div>
@@ -368,19 +368,19 @@
               <ng-container *ngIf="item.formulaire_type === 'Nouvel abonnement'">
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Date début abonnement</span>
+                    <span class="itd-field__label">{{ 'item-detail.date-debut-abonnement' | translate }}</span>
                     <span class="itd-field__value">{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Type de monographie</span>
+                    <span class="itd-field__label">{{ 'item-detail.type-monographie' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_aviser_reservation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Usager à aviser — Réservation</span>
+                    <span class="itd-field__label">{{ 'item-detail.usager-aviser-reservation' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_aviser_reservation) }}</span>
                   </div>
                 </div>
@@ -390,67 +390,67 @@
               <ng-container *ngIf="item.formulaire_type === 'Nouvel achat unique'">
                 <div class="col-md-2" *ngIf="item.quantite">
                   <div class="itd-field">
-                    <span class="itd-field__label">Quantité</span>
+                    <span class="itd-field__label">{{ 'item-detail.quantite' | translate }}</span>
                     <span class="itd-field__value fw-semibold">{{ item.quantite }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.projets_speciaux && item.projets_speciaux !== 'Ne s\'applique pas'">
                   <div class="itd-field">
-                    <span class="itd-field__label">Projet spécial</span>
+                    <span class="itd-field__label">{{ 'item-detail.projet-special' | translate }}</span>
                     <span class="itd-field__value">{{ item.projets_speciaux }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.type_monographie">
                   <div class="itd-field">
-                    <span class="itd-field__label">Type monographie</span>
+                    <span class="itd-field__label">{{ 'item-detail.type-monographie' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.format_electronique">
                   <div class="itd-field">
-                    <span class="itd-field__label">Format électronique</span>
+                    <span class="itd-field__label">{{ 'item-detail.format-support' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.format_electronique) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.bordereau_imprime">
                   <div class="itd-field">
-                    <span class="itd-field__label">Bordereau imprimé</span>
+                    <span class="itd-field__label">{{ 'item-detail.bordereau-imprime' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_aviser_reservation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Usager à aviser — Réservation</span>
+                    <span class="itd-field__label">{{ 'item-detail.usager-aviser-reservation' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_aviser_reservation) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_aviser_activation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Usager à aviser — Activation</span>
+                    <span class="itd-field__label">{{ 'item-detail.usager-aviser-activation' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_aviser_activation) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.reserve_cours">
                   <div class="itd-infoband itd-infoband--gray">
                     <div class="itd-infoband__title">
-                      <i class="bi bi-mortarboard me-2"></i>Réserve de cours
+                      <i class="bi bi-mortarboard me-2"></i>{{ 'item-detail.reserve-cours' | translate }}
                     </div>
                     <div class="row mt-2 g-2">
                       <div class="col-md-4">
                         <div class="itd-field">
-                          <span class="itd-field__label">Sigle</span>
+                          <span class="itd-field__label">{{ 'item-detail.sigle' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.reserve_cours_sigle) }}</span>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="itd-field">
-                          <span class="itd-field__label">Session</span>
+                          <span class="itd-field__label">{{ 'item-detail.session' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.reserve_cours_session) }}</span>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="itd-field">
-                          <span class="itd-field__label">Enseignant</span>
+                          <span class="itd-field__label">{{ 'item-detail.enseignant' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.reserve_cours_enseignant) }}</span>
                         </div>
                       </div>
@@ -463,25 +463,25 @@
               <ng-container *ngIf="item.formulaire_type === 'PEB Tipasa numérique'">
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Livre vu sur GOBI / Leslibraires.ca ?</span>
+                    <span class="itd-field__label">{{ 'item-detail.gobi-format-numerique' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.gobi_vu_format_numerique) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Référence Tipasa</span>
+                    <span class="itd-field__label">{{ 'item-detail.reference-tipasa' | translate }}</span>
                     <span class="itd-field__value font-monospace">{{ val(item.reference_tipasa) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">GOBI version &lt; 365 USD ?</span>
+                    <span class="itd-field__label">{{ 'item-detail.gobi-365' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.gobi_version_moins_365_usd) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__label">{{ 'item-detail.acq-responsable' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
                   </div>
                 </div>
@@ -491,55 +491,55 @@
               <ng-container *ngIf="item.formulaire_type === 'Requête ACQ Accessibilité'">
                 <div class="col-md-3" *ngIf="item.type_monographie">
                   <div class="itd-field">
-                    <span class="itd-field__label">Type de monographie</span>
+                    <span class="itd-field__label">{{ 'item-detail.type-monographie' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.type_monographie) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.reference_usager">
                   <div class="itd-field">
-                    <span class="itd-field__label">Référence usager</span>
+                    <span class="itd-field__label">{{ 'item-detail.reference-usager' | translate }}</span>
                     <span class="itd-field__value font-monospace">{{ val(item.reference_usager) }}</span>
                   </div>
                 </div>
                 <div class="col-md-5" *ngIf="item.besoin_specifique_format">
                   <div class="itd-field">
-                    <span class="itd-field__label">Besoin spécifique (format)</span>
+                    <span class="itd-field__label">{{ 'item-detail.besoin-format' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.besoin_specifique_format) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.fournisseur_contacte_sans_succes">
                   <div class="itd-field">
-                    <span class="itd-field__label">Fournisseur contacté sans succès</span>
+                    <span class="itd-field__label">{{ 'item-detail.fournisseur-contacte' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.fournisseur_contacte_sans_succes) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.exemplaire_detenu">
                   <div class="itd-field">
-                    <span class="itd-field__label">Exemplaire détenu</span>
+                    <span class="itd-field__label">{{ 'item-detail.exemplaire-detenu' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.exemplaire_detenu) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.verification_caeb">
                   <div class="itd-field">
-                    <span class="itd-field__label">Vérification CAEB</span>
+                    <span class="itd-field__label">{{ 'item-detail.caeb' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.verification_caeb) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.verification_sqla">
                   <div class="itd-field">
-                    <span class="itd-field__label">Vérification SQLA</span>
+                    <span class="itd-field__label">{{ 'item-detail.sqla' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.verification_sqla) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.verification_emma">
                   <div class="itd-field">
-                    <span class="itd-field__label">Vérification EMMA</span>
+                    <span class="itd-field__label">{{ 'item-detail.emma' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.verification_emma) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.permalien_sofia">
                   <div class="itd-field">
-                    <span class="itd-field__label">Permalien SOFIA</span>
+                    <span class="itd-field__label">{{ 'item-detail.permalien-sofia' | translate }}</span>
                     <span class="itd-field__value">
                       <a [href]="item.permalien_sofia" target="_blank" rel="noopener">{{ val(item.permalien_sofia) }}</a>
                     </span>
@@ -547,25 +547,25 @@
                 </div>
                 <div class="col-md-3" *ngIf="item.acq_responsable_courriel">
                   <div class="itd-field">
-                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__label">{{ 'item-detail.acq-responsable' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.acq_numerisation_recommandee">
                   <div class="itd-field">
-                    <span class="itd-field__label">Numérisation recommandée</span>
+                    <span class="itd-field__label">{{ 'item-detail.numerisation' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_numerisation_recommandee) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.acq_date_demande_editeur">
                   <div class="itd-field">
-                    <span class="itd-field__label">Date demande à l'éditeur</span>
+                    <span class="itd-field__label">{{ 'item-detail.date-demande-editeur' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_date_demande_editeur) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.acq_date_livraison_estimee">
                   <div class="itd-field">
-                    <span class="itd-field__label">Date livraison estimée</span>
+                    <span class="itd-field__label">{{ 'item-detail.date-livraison' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_date_livraison_estimee) }}</span>
                   </div>
                 </div>
@@ -575,72 +575,72 @@
               <ng-container *ngIf="item.formulaire_type === 'Suggestion d\'achat' || item.formulaire_type === 'Suggestion d\'achat - Usager'">
                 <div class="col-md-4" *ngIf="item.auteur">
                   <div class="itd-field">
-                    <span class="itd-field__label">Auteur(rice)</span>
+                    <span class="itd-field__label">{{ 'item-detail.auteur' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.auteur) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.acq_isbn">
                   <div class="itd-field">
-                    <span class="itd-field__label">ISBN (suggestion)</span>
+                    <span class="itd-field__label">{{ 'item-detail.isbn-suggestion' | translate }}</span>
                     <span class="itd-field__value font-monospace">{{ val(item.acq_isbn) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.date_requise_cours">
                   <div class="itd-field">
-                    <span class="itd-field__label">Requis pour cours</span>
+                    <span class="itd-field__label">{{ 'item-detail.requis-cours' | translate }}</span>
                     <span class="itd-field__value">{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_statut">
                   <div class="itd-field">
-                    <span class="itd-field__label">Statut de l'usager</span>
+                    <span class="itd-field__label">{{ 'item-detail.statut-usager' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_statut) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_faculte">
                   <div class="itd-field">
-                    <span class="itd-field__label">Faculté / Département</span>
+                    <span class="itd-field__label">{{ 'item-detail.faculte' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_faculte) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_courriel">
                   <div class="itd-field">
-                    <span class="itd-field__label">Courriel de l'usager</span>
+                    <span class="itd-field__label">{{ 'item-detail.courriel-usager' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_courriel) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.bibliothecaire_disciplinaire">
                   <div class="itd-field">
-                    <span class="itd-field__label">Bibliothécaire disciplinaire</span>
+                    <span class="itd-field__label">{{ 'item-detail.bibliothecaire-disc' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.bibliothecaire_disciplinaire) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Aviser — Réservation</span>
+                    <span class="itd-field__label">{{ 'item-detail.aviser-reservation' | translate }}</span>
                     <span class="badge" [ngClass]="item.aviser_reservation ? 'bg-success' : 'bg-secondary'">
-                      {{ item.aviser_reservation ? 'Oui' : 'Non' }}
+                      {{ item.aviser_reservation ? ('item-detail.oui' | translate) : ('item-detail.non' | translate) }}
                     </span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Aviser — Réception</span>
+                    <span class="itd-field__label">{{ 'item-detail.aviser-reception' | translate }}</span>
                     <span class="badge" [ngClass]="item.aviser_reception ? 'bg-success' : 'bg-secondary'">
-                      {{ item.aviser_reception ? 'Oui' : 'Non' }}
+                      {{ item.aviser_reception ? ('item-detail.oui' | translate) : ('item-detail.non' | translate) }}
                     </span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.bordereau_imprime">
                   <div class="itd-field">
-                    <span class="itd-field__label">Bordereau imprimé</span>
+                    <span class="itd-field__label">{{ 'item-detail.bordereau-imprime' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.bordereau_imprime) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.reserve_cours">
                   <div class="itd-field">
-                    <span class="itd-field__label">En réserve de cours</span>
-                    <span class="badge bg-info text-dark">Oui</span>
+                    <span class="itd-field__label">{{ 'item-detail.reserve-cours-label' | translate }}</span>
+                    <span class="badge bg-info text-dark">{{ 'item-detail.oui' | translate }}</span>
                     <span class="itd-field__value ms-2" *ngIf="item.reserve_cours_sigle">
                       {{ item.reserve_cours_sigle }}
                     </span>
@@ -648,33 +648,33 @@
                 </div>
                 <div class="col-md-4" *ngIf="item.acq_responsable_courriel">
                   <div class="itd-field">
-                    <span class="itd-field__label">ACQ : Responsable (courriel)</span>
+                    <span class="itd-field__label">{{ 'item-detail.acq-responsable' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="itd-field">
-                    <span class="itd-field__label">Suggestion transmise TECHDOC</span>
+                    <span class="itd-field__label">{{ 'item-detail.suggestion-techdoc' | translate }}</span>
                     <span class="badge" [ngClass]="item.techdoc_suggestion_transmise ? 'bg-success' : 'bg-secondary'">
-                      {{ item.techdoc_suggestion_transmise ? 'Oui' : 'Non' }}
+                      {{ item.techdoc_suggestion_transmise ? ('item-detail.oui' | translate) : ('item-detail.non' | translate) }}
                     </span>
                   </div>
                 </div>
                 <div class="col-md-4" *ngIf="item.usager_nom">
                   <div class="itd-field">
-                    <span class="itd-field__label">Nom de l'usager</span>
+                    <span class="itd-field__label">{{ 'item-detail.nom-usager' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.usager_nom) }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.note_usager">
                   <div class="itd-field">
-                    <span class="itd-field__label">Notes et commentaires de l'usager</span>
+                    <span class="itd-field__label">{{ 'item-detail.notes-usager' | translate }}</span>
                     <span class="itd-note">{{ item.note_usager }}</span>
                   </div>
                 </div>
                 <div class="col-12" *ngIf="item.acq_raison_annulation">
                   <div class="itd-field">
-                    <span class="itd-field__label">Raison d'annulation</span>
+                    <span class="itd-field__label">{{ 'item-detail.raison-annulation' | translate }}</span>
                     <span class="itd-note">{{ item.acq_raison_annulation }}</span>
                   </div>
                 </div>
@@ -688,45 +688,45 @@
         <div class="itd-card"
              *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm !== undefined || item.suivi_acq || item.note_acq || item.bibliotheque_note_interne">
           <div class="itd-card__header">
-            <i class="bi bi-sticky me-2"></i>Notes &amp; Catalogage
+            <i class="bi bi-sticky me-2"></i>{{ 'item-detail.section-notes' | translate }}
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
               <div class="col-md-3" *ngIf="item.creation_notice_dtdm !== undefined">
                 <div class="itd-field">
-                  <span class="itd-field__label">Création notice DTDM</span>
+                  <span class="itd-field__label">{{ 'item-detail.notice-dtdm' | translate }}</span>
                   <span class="badge" [ngClass]="item.creation_notice_dtdm ? 'bg-success' : 'bg-light text-dark border'">
-                    {{ item.creation_notice_dtdm ? 'Oui' : 'Non' }}
+                    {{ item.creation_notice_dtdm ? ('item-detail.oui' | translate) : ('item-detail.non' | translate) }}
                   </span>
                 </div>
               </div>
               <div class="col-md-3" *ngIf="item.suivi_acq">
                 <div class="itd-field">
-                  <span class="itd-field__label">ACQ : Suivi de la demande</span>
+                  <span class="itd-field__label">{{ 'item-detail.suivi-acq' | translate }}</span>
                   <span class="badge bg-secondary">{{ item.suivi_acq }}</span>
                 </div>
               </div>
               <div class="col-md-6" *ngIf="item.note_dtdm">
                 <div class="itd-field">
-                  <span class="itd-field__label">Note DTDM (Catalogage)</span>
+                  <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
                   <span class="itd-note">{{ item.note_dtdm }}</span>
                 </div>
               </div>
               <div class="col-md-6" *ngIf="item.note_commentaire">
                 <div class="itd-field">
-                  <span class="itd-field__label">Note / Commentaire bibliothèque</span>
+                  <span class="itd-field__label">{{ 'item-detail.note-commentaire' | translate }}</span>
                   <span class="itd-note">{{ item.note_commentaire }}</span>
                 </div>
               </div>
               <div class="col-md-6" *ngIf="item.note_acq">
                 <div class="itd-field">
-                  <span class="itd-field__label">Acquisitions : Note / Commentaire</span>
+                  <span class="itd-field__label">{{ 'item-detail.note-acq' | translate }}</span>
                   <span class="itd-note">{{ item.note_acq }}</span>
                 </div>
               </div>
               <div class="col-md-6" *ngIf="item.bibliotheque_note_interne">
                 <div class="itd-field">
-                  <span class="itd-field__label">Bibliothèque — Note interne</span>
+                  <span class="itd-field__label">{{ 'item-detail.note-interne' | translate }}</span>
                   <span class="itd-note">{{ item.bibliotheque_note_interne }}</span>
                 </div>
               </div>

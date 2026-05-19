@@ -7,10 +7,10 @@
     </div>
     <div>
       <h2 class="uh-greeting__title">
-        Bonjour<span *ngIf="prenomAdmin">, {{ prenomAdmin }}</span>
+        {{ 'usager-home.bonjour' | translate }}<span *ngIf="prenomAdmin">, {{ prenomAdmin }}</span>
       </h2>
       <p class="uh-greeting__sub">
-        Sélectionnez le formulaire correspondant à votre demande.
+        {{ 'usager-home.subtitle' | translate }}
       </p>
     </div>
   </div>
@@ -36,7 +36,7 @@
         <h3 class="uh-card__title">{{ f.titre }}</h3>
         <p class="uh-card__desc">{{ f.description }}</p>
         <span class="uh-card__cta">
-          Accéder au formulaire
+          {{ 'usager-home.acceder' | translate }}
           <i class="bi bi-arrow-right"></i>
         </span>
       </div>
@@ -47,7 +47,7 @@
   <!-- ── Note ──────────────────────────────────── -->
   <p class="uh-note">
     <i class="bi bi-info-circle"></i>
-    Pour toute question, contactez votre bibliothécaire disciplinaire.
+    {{ 'usager-home.note' | translate }}
   </p>
 
 </div>

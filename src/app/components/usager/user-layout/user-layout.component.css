@@ -1,3 +1,42 @@
-.bg-usager{
-    background: #0b113a;
+.bg-usager {
+  background: #0b113a;
+}
+
+/* ── Sélecteur de langue ── */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 2px 6px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 5px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.lang-btn:hover {
+  color: #fff;
+}
+
+.lang-btn--active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.lang-sep {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+  line-height: 1;
+  user-select: none;
 }
