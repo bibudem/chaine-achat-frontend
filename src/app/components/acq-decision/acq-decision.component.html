@@ -84,14 +84,22 @@
               </small>
             </div>
 
-            <div class="col-12">
+            <div class="col-md-6">
               <label for="note_acq" class="form-label">{{ 'acq-decision.note' | translate }}</label>
               <textarea id="note_acq" formControlName="note_acq" rows="4"
                         class="form-control"
                         [placeholder]="'acq-decision.note-placeholder' | translate"></textarea>
             </div>
+
+            <div class="col-md-6">
+              <label for="bibliotheque_note_interne" class="form-label">{{ 'item-formulaire.note-interne' | translate }}</label>
+              <textarea id="bibliotheque_note_interne" formControlName="bibliotheque_note_interne" rows="4"
+                        class="form-control"
+                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
+            </div>
           </div>
         </div>
+
 
         <div class="form-actions d-flex justify-content-between">
           <button type="button" class="btn acq-btn-outline" (click)="goBack()">

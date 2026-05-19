@@ -38,8 +38,9 @@ export class AcqDecisionComponent implements OnInit {
     private reponsesService: ReponsesService
   ) {
     this.form = this.fb.group({
-      suivi_acq: ['', Validators.required],
-      note_acq:  ['']
+      suivi_acq:                 ['', Validators.required],
+      note_acq:                  [''],
+      bibliotheque_note_interne: [''],
     });
   }
 
@@ -63,8 +64,9 @@ export class AcqDecisionComponent implements OnInit {
           this.itemExisteDansItems = true;
           this.item = response.data;
           this.form.patchValue({
-            suivi_acq: response.data.suivi_acq || '',
-            note_acq:  response.data.note_acq  || ''
+            suivi_acq:                 response.data.suivi_acq || '',
+            note_acq:                  response.data.note_acq  || '',
+            bibliotheque_note_interne: response.data.bibliotheque_note_interne || '',
           }, { emitEvent: false });
         } else {
           this.chargerDepuisReponse();
@@ -165,7 +167,7 @@ export class AcqDecisionComponent implements OnInit {
       'source_information', 'prix_cad', 'devise_originale', 'prix_devise_originale',
       'nombre_titres_inclus', 'nombre_utilisateurs', 'lien_plateforme',
       'format_pret_numerique', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
-      'note_commentaire'
+      'note_commentaire', 'bibliotheque_note_interne'
     ];
 
     const payload: Record<string, any> = { suivi_acq, note_acq };
@@ -264,20 +266,21 @@ export class AcqDecisionComponent implements OnInit {
     this.errorMessage = null;
     this.successMessage = null;
 
-    const suivi_acq = this.form.get('suivi_acq')?.value;
-    const note_acq  = this.form.get('note_acq')?.value || null;
+    const suivi_acq                 = this.form.get('suivi_acq')?.value;
+    const note_acq                  = this.form.get('note_acq')?.value || null;
+    const bibliotheque_note_interne = this.form.get('bibliotheque_note_interne')?.value || null;
 
     const specificData = this.buildSpecificData();
 
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, note_acq, ...(specificData ? { specificData } : {}) },
+          { item_id: this.itemId, suivi_acq, note_acq, bibliotheque_note_interne, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          this.buildItemPayload(suivi_acq, note_acq),
+          { ...this.buildItemPayload(suivi_acq, note_acq), bibliotheque_note_interne },
           this.httpOptions
         );
 
