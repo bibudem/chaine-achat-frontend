@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -31,6 +32,7 @@ export class AcqDecisionComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private http: HttpClient,
     private itemService: ItemFormulaireService,
     private reponsesService: ReponsesService
@@ -39,6 +41,10 @@ export class AcqDecisionComponent implements OnInit {
       suivi_acq: ['', Validators.required],
       note_acq:  ['']
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   ngOnInit(): void {

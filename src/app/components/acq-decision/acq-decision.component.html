@@ -93,7 +93,10 @@
           </div>
         </div>
 
-        <div class="form-actions d-flex justify-content-end">
+        <div class="form-actions d-flex justify-content-between">
+          <button type="button" class="btn acq-btn-outline" (click)="goBack()">
+            <i class="bi bi-arrow-left me-2"></i>{{ 'btn-return' | translate }}
+          </button>
           <button type="submit" class="btn acq-btn-primary" [disabled]="submitting || form.invalid">
             <span *ngIf="!submitting">
               <i class="bi bi-check-circle me-2"></i>{{ 'acq-decision.enregistrer' | translate }}
