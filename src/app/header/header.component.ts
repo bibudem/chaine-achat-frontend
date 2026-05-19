@@ -12,29 +12,22 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  //chercher le nom de la session
-  nomAdmin: string | null = '';
-  prenomAdmin : string | null = '';
-  groupeAdmin : string | null = '';
   message: string = 'Vous êtes déconnecté.';
   flagChoix:string= 'flag-icon-fr';
 
   currentDate = new Date();
   isProduction = environment.production;
 
+  get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
+  get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
+  get groupeAdmin(): string { return sessionStorage.getItem('groupeAdmin') ?? ''; }
+
   constructor(public authService: AuthService,
               private translate: TranslateService,
               public router: Router) { }
+
   ngOnInit(){
-
     this.translate.setDefaultLang('fr');
-    this.flagChoix= 'flag-icon-fr';
-    //chercher le nom de la session
-    this.nomAdmin = sessionStorage.getItem('nomAdmin');
-    this.prenomAdmin = sessionStorage.getItem('prenomAdmin');
-    this.groupeAdmin = sessionStorage.getItem('groupeAdmin');
-
-
   }
   // Informe l'utilisateur sur son authentfication.
   setMessage() {

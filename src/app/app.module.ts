@@ -31,7 +31,8 @@ import { LoginComponent } from './components/login/login.component';
 import { LoginRoutingModule } from './components/login/login-routing.module';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from "./services/auth-guard.service";
-import {AdminGuard} from "./services/admin-guard.service";
+import { AdminGuard } from "./services/admin-guard.service";
+import { EditGuard } from "./services/edit-guard.service";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr, 'fr');
@@ -135,6 +136,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
     DialogService,
     AuthGuard,
     AdminGuard,
+    EditGuard,
     { provide: LOCALE_ID, useValue: "fr-FR" }
   ],
   bootstrap: [AppComponent]

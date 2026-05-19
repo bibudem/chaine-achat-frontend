@@ -23,16 +23,17 @@ import { NouvelAbonnementComponent } from './components/usager/pages/nouvel-abon
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
+import { EditGuard } from './services/edit-guard.service';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'items/nouveau', component: ItemFormulaireComponent },
-  { path: 'items/details/:id', component: ItemDetailComponent },
-  { path: 'items/:id', component: ItemFormulaireComponent },
-  { path: 'items', component: ItemsListComponent },
+  { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, EditGuard] },
+  { path: 'items/details/:id', component: ItemDetailComponent, canActivate: [AuthGuard] },
+  { path: 'items/:id', component: ItemFormulaireComponent, canActivate: [AuthGuard, EditGuard] },
+  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
   { path: 'acq-decision', component: AcqDecisionComponent, canActivate: [AuthGuard] },
-  { path: 'rapport', component: RapportsComponent },
+  { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard] },
   { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },
   // ── Nouvelle section usager ──

@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-items-list',
@@ -39,7 +40,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     private itemService: ItemFormulaireService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {

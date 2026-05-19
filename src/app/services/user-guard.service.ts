@@ -8,7 +8,7 @@ export class UserGuard implements CanActivate {
 
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
-    if (role === 'Usager' || role === 'Admin') {
+    if (role === 'Usager' || role === 'Admin' || role === 'Bibliothécaire') {
       return true;
     }
     this.router.navigate(['/not-acces']);

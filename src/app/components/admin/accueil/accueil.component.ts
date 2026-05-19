@@ -5,6 +5,7 @@ import { DialogService } from '../../../services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-accueil',
@@ -91,7 +92,8 @@ export class AccueilComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private dialog: DialogService,
     private translate: TranslateService,
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {

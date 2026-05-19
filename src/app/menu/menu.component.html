@@ -20,7 +20,7 @@
     </li>
 
     <!-- Ajouter — actif uniquement sur /items/nouveau -->
-    <li class="nav-item" [class.active]="isAddItemRoute">
+    <li *ngIf="authService.canEdit" class="nav-item" [class.active]="isAddItemRoute">
       <a class="nav-link" routerLink="/items/nouveau">
         <i class="bi bi-file-earmark-plus menu-icon"></i>
         <span class="menu-title">{{ 'menu.ajouter' | translate }}</span>
@@ -38,7 +38,7 @@
     </li>
 
     <!-- Processus / Import -->
-    <li class="nav-item"
+    <li *ngIf="authService.isAdmin" class="nav-item"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }">
       <a class="nav-link" routerLink="/import">
@@ -63,7 +63,7 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"
               routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }" *ngIf="ifAdmin">
+              [routerLinkActiveOptions]="{ exact: true }" *ngIf="!authService.isUsager">
             <a class="nav-link" routerLink="/reponses">
               {{ 'menu.reponses' | translate }}
             </a>

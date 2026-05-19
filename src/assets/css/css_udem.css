@@ -2339,6 +2339,7 @@ body.sidebar-open { overflow: hidden; }
   border: 1px solid #0b113a;
 }
 
+
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 576px) {
   .confirmation-screen       { padding: 36px 20px 32px; }

@@ -1,0 +1,144 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #00305F 0%, #00407F 50%, #0057AC 100%);
+  padding: 1.5rem;
+}
+
+.login-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 2.5rem 2.25rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0, 48, 95, 0.30);
+  text-align: center;
+}
+
+/* ── Logo ── */
+.login-logo {
+  margin-bottom: 1.75rem;
+}
+
+.login-logo__img {
+  height: 48px;
+  filter: invert(14%) sepia(83%) saturate(938%) hue-rotate(186deg) brightness(73%) contrast(107%);
+  margin-bottom: .6rem;
+}
+
+.login-logo__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #00407F;
+  letter-spacing: -.01em;
+}
+
+.login-logo__app {
+  font-size: .875rem;
+  color: #607386;
+  margin-top: .15rem;
+}
+
+/* ── Badge avertissement ── */
+.login-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: .775rem;
+  background: #FFF3CD;
+  color: #856404;
+  border: 1px solid #FFE5A0;
+  border-radius: 20px;
+  padding: .3rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Hint ── */
+.login-hint {
+  font-size: .9rem;
+  color: #607386;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Cards ── */
+.login-cards {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  margin-bottom: 2rem;
+}
+
+.login-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #E4EBF3;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.login-card:hover,
+.login-card:focus {
+  border-color: #00407F;
+  background: #F0F6FF;
+  box-shadow: 0 4px 16px rgba(0, 64, 127, .12);
+  outline: none;
+}
+
+.login-card__icon-wrap {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  background: #E8F0FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.35rem;
+  color: #00407F;
+}
+
+.login-card:hover .login-card__icon-wrap {
+  background: #CCE2F3;
+}
+
+.login-card__text {
+  flex: 1;
+}
+
+.login-card__label {
+  font-weight: 600;
+  font-size: .95rem;
+  color: #0B113A;
+}
+
+.login-card__desc {
+  font-size: .8rem;
+  color: #607386;
+  margin-top: .1rem;
+}
+
+.login-card__arrow {
+  color: #B0BEC8;
+  font-size: .9rem;
+  flex-shrink: 0;
+  transition: color .18s;
+}
+
+.login-card:hover .login-card__arrow {
+  color: #00407F;
+}
+
+/* ── Footer ── */
+.login-footer {
+  font-size: .75rem;
+  color: #B0BEC8;
+  margin: 0;
+  line-height: 1.5;
+}

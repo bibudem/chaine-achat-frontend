@@ -1,55 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, SimulatedProfile, SIMULATED_PROFILES } from '../../services/auth.service';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-  message: string = 'Vous êtes déconnecté !';
-  courriel: string | undefined;
-  password: string | undefined;
-  isLoggedIn:boolean=false
+export class LoginComponent {
+  profiles = SIMULATED_PROFILES;
 
-  constructor(public authService: AuthService,
-              public router: Router) { }
+  constructor(public authService: AuthService, private router: Router) {}
 
-  async ngOnInit() {
-    await this.login()
+  select(profile: SimulatedProfile): void {
+    this.authService.simulateLogin(profile);
+    const saved = this.authService.redirectUrl;
+    this.authService.redirectUrl = '/accueil';
+    const fallback = profile.role === 'Usager' ? '/usager' : '/accueil';
+    const dest = (saved && saved !== '/accueil') ? saved : fallback;
+    this.router.navigateByUrl(dest);
   }
-
-  // Informe l'utilisateur sur son authentfication.
-  setMessage() {
-    this.message = this.authService.isLoggedIn ?
-      'Vous êtes connecté.' : 'Identifiant ou mot de passe incorrect.';
-  }
-
-
-  // Connecte l'utilisateur auprès du Guard
-
-  async login() {
-        this.message = 'Tentative de connexion en cours ...';
-        // @ts-ignore
-        (await this.authService.login()).subscribe(() => {
-          this.setMessage();
-          if (this.authService.isLoggedIn) {
-            // Récupère l'URL de redirection depuis le service d'authentification
-            // Si aucune redirection n'a été définis, redirige l'utilisateur vers la page d'accueil.
-            const redirect = this.authService.redirectUrl || '/accueil';
-            this.router.navigateByUrl(redirect);
-          } else {
-            //alert('logout11')
-            this.logout()
-          }
-        });
-  }
-
-  // Logout l'utilisateur
-  async logout() {
-    await this.authService.logout();
-  }
-
-
 }

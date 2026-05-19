@@ -1,1 +1,30 @@
+<div class="login-page">
+  <div class="login-box">
 
+    <div class="login-logo">
+      <img src="assets/images/logo-udem-white.svg" alt="UdeM" class="login-logo__img">
+      <div class="login-logo__name">Bibliothèques UdeM</div>
+      <div class="login-logo__app">Gestion des acquisitions</div>
+    </div>
+
+    <div class="login-badge">
+      <i class="bi bi-exclamation-triangle me-1"></i>
+      Authentification simulée — installation locale
+    </div>
+
+    <p class="login-hint">Sélectionnez un profil pour accéder à l'application</p>
+
+    <div class="login-cards">
+      <button *ngFor="let p of profiles" class="login-card" (click)="select(p)">
+        <div class="login-card__icon-wrap">
+          <i class="bi {{ p.icon }}"></i>
+        </div>
+        <div class="login-card__text">
+          <div class="login-card__label">{{ p.label }}</div>
+          <div class="login-card__desc">{{ p.description }}</div>
+        </div>
+        <i class="bi bi-chevron-right login-card__arrow"></i>
+      </button>
+    </div>
+  </div>
+</div>

@@ -30,7 +30,7 @@
             <span class="info-chip__val">Mis à jour le {{ acqConfig.majDate }}</span>
           </div>
         </div>
-        <button class="info-chip__edit-btn" (click)="startEdit('repartition')" title="Modifier">
+        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('repartition')" title="Modifier">
           <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'repartition'" class="info-chip__dropdown">
@@ -64,7 +64,7 @@
           <span class="info-chip__label">Taux USD · {{ acqConfig.tauxPeriode }}</span>
           <span class="info-chip__val info-chip__val--lg">{{ acqConfig.tauxRate }}</span>
         </div>
-        <button class="info-chip__edit-btn" (click)="startEdit('taux')" title="Modifier">
+        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('taux')" title="Modifier">
           <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'taux'" class="info-chip__dropdown">

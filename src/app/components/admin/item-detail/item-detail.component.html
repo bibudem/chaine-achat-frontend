@@ -29,7 +29,11 @@
         <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
           <i class="bi bi-arrow-left"></i> Retour
         </button>
-        <button class="btn btn-primary btn-sm" (click)="onEdit()">
+        <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
+                [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}">
+          <i class="bi bi-clipboard-check me-1"></i>Décision ACQ
+        </button>
+        <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
           <i class="bi bi-pencil me-1"></i>Modifier
         </button>
       </div>

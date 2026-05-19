@@ -1,128 +1,119 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import {Injectable, OnInit} from "@angular/core";
-// RxJS 6
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import {tap, delay, catchError} from 'rxjs/operators';
+import { tap, delay } from 'rxjs/operators';
 
-import {User} from "../models/User";
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TYPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+export type UserRole = 'Admin' | 'Bibliothécaire' | 'Usager';
 
-import { ErrorHandlerService } from "./error-handler.service";
-import { Inject } from "@angular/core";
-import {DOCUMENT} from "@angular/common";
+export interface SimulatedProfile {
+  role:     UserRole;
+  nom:      string;
+  prenom:   string;
+  courriel: string;
+  groupe:   string;
+  /** Affiché sur la carte de sélection */
+  label:    string;
+  description: string;
+  icon:     string;
+}
+
+/**
+ * Profils de simulation pour l'installation locale.
+ * Supprimés (ou ignorés) lorsque l'authentification Azure AD sera activée.
+ */
+export const SIMULATED_PROFILES: SimulatedProfile[] = [
+  {
+    role:        'Admin',
+    nom:         'Admin',
+    prenom:      'Système',
+    courriel:    'admin@bib.umontreal.ca',
+    groupe:      'Gestionnaire',
+    label:       'Administrateur',
+    description: 'Accès complet — création, modification et suppression',
+    icon:        'bi-shield-lock-fill',
+  },
+  {
+    role:        'Bibliothécaire',
+    nom:         'Bibliothécaire',
+    prenom:      'Test',
+    courriel:    'bib@bib.umontreal.ca',
+    groupe:      'Bibliothécaire',
+    label:       'Bibliothécaire',
+    description: 'Consultation uniquement — lecture sans modification',
+    icon:        'bi-book-half',
+  },
+  {
+    role:        'Usager',
+    nom:         'Usager',
+    prenom:      'Test',
+    courriel:    'usager@umontreal.ca',
+    groupe:      'Usager',
+    label:       'Usager',
+    description: 'Accès aux formulaires de demande uniquement',
+    icon:        'bi-person-fill',
+  },
+];
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @Injectable()
 export class AuthService {
-  // Persisté via sessionStorage pour survivre aux rechargements de page
-  isLoggedIn: boolean = sessionStorage.getItem('role') !== null && sessionStorage.getItem('role') !== '';
 
-  redirectUrl: string | undefined = '/accueil';
+  isLoggedIn: boolean =
+    sessionStorage.getItem('role') !== null &&
+    sessionStorage.getItem('role') !== '';
 
-  // @ts-ignore
-  public user: User = {};
-  private data: any;
+  redirectUrl: string = '/accueil';
 
-  constructor(private http: HttpClient,
-              private errorHandlerService: ErrorHandlerService,
-              @Inject(DOCUMENT) readonly document: Document) {}
+  constructor(@Inject(DOCUMENT) readonly document: Document) {}
 
+  /* ── Accesseurs de rôle ──────────────────────── */
 
-  // Une méthode de connexion
-  // @ts-ignore
+  get role(): UserRole | null {
+    return sessionStorage.getItem('role') as UserRole | null;
+  }
+
+  get isAdmin(): boolean        { return this.role === 'Admin'; }
+  get isBibliothécaire(): boolean { return this.role === 'Bibliothécaire'; }
+  get isUsager(): boolean       { return this.role === 'Usager'; }
+
+  /** Seul l'Administrateur peut créer / modifier / supprimer des items. */
+  get canEdit(): boolean        { return this.isAdmin; }
+
+  /* ── Connexion simulée (installation locale) ─────
+     Remplacer par le flux Azure AD OAuth2 en production :
+     window.location.href = '/api/auth/azure';
+  ─────────────────────────────────────────────────── */
+  simulateLogin(profile: SimulatedProfile): void {
+    sessionStorage.setItem('nomAdmin',      profile.nom);
+    sessionStorage.setItem('prenomAdmin',   profile.prenom);
+    sessionStorage.setItem('courrielAdmin', profile.courriel);
+    sessionStorage.setItem('groupeAdmin',   profile.groupe);
+    sessionStorage.setItem('role',          profile.role);
+    this.isLoggedIn = true;
+  }
+
+  /**
+   * Conservé pour la compatibilité avec AuthGuard (login auto si déjà en session).
+   * En production ce sera remplacé par la validation du token Azure AD.
+   */
   async login(): Promise<Observable<boolean>> {
-    let isLoggedIn: boolean ;
-    caches.keys().then((keyList) =>  Promise.all(keyList.map((key) => caches.delete(key))))
-    // Appel au service d'authentification en mode asyncrone
-    try {
-      isLoggedIn=true;
-      //Souvegarder les infos du user// @ts-ignore
-      isLoggedIn=true;
-      //supprimer une fois authentification est instalé
-
-      //sessionStorage.setItem('nomAdmin', this.user.nom);
-      sessionStorage.setItem('nomAdmin', 'Administrateur');
-      //sessionStorage.setItem('prenomAdmin', this.user.prenom);
-      sessionStorage.setItem('prenomAdmin', 'Système');
-      //sessionStorage.setItem('courrielAdmin', this.user.courriel);
-      sessionStorage.setItem('courrielAdmin', 'nataliapanfilii@yahoo.com');
-      sessionStorage.setItem('groupeAdmin', 'Gestionnaire');
-      sessionStorage.setItem('role', 'Admin');
-
-      //reconnect le bon user
-      /* await this.http
-        .get<User>(`/api/user-udem`, {responseType: "json"})
-        .toPromise()
-        .then((res: any) => {
-            // Success
-          if(res.length==0){
-            isLoggedIn=false;
-            this.logout()
-          }
-          isLoggedIn=true;
-          this.user=res;
-          //Souvegarder les infos du user// @ts-ignore
-          isLoggedIn=true;
-          //supprimer une fois authentification est instalé
-
-          //sessionStorage.setItem('nomAdmin', this.user.nom);
-          sessionStorage.setItem('nomAdmin', 'Natalia');
-          //sessionStorage.setItem('prenomAdmin', this.user.prenom);
-          sessionStorage.setItem('prenomAdmin', 'Jabinschi');
-          //sessionStorage.setItem('courrielAdmin', this.user.courriel);
-          sessionStorage.setItem('courrielAdmin', 'nataliapanfilii@yahoo.com');
-          sessionStorage.setItem('groupeAdmin', 'Gestionnaire');
-          sessionStorage.setItem('role', 'Admin');
-
-
-          switch (this.user.groupe){
-            case 'Admin':
-              sessionStorage.setItem('groupeAdmin', 'Gestionnaire');
-              sessionStorage.setItem('role', 'Admin');
-              break
-            case 'Viewer':
-              sessionStorage.setItem('groupeAdmin', 'Bibliothécaire');
-              sessionStorage.setItem('role', 'Viewer');
-              break
-            default:
-              window.location.href ='/not-user'
-          }
-
-          }
-
-        );*/
-    } catch (e : any){
-      isLoggedIn=false;
-      await this.logout()
-      console.log('Erreur login http'+e);
-    }
-
-    //console.log(isLoggedIn);
-    return of(true).pipe(
-      delay(100),
-      tap(val => this.isLoggedIn = isLoggedIn)
+    return of(this.isLoggedIn).pipe(
+      delay(50),
+      tap(val => { this.isLoggedIn = val; })
     );
   }
 
-  // Une méthode de déconnexion
-
-  async logout() {
-
+  /* ── Déconnexion ─────────────────────────────── */
+  async logout(): Promise<void> {
     this.isLoggedIn = false;
-    sessionStorage.clear()
-    sessionStorage.setItem('isLoggedIn', 'true')
-    caches.keys().then((keyList) =>  Promise.all(keyList.map((key) => caches.delete(key))))
-
-    window.location.href = '/api/logout'
+    sessionStorage.clear();
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+    // En production : window.location.href = '/api/logout';
+    window.location.href = '/login';
   }
-
-  /** Redirects to the specified external link with the mediation of the router */
-  public redirect(url: string): Promise<boolean> {
-
-    return new Promise<boolean>( (resolve, reject) => {
-
-      try { // @ts-ignore
-        this.window.location.href=url }
-      catch(e) { reject(e); }
-    });
-  }
-
-
 }

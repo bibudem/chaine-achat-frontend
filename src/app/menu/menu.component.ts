@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { MethodesGlobal } from '../lib/MethodesGlobal';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector:    'app-menu',
@@ -27,7 +28,8 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private router:    Router
+    private router:    Router,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {

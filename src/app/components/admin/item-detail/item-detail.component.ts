@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-item-detail',
@@ -19,7 +20,8 @@ export class ItemDetailComponent implements OnInit {
     private router: Router,
     private itemService: ItemFormulaireService,
     private dialogService: DialogService,
-    private location: Location
+    private location: Location,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {

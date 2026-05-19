@@ -21,7 +21,8 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('fr');
 
     // Initialisation immédiate avant le premier rendu
-    this.isUsagerRoute = window.location.pathname.startsWith('/usager');
+    const path = window.location.pathname;
+    this.isUsagerRoute = path.startsWith('/usager') || path.startsWith('/login');
     if (!this.isUsagerRoute){
       document.documentElement.classList.remove('usager-route');
     }
@@ -33,7 +34,7 @@ export class AppComponent implements OnInit {
       // NavigationStart au lieu de NavigationEnd pour réagir avant le rendu
       filter(event => event instanceof NavigationStart)
     ).subscribe((event: any) => {
-      this.isUsagerRoute = event.url.startsWith('/usager');
+      this.isUsagerRoute = event.url.startsWith('/usager') || event.url.startsWith('/login');
     });
   }
 

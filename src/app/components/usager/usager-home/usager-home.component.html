@@ -1,83 +1,53 @@
-<div class="container py-5">
-  <h2 class="mb-4">Bienvenue</h2>
-  <p class="text-muted mb-5">Que souhaitez-vous faire ?</p>
+<div class="uh-wrap">
 
-  <div class="row g-4">
-
-    <!-- Card Demande d'achat -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body d-flex flex-column p-4">
-          <div class="mb-3">
-            <i class="bi bi-cart-plus fs-1 text-primary"></i>
-          </div>
-          <h5 class="card-title">Demande d'achat</h5>
-          <p class="card-text text-muted flex-grow-1">
-            Soumettez une demande d'acquisition d'un document pour les collections des bibliothèques.
-          </p>
-          <a routerLink="/usager/demande" class="btn btn-primary mt-3 align-self-start">
-            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
-          </a>
-        </div>
-      </div>
+  <!-- ── Bienvenue ─────────────────────────────── -->
+  <div class="uh-greeting">
+    <div class="uh-greeting__icon">
+      <i class="bi bi-grid-3x3-gap-fill"></i>
     </div>
-
-    <!-- Card Suggestion d'achat -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body d-flex flex-column p-4">
-          <div class="mb-3">
-            <i class="bi bi-lightbulb fs-1 text-warning"></i>
-          </div>
-          <h5 class="card-title">Suggestion d'achat</h5>
-          <p class="card-text text-muted flex-grow-1">
-            Proposez l'ajout d'un document à nos collections. Votre suggestion sera analysée avec soin.
-          </p>
-          <a routerLink="/usager/suggestion-public" class="btn btn-warning mt-3 align-self-start">
-            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
-          </a>
-        </div>
-      </div>
+    <div>
+      <h2 class="uh-greeting__title">
+        Bonjour<span *ngIf="prenomAdmin">, {{ prenomAdmin }}</span>
+      </h2>
+      <p class="uh-greeting__sub">
+        Sélectionnez le formulaire correspondant à votre demande.
+      </p>
     </div>
-
-    <!-- Card Nouvel abonnement -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body d-flex flex-column p-4">
-          <div class="mb-3">
-            <i class="bi bi-newspaper fs-1" style="color: #6d28d9;"></i>
-          </div>
-          <h5 class="card-title">Nouvel abonnement</h5>
-          <p class="card-text text-muted flex-grow-1">
-            Soumettez une demande de souscription à une ressource périodique ou sérielle (imprimée ou électronique).
-          </p>
-          <a routerLink="/usager/nouvel-abonnement" class="btn mt-3 align-self-start"
-             style="background-color: #6d28d9; color: white;">
-            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
-          </a>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- Card PEB Tipasa numérique -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body d-flex flex-column p-4">
-          <div class="mb-3">
-            <i class="bi bi-share fs-1" style="color: #0891b2;"></i>
-          </div>
-          <h5 class="card-title">PEB Tipasa numérique</h5>
-          <p class="card-text text-muted flex-grow-1">
-            Demandez l'achat d'un livre numérique en remplacement d'un prêt entre bibliothèques via Tipasa.
-          </p>
-          <a routerLink="/usager/peb-tipasa-numerique" class="btn mt-3 align-self-start"
-             style="background-color: #0891b2; color: white;">
-            <i class="bi bi-arrow-right-circle me-2"></i>Accéder au formulaire
-          </a>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <!-- ── Grille des formulaires ─────────────────── -->
+  <div class="uh-grid">
+    <a *ngFor="let f of formulaires"
+       [routerLink]="f.route"
+       class="uh-card"
+       [style.--c-accent]="f.accentColor"
+       [style.--c-bg]="f.bgColor"
+       [style.--c-text]="f.textColor">
+
+      <!-- Bandeau coloré -->
+      <div class="uh-card__band">
+        <div class="uh-card__icon-wrap">
+          <i class="bi {{ f.icon }}"></i>
+        </div>
+      </div>
+
+      <!-- Corps texte -->
+      <div class="uh-card__body">
+        <h3 class="uh-card__title">{{ f.titre }}</h3>
+        <p class="uh-card__desc">{{ f.description }}</p>
+        <span class="uh-card__cta">
+          Accéder au formulaire
+          <i class="bi bi-arrow-right"></i>
+        </span>
+      </div>
+
+    </a>
+  </div>
+
+  <!-- ── Note ──────────────────────────────────── -->
+  <p class="uh-note">
+    <i class="bi bi-info-circle"></i>
+    Pour toute question, contactez votre bibliothécaire disciplinaire.
+  </p>
+
 </div>
