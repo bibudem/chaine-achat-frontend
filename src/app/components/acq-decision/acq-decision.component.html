@@ -2,16 +2,23 @@
   <div class="form-container">
 
     <!-- ── En-tête ── -->
-    <div class="form-header">
+    <div class="form-header d-flex gap-3 align-items-center mt-5">
       <div class="form-header__icon">
         <i class="bi" [ngClass]="item ? typeIcon : 'bi-clipboard-check'"></i>
       </div>
-      <div>
+      <div class="flex-grow-1">
         <h1 class="form-header__title">
+          {{ 'acq-decision.section-demande' | translate }}:
           {{ item ? (item.formulaire_type || ('acq-decision.titre-defaut' | translate)) : ('acq-decision.titre-defaut' | translate) }}
         </h1>
         <p class="form-header__subtitle">
-          {{ 'acq-decision.confirmation-demande' | translate }}&nbsp;#{{ itemId }}<span *ngIf="item?.priorite_demande"> · {{ item!.priorite_demande }}</span>
+          {{ 'acq-decision.confirmation-demande' | translate }}&nbsp;#{{ itemId }}
+          <span *ngIf="item?.priorite_demande" class="acq-badge ms-2"
+            [ngClass]="{
+              'acq-badge--urgent':      item!.priorite_demande === 'Urgent',
+              'acq-badge--prioritaire': item!.priorite_demande === 'Prioritaire',
+              'acq-badge--regulier':    item!.priorite_demande === 'Régulier'
+            }">{{ item!.priorite_demande }}</span>
         </p>
       </div>
     </div>
@@ -26,9 +33,6 @@
 
       <!-- ── Résumé de la demande ── -->
       <div class="form-section form-section--item-summary" *ngIf="item">
-        <h2 class="form-section__title">
-          <i class="bi bi-file-text"></i>{{ 'acq-decision.section-demande' | translate }}
-        </h2>
         <div class="d-flex justify-content-between align-items-start gap-3">
           <div>
             <div class="fw-semibold lh-sm">{{ item.titre_document }}</div>
@@ -39,7 +43,7 @@
               </span>
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary flex-shrink-0"
+          <button type="button" class="btn acq-btn-outline btn-sm flex-shrink-0"
                   (click)="showDetailModal = true">
             <i class="bi bi-eye me-1"></i>{{ 'acq-decision.voir-tout' | translate }}
           </button>
@@ -89,8 +93,8 @@
           </div>
         </div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" [disabled]="submitting || form.invalid">
+        <div class="form-actions d-flex justify-content-end">
+          <button type="submit" class="btn acq-btn-primary" [disabled]="submitting || form.invalid">
             <span *ngIf="!submitting">
               <i class="bi bi-check-circle me-2"></i>{{ 'acq-decision.enregistrer' | translate }}
             </span>
@@ -176,11 +180,11 @@
               <tr *ngIf="item.priorite_demande">
                 <th>{{ 'acq-decision.col-priorite' | translate }}</th>
                 <td>
-                  <span class="badge"
+                  <span class="acq-badge"
                     [ngClass]="{
-                      'bg-danger':            item.priorite_demande === 'Urgent',
-                      'bg-warning text-dark': item.priorite_demande === 'Prioritaire',
-                      'bg-secondary':         item.priorite_demande === 'Régulier'
+                      'acq-badge--urgent':      item.priorite_demande === 'Urgent',
+                      'acq-badge--prioritaire': item.priorite_demande === 'Prioritaire',
+                      'acq-badge--regulier':    item.priorite_demande === 'Régulier'
                     }">{{ item.priorite_demande }}</span>
                 </td>
               </tr>
@@ -266,7 +270,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" (click)="showDetailModal = false">{{ 'acq-decision.fermer' | translate }}</button>
+          <button type="button" class="btn acq-btn-outline btn-sm" (click)="showDetailModal = false">{{ 'acq-decision.fermer' | translate }}</button>
         </div>
 
       </div>
