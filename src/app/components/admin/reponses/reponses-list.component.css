@@ -259,6 +259,14 @@
   font-weight: 600;
 }
 
+/* Ligne mise en évidence depuis notification ─────────────────── */
+.row-highlighted td {
+  background: var(--extra-light-blue, #E5F0F8) !important;
+}
+.row-highlighted td:first-child {
+  border-left: 3px solid var(--secondary-blue, #00407F) !important;
+}
+
 /* Responsive ───────────────────────────────────────────── */
 @media (max-width: 768px) {
   .formatted-view { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }

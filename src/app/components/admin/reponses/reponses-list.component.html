@@ -97,7 +97,9 @@
         <ng-container *ngFor="let reponse of filteredReponses">
 
           <!-- Ligne principale -->
-          <tr [class.row-expanded]="expandedId === reponse.id">
+          <tr [id]="'reponse-row-' + reponse.id"
+              [class.row-expanded]="expandedId === reponse.id"
+              [class.row-highlighted]="highlightId === reponse.id">
             <td class="text-muted small">#{{ reponse.id }}</td>
             <td>
               <span class="badge" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">

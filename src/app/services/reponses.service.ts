@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -45,6 +45,12 @@ export interface PaginatedResponse {
 export class ReponsesService {
 
   private readonly baseUrl = `${environment.apiUrl}/reponses`;
+
+  readonly pendingRefresh$ = new Subject<void>();
+
+  triggerPendingRefresh(): void {
+    this.pendingRefresh$.next();
+  }
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -224,6 +230,12 @@ export class ReponsesService {
     return this.http
       .get<Reponse>(`${this.baseUrl}/${id}`)
       .pipe(catchError(this.handleError('getById')));
+  }
+
+  getPending(limit = 5): Observable<{ count: number; reponses: Pick<Reponse, 'id' | 'type_formulaire' | 'usager_nom' | 'dateA'>[] }> {
+    return this.http
+      .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, { params: { limit } })
+      .pipe(catchError(this.handleError('getPending')));
   }
 
   // ──────────────────────────────────────────────────────────

@@ -295,6 +295,7 @@ export class AcqDecisionComponent implements OnInit {
         if (response.success) {
           this.successMessage = 'Décision enregistrée avec succès !';
           this.notifyN8nDecision(suivi_acq, note_acq);
+          this.reponsesService.triggerPendingRefresh();
           setTimeout(() => this.router.navigate(['/items']), 2000);
         } else {
           this.errorMessage = response.message || "Erreur lors de l'enregistrement.";

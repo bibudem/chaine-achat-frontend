@@ -31,6 +31,49 @@
           </div>
         </div>
       </li>
+      <!-- Notifications réponses en attente (admin seulement) -->
+      <li class="nav-item d-flex align-items-center" *ngIf="authService.isAdmin" style="position:relative">
+        <button class="notif-btn" (click)="toggleNotif($event)" [class.notif-btn--active]="notifOpen" title="Réponses en attente de décision">
+          <i class="bi" [class.bi-bell-fill]="notifOpen" [class.bi-bell]="!notifOpen"></i>
+          <span class="notif-badge" *ngIf="pendingCount > 0">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
+        </button>
+
+        <!-- Panneau dropdown -->
+        <div class="notif-panel" *ngIf="notifOpen" (click)="$event.stopPropagation()">
+          <div class="notif-panel__head">
+            <i class="bi bi-bell-fill me-2"></i>
+            <span>Réponses en attente</span>
+            <span class="notif-panel__count">{{ pendingCount }}</span>
+          </div>
+
+          <div class="notif-panel__body">
+            <div *ngIf="pendingReponses.length === 0" class="notif-empty">
+              <i class="bi bi-check2-circle"></i> Tout est traité
+            </div>
+            <button
+              *ngFor="let r of pendingReponses"
+              class="notif-item"
+              (click)="ouvrirReponse(r.id)">
+              <span class="notif-item__icon {{ typeClass(r.type_formulaire) }}">
+                <i class="bi {{ typeIcon(r.type_formulaire) }}"></i>
+              </span>
+              <span class="notif-item__body">
+                <span class="notif-item__type">{{ r.type_formulaire }}</span>
+                <span class="notif-item__meta">#{{ r.id }} · {{ r.usager_nom }} · {{ formatDate(r.dateA) }}</span>
+              </span>
+              <i class="bi bi-chevron-right notif-item__arrow"></i>
+            </button>
+          </div>
+
+          <div class="notif-panel__foot">
+            <button class="notif-voir-tout" (click)="voirTout()">
+              Voir toutes les réponses
+              <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+      </li>
+
          <!-- Sélecteur de langue -->
       <li class="nav-item d-flex align-items-center">
         <div class="lang-toggle">

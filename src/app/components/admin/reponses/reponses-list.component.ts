@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReponsesService, Reponse, PaginatedResponse } from '../../../services/reponses.service';
 import { PageEvent } from '@angular/material/paginator';
 
@@ -10,7 +11,8 @@ export type SortDirection = 'asc' | 'desc' | '';
   templateUrl: './reponses-list.component.html',
   styleUrls: ['./reponses-list.component.css']
 })
-export class ReponsesListComponent implements OnInit {
+export class ReponsesListComponent implements OnInit, OnDestroy {
+  private querySub?: Subscription;
 
   reponses: Reponse[] = [];
   filteredReponses: Reponse[] = [];
@@ -123,9 +125,12 @@ export class ReponsesListComponent implements OnInit {
     usager_aviser_activation: "Usager à aviser — Activation",
   };
 
+  highlightId: number | null = null;
+
   constructor(
     private reponsesService: ReponsesService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ouvrirDecisionAcq(): void {
@@ -136,7 +141,20 @@ export class ReponsesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadReponses();
+    this.querySub = this.route.queryParamMap.subscribe(params => {
+      const hid = params.get('highlight');
+      this.highlightId = hid ? parseInt(hid, 10) : null;
+      this.loadReponses();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.querySub?.unsubscribe();
+  }
+
+  clearHighlight(): void {
+    this.highlightId = null;
+    this.router.navigate([], { queryParams: {}, replaceUrl: true });
   }
 
   loadReponses(): void {
@@ -154,12 +172,42 @@ export class ReponsesListComponent implements OnInit {
         this.totalItems = response.total;
         this.applyClientFiltering();
         this.loading = false;
+        if (this.highlightId) this.activerHighlight();
       },
       error: () => {
         this.errorMessage = 'Erreur lors du chargement des réponses';
         this.loading = false;
       }
     });
+  }
+
+  private activerHighlight(): void {
+    const found = this.filteredReponses.find(r => r.id === this.highlightId);
+    if (found) {
+      this.expandedId       = found.id;
+      this.expandedReponse  = found;
+      this.jsonFormatted    = JSON.stringify(found.reponses, null, 2);
+      this.activeTab        = 'formatted';
+      setTimeout(() => {
+        document.getElementById('reponse-row-' + this.highlightId)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    } else {
+      // Item absent de la page courante → le charger et l'injecter en tête
+      this.reponsesService.getById(this.highlightId!).subscribe({
+        next: (r) => {
+          this.filteredReponses  = [r, ...this.filteredReponses];
+          this.expandedId        = r.id;
+          this.expandedReponse   = r;
+          this.jsonFormatted     = JSON.stringify(r.reponses, null, 2);
+          this.activeTab         = 'formatted';
+          setTimeout(() => {
+            document.getElementById('reponse-row-' + this.highlightId)
+              ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+      });
+    }
   }
 
   applyClientFiltering(): void {
