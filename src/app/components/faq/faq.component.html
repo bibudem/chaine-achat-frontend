@@ -26,7 +26,7 @@
   <div class="faq-contact">
     <p>Si des incertitudes surviennent au moment de compléter un formulaire (prix, format, etc.), consignez-les dans le champ <strong>Bibliothèque&nbsp;: Note, commentaire ou question</strong>. Un membre de l'équipe des Acquisitions vous contactera lors du traitement.</p>
     <p >Pour toute autre question&nbsp;:</p>
-    <ul class="list-group ml-3">
+    <ul class="faq-contact__list">
       <li><a href="mailto:acqmono@bib.umontreal.ca">acqmono@bib.umontreal.ca</a><span>— monographies</span></li>
       <li><a href="mailto:acqperi@bib.umontreal.ca">acqperi@bib.umontreal.ca</a><span>— périodiques</span></li>
       <li><a href="mailto:resselect@bib.umontreal.ca">resselect@bib.umontreal.ca</a><span>— ressources électroniques</span></li>
@@ -41,7 +41,7 @@
   <!-- Corps : liste accordéon -->
   <div class="faq-panel__body">
     <div
-      *ngFor="let item of items; let i = index"
+      *ngFor="let item of visibleItems; let i = index"
       class="faq-item"
       [class.faq-item--open]="item.open"
     >

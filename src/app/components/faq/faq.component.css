@@ -101,13 +101,13 @@
 .faq-panel__sub {
   font-family: 'Figtree', sans-serif;
   font-size: 0.72rem;
-  color: var(--text-gray, #607386);
+  color: rgba(255, 255, 255, 0.70);
 }
 .faq-panel__close {
   margin-left: auto;
   background: none;
   border: none;
-  color: var(--text-gray, #607386);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 1.3rem;
   cursor: pointer;
   border-radius: 6px;
@@ -121,8 +121,8 @@
   flex-shrink: 0;
 }
 .faq-panel__close:hover {
-  background: var(--extra-light-blue, #E5F0F8);
-  color: var(--primary-blue, #0b113a);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 /* ── Corps ───────────────────────────────────────────────── */
