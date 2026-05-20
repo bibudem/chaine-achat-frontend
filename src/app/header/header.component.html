@@ -1,28 +1,33 @@
 
-<!-- Integrer le header -->
-<!-- partial:partials/_navbar.html -->
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-   <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-          <a class="navbar-brand brand-logo" href="/"><img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM"/></a>
-          <a class="navbar-brand brand-logo-mini" href="/"><img src="assets/images/favicon.ico" alt="Bibliothèques UdeM"/></a>
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="typcn typcn-th-menu"></span>
-          </button>
-        </div>
-      </div>
+
+  <!-- Zone logo + toggler sidebar -->
+  <div class="navbar-brand-wrapper d-flex justify-content-center">
+    <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+      <a class="navbar-brand brand-logo" href="/"><img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM"/></a>
+      <a class="navbar-brand brand-logo-mini" href="/"><img src="assets/images/favicon.ico" alt="Bibliothèques UdeM"/></a>
+      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+        <span class="typcn typcn-th-menu"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Zone droite -->
   <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
-    <h5 class="mb-0 font-weight-mediu d-none d-lg-flex titre-initial header-udem">{{ 'app-title' | translate}}</h5>
-      <h4 *ngIf="!isProduction" class="typing ml-5 mt-3 text-danger font-weight-light mt-2 titre-initial">
-        {{ 'app-title-dev' | translate}}
-      </h4>
-      <span *ngIf="isProduction" class="ml-3 font-weight-light titre-initial header-udem-prod">
-        {{ 'header.sous-titre-prod' | translate }}
-      </span>
+
+    <!-- Titre (desktop seulement) -->
+    <h5 class="mb-0 font-weight-mediu d-none d-lg-flex titre-initial header-udem">{{ 'app-title' | translate }}</h5>
+    <h4 *ngIf="!isProduction" class="typing ml-5 mt-3 text-danger font-weight-light mt-2 titre-initial d-none d-md-flex">
+      {{ 'app-title-dev' | translate }}
+    </h4>
+    <span *ngIf="isProduction" class="ml-3 font-weight-light titre-initial header-udem-prod d-none d-md-inline">
+      {{ 'header.sous-titre-prod' | translate }}
+    </span>
 
     <ul class="navbar-nav navbar-nav-right ml-auto">
-    <!-- Date -->
-      <li class="nav-item d-flex align-items-center">
+
+      <!-- Date (masquée en dessous de 768px) -->
+      <!--<li class="nav-item nav-item--date d-none d-md-flex align-items-center">
         <div class="date-card">
           <span class="date-card-day">{{ currentDate | date:'dd' }}</span>
           <div class="date-card-right">
@@ -30,30 +35,28 @@
             <span class="date-card-year">{{ currentDate | date:'yyyy' }}</span>
           </div>
         </div>
-      </li>
-      <!-- Notifications réponses en attente (admin seulement) -->
-      <li class="nav-item d-flex align-items-center" *ngIf="authService.isAdmin" style="position:relative">
-        <button class="notif-btn" (click)="toggleNotif($event)" [class.notif-btn--active]="notifOpen" title="Réponses en attente de décision">
+      </li>-->
+
+      <!-- Cloche notifications (admin seulement) -->
+      <li class="nav-item nav-item--notif d-flex align-items-center" *ngIf="authService.isAdmin">
+        <button class="notif-btn" (click)="toggleNotif($event)"
+                [class.notif-btn--active]="notifOpen"
+                title="Réponses en attente de décision">
           <i class="bi" [class.bi-bell-fill]="notifOpen" [class.bi-bell]="!notifOpen"></i>
           <span class="notif-badge" *ngIf="pendingCount > 0">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
         </button>
 
-        <!-- Panneau dropdown -->
         <div class="notif-panel" *ngIf="notifOpen" (click)="$event.stopPropagation()">
           <div class="notif-panel__head">
             <i class="bi bi-bell-fill me-2"></i>
             <span>Réponses en attente</span>
             <span class="notif-panel__count">{{ pendingCount }}</span>
           </div>
-
           <div class="notif-panel__body">
             <div *ngIf="pendingReponses.length === 0" class="notif-empty">
               <i class="bi bi-check2-circle"></i> Tout est traité
             </div>
-            <button
-              *ngFor="let r of pendingReponses"
-              class="notif-item"
-              (click)="ouvrirReponse(r.id)">
+            <button *ngFor="let r of pendingReponses" class="notif-item" (click)="ouvrirReponse(r.id)">
               <span class="notif-item__icon {{ typeClass(r.type_formulaire) }}">
                 <i class="bi {{ typeIcon(r.type_formulaire) }}"></i>
               </span>
@@ -64,7 +67,6 @@
               <i class="bi bi-chevron-right notif-item__arrow"></i>
             </button>
           </div>
-
           <div class="notif-panel__foot">
             <button class="notif-voir-tout" (click)="voirTout()">
               Voir toutes les réponses
@@ -74,94 +76,91 @@
         </div>
       </li>
 
-         <!-- Sélecteur de langue -->
+      <!-- Sélecteur de langue -->
       <li class="nav-item d-flex align-items-center">
         <div class="lang-toggle">
-          <i class="bi bi-globe lang-toggle__icon"></i>
+          <i class="bi bi-globe lang-toggle__icon d-none d-sm-inline"></i>
           <button class="lang-btn" [class.lang-btn--active]="currentLang === 'fr'" (click)="switchLanguage('fr')" title="Français">FR</button>
           <span class="lang-sep">|</span>
           <button class="lang-btn" [class.lang-btn--active]="currentLang === 'en'" (click)="switchLanguage('en')" title="English">EN</button>
         </div>
       </li>
-          <li class="nav-item dropdown d-flex align-items-center">
-            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="bi bi-grid-3x3-gap-fill"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">{{ 'header.formulaires' | translate }}</p>
-              <a class="dropdown-item preview-item" routerLink="/usager/nouvel-achat" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--achat">
-                    <i class="bi bi-cart-plus mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-achat' | translate }}</h5>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item" routerLink="/usager/nouvel-abonnement" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--abonnement">
-                    <i class="bi bi-newspaper mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-abonnement' | translate }}</h5>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item" routerLink="/usager/modification-ccol" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--ccol">
-                    <i class="bi bi-pencil-square mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.modification-ccol' | translate }}</h5>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item" routerLink="/usager/peb-tipasa-numerique" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--peb">
-                    <i class="bi bi-share mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.peb-tipasa' | translate }}</h5>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item" routerLink="/usager/requete-accessibilite" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--accessibilite">
-                    <i class="bi bi-universal-access mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.accessibilite' | translate }}</h5>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item" routerLink="/usager/suggestion-public" target="_blank">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon preview-icon--suggest">
-                    <i class="bi bi-lightbulb mx-0"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content">
-                  <h5 class="font-weight-normal mt-1">{{ 'header.suggestion' | translate }}</h5>
-                </div>
-              </a>
-            </div>
-          </li>
+
+      <!-- Grille formulaires -->
       <li class="nav-item dropdown d-flex align-items-center">
-          <a class="nav-link d-flex align-items-center gap-2 dropdown-toggle" id="UserDropdown" data-toggle="dropdown" aria-expanded="false" href="javascript:;">
-            <i class="bi bi-person-circle"></i>
-            <span class="d-none d-sm-inline">{{prenomAdmin}} {{nomAdmin}}</span>
+        <a class="nav-link d-flex align-items-center justify-content-center"
+           id="notificationDropdown" href="#" data-toggle="dropdown">
+          <i class="bi bi-grid-3x3-gap-fill"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+          <p class="mb-0 font-weight-normal float-left dropdown-header">{{ 'header.formulaires' | translate }}</p>
+          <a class="dropdown-item preview-item" routerLink="/usager/nouvel-achat" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--achat"><i class="bi bi-cart-plus mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-achat' | translate }}</h5>
+            </div>
           </a>
-          <div class="dropdown-menu dropdown-menu-right navbar-dropdown w-100" aria-labelledby="UserDropdown">
-          <!--<a  class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"  ></i>{{groupeAdmin}}</a>-->
-          <a (click)="logout()" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> {{'login.logout-text' | translate }}</a>
+          <a class="dropdown-item preview-item" routerLink="/usager/nouvel-abonnement" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--abonnement"><i class="bi bi-newspaper mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-abonnement' | translate }}</h5>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item" routerLink="/usager/modification-ccol" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--ccol"><i class="bi bi-pencil-square mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.modification-ccol' | translate }}</h5>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item" routerLink="/usager/peb-tipasa-numerique" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--peb"><i class="bi bi-share mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.peb-tipasa' | translate }}</h5>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item" routerLink="/usager/requete-accessibilite" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--accessibilite"><i class="bi bi-universal-access mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.accessibilite' | translate }}</h5>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item" routerLink="/usager/suggestion-public" target="_blank">
+            <div class="preview-thumbnail">
+              <div class="preview-icon preview-icon--suggest"><i class="bi bi-lightbulb mx-0"></i></div>
+            </div>
+            <div class="preview-item-content">
+              <h5 class="font-weight-normal mt-1">{{ 'header.suggestion' | translate }}</h5>
+            </div>
+          </a>
         </div>
       </li>
+
+      <!-- Utilisateur -->
+      <li class="nav-item dropdown d-flex align-items-center">
+        <a class="nav-link d-flex align-items-center gap-2"
+           id="UserDropdown" data-toggle="dropdown" aria-expanded="false" href="javascript:;">
+          <i class="bi bi-person-circle"></i>
+          <span class="d-none d-sm-inline">{{ prenomAdmin }} {{ nomAdmin }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+          <a (click)="logout()" class="dropdown-item">
+            <i class="bi bi-box-arrow-right me-2"></i>{{ 'login.logout-text' | translate }}
+          </a>
+        </div>
+      </li>
+
     </ul>
+
     <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
       <span class="icon-menu"></span>
     </button>
