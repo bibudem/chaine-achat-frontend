@@ -189,13 +189,74 @@
 
 /* Pied du panneau ──────────────────────────────────────── */
 .panel-footer {
-  background-color: #f1f3f5;
-  border-top: 1px solid #dee2e6;
-  padding: 0.45rem 0.85rem;
+  background: #fff;
+  border-top: 1px solid var(--light-gray, #E7EBEE);
+  padding: 0.55rem 1rem;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   flex-wrap: wrap;
   border-radius: 0 0 0.375rem 0.375rem;
+}
+
+.pf-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.pf-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.32rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+
+.pf-btn--close {
+  background: none;
+  border: 1px solid var(--border-gray, #9DABB9);
+  color: var(--text-gray, #607386);
+}
+.pf-btn--close:hover {
+  background: var(--light-gray, #E7EBEE);
+  color: var(--primary-blue, #0b113a);
+  border-color: var(--text-gray, #607386);
+}
+
+.pf-btn--acq {
+  background: var(--secondary-blue, #00407F);
+  border: 1px solid var(--secondary-blue, #00407F);
+  color: #fff;
+  font-weight: 600;
+}
+.pf-btn--acq:hover {
+  background: var(--primary-blue, #0b113a);
+  border-color: var(--primary-blue, #0b113a);
+  box-shadow: 0 2px 8px rgba(0, 64, 127, 0.25);
+}
+
+.pf-btn--secondary {
+  background: #fff;
+  border: 1px solid var(--border-gray, #9DABB9);
+  color: var(--medium-gray, #37424D);
+}
+.pf-btn--secondary:hover {
+  background: var(--extra-light-blue, #E5F0F8);
+  border-color: var(--secondary-blue, #00407F);
+  color: var(--secondary-blue, #00407F);
+}
+
+.pf-feedback {
+  color: #1a7a4a;
+  font-weight: 600;
 }
 
 /* Responsive ───────────────────────────────────────────── */

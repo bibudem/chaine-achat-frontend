@@ -37,6 +37,13 @@ export class ReponsesDetailComponent implements OnInit {
     });
   }
 
+  ouvrirDecisionAcq(): void {
+    this.activeModal.close();
+    this.router.navigate(['/acq-decision'], {
+      queryParams: { id: this.reponse?.id }
+    });
+  }
+
   /**
    * Copie le JSON dans le presse-papiers
    */

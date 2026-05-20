@@ -31,6 +31,7 @@ export interface Reponse {
   usager_statut: string;
   reponses: any;
   dateA: string;
+  item_id_cree?: number | null;
 }
 
 export interface PaginatedResponse {

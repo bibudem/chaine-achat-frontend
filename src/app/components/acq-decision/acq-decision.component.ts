@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AcqDecisionComponent implements OnInit {
   form: FormGroup;
+  reponseId: number | null = null;
   itemId: number | null = null;
   item: Item | null = null;
   loadingItem = false;
@@ -49,109 +50,113 @@ export class AcqDecisionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.itemId = Number(this.route.snapshot.queryParamMap.get('id')) || null;
+    this.reponseId = Number(this.route.snapshot.queryParamMap.get('id')) || null;
 
-    if (!this.itemId) {
+    if (!this.reponseId) {
       this.errorMessage = 'Paramètre manquant : id';
       return;
     }
 
     this.loadingItem = true;
-    this.itemService.getById(this.itemId).subscribe({
-      next: (response) => {
-        this.loadingItem = false;
-        if (response?.success && response?.data) {
-          this.itemExisteDansItems = true;
-          this.item = response.data;
-          this.form.patchValue({
-            suivi_acq:                 response.data.suivi_acq || '',
-            note_acq:                  response.data.note_acq  || '',
-            bibliotheque_note_interne: response.data.bibliotheque_note_interne || '',
-          }, { emitEvent: false });
+
+    // On charge d'abord la réponse pour vérifier item_id_cree
+    this.reponsesService.getById(this.reponseId).subscribe({
+      next: (reponse) => {
+        if (reponse?.item_id_cree) {
+          // L'item existe déjà — on le charge pour modification
+          this.itemId = reponse.item_id_cree;
+          this.itemService.getById(this.itemId).subscribe({
+            next: (resp) => {
+              this.loadingItem = false;
+              if (resp?.success && resp?.data) {
+                this.itemExisteDansItems = true;
+                this.item = resp.data;
+                this.form.patchValue({
+                  suivi_acq:                 resp.data.suivi_acq || '',
+                  note_acq:                  resp.data.note_acq  || '',
+                  bibliotheque_note_interne: resp.data.bibliotheque_note_interne || '',
+                }, { emitEvent: false });
+              } else {
+                this.mapReponseToItem(reponse);
+              }
+            },
+            error: () => { this.loadingItem = false; this.mapReponseToItem(reponse); }
+          });
         } else {
-          this.chargerDepuisReponse();
+          // Aucun item encore — on prépare la création
+          this.loadingItem = false;
+          this.mapReponseToItem(reponse);
         }
       },
       error: () => {
         this.loadingItem = false;
-        this.chargerDepuisReponse();
+        this.errorMessage = 'Impossible de charger la réponse.';
       }
     });
   }
 
-  private chargerDepuisReponse(): void {
-    if (!this.itemId) return;
-    this.reponsesService.getById(this.itemId).subscribe({
-      next: (r) => {
-        const bd   = r.reponses?.baseData    || {};
-        const sd   = r.reponses?.specificData || {};
-        const flat = (r.reponses && !r.reponses.baseData) ? r.reponses : {};
-        const f = (b: any, s: any) => b || flat[s] || sd[s];
-        this.item = {
-          formulaire_type:                r.type_formulaire,
-          demandeur:                      r.usager_nom,
-          usager_courriel:                r.usager_courriel,
-          usager_statut:                  r.usager_statut,
-          titre_document:                 bd.titre_document    || flat.titre_document    || sd.titre_document || '—',
-          sous_titre:                     f(bd.sous_titre,      'sous_titre'),
-          editeur:                        f(bd.editeur,         'editeur'),
-          isbn_issn:                      f(bd.isbn_issn,       'isbn_issn'),
-          date_publication:               f(bd.date_publication,'date_publication'),
-          format_support:                 f(bd.format_support,  'format_support'),
-          categorie_document:             f(bd.categorie_document,'categorie_document'),
-          bibliotheque:                   f(bd.bibliotheque,    'bibliotheque'),
-          fonds_budgetaire:               f(bd.fonds_budgetaire,'fonds_budgetaire'),
-          fonds_sn_projet:                f(bd.fonds_sn_projet, 'fonds_sn_projet'),
-          periode_couverte:               f(bd.periode_couverte,'periode_couverte'),
-          source_information:             f(bd.source_information,'source_information'),
-          prix_cad:                       f(bd.prix_cad,        'prix_cad'),
-          devise_originale:               f(bd.devise_originale,'devise_originale'),
-          prix_devise_originale:          f(bd.prix_devise_originale,'prix_devise_originale'),
-          priorite_demande:               f(bd.priorite_demande,'priorite_demande'),
-          localisation_emplacement:       f(bd.localisation_emplacement,'localisation_emplacement'),
-          nombre_titres_inclus:           f(bd.nombre_titres_inclus,'nombre_titres_inclus'),
-          nombre_utilisateurs:            f(bd.nombre_utilisateurs,'nombre_utilisateurs'),
-          format_pret_numerique:          f(bd.format_pret_numerique,'format_pret_numerique'),
-          lien_plateforme:                f(bd.lien_plateforme, 'lien_plateforme'),
-          personne_a_aviser_nom:          f(bd.personne_a_aviser_nom,'personne_a_aviser_nom'),
-          personne_a_aviser_courriel:     f(bd.personne_a_aviser_courriel,'personne_a_aviser_courriel'),
-          usager_aviser_reservation:      bd.usager_aviser_reservation || flat.usager_aviser_reservation || sd.usager_aviser_reservation,
-          usager_aviser_activation:       bd.usager_aviser_activation  || flat.usager_aviser_activation  || sd.usager_aviser_activation,
-          note_commentaire:               f(bd.note_commentaire,'note_commentaire'),
-          // Suggestion d'achat
-          auteur:                         flat.auteur           || bd.auteur,
-          usager_faculte:                 flat.usager_faculte   || sd.usager_faculte,
-          date_requise_cours:             flat.date_requise_cours || sd.date_requise_cours,
-          note_usager:                    flat.note_usager       || sd.note_usager,
-          // Nouvel achat unique
-          quantite:                       sd.quantite,
-          projets_speciaux:               sd.projets_speciaux,
-          type_monographie:               sd.type_monographie    || bd.type_monographie,
-          reserve_cours:                  sd.reserve_cours,
-          reserve_cours_sigle:            sd.reserve_cours_sigle,
-          reserve_cours_session:          sd.reserve_cours_session,
-          reserve_cours_enseignant:       sd.reserve_cours_enseignant,
-          // Modification et CCOL
-          precision_demande:              sd.precision_demande,
-          numero_oclc:                    sd.numero_oclc,
-          date_debut_abonnement:          sd.date_debut_abonnement,
-          // PEB Tipasa numérique
-          gobi_vu_format_numerique:       sd.gobi_vu_format_numerique,
-          gobi_version_moins_365_usd:     sd.gobi_version_moins_365_usd,
-          reference_tipasa:               sd.reference_tipasa,
-          // Requête Accessibilité
-          reference_usager:               sd.reference_usager,
-          besoin_specifique_format:       sd.besoin_specifique_format,
-          permalien_sofia:                sd.permalien_sofia,
-          exemplaire_detenu:              sd.exemplaire_detenu,
-          fournisseur_contacte_sans_succes: sd.fournisseur_contacte_sans_succes,
-          verification_caeb:              sd.verification_caeb,
-          verification_sqla:              sd.verification_sqla,
-          verification_emma:              sd.verification_emma,
-        } as Item;
-      },
-      error: () => {}
-    });
+  private mapReponseToItem(r: any): void {
+    const bd   = r.reponses?.baseData    || {};
+    const sd   = r.reponses?.specificData || {};
+    const flat = (r.reponses && !r.reponses.baseData) ? r.reponses : {};
+    const f = (b: any, s: any) => b || flat[s] || sd[s];
+    this.item = {
+      formulaire_type:                r.type_formulaire,
+      demandeur:                      r.usager_nom,
+      usager_courriel:                r.usager_courriel,
+      usager_statut:                  r.usager_statut,
+      titre_document:                 bd.titre_document    || flat.titre_document    || sd.titre_document || '—',
+      sous_titre:                     f(bd.sous_titre,      'sous_titre'),
+      editeur:                        f(bd.editeur,         'editeur'),
+      isbn_issn:                      f(bd.isbn_issn,       'isbn_issn'),
+      date_publication:               f(bd.date_publication,'date_publication'),
+      format_support:                 f(bd.format_support,  'format_support'),
+      categorie_document:             f(bd.categorie_document,'categorie_document'),
+      bibliotheque:                   f(bd.bibliotheque,    'bibliotheque'),
+      fonds_budgetaire:               f(bd.fonds_budgetaire,'fonds_budgetaire'),
+      fonds_sn_projet:                f(bd.fonds_sn_projet, 'fonds_sn_projet'),
+      periode_couverte:               f(bd.periode_couverte,'periode_couverte'),
+      source_information:             f(bd.source_information,'source_information'),
+      prix_cad:                       f(bd.prix_cad,        'prix_cad'),
+      devise_originale:               f(bd.devise_originale,'devise_originale'),
+      prix_devise_originale:          f(bd.prix_devise_originale,'prix_devise_originale'),
+      priorite_demande:               f(bd.priorite_demande,'priorite_demande'),
+      localisation_emplacement:       f(bd.localisation_emplacement,'localisation_emplacement'),
+      nombre_titres_inclus:           f(bd.nombre_titres_inclus,'nombre_titres_inclus'),
+      nombre_utilisateurs:            f(bd.nombre_utilisateurs,'nombre_utilisateurs'),
+      format_pret_numerique:          f(bd.format_pret_numerique,'format_pret_numerique'),
+      lien_plateforme:                f(bd.lien_plateforme, 'lien_plateforme'),
+      personne_a_aviser_nom:          f(bd.personne_a_aviser_nom,'personne_a_aviser_nom'),
+      personne_a_aviser_courriel:     f(bd.personne_a_aviser_courriel,'personne_a_aviser_courriel'),
+      usager_aviser_reservation:      bd.usager_aviser_reservation || flat.usager_aviser_reservation || sd.usager_aviser_reservation,
+      usager_aviser_activation:       bd.usager_aviser_activation  || flat.usager_aviser_activation  || sd.usager_aviser_activation,
+      note_commentaire:               f(bd.note_commentaire,'note_commentaire'),
+      auteur:                         flat.auteur           || bd.auteur,
+      usager_faculte:                 flat.usager_faculte   || sd.usager_faculte,
+      date_requise_cours:             flat.date_requise_cours || sd.date_requise_cours,
+      note_usager:                    flat.note_usager       || sd.note_usager,
+      quantite:                       sd.quantite,
+      projets_speciaux:               sd.projets_speciaux,
+      type_monographie:               sd.type_monographie    || bd.type_monographie,
+      reserve_cours:                  sd.reserve_cours,
+      reserve_cours_sigle:            sd.reserve_cours_sigle,
+      reserve_cours_session:          sd.reserve_cours_session,
+      reserve_cours_enseignant:       sd.reserve_cours_enseignant,
+      precision_demande:              sd.precision_demande,
+      numero_oclc:                    sd.numero_oclc,
+      date_debut_abonnement:          sd.date_debut_abonnement,
+      gobi_vu_format_numerique:       sd.gobi_vu_format_numerique,
+      gobi_version_moins_365_usd:     sd.gobi_version_moins_365_usd,
+      reference_tipasa:               sd.reference_tipasa,
+      reference_usager:               sd.reference_usager,
+      besoin_specifique_format:       sd.besoin_specifique_format,
+      permalien_sofia:                sd.permalien_sofia,
+      exemplaire_detenu:              sd.exemplaire_detenu,
+      fournisseur_contacte_sans_succes: sd.fournisseur_contacte_sans_succes,
+      verification_caeb:              sd.verification_caeb,
+      verification_sqla:              sd.verification_sqla,
+      verification_emma:              sd.verification_emma,
+    } as Item;
   }
 
   private buildItemPayload(suivi_acq: string, note_acq: string | null): Record<string, any> {
@@ -256,7 +261,7 @@ export class AcqDecisionComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (!this.form.valid || !this.itemId) {
+    if (!this.form.valid || !this.reponseId) {
       this.form.markAllAsTouched();
       this.errorMessage = 'Veuillez remplir tous les champs requis.';
       return;
@@ -280,7 +285,7 @@ export class AcqDecisionComponent implements OnInit {
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), bibliotheque_note_interne },
+          { ...this.buildItemPayload(suivi_acq, note_acq), bibliotheque_note_interne, reponse_id: this.reponseId },
           this.httpOptions
         );
 
@@ -306,7 +311,7 @@ export class AcqDecisionComponent implements OnInit {
 
   private notifyN8nDecision(suivi_acq: string, note_acq: string | null): void {
     const payload = {
-      reponse_id:      this.itemId,
+      reponse_id:      this.reponseId,
       suivi_acq,
       note_acq,
       usager_courriel: this.item?.usager_courriel,

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReponsesService, Reponse, PaginatedResponse } from '../../../services/reponses.service';
 import { PageEvent } from '@angular/material/paginator';
 
@@ -123,8 +124,16 @@ export class ReponsesListComponent implements OnInit {
   };
 
   constructor(
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private router: Router
   ) {}
+
+  ouvrirDecisionAcq(): void {
+    if (!this.expandedReponse) return;
+    this.router.navigate(['/acq-decision'], {
+      queryParams: { id: this.expandedReponse.id }
+    });
+  }
 
   ngOnInit(): void {
     this.loadReponses();

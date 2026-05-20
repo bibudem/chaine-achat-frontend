@@ -194,16 +194,21 @@
 
                 <!-- Pied panneau -->
                 <div class="panel-footer">
-                  <button class="btn btn-sm btn-outline-secondary" (click)="toggleDetails(reponse)">
+                  <button class="pf-btn pf-btn--close" (click)="toggleDetails(reponse)">
                     <i class="bi bi-x me-1"></i>Fermer
                   </button>
-                  <button class="btn btn-sm btn-outline-primary" (click)="copyToClipboard()">
-                    <i class="bi bi-copy me-1"></i>Copier JSON
-                    <small *ngIf="copyFeedback" class="ms-1 text-success fw-semibold">{{ copyFeedback }}</small>
-                  </button>
-                  <button class="btn btn-sm btn-outline-success" (click)="downloadJson()">
-                    <i class="bi bi-download me-1"></i>Télécharger JSON
-                  </button>
+                  <div class="pf-actions">
+                    <button class="pf-btn pf-btn--acq" (click)="ouvrirDecisionAcq()">
+                      <i class="bi bi-check2-circle me-1"></i>Décision ACQ
+                    </button>
+                    <button class="pf-btn pf-btn--secondary" (click)="copyToClipboard()">
+                      <i class="bi bi-copy me-1"></i>Copier JSON
+                      <small *ngIf="copyFeedback" class="ms-1 pf-feedback">{{ copyFeedback }}</small>
+                    </button>
+                    <button class="pf-btn pf-btn--secondary" (click)="downloadJson()">
+                      <i class="bi bi-download me-1"></i>Télécharger JSON
+                    </button>
+                  </div>
                 </div>
 
               </div>
