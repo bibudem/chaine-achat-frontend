@@ -19,6 +19,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   pendingCount    = 0;
   pendingReponses: { id: number; type_formulaire: string; usager_nom: string; dateA: string }[] = [];
   notifOpen       = false;
+  formsOpen       = false;
+  userOpen        = false;
 
   private pollInterval: any;
   private refreshSub?: Subscription;
@@ -63,11 +65,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toggleNotif(event: Event): void {
     event.stopPropagation();
     this.notifOpen = !this.notifOpen;
+    this.formsOpen = false;
+    this.userOpen  = false;
+  }
+
+  toggleForms(event: Event): void {
+    event.stopPropagation();
+    this.formsOpen = !this.formsOpen;
+    this.notifOpen = false;
+    this.userOpen  = false;
+  }
+
+  toggleUser(event: Event): void {
+    event.stopPropagation();
+    this.userOpen  = !this.userOpen;
+    this.notifOpen = false;
+    this.formsOpen = false;
   }
 
   @HostListener('document:click')
   onDocumentClick(): void {
     this.notifOpen = false;
+    this.formsOpen = false;
+    this.userOpen  = false;
   }
 
   voirTout(): void {

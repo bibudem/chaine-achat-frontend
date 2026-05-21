@@ -1,7 +1,11 @@
+/* ══════════════════════════════════════════════════════
+   Logo
+   ══════════════════════════════════════════════════════ */
 .brand-logo { max-width: 200px; }
 
+
 /* ══════════════════════════════════════════════════════
-   Barre droite — espacement uniforme
+   Navbar — layout & surcharges Bootstrap
    ══════════════════════════════════════════════════════ */
 .navbar-nav-right {
   gap: 6px;
@@ -9,9 +13,7 @@
   flex-wrap: nowrap;
 }
 
-/* ══════════════════════════════════════════════════════
-   Token visuel commun — pill shape bleu
-   ══════════════════════════════════════════════════════ */
+/* Pill shape bleu sur les nav-link Bootstrap restants */
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
   box-shadow: none !important;
   border-radius: 20px;
@@ -24,156 +26,181 @@
   font-weight: 500;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link i {
   color: #2380D1;
   font-size: 0.95rem;
 }
-
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link:hover,
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item.show .nav-link {
   background: rgba(0, 64, 127, 0.05) !important;
   border-color: rgba(0, 64, 127, 0.25) !important;
   color: #00407F !important;
 }
-
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link:hover i,
 .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item.show .nav-link i {
   color: #00407F;
 }
-
-/* Icône seule : padding symétrique, caret masqué */
-#notificationDropdown        { padding: 5px 10px; }
-#notificationDropdown::after { display: none; }
-#UserDropdown::after         { display: none; }
-
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown i {
   margin-right: 0 !important;
 }
 
+
 /* ══════════════════════════════════════════════════════
-   Mini carte calendrier
+   Pill buttons — base partagée : notif / forms / user
    ══════════════════════════════════════════════════════ */
-.date-card {
+
+/* Les trois nav-items ont besoin de position:relative
+   pour le panneau absolu et la flèche ::after */
+.nav-item--notif,
+.nav-item--forms,
+.nav-item--user { position: relative; }
+
+.notif-btn,
+.forms-btn,
+.user-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
   background: rgba(0, 64, 127, 0.02);
   border: 1px solid rgba(0, 64, 127, 0.12);
   border-radius: 20px;
-  padding: 4px 12px;
-  user-select: none;
-}
-
-.date-card-day {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #00407F;
-  line-height: 1;
-  padding-right: 8px;
-  border-right: 1px solid rgba(0, 64, 127, 0.2);
-}
-
-.date-card-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
-}
-
-.date-card-month {
-  font-size: 0.67rem;
-  font-weight: 700;
-  color: #00407F;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.date-card-year {
-  font-size: 0.59rem;
-  color: rgba(0, 64, 127, 0.55);
-  letter-spacing: 0.04em;
-}
-
-/* ══════════════════════════════════════════════════════
-   Sélecteur de langue
-   ══════════════════════════════════════════════════════ */
-.lang-toggle {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: rgba(0, 64, 127, 0.02);
-  border: 1px solid rgba(0, 64, 127, 0.12);
-  border-radius: 20px;
-  padding: 5px 10px;
-}
-
-.lang-btn {
-  background: none;
-  border: none;
-  color: rgba(0, 64, 127, 0.5);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  padding: 2px 5px;
   cursor: pointer;
-  border-radius: 12px;
-  transition: color 0.15s, background 0.15s;
-}
-.lang-btn:hover      { color: #00407F; }
-.lang-btn--active    { color: #fff; background: #00407F; }
-
-.lang-sep {
-  color: rgba(0, 64, 127, 0.25);
-  font-size: 0.7rem;
-  line-height: 1;
-  user-select: none;
-}
-
-.lang-toggle__icon {
-  color: #2380D1;
-  font-size: 0.8rem;
-  margin-right: 3px;
-}
-
-/* ══════════════════════════════════════════════════════
-   Couleurs sémantiques des formulaires (dropdown grille)
-   ══════════════════════════════════════════════════════ */
-.preview-icon--achat         { background: var(--achat-dark)   !important; }
-.preview-icon--abonnement    { background: var(--type-violet)  !important; }
-.preview-icon--ccol          { background: var(--acq-dark)     !important; }
-.preview-icon--peb           { background: var(--type-cyan)    !important; }
-.preview-icon--accessibilite { background: var(--text-gray)    !important; }
-.preview-icon--suggest       { background: var(--suggest-mid)  !important; }
-
-/* ══════════════════════════════════════════════════════
-   Cloche — notifications
-   ══════════════════════════════════════════════════════ */
-.nav-item--notif { position: relative; }
-
-.notif-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 64, 127, 0.02);
-  border: 1px solid rgba(0, 64, 127, 0.12);
-  border-radius: 20px;
-  color: #2380D1;
-  width: 36px;
-  height: 32px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background .15s, border-color .15s, color .15s;
   flex-shrink: 0;
+  transition: background .15s, border-color .15s, color .15s;
 }
-.notif-btn:hover,
-.notif-btn--active {
+.notif-btn:hover, .notif-btn--active,
+.forms-btn:hover, .forms-btn--active,
+.user-btn:hover,  .user-btn--active {
   background: rgba(0, 64, 127, 0.05) !important;
   border-color: rgba(0, 64, 127, 0.28) !important;
   color: #00407F !important;
 }
 
+/* Icône seule : centré, dimensions carrées fixes */
+.notif-btn,
+.forms-btn {
+  position: relative; /* pour le badge et le ::after */
+  justify-content: center;
+  width: 36px;
+  height: 32px;
+  color: #2380D1;
+  font-size: 0.95rem;
+}
+
+/* Bouton texte + avatar : largeur automatique */
+.user-btn {
+  gap: 6px;
+  height: 32px;
+  padding: 5px 12px;
+  color: rgba(0, 64, 127, 0.75);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Panel flyout — base partagée : notif / forms / user
+   ══════════════════════════════════════════════════════ */
+.notif-panel,
+.forms-panel,
+.user-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--light-gray, #E7EBEE);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(11, 17, 58, 0.13);
+  z-index: 1300;
+  overflow: hidden;
+  animation: notifIn .15s ease;
+}
+@keyframes notifIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Largeurs propres à chaque panneau */
+.notif-panel { width: 320px; }
+.forms-panel { width: 300px; }
+.user-panel  { width: 240px; }
+
+/* En-tête bleu foncé — identique pour notif et forms */
+.notif-panel__head,
+.forms-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--primary-blue, #0b113a);
+  color: #fff;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Panel items — base partagée : lignes des trois listes
+   ══════════════════════════════════════════════════════ */
+.notif-item,
+.forms-item,
+.user-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border-bottom: 1px solid var(--light-gray, #E7EBEE);
+  transition: background .12s;
+}
+.notif-item:last-child,
+.forms-item:last-child,
+.user-item:last-child { border-bottom: none; }
+
+.notif-item:hover,
+.forms-item:hover,
+.user-item:hover { background: var(--extra-light-blue, #E5F0F8); }
+
+/* Ajustements par contexte */
+.notif-item { padding: 10px 14px; border: none; cursor: pointer; text-align: left; }
+.forms-item { padding: 10px 14px; text-decoration: none; color: inherit; }
+.forms-item:hover { text-decoration: none; color: inherit; }
+.user-item  {
+  padding: 11px 16px; border: none; cursor: pointer; text-align: left;
+  color: var(--primary-blue, #0b113a);
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+}
+
+/* Icône carrée colorée (notif & forms partagent le même gabarit) */
+.notif-item__icon,
+.forms-item__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* Chevron de fin de ligne — identique dans les trois panneaux */
+.notif-item__arrow,
+.forms-item__arrow,
+.user-item__arrow {
+  font-size: 0.65rem;
+  color: var(--border-gray, #9DABB9);
+  flex-shrink: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Widget notifications
+   ══════════════════════════════════════════════════════ */
+
+/* Badge compteur rouge sur la cloche */
 .notif-badge {
   position: absolute;
   top: -5px;
@@ -194,36 +221,6 @@
   line-height: 1;
 }
 
-/* ── Panneau ── */
-.notif-panel {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  width: 320px;
-  background: #fff;
-  border: 1px solid var(--light-gray, #E7EBEE);
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(11, 17, 58, 0.13);
-  z-index: 1300;
-  overflow: hidden;
-  animation: notifIn .15s ease;
-}
-@keyframes notifIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.notif-panel__head {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 16px;
-  background: var(--primary-blue, #0b113a);
-  color: #fff;
-  font-family: 'Figtree', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
 .notif-panel__count {
   margin-left: auto;
   background: rgba(255, 255, 255, 0.18);
@@ -250,40 +247,6 @@
   color: var(--text-gray, #607386);
 }
 
-.notif-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--light-gray, #E7EBEE);
-  cursor: pointer;
-  text-align: left;
-  transition: background .12s;
-}
-.notif-item:last-child { border-bottom: none; }
-.notif-item:hover      { background: var(--extra-light-blue, #E5F0F8); }
-
-.notif-item__icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 0.8rem;
-  flex-shrink: 0;
-}
-.notif-type--achat   { background: var(--achat-dark,  #1B5E6E); }
-.notif-type--ccol    { background: var(--acq-dark,    #3730A3); }
-.notif-type--abo     { background: var(--type-violet, #6D28D9); }
-.notif-type--peb     { background: var(--type-cyan,   #0369A1); }
-.notif-type--acq     { background: var(--type-gray,   #37424D); }
-.notif-type--suggest { background: var(--suggest-mid, #C8872A); }
-
 .notif-item__body {
   flex: 1;
   display: flex;
@@ -308,12 +271,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.notif-item__arrow {
-  font-size: 0.65rem;
-  color: var(--border-gray, #9DABB9);
-  flex-shrink: 0;
-}
 
+/* Pied de panneau */
 .notif-panel__foot {
   padding: 8px 14px;
   border-top: 1px solid var(--light-gray, #E7EBEE);
@@ -334,8 +293,225 @@
 }
 .notif-voir-tout:hover { color: var(--primary-blue, #0b113a); }
 
+/* Couleurs sémantiques par type de réponse */
+.notif-type--achat   { background: var(--achat-dark,  #1B5E6E); }
+.notif-type--ccol    { background: var(--acq-dark,    #3730A3); }
+.notif-type--abo     { background: var(--type-violet, #6D28D9); }
+.notif-type--peb     { background: var(--type-cyan,   #0369A1); }
+.notif-type--acq     { background: var(--type-gray,   #37424D); }
+.notif-type--suggest { background: var(--suggest-mid, #C8872A); }
+
+
 /* ══════════════════════════════════════════════════════
-   Animation titre (env. dev)
+   Widget formulaires
+   ══════════════════════════════════════════════════════ */
+.forms-item__label {
+  flex: 1;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--primary-blue, #0b113a);
+}
+
+/* Couleurs sémantiques par type de formulaire (partagées avec notif-type-*) */
+.preview-icon--achat         { background: var(--achat-dark)   !important; }
+.preview-icon--abonnement    { background: var(--type-violet)  !important; }
+.preview-icon--ccol          { background: var(--acq-dark)     !important; }
+.preview-icon--peb           { background: var(--type-cyan)    !important; }
+.preview-icon--accessibilite { background: var(--text-gray)    !important; }
+.preview-icon--suggest       { background: var(--suggest-mid)  !important; }
+
+
+/* ══════════════════════════════════════════════════════
+   Widget utilisateur
+   ══════════════════════════════════════════════════════ */
+
+/* Avatar initiales dans le bouton header */
+.user-btn__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2380D1;
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* Chevron animé à l'ouverture */
+.user-btn__caret {
+  font-size: 0.6rem;
+  color: rgba(0, 64, 127, 0.45);
+  transition: transform .15s;
+}
+.user-btn--active .user-btn__caret { transform: rotate(180deg); }
+
+/* En-tête — avatar large + nom + rôle */
+.user-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--primary-blue, #0b113a);
+  color: #fff;
+}
+.user-panel__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.user-panel__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.user-panel__name {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-panel__role {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-item__icon {
+  color: var(--text-gray, #607386);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.user-item:hover .user-item__icon { color: var(--primary-blue, #0b113a); }
+.user-item__label { flex: 1; font-weight: 500; }
+
+
+/* ══════════════════════════════════════════════════════
+   Sélecteur de langue
+   ══════════════════════════════════════════════════════ */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 64, 127, 0.02);
+  border: 1px solid rgba(0, 64, 127, 0.12);
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+.lang-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 64, 127, 0.5);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 5px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: color 0.15s, background 0.15s;
+}
+.lang-btn:hover   { color: #00407F; }
+.lang-btn--active { color: #fff; background: #00407F; }
+
+.lang-sep {
+  color: rgba(0, 64, 127, 0.25);
+  font-size: 0.7rem;
+  line-height: 1;
+  user-select: none;
+}
+.lang-toggle__icon {
+  color: #2380D1;
+  font-size: 0.8rem;
+  margin-right: 3px;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Mini carte calendrier (désactivée — HTML commenté)
+   ══════════════════════════════════════════════════════ */
+.date-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 64, 127, 0.02);
+  border: 1px solid rgba(0, 64, 127, 0.12);
+  border-radius: 20px;
+  padding: 4px 12px;
+  user-select: none;
+}
+.date-card-day {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00407F;
+  line-height: 1;
+  padding-right: 8px;
+  border-right: 1px solid rgba(0, 64, 127, 0.2);
+}
+.date-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+.date-card-month {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #00407F;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.date-card-year {
+  font-size: 0.59rem;
+  color: rgba(0, 64, 127, 0.55);
+  letter-spacing: 0.04em;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Flèche de connexion bouton → panneau
+   ══════════════════════════════════════════════════════ */
+
+/* Losange bleu dans le gap de 10px bouton/panneau.
+   Sans z-index explicite → reste sous les panneaux (z-index: 1300). */
+.nav-item--notif.panel-open::after,
+.nav-item--forms.panel-open::after,
+.nav-item--user.panel-open::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: var(--primary-blue, #0b113a);
+  transform: rotate(45deg);
+  border-top: 1px solid var(--light-gray, #E7EBEE);
+  border-left: 1px solid var(--light-gray, #E7EBEE);
+  animation: notifIn .15s ease;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Animation titre (env. dev uniquement)
    ══════════════════════════════════════════════════════ */
 .typing {
   position: relative;
@@ -355,61 +531,51 @@
 @keyframes typing { to { width: 0; } }
 @keyframes caret  { 50% { color: red; } }
 
+
 /* ══════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════ */
 
-/* Tablette (< 992px) — réduire les paddings */
+/* Tablette (< 992px) */
 @media (max-width: 991px) {
   .navbar-nav-right { gap: 4px; }
-
   .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
     padding: 5px 9px;
   }
 }
 
-/* Mobile paysage / petite tablette (< 768px) */
+/* Mobile paysage (< 768px) */
 @media (max-width: 767px) {
-  .navbar-nav-right {
-    gap: 4px;
-    flex-shrink: 0; /* empêche les icônes de rétrécir */
-  }
-
+  .navbar-nav-right { gap: 4px; flex-shrink: 0; }
   .lang-toggle { padding: 4px 8px; }
-
-  /* Panneau notif : colle à droite du viewport */
-  .notif-panel {
-    width: calc(100vw - 16px);
-    right: -8px;
-  }
-
-  /* Empêche le titre de pousser les icônes hors écran */
   .titre-initial { min-width: 0; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .notif-panel,
+  .forms-panel,
+  .user-panel { width: calc(100vw - 16px); right: -8px; }
 }
 
-/* Mobile portrait (< 480px) — layout très compact */
+/* Mobile portrait (< 480px) */
 @media (max-width: 479px) {
   .navbar-nav-right { gap: 2px; flex-shrink: 0; }
 
-  .lang-toggle { padding: 3px 6px; gap: 0; flex-direction: column; border-radius: 10px; }
-  .lang-btn    { padding: 1px 4px; font-size: 0.65rem; line-height: 1.4; }
-  .lang-sep    { display: none; }
+  .lang-toggle     { padding: 3px 6px; gap: 0; flex-direction: column; border-radius: 10px; }
+  .lang-btn        { padding: 1px 4px; font-size: 0.65rem; line-height: 1.4; }
+  .lang-sep        { display: none; }
   .lang-toggle__icon { display: none !important; }
 
-  .notif-btn { width: 30px; height: 28px; font-size: 0.82rem; }
+  .notif-btn,
+  .forms-btn,
+  .user-btn { height: 28px; }
+  .notif-btn,
+  .forms-btn { width: 30px; font-size: 0.82rem; }
 
-  .notif-panel {
-    width: calc(100vw - 12px);
-    right: -4px;
-  }
+  .notif-panel,
+  .forms-panel,
+  .user-panel { width: calc(100vw - 12px); right: -4px; }
 
-  /* Réduit le padding des nav-link icônes */
   .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
     padding: 4px 7px;
     font-size: 0.75rem;
   }
-  #notificationDropdown { padding: 4px 7px; }
-
-  /* Nom utilisateur : masqué sur très petit écran */
-  #UserDropdown span { display: none !important; }
 }

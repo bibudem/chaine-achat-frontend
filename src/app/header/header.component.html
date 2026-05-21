@@ -38,7 +38,8 @@
       </li>-->
 
       <!-- Cloche notifications (admin seulement) -->
-      <li class="nav-item nav-item--notif d-flex align-items-center" *ngIf="authService.isAdmin">
+      <li class="nav-item nav-item--notif d-flex align-items-center" *ngIf="authService.isAdmin"
+          [class.panel-open]="notifOpen">
         <button class="notif-btn" (click)="toggleNotif($event)"
                 [class.notif-btn--active]="notifOpen"
                 title="Réponses en attente de décision">
@@ -75,6 +76,54 @@
           </div>
         </div>
       </li>
+      <!-- Grille formulaires -->
+      <li class="nav-item nav-item--forms d-flex align-items-center"
+          [class.panel-open]="formsOpen">
+        <button class="forms-btn" (click)="toggleForms($event)"
+                [class.forms-btn--active]="formsOpen"
+                title="{{ 'header.formulaires' | translate }}">
+          <i class="bi bi-grid-3x3-gap-fill"></i>
+        </button>
+
+        <div class="forms-panel" *ngIf="formsOpen" (click)="$event.stopPropagation()">
+          <div class="forms-panel__head">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+            <span>{{ 'header.formulaires' | translate }}</span>
+          </div>
+          <div class="forms-panel__body">
+            <a class="forms-item" routerLink="/usager/nouvel-achat" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--achat"><i class="bi bi-cart-plus"></i></span>
+              <span class="forms-item__label">{{ 'header.nouvel-achat' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+            <a class="forms-item" routerLink="/usager/nouvel-abonnement" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--abonnement"><i class="bi bi-newspaper"></i></span>
+              <span class="forms-item__label">{{ 'header.nouvel-abonnement' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+            <a class="forms-item" routerLink="/usager/modification-ccol" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--ccol"><i class="bi bi-pencil-square"></i></span>
+              <span class="forms-item__label">{{ 'header.modification-ccol' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+            <a class="forms-item" routerLink="/usager/peb-tipasa-numerique" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--peb"><i class="bi bi-share"></i></span>
+              <span class="forms-item__label">{{ 'header.peb-tipasa' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+            <a class="forms-item" routerLink="/usager/requete-accessibilite" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--accessibilite"><i class="bi bi-universal-access"></i></span>
+              <span class="forms-item__label">{{ 'header.accessibilite' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+            <a class="forms-item" routerLink="/usager/suggestion-public" target="_blank" (click)="formsOpen = false">
+              <span class="forms-item__icon preview-icon--suggest"><i class="bi bi-lightbulb"></i></span>
+              <span class="forms-item__label">{{ 'header.suggestion' | translate }}</span>
+              <i class="bi bi-chevron-right forms-item__arrow"></i>
+            </a>
+          </div>
+        </div>
+      </li>
 
       <!-- Sélecteur de langue -->
       <li class="nav-item d-flex align-items-center">
@@ -86,76 +135,31 @@
         </div>
       </li>
 
-      <!-- Grille formulaires -->
-      <li class="nav-item dropdown d-flex align-items-center">
-        <a class="nav-link d-flex align-items-center justify-content-center"
-           id="notificationDropdown" href="#" data-toggle="dropdown">
-          <i class="bi bi-grid-3x3-gap-fill"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-          <p class="mb-0 font-weight-normal float-left dropdown-header">{{ 'header.formulaires' | translate }}</p>
-          <a class="dropdown-item preview-item" routerLink="/usager/nouvel-achat" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--achat"><i class="bi bi-cart-plus mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-achat' | translate }}</h5>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item" routerLink="/usager/nouvel-abonnement" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--abonnement"><i class="bi bi-newspaper mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.nouvel-abonnement' | translate }}</h5>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item" routerLink="/usager/modification-ccol" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--ccol"><i class="bi bi-pencil-square mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.modification-ccol' | translate }}</h5>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item" routerLink="/usager/peb-tipasa-numerique" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--peb"><i class="bi bi-share mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.peb-tipasa' | translate }}</h5>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item" routerLink="/usager/requete-accessibilite" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--accessibilite"><i class="bi bi-universal-access mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.accessibilite' | translate }}</h5>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item" routerLink="/usager/suggestion-public" target="_blank">
-            <div class="preview-thumbnail">
-              <div class="preview-icon preview-icon--suggest"><i class="bi bi-lightbulb mx-0"></i></div>
-            </div>
-            <div class="preview-item-content">
-              <h5 class="font-weight-normal mt-1">{{ 'header.suggestion' | translate }}</h5>
-            </div>
-          </a>
-        </div>
-      </li>
-
       <!-- Utilisateur -->
-      <li class="nav-item dropdown d-flex align-items-center">
-        <a class="nav-link d-flex align-items-center gap-2"
-           id="UserDropdown" data-toggle="dropdown" aria-expanded="false" href="javascript:;">
-          <i class="bi bi-person-circle"></i>
+      <li class="nav-item nav-item--user d-flex align-items-center"
+          [class.panel-open]="userOpen">
+        <button class="user-btn" (click)="toggleUser($event)"
+                [class.user-btn--active]="userOpen">
+          <span class="user-btn__avatar">{{ prenomAdmin.charAt(0) }}{{ nomAdmin.charAt(0) }}</span>
           <span class="d-none d-sm-inline">{{ prenomAdmin }} {{ nomAdmin }}</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-          <a (click)="logout()" class="dropdown-item">
-            <i class="bi bi-box-arrow-right me-2"></i>{{ 'login.logout-text' | translate }}
-          </a>
+          <i class="bi bi-chevron-down user-btn__caret d-none d-sm-inline"></i>
+        </button>
+
+        <div class="user-panel" *ngIf="userOpen" (click)="$event.stopPropagation()">
+          <div class="user-panel__head">
+            <span class="user-panel__avatar">{{ prenomAdmin.charAt(0) }}{{ nomAdmin.charAt(0) }}</span>
+            <div class="user-panel__info">
+              <span class="user-panel__name">{{ prenomAdmin }} {{ nomAdmin }}</span>
+              <span class="user-panel__role">{{ groupeAdmin }}</span>
+            </div>
+          </div>
+          <div class="user-panel__body">
+            <button class="user-item" (click)="logout()">
+              <i class="bi bi-box-arrow-right user-item__icon"></i>
+              <span class="user-item__label">{{ 'login.logout-text' | translate }}</span>
+              <i class="bi bi-chevron-right user-item__arrow"></i>
+            </button>
+          </div>
         </div>
       </li>
 
