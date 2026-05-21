@@ -91,36 +91,36 @@
             <span>{{ 'header.formulaires' | translate }}</span>
           </div>
           <div class="forms-panel__body">
-            <a class="forms-item" routerLink="/usager/nouvel-achat" target="_blank" (click)="formsOpen = false">
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/nouvel-achat')">
               <span class="forms-item__icon preview-icon--achat"><i class="bi bi-cart-plus"></i></span>
               <span class="forms-item__label">{{ 'header.nouvel-achat' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
-            <a class="forms-item" routerLink="/usager/nouvel-abonnement" target="_blank" (click)="formsOpen = false">
+            </button>
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/nouvel-abonnement')">
               <span class="forms-item__icon preview-icon--abonnement"><i class="bi bi-newspaper"></i></span>
               <span class="forms-item__label">{{ 'header.nouvel-abonnement' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
-            <a class="forms-item" routerLink="/usager/modification-ccol" target="_blank" (click)="formsOpen = false">
+            </button>
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/modification-ccol')">
               <span class="forms-item__icon preview-icon--ccol"><i class="bi bi-pencil-square"></i></span>
               <span class="forms-item__label">{{ 'header.modification-ccol' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
-            <a class="forms-item" routerLink="/usager/peb-tipasa-numerique" target="_blank" (click)="formsOpen = false">
+            </button>
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/peb-tipasa-numerique')">
               <span class="forms-item__icon preview-icon--peb"><i class="bi bi-share"></i></span>
               <span class="forms-item__label">{{ 'header.peb-tipasa' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
-            <a class="forms-item" routerLink="/usager/requete-accessibilite" target="_blank" (click)="formsOpen = false">
+            </button>
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/requete-accessibilite')">
               <span class="forms-item__icon preview-icon--accessibilite"><i class="bi bi-universal-access"></i></span>
               <span class="forms-item__label">{{ 'header.accessibilite' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
-            <a class="forms-item" routerLink="/usager/suggestion-public" target="_blank" (click)="formsOpen = false">
+            </button>
+            <button class="forms-item" (click)="ouvrirFormulaire('/usager/suggestion-public')">
               <span class="forms-item__icon preview-icon--suggest"><i class="bi bi-lightbulb"></i></span>
               <span class="forms-item__label">{{ 'header.suggestion' | translate }}</span>
               <i class="bi bi-chevron-right forms-item__arrow"></i>
-            </a>
+            </button>
           </div>
         </div>
       </li>

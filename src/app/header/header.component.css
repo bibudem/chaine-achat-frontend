@@ -163,8 +163,7 @@
 
 /* Ajustements par contexte */
 .notif-item { padding: 10px 14px; border: none; cursor: pointer; text-align: left; }
-.forms-item { padding: 10px 14px; text-decoration: none; color: inherit; }
-.forms-item:hover { text-decoration: none; color: inherit; }
+.forms-item { padding: 10px 14px; border: none; cursor: pointer; text-align: left; color: inherit; }
 .user-item  {
   padding: 11px 16px; border: none; cursor: pointer; text-align: left;
   color: var(--primary-blue, #0b113a);

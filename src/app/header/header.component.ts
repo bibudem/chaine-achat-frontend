@@ -76,6 +76,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userOpen  = false;
   }
 
+  ouvrirFormulaire(chemin: string): void {
+    window.open(chemin, '_blank', 'noopener,noreferrer');
+    this.formsOpen = false;
+  }
+
   toggleUser(event: Event): void {
     event.stopPropagation();
     this.userOpen  = !this.userOpen;
