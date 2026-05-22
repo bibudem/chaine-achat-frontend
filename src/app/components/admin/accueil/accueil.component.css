@@ -354,7 +354,7 @@
 /* Palette 6 types — Modification CCOL · Nouvel abonnement · Nouvel achat unique
    PEB Tipasa numérique · Requête ACQ · Suggestion d'achat                      */
 .tc-0    { background: var(--acq-dark); }       .tc-0-bg { background: var(--acq-dark); }       /* Indigo     — Modification CCOL       */
-.tc-1    { background: var(--type-violet); }    .tc-1-bg { background: var(--type-violet); }    /* Violet     — Nouvel abonnement       */
+.tc-1    { background: var(--type-vert); }      .tc-1-bg { background: var(--type-vert); }      /* Vert       — Nouvel abonnement       */
 .tc-2    { background: var(--achat-dark); }     .tc-2-bg { background: var(--achat-dark); }     /* Teal       — Nouvel achat unique     */
 .tc-3    { background: var(--type-cyan); }      .tc-3-bg { background: var(--type-cyan); }      /* Cyan       — PEB Tipasa numérique    */
 .tc-4    { background: var(--type-gray); }      .tc-4-bg { background: var(--type-gray); }      /* Gris foncé — Requête ACQ             */

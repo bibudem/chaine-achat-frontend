@@ -62,7 +62,7 @@ export class FaqComponent {
       answerHtml: `Chaque type de formulaire est identifié par une <strong>couleur distinctive</strong> dans la liste des demandes et le tableau de bord :
         <ul style="margin:.5rem 0 .3rem 1.1rem;padding:0;line-height:1.9">
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3730A3;margin-right:6px;vertical-align:middle"></span><strong style="color:#3730A3">Indigo</strong> — Modification et CCOL</li>
-          <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#6D28D9;margin-right:6px;vertical-align:middle"></span><strong style="color:#6D28D9">Violet</strong> — Nouvel abonnement</li>
+          <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#16A34A;margin-right:6px;vertical-align:middle"></span><strong style="color:#16A34A">Vert</strong> — Nouvel abonnement</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#1B5E6E;margin-right:6px;vertical-align:middle"></span><strong style="color:#1B5E6E">Teal</strong> — Nouvel achat unique</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#0369A1;margin-right:6px;vertical-align:middle"></span><strong style="color:#0369A1">Cyan</strong> — PEB Tipasa numérique</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#37424D;margin-right:6px;vertical-align:middle"></span><strong style="color:#37424D">Gris foncé</strong> — Requête ACQ Accessibilité</li>

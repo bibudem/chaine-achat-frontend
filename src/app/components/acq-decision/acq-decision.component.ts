@@ -303,7 +303,7 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
     const colors: Record<string, string> = {
       'Nouvel achat unique':        '#1565c0',
       'Modification et CCOL':       '#6a1b9a',
-      'Nouvel abonnement':          '#00695c',
+      'Nouvel abonnement':          '#14532D',
       'PEB Tipasa numérique':       '#e65100',
       'Requête ACQ Accessibilité':  '#b71c1c',
     };

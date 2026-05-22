@@ -124,7 +124,7 @@ export class ImportLogsComponent implements OnInit {
     const t = (type ?? '').toLowerCase();
     if (t.includes('suggestion'))  return '#C8872A';
     if (t.includes('ccol'))        return '#3730A3';
-    if (t.includes('abonnement'))  return '#6D28D9';
+    if (t.includes('abonnement'))  return '#16A34A';
     if (t.includes('peb'))         return '#0369A1';
     if (t.includes('acq'))         return '#B91C1C';
     if (t.includes('achat'))       return '#1B5E6E';

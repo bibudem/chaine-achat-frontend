@@ -83,7 +83,7 @@
   --gray-card-bg:   #EEF0F2;
 
   /* ── Types de demande (palette 7 types) ─────────────────── */
-  --type-violet:     #6D28D9;
+  --type-vert:       #16A34A;
   --type-cyan:       #0369A1;
   --type-gray:       #37424D;
   --type-terracotta: #9A3412;
@@ -1365,7 +1365,7 @@ select.typeahead, select.tt-query, select.tt-hint {
    les 7 types dans toute l'application.
    ============================================= */
 .badge-type--ccol     { background: #EDE9FE; color: #3730A3; border: 1px solid rgba(55,48,163,.3); }   /* Modif. CCOL — Indigo    */
-.badge-type--abo      { background: #F3E8FF; color: #4C1D95; border: 1px solid rgba(109,40,217,.3); }  /* Nouvel abonnement — Violet */
+.badge-type--abo      { background: #DCFCE7; color: #14532D; border: 1px solid rgba(21,128,61,.25); } /* Nouvel abonnement — Vert émeraude */
 .badge-type--achat    { background: #D9F0EE; color: #1B5E6E; border: 1px solid rgba(42,144,134,.3); }  /* Achat unique — Teal     */
 .badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }   /* PEB Tipasa — Cyan       */
 .badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }   /* Requête ACQ — Gris foncé */

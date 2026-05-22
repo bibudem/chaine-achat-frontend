@@ -1,13 +1,13 @@
 /* ============================================================
    nouvel-abonnement.component.css
-   ACCENT : violet abonnement (--abo-*)
+   ACCENT : vert émeraude abonnement (--abo-*)
    Structure, responsive et composants partagés → css_udem.css
    ============================================================ */
 
 :host {
-  --abo-light: #ede9fe;
-  --abo-mid:   #6d28d9;
-  --abo-dark:  #4c1d95;
+  --abo-light: #dcfce7;
+  --abo-mid:   #16a34a;
+  --abo-dark:  #14532d;
 }
 
 /* ── Gradient d'en-tête ────────────────────────────────────── */

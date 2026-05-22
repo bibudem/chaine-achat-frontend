@@ -52,9 +52,9 @@ export class UsagerHomeComponent {
       description: "Soumettez une demande de souscription à une ressource périodique ou sérielle imprimée ou électronique.",
       icon:        'bi-newspaper',
       route:       '/usager/nouvel-abonnement',
-      accentColor: '#6D28D9',
-      bgColor:     '#F3E8FF',
-      textColor:   '#4C1D95',
+      accentColor: '#16A34A',
+      bgColor:     '#DCFCE7',
+      textColor:   '#14532D',
     },
     {
       titre:       'PEB Tipasa numérique',
