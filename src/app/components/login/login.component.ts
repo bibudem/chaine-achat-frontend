@@ -16,8 +16,9 @@ export class LoginComponent {
     this.authService.simulateLogin(profile);
     const saved = this.authService.redirectUrl;
     this.authService.redirectUrl = '/accueil';
-    const fallback = profile.role === 'Usager' ? '/usager' : '/accueil';
-    const dest = (saved && saved !== '/accueil') ? saved : fallback;
+    const dest = profile.role === 'Usager'
+      ? '/usager'
+      : (saved && saved !== '/accueil' ? saved : '/accueil');
     this.router.navigateByUrl(dest);
   }
 }

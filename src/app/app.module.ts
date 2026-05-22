@@ -33,6 +33,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AuthGuard } from "./services/auth-guard.service";
 import { AdminGuard } from "./services/admin-guard.service";
 import { EditGuard } from "./services/edit-guard.service";
+import { StaffGuard } from "./services/staff-guard.service";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr, 'fr');
@@ -139,6 +140,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
     AuthGuard,
     AdminGuard,
     EditGuard,
+    StaffGuard,
     { provide: LOCALE_ID, useValue: "fr-FR" }
   ],
   bootstrap: [AppComponent]

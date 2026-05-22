@@ -48,7 +48,7 @@
     </li>
 
     <!-- Outils (sous-menu collapse) -->
-    <li class="nav-item" [class.active]="isOutilsRoute">
+    <li *ngIf="authService.isAdmin" class="nav-item" [class.active]="isOutilsRoute">
       <a class="nav-link d-flex justify-content-between align-items-center"
          data-toggle="collapse" href="#outils"
          aria-expanded="false" aria-controls="outils">

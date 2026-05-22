@@ -24,20 +24,21 @@ import { ReponsesListComponent } from './components/admin/reponses/reponses-list
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
 import { EditGuard } from './services/edit-guard.service';
+import { StaffGuard } from './services/staff-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 
 const routes: Routes = [
-  { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, EditGuard] },
-  { path: 'items/details/:id', component: ItemDetailComponent, canActivate: [AuthGuard] },
-  { path: 'items/:id', component: ItemFormulaireComponent, canActivate: [AuthGuard, EditGuard] },
-  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
-  { path: 'acq-decision', component: AcqDecisionComponent, canActivate: [AuthGuard] },
-  { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard] },
+  { path: '', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
+  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
+  { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
+  { path: 'items/details/:id', component: ItemDetailComponent, canActivate: [AuthGuard, StaffGuard] },
+  { path: 'items/:id', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
+  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, StaffGuard] },
+  { path: 'acq-decision', component: AcqDecisionComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },
+  { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',
