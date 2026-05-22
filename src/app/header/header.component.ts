@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentLang: string = localStorage.getItem('lang') ?? 'fr';
 
   pendingCount    = 0;
-  pendingReponses: { id: number; type_formulaire: string; usager_nom: string; dateA: string }[] = [];
+  pendingReponses: { id: number; type_formulaire: string; usager_nom: string; dateA: string; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null }[] = [];
   notifOpen       = false;
   formsOpen       = false;
   userOpen        = false;
@@ -100,9 +100,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/reponses']);
   }
 
-  ouvrirReponse(id: number): void {
+  ouvrirReponse(r: { id: number; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null }): void {
     this.notifOpen = false;
-    this.router.navigate(['/reponses'], { queryParams: { highlight: id } });
+    if (r.source === 'reponse') {
+      this.router.navigate(['/acq-decision'], { queryParams: { reponse_id: r.id } });
+    } else {
+      this.router.navigate(['/acq-decision'], { queryParams: { item_id: r.item_id } });
+    }
   }
 
   typeClass(type: string): string {

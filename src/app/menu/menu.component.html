@@ -68,6 +68,13 @@
               {{ 'menu.reponses' | translate }}
             </a>
           </li>
+          <li class="nav-item"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.isAdmin">
+            <a class="nav-link" routerLink="/import-logs">
+              {{ 'menu.import-logs' | translate }}
+            </a>
+          </li>
         </ul>
       </div>
     </li>

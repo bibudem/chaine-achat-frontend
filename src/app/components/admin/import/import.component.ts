@@ -17,12 +17,13 @@ type Step = 'select' | 'notice' | 'upload' | 'preview' | 'result';
 const CHAMPS_COMMUNS_IMPORT = new Set<string>([
   'titre_document', 'sous_titre', 'isbn_issn', 'editeur', 'date_publication',
   'categorie_document', 'format_support', 'bibliotheque', 'localisation_emplacement',
-  'demandeur', 'fournisseur', 'priorite_demande',
+  'demandeur', 'priorite_demande',
   'fonds_budgetaire', 'fonds_sn_projet', 'source_information',
   'prix_cad', 'devise_originale', 'prix_devise_originale',
   'nombre_utilisateurs', 'lien_plateforme', 'nombre_titres_inclus', 'periode_couverte',
   'note_commentaire', 'creation_notice_dtdm', 'note_dtdm',
-  'statut_bibliotheque', 'statut_acq', 'format_pret_numerique',
+  'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'note_acq', 'bibliotheque_note_interne',
+  'format_pret_numerique', 'catalogue',
   'personne_a_aviser', 'personne_a_aviser_nom', 'personne_a_aviser_courriel'
 ]);
 

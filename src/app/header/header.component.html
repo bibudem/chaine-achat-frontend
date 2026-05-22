@@ -57,7 +57,7 @@
             <div *ngIf="pendingReponses.length === 0" class="notif-empty">
               <i class="bi bi-check2-circle"></i> Tout est traité
             </div>
-            <button *ngFor="let r of pendingReponses" class="notif-item" (click)="ouvrirReponse(r.id)">
+            <button *ngFor="let r of pendingReponses" class="notif-item" (click)="ouvrirReponse(r)">
               <span class="notif-item__icon {{ typeClass(r.type_formulaire) }}">
                 <i class="bi {{ typeIcon(r.type_formulaire) }}"></i>
               </span>

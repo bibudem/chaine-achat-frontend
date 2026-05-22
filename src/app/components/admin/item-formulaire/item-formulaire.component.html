@@ -46,6 +46,12 @@
           {{ 'item-formulaire.onglet-specifique' | translate }}
         </button>
       </li>
+      <li class="nav-item" role="presentation" *ngIf="selectedFormulaireType">
+        <button class="nav-link" [class.active]="activeTab === 'acq-decision'"
+                type="button" (click)="setActiveTab('acq-decision')">
+          <i class="bi bi-clipboard-check me-1"></i>{{ 'item-formulaire.onglet-acq-decision' | translate }}
+        </button>
+      </li>
     </ul>
 
     <!-- Contenu des onglets -->
@@ -1059,7 +1065,56 @@
           </div>
         </div>
 
-      </div><!-- fin tab-content -->
+      </div><!-- fin tab-content spécifiques -->
+
+      <!-- ========== ONGLET 3: DÉCISION ACQ ========== -->
+      <div class="tab-pane" [class.show]="activeTab === 'acq-decision'" [class.active]="activeTab === 'acq-decision'">
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <h5 class="mb-3 pb-2 border-bottom">
+              <i class="bi bi-clipboard-check me-2"></i>{{ 'item-formulaire.section-acq' | translate }}
+            </h5>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.suivi-acq' | translate }}</label>
+              <select class="form-select form-control" formControlName="suivi_acq"
+                      [class.is-invalid]="isInvalid('suivi_acq')">
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="hasError('suivi_acq', 'required')">
+                {{ 'item-formulaire.obligatoire' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.note-acq' | translate }}</label>
+              <textarea class="form-control" formControlName="note_acq" rows="6"
+                        [placeholder]="'item-formulaire.note-acq-placeholder' | translate"></textarea>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-lock-fill me-1" style="font-size:.85rem"></i>{{ 'item-formulaire.note-interne' | translate }}
+              </label>
+              <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="6"
+                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- fin tab-content acq-decision -->
+
     </div>
 
     <!-- Boutons d'action -->
@@ -1072,15 +1127,30 @@
             </button>
           </div>
           <div class="d-flex gap-2">
+            <!-- Retour : spécifiques → base -->
             <button type="button" class="btn btn-outline-primary"
-                    *ngIf="activeTab === 'specifique' && selectedFormulaireType"
+                    *ngIf="activeTab === 'specifique'"
                     (click)="setActiveTab('base')">
               <i class="bi bi-arrow-left me-1"></i> {{ 'item-formulaire.retour-base' | translate }}
             </button>
+            <!-- Retour : décision ACQ → spécifiques (si existe) ou base -->
+            <button type="button" class="btn btn-outline-primary"
+                    *ngIf="activeTab === 'acq-decision'"
+                    (click)="setActiveTab(hasSpecificFields() ? 'specifique' : 'base')">
+              <i class="bi bi-arrow-left me-1"></i>
+              {{ hasSpecificFields() ? ('item-formulaire.retour-specifique' | translate) : ('item-formulaire.retour-base' | translate) }}
+            </button>
+            <!-- Suivant : base → spécifiques -->
             <button type="button" class="btn btn-primary"
                     *ngIf="activeTab === 'base' && hasSpecificFields()"
                     (click)="setActiveTab('specifique')">
               {{ 'item-formulaire.champs-specifiques-btn' | translate }} <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+            <!-- Suivant : spécifiques → décision ACQ -->
+            <button type="button" class="btn btn-primary"
+                    *ngIf="activeTab === 'specifique'"
+                    (click)="setActiveTab('acq-decision')">
+              {{ 'item-formulaire.decision-acq-btn' | translate }} <i class="bi bi-arrow-right ms-1"></i>
             </button>
             <button type="button" class="btn btn-success" (click)="onSubmit()"
                     [disabled]="submitting">

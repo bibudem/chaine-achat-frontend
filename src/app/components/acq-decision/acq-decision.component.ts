@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -13,7 +14,8 @@ import { environment } from 'src/environments/environment';
   templateUrl: './acq-decision.component.html',
   styleUrls: ['./acq-decision.component.css']
 })
-export class AcqDecisionComponent implements OnInit {
+export class AcqDecisionComponent implements OnInit, OnDestroy {
+  private routeSub?: Subscription;
   form: FormGroup;
   reponseId: number | null = null;
   itemId: number | null = null;
@@ -50,55 +52,119 @@ export class AcqDecisionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reponseId = Number(this.route.snapshot.queryParamMap.get('id')) || null;
+    this.routeSub = this.route.queryParamMap.subscribe(params => {
+      const reponseIdParam = Number(params.get('reponse_id')) || null; // formulaire usager
+      const legacyIdParam  = Number(params.get('id'))         || null; // compat ancien lien
+      const itemIdParam    = Number(params.get('item_id'))    || null; // import / reponse-created
 
-    if (!this.reponseId) {
-      this.errorMessage = 'Paramètre manquant : id';
-      return;
-    }
+      this.reponseId           = null;
+      this.itemId              = null;
+      this.item                = null;
+      this.errorMessage        = null;
+      this.successMessage      = null;
+      this.itemExisteDansItems = false;
+      this.form.reset({ suivi_acq: '', note_acq: '', bibliotheque_note_interne: '' });
 
-    this.loadingItem = true;
+      if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
+        this.errorMessage = 'Paramètre manquant : reponse_id, id ou item_id';
+        return;
+      }
 
-    // On charge d'abord la réponse pour vérifier item_id_cree
-    this.reponsesService.getById(this.reponseId).subscribe({
-      next: (reponse) => {
-        if (reponse?.item_id_cree) {
-          // L'item existe déjà — on le charge pour modification
-          this.itemId = reponse.item_id_cree;
-          this.itemService.getById(this.itemId).subscribe({
-            next: (resp) => {
+      this.loadingItem = true;
+
+      if (itemIdParam) {
+        // Import ou réponse déjà convertie : item dans tbl_items
+        this.itemId              = itemIdParam;
+        this.itemExisteDansItems = true;
+        this.chargerItemDirectement(itemIdParam);
+
+      } else if (reponseIdParam) {
+        // Formulaire usager : créer l'item dans tbl_items puis charger
+        this.reponseId = reponseIdParam;
+        this.reponsesService.creerItem(reponseIdParam).subscribe({
+          next: ({ item_id }) => {
+            this.itemId              = item_id;
+            this.itemExisteDansItems = true;
+            this.chargerItemDirectement(item_id);
+          },
+          error: () => {
+            this.loadingItem  = false;
+            this.errorMessage = "Impossible de créer l'item depuis la réponse.";
+          }
+        });
+
+      } else {
+        // Compat : ancien paramètre ?id=X
+        this.reponseId = legacyIdParam;
+        this.reponsesService.getById(legacyIdParam!).subscribe({
+          next: (reponse) => {
+            if (reponse?.item_id_cree) {
+              this.itemId = reponse.item_id_cree;
+              this.itemService.getById(this.itemId!).subscribe({
+                next: (resp) => {
+                  this.loadingItem = false;
+                  if (resp?.success && resp?.data) {
+                    this.itemExisteDansItems = true;
+                    this.item = resp.data;
+                    this.patchFormFromItem(resp.data);
+                  } else {
+                    this.mapReponseToItem(reponse);
+                  }
+                },
+                error: () => { this.loadingItem = false; this.mapReponseToItem(reponse); }
+              });
+            } else {
               this.loadingItem = false;
-              if (resp?.success && resp?.data) {
-                this.itemExisteDansItems = true;
-                this.item = resp.data;
-                this.form.patchValue({
-                  suivi_acq:                 resp.data.suivi_acq || '',
-                  note_acq:                  resp.data.note_acq  || '',
-                  bibliotheque_note_interne: resp.data.bibliotheque_note_interne || '',
-                }, { emitEvent: false });
-              } else {
-                this.mapReponseToItem(reponse);
-              }
-            },
-            error: () => { this.loadingItem = false; this.mapReponseToItem(reponse); }
-          });
-        } else {
-          // Aucun item encore — on prépare la création
-          this.loadingItem = false;
-          this.mapReponseToItem(reponse);
-        }
-      },
-      error: () => {
-        this.loadingItem = false;
-        this.errorMessage = 'Impossible de charger la réponse.';
+              this.mapReponseToItem(reponse);
+            }
+          },
+          error: () => {
+            this.loadingItem  = false;
+            this.errorMessage = 'Impossible de charger la réponse.';
+          }
+        });
       }
     });
   }
 
+  ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
+  }
+
+  private chargerItemDirectement(id: number): void {
+    this.itemService.getById(id).subscribe({
+      next: (resp) => {
+        this.loadingItem = false;
+        if (resp?.success && resp?.data) {
+          this.item = resp.data;
+          this.patchFormFromItem(resp.data);
+        } else {
+          this.errorMessage = 'Item introuvable.';
+        }
+      },
+      error: () => {
+        this.loadingItem = false;
+        this.errorMessage = 'Impossible de charger l\'item.';
+      }
+    });
+  }
+
+  private patchFormFromItem(data: any): void {
+    this.form.patchValue({
+      suivi_acq:                 data.suivi_acq                 || '',
+      note_acq:                  data.note_acq                  || '',
+      bibliotheque_note_interne: data.bibliotheque_note_interne || '',
+    }, { emitEvent: false });
+  }
+
   private mapReponseToItem(r: any): void {
-    const bd   = r.reponses?.baseData    || {};
-    const sd   = r.reponses?.specificData || {};
-    const flat = (r.reponses && !r.reponses.baseData) ? r.reponses : {};
+    // La colonne tbl_reponses.reponses peut arriver en string (TEXT) ou en objet (JSONB)
+    const parsed = typeof r.reponses === 'string'
+      ? (() => { try { return JSON.parse(r.reponses); } catch { return {}; } })()
+      : (r.reponses || {});
+    const bd   = parsed?.baseData    || {};
+    const sd   = parsed?.specificData || {};
+    const flat = (parsed && !parsed.baseData) ? parsed : {};
     const f = (b: any, s: any) => b || flat[s] || sd[s];
     this.item = {
       formulaire_type:                r.type_formulaire,
@@ -133,8 +199,12 @@ export class AcqDecisionComponent implements OnInit {
       note_commentaire:               f(bd.note_commentaire,'note_commentaire'),
       auteur:                         flat.auteur           || bd.auteur,
       usager_faculte:                 flat.usager_faculte   || sd.usager_faculte,
+      bibliothecaire_disciplinaire:   flat.bibliothecaire_disciplinaire || sd.bibliothecaire_disciplinaire,
       date_requise_cours:             flat.date_requise_cours || sd.date_requise_cours,
       note_usager:                    flat.note_usager       || sd.note_usager,
+      aviser_reservation:             flat.aviser_reservation ?? sd.aviser_reservation,
+      aviser_reception:               flat.aviser_reception   ?? sd.aviser_reception,
+      acq_isbn:                       flat.acq_isbn           || sd.acq_isbn,
       quantite:                       sd.quantite,
       projets_speciaux:               sd.projets_speciaux,
       type_monographie:               sd.type_monographie    || bd.type_monographie,
@@ -261,7 +331,7 @@ export class AcqDecisionComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (!this.form.valid || !this.reponseId) {
+    if (!this.form.valid || (!this.reponseId && !this.itemId)) {
       this.form.markAllAsTouched();
       this.errorMessage = 'Veuillez remplir tous les champs requis.';
       return;
@@ -294,7 +364,7 @@ export class AcqDecisionComponent implements OnInit {
         this.submitting = false;
         if (response.success) {
           this.successMessage = 'Décision enregistrée avec succès !';
-          this.notifyN8nDecision(suivi_acq, note_acq);
+          if (this.reponseId) { this.notifyN8nDecision(suivi_acq, note_acq); }
           this.reponsesService.triggerPendingRefresh();
           setTimeout(() => this.router.navigate(['/items']), 2000);
         } else {

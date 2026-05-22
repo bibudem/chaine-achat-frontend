@@ -24,6 +24,7 @@ import { ReponsesListComponent } from './components/admin/reponses/reponses-list
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
 import { EditGuard } from './services/edit-guard.service';
+import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -34,7 +35,8 @@ const routes: Routes = [
   { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
   { path: 'acq-decision', component: AcqDecisionComponent, canActivate: [AuthGuard] },
   { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard] },
-  { path: 'import', component: ImportComponent, canActivate: [AuthGuard,AdminGuard]  },
+  { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
+  { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard] },
   // ── Nouvelle section usager ──
   {

@@ -30,7 +30,7 @@
           <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
         <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
-                [routerLink]="['/acq-decision']" [queryParams]="{id: item.item_id}">
+                [routerLink]="['/acq-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
         <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
@@ -113,6 +113,29 @@
           <div class="itd-sidebar__label">{{ 'item-detail.fonds-budgetaire' | translate }}</div>
           <div class="itd-sidebar__value itd-sidebar__value--accent">
             <i class="bi bi-wallet2 me-1"></i>{{ item.fonds_budgetaire }}
+          </div>
+        </div>
+
+        <hr class="itd-sidebar__divider">
+
+        <!-- Décision ACQ -->
+        <div class="itd-sidebar__block itd-sidebar__block--acq">
+          <div class="itd-sidebar__label itd-sidebar__label--acq">
+            <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.section-decision-acq' | translate }}
+          </div>
+          <span *ngIf="item.suivi_acq; else acqEnAttente" class="badge itd-badge-suivi mt-1">
+            {{ item.suivi_acq }}
+          </span>
+          <ng-template #acqEnAttente>
+            <span class="badge bg-warning text-white mt-1">
+              <i class="bi bi-hourglass-split me-1"></i>{{ 'item-detail.en-attente' | translate }}
+            </span>
+          </ng-template>
+          <div class="itd-sidebar__value itd-note--sm mt-2" *ngIf="item.note_acq">
+            {{ item.note_acq }}
+          </div>
+          <div class="itd-sidebar__value itd-note--interne-sm mt-1" *ngIf="item.bibliotheque_note_interne">
+            <i class="bi bi-lock-fill me-1" style="font-size:.65rem"></i>{{ item.bibliotheque_note_interne }}
           </div>
         </div>
 
@@ -686,7 +709,7 @@
 
         <!-- ── Section : Notes ───────────────────────────────── -->
         <div class="itd-card"
-             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm !== undefined || item.suivi_acq || item.note_acq || item.bibliotheque_note_interne">
+             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm !== undefined">
           <div class="itd-card__header">
             <i class="bi bi-sticky me-2"></i>{{ 'item-detail.section-notes' | translate }}
           </div>
@@ -700,12 +723,6 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-3" *ngIf="item.suivi_acq">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.suivi-acq' | translate }}</span>
-                  <span class="badge bg-secondary">{{ item.suivi_acq }}</span>
-                </div>
-              </div>
               <div class="col-md-6" *ngIf="item.note_dtdm">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
@@ -716,18 +733,6 @@
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.note-commentaire' | translate }}</span>
                   <span class="itd-note">{{ item.note_commentaire }}</span>
-                </div>
-              </div>
-              <div class="col-md-6" *ngIf="item.note_acq">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.note-acq' | translate }}</span>
-                  <span class="itd-note">{{ item.note_acq }}</span>
-                </div>
-              </div>
-              <div class="col-md-6" *ngIf="item.bibliotheque_note_interne">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.note-interne' | translate }}</span>
-                  <span class="itd-note">{{ item.bibliotheque_note_interne }}</span>
                 </div>
               </div>
             </div>

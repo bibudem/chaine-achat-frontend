@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit {
     // Ajouter : uniquement /items/nouveau
     this.isAddItemRoute = url === '/items/nouveau';
 
-    // Outils : /reponses et sous-routes
-    this.isOutilsRoute  = url.startsWith('/reponses');
+    // Outils : /reponses et /import-logs
+    this.isOutilsRoute  = url.startsWith('/reponses') || url.startsWith('/import-logs');
   }
 }

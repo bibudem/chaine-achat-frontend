@@ -57,6 +57,7 @@ import { SuggestionPublicComponent } from './components/usager/pages/suggestion-
 import { UsagerHomeComponent } from './components/usager/usager-home/usager-home.component';
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 import { ImportComponent } from './components/admin/import/import.component';
+import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 import { ModificationCcolComponent } from './components/usager/pages/modification-ccol/modification-ccol.component';
 import { RequeteAccessibiliteComponent } from './components/usager/pages/requete-accessibilite/requete-accessibilite.component';
@@ -88,6 +89,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
     UsagerHomeComponent,
     ItemDetailComponent,
     ImportComponent,
+    ImportLogsComponent,
     NouvelAchatComponent,
     ModificationCcolComponent,
     RequeteAccessibiliteComponent,

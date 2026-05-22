@@ -1,0 +1,206 @@
+<div class="ilog-page container-fluid pb-5 mt-5">
+
+  <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
+  <div class="ilog-header">
+    <div class="ilog-header__left">
+      <i class="bi bi-journal-text ilog-header__icon"></i>
+      <div>
+        <h1 class="ilog-header__title">Registre des imports</h1>
+        <p class="ilog-header__sub">Traçabilité de tous les imports en lot</p>
+      </div>
+    </div>
+    <div class="ilog-header__right">
+      <span class="ilog-header__total">{{ total }} import{{ total > 1 ? 's' : '' }}</span>
+    </div>
+  </div>
+
+  <!-- ── FILTRES ───────────────────────────────────────────────────── -->
+  <div class="ilog-filters">
+    <select class="form-select form-select-sm ilog-filters__select"
+            [(ngModel)]="filterType" (change)="applyFilters()">
+      <option value="">Tous les types</option>
+      <option *ngFor="let t of formTypes" [value]="t">{{ t }}</option>
+    </select>
+
+    <select class="form-select form-select-sm ilog-filters__select"
+            [(ngModel)]="filterStatut" (change)="applyFilters()">
+      <option value="">Tous les statuts</option>
+      <option value="succès">Succès</option>
+      <option value="partiel">Partiel</option>
+      <option value="échec">Échec</option>
+    </select>
+
+    <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()"
+            *ngIf="filterType || filterStatut">
+      <i class="bi bi-x-circle me-1"></i>Réinitialiser
+    </button>
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted small">Chargement du registre…</p>
+  </div>
+
+  <!-- ── ERREUR ────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- ── VIDE ──────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && !errorMessage && logs.length === 0" class="ilog-empty">
+    <i class="bi bi-inbox"></i>
+    <p>Aucun import enregistré</p>
+  </div>
+
+  <!-- ── TABLEAU ───────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && logs.length > 0" class="ilog-table-wrap">
+    <table class="table ilog-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Type de formulaire</th>
+          <th>Fichier</th>
+          <th>Utilisateur</th>
+          <th class="text-center">Total</th>
+          <th class="text-center">Insérés</th>
+          <th class="text-center">Erreurs</th>
+          <th class="text-center">Taux</th>
+          <th class="text-center">Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs" [class.ilog-row--echec]="log.statut === 'échec'"
+            [class.ilog-row--partiel]="log.statut === 'partiel'">
+
+          <td class="ilog-td--id text-muted">#{{ log.log_id }}</td>
+
+          <td class="ilog-td--date">{{ formatDate(log.date_import) }}</td>
+
+          <td>
+            <span class="ilog-type-pill"
+                  [style.background]="typeColor(log.formulaire_type) + '18'"
+                  [style.color]="typeColor(log.formulaire_type)"
+                  [style.border-color]="typeColor(log.formulaire_type) + '40'">
+              {{ log.formulaire_type }}
+            </span>
+          </td>
+
+          <td class="ilog-td--file">
+            <i class="bi bi-file-earmark-excel me-1 text-success"></i>{{ log.fichier_nom }}
+          </td>
+
+          <td>
+            <i class="bi bi-person me-1 text-muted"></i>{{ log.utilisateur }}
+          </td>
+
+          <td class="text-center fw-semibold">{{ log.nb_total }}</td>
+
+          <td class="text-center">
+            <span class="text-success fw-semibold">{{ log.nb_inseres }}</span>
+          </td>
+
+          <td class="text-center">
+            <span [class.text-danger]="log.nb_erreurs > 0"
+                  [class.text-muted]="log.nb_erreurs === 0"
+                  class="fw-semibold">{{ log.nb_erreurs }}</span>
+          </td>
+
+          <td class="text-center">
+            <div class="ilog-progress">
+              <div class="ilog-progress__bar"
+                   [style.width.%]="tauxSucces(log)"
+                   [class.ilog-progress__bar--ok]="tauxSucces(log) === 100"
+                   [class.ilog-progress__bar--partiel]="tauxSucces(log) > 0 && tauxSucces(log) < 100"
+                   [class.ilog-progress__bar--ko]="tauxSucces(log) === 0"></div>
+            </div>
+            <span class="ilog-progress__label">{{ tauxSucces(log) }}%</span>
+          </td>
+
+          <td class="text-center">
+            <span [class]="statutClass(log.statut)">
+              <i class="bi me-1" [class]="statutIcon(log.statut)"></i>{{ log.statut }}
+            </span>
+          </td>
+
+          <td>
+            <button *ngIf="log.nb_erreurs > 0"
+                    class="btn btn-sm btn-outline-danger py-0"
+                    (click)="openDetail(log)"
+                    title="Voir les erreurs">
+              <i class="bi bi-list-ul"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PAGINATION ────────────────────────────────────────────────── -->
+  <div *ngIf="totalPages > 1" class="ilog-pagination">
+    <button class="ilog-pg-btn" [disabled]="page === 1" (click)="goToPage(page - 1)">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <button *ngFor="let p of pages"
+            class="ilog-pg-btn"
+            [class.ilog-pg-btn--active]="p === page"
+            (click)="goToPage(p)">{{ p }}</button>
+    <button class="ilog-pg-btn" [disabled]="page === totalPages" (click)="goToPage(page + 1)">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+
+</div>
+
+<!-- ── MODAL DÉTAIL ERREURS ─────────────────────────────────────────── -->
+<div class="ilog-overlay" *ngIf="selectedLog" (click)="closeDetail()">
+  <div class="ilog-modal" (click)="$event.stopPropagation()">
+    <div class="ilog-modal__head">
+      <div>
+        <span class="ilog-modal__title">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          Erreurs — import #{{ selectedLog.log_id }}
+        </span>
+        <div class="ilog-modal__sub">
+          {{ selectedLog.fichier_nom }} · {{ formatDate(selectedLog.date_import) }}
+        </div>
+      </div>
+      <button class="ilog-modal__close" (click)="closeDetail()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="ilog-modal__body">
+      <div class="ilog-modal__stats">
+        <span class="text-success"><i class="bi bi-check-circle me-1"></i>{{ selectedLog.nb_inseres }} insérés</span>
+        <span class="text-danger"><i class="bi bi-x-circle me-1"></i>{{ selectedLog.nb_erreurs }} erreurs</span>
+        <span class="text-muted">sur {{ selectedLog.nb_total }} lignes</span>
+      </div>
+
+      <div *ngIf="!selectedLog.details_erreurs?.length" class="text-muted fst-italic py-3 text-center">
+        Aucun détail disponible.
+      </div>
+
+      <table *ngIf="selectedLog.details_erreurs?.length" class="table table-sm ilog-err-table">
+        <thead>
+          <tr>
+            <th style="width:80px">Ligne</th>
+            <th>Message d'erreur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of selectedLog.details_erreurs">
+            <td><span class="badge bg-danger">{{ e.ligne }}</span></td>
+            <td class="font-monospace small text-danger">{{ e.erreur }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ilog-modal__foot">
+      <button class="btn btn-secondary btn-sm" (click)="closeDetail()">Fermer</button>
+    </div>
+  </div>
+</div>

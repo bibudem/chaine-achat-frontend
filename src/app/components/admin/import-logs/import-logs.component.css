@@ -1,0 +1,167 @@
+/* ── Page ──────────────────────────────────────────────────────────── */
+.ilog-page { padding-top: 1.5rem; }
+
+/* ── En-tête ───────────────────────────────────────────────────────── */
+.ilog-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         1rem 1.25rem;
+  background:      #fff;
+  border-bottom:   2px solid #E7EBEE;
+  margin-bottom:   1.25rem;
+  border-radius:   10px;
+  box-shadow:      0 1px 4px rgba(0,0,0,.06);
+  flex-wrap:       wrap;
+  gap:             .75rem;
+}
+.ilog-header__left { display: flex; align-items: center; gap: .85rem; }
+.ilog-header__icon { font-size: 2rem; color: #0057AC; }
+.ilog-header__title { font-size: 1.15rem; font-weight: 700; color: #1A2B3C; margin: 0; }
+.ilog-header__sub { font-size: .78rem; color: #607386; margin: 0; }
+.ilog-header__total {
+  background: #E5F0F8; color: #0057AC;
+  font-weight: 700; font-size: .8rem;
+  padding: .3em .8em; border-radius: 20px;
+}
+
+/* ── Filtres ───────────────────────────────────────────────────────── */
+.ilog-filters {
+  display:     flex;
+  gap:         .6rem;
+  flex-wrap:   wrap;
+  margin-bottom: 1rem;
+}
+.ilog-filters__select { max-width: 260px; }
+
+/* ── Tableau ───────────────────────────────────────────────────────── */
+.ilog-table-wrap {
+  background:    #fff;
+  border-radius: 10px;
+  box-shadow:    0 1px 4px rgba(0,0,0,.06);
+  overflow-x:    auto;
+}
+.ilog-table { margin: 0; font-size: .83rem; }
+.ilog-table thead th {
+  background:     #F3F7FB;
+  color:          #607386;
+  font-size:      .68rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom:  2px solid #E7EBEE;
+  white-space:    nowrap;
+  padding:        .6rem .75rem;
+}
+.ilog-table tbody tr { transition: background .1s; }
+.ilog-table tbody tr:hover { background: #F8FBFE; }
+.ilog-table tbody td { padding: .55rem .75rem; vertical-align: middle; border-color: #F0F4F8; }
+
+.ilog-row--echec  { background: #FFF5F5 !important; }
+.ilog-row--partiel { background: #FFFBF0 !important; }
+
+.ilog-td--id   { font-size: .72rem; min-width: 48px; }
+.ilog-td--date { white-space: nowrap; color: #607386; font-size: .78rem; }
+.ilog-td--file { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .78rem; }
+
+/* ── Type pill ─────────────────────────────────────────────────────── */
+.ilog-type-pill {
+  display:       inline-block;
+  font-size:     .68rem;
+  font-weight:   600;
+  padding:       .2em .6em;
+  border-radius: 20px;
+  border:        1px solid;
+  white-space:   nowrap;
+}
+
+/* ── Statut badge ──────────────────────────────────────────────────── */
+.badge-statut {
+  display:       inline-flex;
+  align-items:   center;
+  font-size:     .68rem;
+  font-weight:   700;
+  padding:       .25em .65em;
+  border-radius: 20px;
+  white-space:   nowrap;
+}
+.badge-statut--succes  { background: #D1FAE5; color: #065F46; }
+.badge-statut--partiel { background: #FEF3C7; color: #92400E; }
+.badge-statut--echec   { background: #FEE2E2; color: #991B1B; }
+
+/* ── Barre de progression ──────────────────────────────────────────── */
+.ilog-progress {
+  width: 60px; height: 5px;
+  background: #E7EBEE;
+  border-radius: 3px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: .3rem;
+}
+.ilog-progress__bar { height: 100%; border-radius: 3px; transition: width .3s; }
+.ilog-progress__bar--ok      { background: #10B981; }
+.ilog-progress__bar--partiel { background: #F59E0B; }
+.ilog-progress__bar--ko      { background: #EF4444; }
+.ilog-progress__label { font-size: .72rem; color: #607386; vertical-align: middle; }
+
+/* ── Vide ──────────────────────────────────────────────────────────── */
+.ilog-empty {
+  text-align: center; padding: 4rem 1rem;
+  color: #9FB3C8;
+}
+.ilog-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }
+
+/* ── Pagination ────────────────────────────────────────────────────── */
+.ilog-pagination {
+  display: flex; justify-content: center;
+  gap: .35rem; margin-top: 1.25rem; flex-wrap: wrap;
+}
+.ilog-pg-btn {
+  width: 34px; height: 34px;
+  border: 1px solid #D0DCE8;
+  border-radius: 8px;
+  background: #fff;
+  color: #3B5166;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.ilog-pg-btn:hover:not(:disabled) { background: #E5F0F8; border-color: #2380D1; color: #2380D1; }
+.ilog-pg-btn--active  { background: #0057AC; color: #fff; border-color: #0057AC; font-weight: 700; }
+.ilog-pg-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Modal overlay ─────────────────────────────────────────────────── */
+.ilog-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1050;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.ilog-modal {
+  background:    #fff;
+  border-radius: 12px;
+  width:         100%;
+  max-width:     680px;
+  max-height:    80vh;
+  display:       flex;
+  flex-direction: column;
+  box-shadow:    0 8px 32px rgba(0,0,0,.18);
+}
+.ilog-modal__head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 1rem 1.25rem .75rem;
+  border-bottom: 1px solid #E7EBEE;
+}
+.ilog-modal__title  { font-size: .9rem; font-weight: 700; color: #1A2B3C; display: block; }
+.ilog-modal__sub    { font-size: .73rem; color: #9FB3C8; margin-top: .15rem; }
+.ilog-modal__close  { background: none; border: none; color: #607386; font-size: 1rem; cursor: pointer; padding: .25rem; }
+.ilog-modal__close:hover { color: #1A2B3C; }
+.ilog-modal__body   { padding: 1rem 1.25rem; overflow-y: auto; flex: 1; }
+.ilog-modal__stats  { display: flex; gap: 1.25rem; margin-bottom: .75rem; font-size: .82rem; font-weight: 600; }
+.ilog-modal__foot   { padding: .75rem 1.25rem; border-top: 1px solid #E7EBEE; text-align: right; }
+
+.ilog-err-table     { font-size: .78rem; }
+.ilog-err-table th  { background: #FFF5F5; color: #991B1B; font-size: .65rem; text-transform: uppercase; letter-spacing: .04em; }

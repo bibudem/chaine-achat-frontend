@@ -232,7 +232,23 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('getById')));
   }
 
-  getPending(limit = 5): Observable<{ count: number; reponses: Pick<Reponse, 'id' | 'type_formulaire' | 'usager_nom' | 'dateA'>[] }> {
+  /** Crée l'item dans tbl_items depuis la réponse (idempotent). */
+  creerItem(reponseId: number): Observable<{ success: boolean; item_id: number; reponse_id: number }> {
+    return this.http
+      .post<{ success: boolean; item_id: number; reponse_id: number }>(
+        `${this.baseUrl}/${reponseId}/creer-item`,
+        {}
+      )
+      .pipe(catchError(this.handleError('creerItem')));
+  }
+
+  getPending(limit = 5): Observable<{
+    count: number;
+    reponses: (Pick<Reponse, 'id' | 'type_formulaire' | 'usager_nom' | 'dateA'> & {
+      source: 'reponse' | 'import' | 'reponse-created';
+      item_id: number | null;
+    })[];
+  }> {
     return this.http
       .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, { params: { limit } })
       .pipe(catchError(this.handleError('getPending')));
