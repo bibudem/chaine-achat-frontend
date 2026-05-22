@@ -20,7 +20,6 @@ export interface Item {
   note_dtdm?: string;
   categorie_document?: string;
   format_support?: string;
-  fournisseur?: string;
   fonds_budgetaire?: string;
   fonds_sn_projet?: string;
   bibliotheque?: string;
@@ -323,9 +322,6 @@ export class ItemFormulaireService {
     // FIX: reserve_cours doit être un booléen pour tbl_nouvel_achat_unique (boolean en DB)
     if (formattedItem.reserve_cours !== undefined) {
       formattedItem.reserve_cours = Boolean(formattedItem.reserve_cours);
-    }
-    if (formattedItem.urgence !== undefined) {
-      formattedItem.urgence = Boolean(formattedItem.urgence);
     }
     if (formattedItem.techdoc_suggestion_transmise !== undefined) {
       formattedItem.techdoc_suggestion_transmise = Boolean(formattedItem.techdoc_suggestion_transmise);

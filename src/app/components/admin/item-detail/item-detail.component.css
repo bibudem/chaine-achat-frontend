@@ -125,22 +125,22 @@
 .itd-sidebar__acq-btn:hover { background: #D6EAF8; color: #154360; }
 
 .itd-note--sm {
-  font-size:   .78rem;
-  color:       #37424D;
-  border-left: 2px solid #2380D1;
+  font-size:    .78rem;
+  color:        #37424D;
+  border-left:  2px solid #A8BECF;
   padding-left: .5rem;
-  line-height: 1.4;
+  line-height:  1.4;
 }
 
 .itd-note--interne-sm {
-  font-size:   .75rem;
-  color:       #7D6608;
-  border-left: 2px solid #D4AC0D;
-  padding-left: .5rem;
-  line-height: 1.4;
-  background:  #FEFDE7;
+  font-size:     .75rem;
+  color:         #5C5016;
+  border-left:   2px solid #C9A83C;
+  padding-left:  .5rem;
+  line-height:   1.4;
+  background:    #FDFAF0;
   border-radius: 0 4px 4px 0;
-  padding: .2rem .5rem;
+  padding:       .2rem .5rem;
 }
 
 .itd-sidebar__label {
@@ -200,37 +200,41 @@
 
 /* ── Cartes ──────────────────────────────────────────────────────── */
 .itd-card {
-  background:    var(--white, #fff);
-  border:        1px solid var(--light-gray, #E7EBEE);
-  border-radius: 10px;
+  background:    #fff;
+  border:        1px solid #D8DDE3;
+  border-radius: 8px;
   overflow:      hidden;
+  box-shadow:    0 1px 3px rgba(0,0,0,.06);
 }
 
 .itd-card__header {
   display:        flex;
   align-items:    center;
-  padding:        .6rem 1rem;
-  background:     var(--extra-light-blue, #E5F0F8);
-  border-bottom:  1px solid var(--light-gray, #E7EBEE);
-  font-size:      .78rem;
+  padding:        .55rem 1rem;
+  background:     #E8F1F8;
+  border-bottom:  1px solid #C9D8E5;
+  font-size:      .72rem;
   font-weight:    700;
   text-transform: uppercase;
-  letter-spacing: .04em;
-  color:          var(--secondary-blue, #00407F);
+  letter-spacing: .06em;
+  color:          #1A4E72;
   flex-wrap:      wrap;
   gap:            .3rem;
 }
-.itd-card__header i { font-size: .92rem; }
+.itd-card__header i { font-size: .88rem; }
 
 .itd-card__header-sub {
   font-weight:    400;
   text-transform: none;
   letter-spacing: 0;
-  color:          var(--text-gray, #607386);
-  font-size:      .76rem;
+  color:          #5E7A8A;
+  font-size:      .73rem;
 }
 
-.itd-card__body { padding: 1rem 1rem .75rem; }
+.itd-card__body {
+  padding:    1rem 1.1rem .85rem;
+  background: #fff;
+}
 
 /* ── Champs ──────────────────────────────────────────────────────── */
 .itd-field {
@@ -256,12 +260,12 @@
 
 /* ── Note ────────────────────────────────────────────────────────── */
 .itd-note {
-  background:    var(--extra-light-blue, #E5F0F8);
-  border-left:   3px solid var(--light-blue, #2380D1);
+  background:    #F5F7F9;
+  border-left:   3px solid #A8BECF;
   border-radius: 0 6px 6px 0;
   padding:       .5rem .75rem;
   font-size:     .87rem;
-  color:         var(--medium-gray, #37424D);
+  color:         #37424D;
   white-space:   pre-line;
   display:       block;
   line-height:   1.55;
@@ -288,25 +292,26 @@
 
 /* ── Bande d'info ────────────────────────────────────────────────── */
 .itd-infoband {
-  background:    var(--light-gray, #E7EBEE);
-  border-radius: 8px;
+  background:    #F5F7F9;
+  border:        1px solid #DDE3E9;
+  border-radius: 6px;
   padding:       .8rem 1rem;
 }
 .itd-infoband--blue {
-  background:  var(--extra-light-blue, #E5F0F8);
-  border-left: 3px solid var(--secondary-blue, #00407F);
+  background:  #F5F7F9;
+  border-left: 3px solid #7AABCC;
 }
 
 .itd-infoband--gray {
-  background:  var(--light-gray, #E7EBEE);
-  border-left: 3px solid var(--dark-gray, #343a40);
+  background:  #F5F7F9;
+  border-left: 3px solid #9DAAB5;
 }
 .itd-infoband__title {
-  font-size:      .78rem;
+  font-size:      .72rem;
   font-weight:    700;
-  color:          var(--secondary-blue, #00407F);
+  color:          #3A6080;
   text-transform: uppercase;
-  letter-spacing: .04em;
+  letter-spacing: .05em;
 }
 
 /* ── Liens ───────────────────────────────────────────────────────── */

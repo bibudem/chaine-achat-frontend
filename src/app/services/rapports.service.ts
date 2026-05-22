@@ -26,7 +26,6 @@ export interface ItemDetaille {
   identifiant?: string;
   montant?: number;
   notes?: string;
-  fournisseur?: string;
 }
 
 export interface ApiResponse<T> {

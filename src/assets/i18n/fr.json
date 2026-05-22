@@ -199,7 +199,6 @@
 
     "fonds_budgetaire": "Fonds budgétaire",
     "fonds_sn_projet": "Fonds SN – No projet",
-    "fournisseur": "Fournisseur",
     "source_information": "Source d'information",
     "prix_cad": "Prix total (CAD)",
     "devise_originale": "Devise originale",
@@ -212,7 +211,6 @@
     "lien_plateforme": "Lien plateforme",
 
     "demandeur": "Demandeur",
-    "personne_a_aviser_activation": "Personne à aviser",
     "personne_a_aviser_nom": "Personne à aviser — Nom",
     "personne_a_aviser_courriel": "Personne à aviser — Courriel",
     "statut_bibliotheque": "Statut bibliothèque",
@@ -220,8 +218,6 @@
     "priorite_demande": "Priorité",
 
     "numero_oclc": "Numéro OCLC",
-    "collection": "Collection",
-    "catalogage": "Catalogage",
     "precision_demande": "Précision de la demande",
 
     "date_debut_abonnement": "Date début abonnement",
@@ -231,22 +227,15 @@
 
     "format_electronique": "Format électronique",
     "bordereau_imprime": "Bordereau imprimé",
-    "categorie_depense": "Catégorie de dépense",
     "reserve_cours": "Réserve de cours",
     "reserve_cours_sigle": "Sigle du cours",
     "reserve_cours_session": "Session",
     "reserve_cours_enseignant": "Enseignant",
-    "note_catalogueur_droit": "Note catalogueur droit",
 
-    "type_demande_peb": "Type de demande PEB",
     "reference_tipasa": "Référence Tipasa",
-    "urgence": "Urgence",
     "gobi_vu_format_numerique": "GOBI vu format numérique",
     "gobi_version_moins_365_usd": "GOBI version -365 USD",
 
-    "type_requete": "Type de requête",
-    "description_requete": "Description de la requête",
-    "action_demandee": "Action demandée",
     "reference_usager": "Référence usager",
     "besoin_specifique_format": "Besoin spécifique de format",
     "permalien_sofia": "Permalien Sofia",
@@ -262,7 +251,6 @@
     "quantite": "Quantité",
     "projets_speciaux": "Projets spéciaux",
 
-    "public_cible": "Public cible",
     "auteur": "Auteur",
     "usager_nom": "Nom de l'usager",
     "usager_statut": "Statut de l'usager",
@@ -277,8 +265,6 @@
     "acq_raison_annulation": "Raison d'annulation (ACQ)",
     "acq_isbn": "ISBN (ACQ)",
     "acq_responsable_courriel": "Responsable ACQ (courriel)",
-    "recommandation": "Recommandation",
-    "justification": "Justification",
 
     "note_dtdm": "Note DTDM (Catalogage)",
     "note_commentaire": "Note / Commentaire bibliothèque",

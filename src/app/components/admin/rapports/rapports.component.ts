@@ -11,14 +11,11 @@ const CHAMPS_COMMUNS = new Set<string>([
   'item_id', 'formulaire_type', 'titre_document', 'sous_titre', 'isbn_issn',
   'editeur', 'date_publication', 'categorie_document', 'format_support',
   'bibliotheque', 'localisation_emplacement', 'projet_special', 'creation_notice_dtdm',
-  'fonds_budgetaire', 'fonds_sn_projet', 'fournisseur', 'source_information',
+  'fonds_budgetaire', 'fonds_sn_projet', 'source_information',
   'prix_cad', 'devise_originale', 'prix_devise_originale', 'periode_couverte', 'nombre_titres_inclus',
   'nombre_utilisateurs', 'format_pret_numerique', 'lien_plateforme',
-  'demandeur', 'personne_a_aviser_activation', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
+  'demandeur', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
   'statut_bibliotheque', 'statut_acq', 'priorite_demande',
-  'collection', 'catalogage', 'categorie_depense', 'note_catalogueur_droit',
-  'type_demande_peb', 'urgence', 'type_requete', 'description_requete', 'action_demandee',
-  'public_cible', 'recommandation', 'justification',
   'note_dtdm', 'note_commentaire', 'suivi_acq', 'note_acq', 'bibliotheque_note_interne',
   'utilisateur_modification', 'date_creation', 'date_modification'
 ]);
