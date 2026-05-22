@@ -27,7 +27,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   itemsPerPage = 25;
   totalPages   = 0;
 
-  sortColumn: string = 'date_creation';
+  sortColumn: string = 'date_modification';
   sortDirection: 'asc' | 'desc' = 'desc';
 
   decisionMessage: { type: 'success' | 'danger' | 'warning'; texte: string } | null = null;
@@ -136,7 +136,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedStatut         = '';
     this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
-    this.sortColumn             = 'date_creation';
+    this.sortColumn             = 'date_modification';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
     this.loadItems();
