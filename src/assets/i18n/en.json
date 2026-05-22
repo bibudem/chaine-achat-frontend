@@ -472,7 +472,7 @@
     "col-bib": "Library",
     "col-statut": "Status",
     "col-suivi": "ACQ Follow-up",
-    "col-date": "Date",
+    "col-date": "Created",
     "col-actions": "Actions",
     "sans-titre": "Untitled",
     "aucun-item": "No item found",

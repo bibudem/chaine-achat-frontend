@@ -114,8 +114,8 @@
                   <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
                     {{ 'items.col-suivi' | translate }} <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
                   </th>
-                  <th class="col-date sortable-col" (click)="sortBy('date_modification')">
-                    {{ 'items.col-date' | translate }} <i class="bi {{ getSortIcon('date_modification') }} ms-1"></i>
+                  <th class="col-date sortable-col" (click)="sortBy('date_creation')">
+                    {{ 'items.col-date' | translate }} <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
                   </th>
                   <th class="col-actions text-center">{{ 'items.col-actions' | translate }}</th>
                 </tr>
@@ -163,7 +163,11 @@
                     </span>
                     <ng-template #noSuivi><span class="text-muted">—</span></ng-template>
                   </td>
-                  <td class="col-date">{{ formatDate(item.date_modification || item.date_creation) }}</td>
+                  <td class="col-date">
+                    <div>{{ formatDate(item.date_creation) }}</div>
+                    <div class="small text-muted" *ngIf="item.date_modification && item.date_modification !== item.date_creation">
+                    </div>
+                  </td>
                   <td class="col-actions text-center">
                     <div class="btn-group btn-group-sm" role="group">
                       <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
@@ -233,7 +237,12 @@
                 </div>
                 <div class="item-card__row">
                   <span class="item-card__label">{{ 'items.col-date' | translate }}</span>
-                  <span>{{ formatDate(item.date_creation) }}</span>
+                  <span>
+                    {{ formatDate(item.date_creation) }}
+                    <span class="text-muted ms-1" *ngIf="item.date_modification && item.date_modification !== item.date_creation">
+                      (<i class="bi bi-pencil-fill me-1" style="font-size:0.65rem"></i>{{ formatDate(item.date_modification) }})
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
