@@ -829,7 +829,7 @@
   "login-page": {
     "bib-udem": "UdeM Libraries",
     "app-name": "Acquisitions management",
-    "badge-local": "Simulated authentication — local installation",
+    "badge-local": "Internal application — UdeM Libraries",
     "hint": "Select a profile to access the application"
   },
 

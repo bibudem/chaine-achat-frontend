@@ -846,7 +846,7 @@
   "login-page": {
     "bib-udem": "Bibliothèques UdeM",
     "app-name": "Gestion des acquisitions",
-    "badge-local": "Authentification simulée — installation locale",
+    "badge-local": "Application interne — Bibliothèques UdeM",
     "hint": "Sélectionnez un profil pour accéder à l'application"
   },
 
