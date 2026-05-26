@@ -848,7 +848,8 @@
     "org-name": "Bibliothèques de l'Université de Montréal",
     "badge-prod": "Application interne",
     "badge-local": "Version locale — développement",
-    "hint": "Sélectionnez un profil pour accéder à l'application"
+    "hint": "Sélectionnez un profil pour accéder à l'application",
+    "acces-refuse": "Votre profil actuel n'a pas les droits nécessaires pour accéder à cette page."
   },
 
   "usager-home": {

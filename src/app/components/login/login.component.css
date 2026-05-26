@@ -79,6 +79,20 @@
   border-color: #F9C800;
 }
 
+/* ── Alerte accès refusé ── */
+.login-alert {
+  display: flex;
+  align-items: flex-start;
+  font-size: .85rem;
+  background: #FFF3CD;
+  color: #6B4C00;
+  border: 1px solid #FFCA2C;
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
 /* ── Hint ── */
 .login-hint {
   font-size: .9rem;

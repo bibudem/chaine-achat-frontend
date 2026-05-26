@@ -831,7 +831,8 @@
     "org-name": "University of Montreal Libraries",
     "badge-prod": "Internal application",
     "badge-local": "Local version — development",
-    "hint": "Select a profile to access the application"
+    "hint": "Select a profile to access the application",
+    "acces-refuse": "Your current profile does not have the required permissions to access this page."
   },
 
   "usager-home": {

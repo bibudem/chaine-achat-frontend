@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, SimulatedProfile, SIMULATED_PROFILES } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -8,11 +8,20 @@ import { environment } from '../../../environments/environment';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   profiles = SIMULATED_PROFILES;
   isProduction = environment.production;
+  accessDenied = false;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.accessDenied = this.route.snapshot.queryParamMap.get('acces') === 'refuse';
+  }
 
   select(profile: SimulatedProfile): void {
     this.authService.simulateLogin(profile);

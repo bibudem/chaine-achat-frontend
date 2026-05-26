@@ -16,6 +16,11 @@
         {{ (isProduction ? 'login-page.badge-prod' : 'login-page.badge-local') | translate }}
       </div>
 
+      <div class="login-alert" *ngIf="accessDenied">
+        <i class="bi bi-shield-exclamation me-2"></i>
+        {{ 'login-page.acces-refuse' | translate }}
+      </div>
+
       <p class="login-hint">{{ 'login-page.hint' | translate }}</p>
 
       <div class="login-cards">
