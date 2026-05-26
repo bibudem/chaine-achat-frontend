@@ -3,42 +3,61 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #00305F 0%, #00407F 50%, #0057AC 100%);
+  background: #EEF0F2;
   padding: 1.5rem;
 }
 
 .login-box {
   background: #fff;
   border-radius: 18px;
-  padding: 2.5rem 2.25rem;
-  max-width: 480px;
+  max-width: 460px;
   width: 100%;
-  box-shadow: 0 24px 64px rgba(0, 48, 95, 0.30);
+  box-shadow: 0 14px 34px rgba(0, 48, 95, 0.35);
+  overflow: hidden;
+}
+
+/* ── Bande bleue supérieure ── */
+.login-strip {
+  height: 80px;
+  background: #0057AC;
+}
+
+/* ── Zone principale (fond blanc) ── */
+.login-content {
+  padding: 0 2rem 2rem;
   text-align: center;
 }
 
-/* ── Logo ── */
-.login-logo {
-  margin-bottom: 1.75rem;
+/* ── Logo flottant (chevauche la bande bleue) ── */
+.login-avatar {
+  margin-top: -56px;
+  margin-bottom: 1rem;
 }
 
-.login-logo__img {
-  height: 48px;
-  filter: invert(14%) sepia(83%) saturate(938%) hue-rotate(186deg) brightness(73%) contrast(107%);
-  margin-bottom: .6rem;
+.login-avatar__img {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  box-shadow: 0 6px 24px rgba(0, 48, 95, 0.22);
+  display: block;
+  margin: 0 auto;
+  background: #00305F;
 }
 
-.login-logo__name {
-  font-size: 1.25rem;
+/* ── Titre ── */
+.login-title {
+  font-size: 1.4rem;
   font-weight: 700;
   color: #00407F;
   letter-spacing: -.01em;
 }
 
-.login-logo__app {
-  font-size: .875rem;
+.login-subtitle {
+  font-size: .8rem;
   color: #607386;
-  margin-top: .15rem;
+  margin-top: .25rem;
+  margin-bottom: 1.4rem;
+  letter-spacing: .01em;
 }
 
 /* ── Badge avertissement ── */
@@ -51,7 +70,13 @@
   border: 1px solid #C9D8E5;
   border-radius: 20px;
   padding: .3rem 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.login-badge--dev {
+  background: #FFF8E1;
+  color: #7A5100;
+  border-color: #F9C800;
 }
 
 /* ── Hint ── */
@@ -66,7 +91,6 @@
   display: flex;
   flex-direction: column;
   gap: .75rem;
-  margin-bottom: 2rem;
 }
 
 .login-card {
@@ -133,12 +157,4 @@
 
 .login-card:hover .login-card__arrow {
   color: #00407F;
-}
-
-/* ── Footer ── */
-.login-footer {
-  font-size: .75rem;
-  color: #B0BEC8;
-  margin: 0;
-  line-height: 1.5;
 }

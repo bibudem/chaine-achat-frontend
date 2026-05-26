@@ -844,9 +844,10 @@
   },
 
   "login-page": {
-    "bib-udem": "Bibliothèques UdeM",
     "app-name": "Gestion des acquisitions",
-    "badge-local": "Application interne — Bibliothèques UdeM",
+    "org-name": "Bibliothèques de l'Université de Montréal",
+    "badge-prod": "Application interne",
+    "badge-local": "Version locale — développement",
     "hint": "Sélectionnez un profil pour accéder à l'application"
   },
 

@@ -1,30 +1,36 @@
 <div class="login-page">
   <div class="login-box">
 
-    <div class="login-logo">
-      <img src="assets/images/logo-udem-white.svg" alt="UdeM" class="login-logo__img">
-      <div class="login-logo__name">{{ 'login-page.bib-udem' | translate }}</div>
-      <div class="login-logo__app">{{ 'login-page.app-name' | translate }}</div>
+    <div class="login-strip"></div>
+
+    <div class="login-content">
+      <div class="login-avatar">
+        <img src="assets/images/logo-circle-Biblio.png" alt="Bibliothèques UdeM" class="login-avatar__img">
+      </div>
+
+      <div class="login-title">{{ 'login-page.app-name' | translate }}</div>
+      <div class="login-subtitle">{{ 'login-page.org-name' | translate }}</div>
+
+      <div class="login-badge" [class.login-badge--dev]="!isProduction">
+        <i class="bi me-1" [class.bi-building]="isProduction" [class.bi-laptop]="!isProduction"></i>
+        {{ (isProduction ? 'login-page.badge-prod' : 'login-page.badge-local') | translate }}
+      </div>
+
+      <p class="login-hint">{{ 'login-page.hint' | translate }}</p>
+
+      <div class="login-cards">
+        <button *ngFor="let p of profiles" class="login-card" (click)="select(p)">
+          <div class="login-card__icon-wrap">
+            <i class="bi {{ p.icon }}"></i>
+          </div>
+          <div class="login-card__text">
+            <div class="login-card__label">{{ p.label }}</div>
+            <div class="login-card__desc">{{ p.description }}</div>
+          </div>
+          <i class="bi bi-chevron-right login-card__arrow"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="login-badge">
-      <i class="bi bi-building me-1"></i>
-      {{ 'login-page.badge-local' | translate }}
-    </div>
-
-    <p class="login-hint">{{ 'login-page.hint' | translate }}</p>
-
-    <div class="login-cards">
-      <button *ngFor="let p of profiles" class="login-card" (click)="select(p)">
-        <div class="login-card__icon-wrap">
-          <i class="bi {{ p.icon }}"></i>
-        </div>
-        <div class="login-card__text">
-          <div class="login-card__label">{{ p.label }}</div>
-          <div class="login-card__desc">{{ p.description }}</div>
-        </div>
-        <i class="bi bi-chevron-right login-card__arrow"></i>
-      </button>
-    </div>
   </div>
 </div>

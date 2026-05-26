@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, SimulatedProfile, SIMULATED_PROFILES } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'login',
@@ -9,6 +10,7 @@ import { AuthService, SimulatedProfile, SIMULATED_PROFILES } from '../../service
 })
 export class LoginComponent {
   profiles = SIMULATED_PROFILES;
+  isProduction = environment.production;
 
   constructor(public authService: AuthService, private router: Router) {}
 

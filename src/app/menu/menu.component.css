@@ -1,3 +1,30 @@
-.menu-udem{
-  color: white!important;
+.menu-udem {
+  color: white !important;
+}
+
+/* ─── Sous-menu : correction positionnement des puces ────────────────────
+   Sans position:relative sur le li, le ::before absolu s'ancre au mauvais
+   conteneur parent et se déplace selon la quantité d'items du sous-menu.  */
+
+.sidebar .nav.sub-menu .nav-item {
+  position: relative;
+}
+
+/* Centre la puce dans la zone de padding gauche du sous-menu (1.1rem) */
+.sidebar .nav.sub-menu .nav-item::before {
+  left: -0.7rem;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
+}
+
+/* ─── Chevron du sous-menu : animation à l'ouverture ─────────────────── */
+
+.sidebar .nav-item .nav-link .toggle-icon {
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.sidebar .nav-item .nav-link[aria-expanded="true"] .toggle-icon {
+  transform: rotate(180deg);
 }
