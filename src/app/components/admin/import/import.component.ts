@@ -10,6 +10,7 @@ import {
   ColumnInfo,
   FORM_TYPES
 } from '../../../services/import.service';
+import { ReponsesService } from '../../../services/reponses.service';
 
 type Step = 'select' | 'notice' | 'upload' | 'preview' | 'result';
 
@@ -57,9 +58,10 @@ export class ImportComponent implements OnDestroy {
   private subs = new Subscription();
 
   constructor(
-    private importService: ImportService,
-    private router: Router,
-    private translate: TranslateService
+    private importService:   ImportService,
+    private router:          Router,
+    private translate:       TranslateService,
+    private reponsesService: ReponsesService
   ) {}
 
   ngOnDestroy(): void {
@@ -279,6 +281,7 @@ export class ImportComponent implements OnDestroy {
           this.result    = res;
           this.step      = 'result';
           this.isLoading = false;
+          this.reponsesService.triggerPendingRefresh();
         },
         error: (err: any) => {
           this.result = {
