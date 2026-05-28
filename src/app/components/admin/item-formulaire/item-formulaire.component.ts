@@ -5,6 +5,7 @@ import { Item, ItemFormulaireService, ApiResponse } from '../../../services/item
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
+import { ReponsesService } from '../../../services/reponses.service';
 
 @Component({
   selector: 'app-item-formulaire',
@@ -48,9 +49,10 @@ export class ItemFormulaireComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private itemService: ItemFormulaireService,
-    private dialogService: DialogService,
-    private location: Location
+    private itemService:     ItemFormulaireService,
+    private dialogService:   DialogService,
+    private location:        Location,
+    private reponsesService: ReponsesService
   ) {
     this.itemForm = this.createForm();
   }
@@ -399,6 +401,7 @@ export class ItemFormulaireComponent implements OnInit {
         next: (response: ApiResponse<Item>) => {
           this.submitting = false;
           if (response.success) {
+            this.reponsesService.triggerPendingRefresh();
             this.dialogService.showSuccess('Item modifié avec succès!');
             setTimeout(() => this.router.navigate(['/items']), 1500);
           } else {
@@ -417,6 +420,7 @@ export class ItemFormulaireComponent implements OnInit {
         next: (response: ApiResponse<Item>) => {
           this.submitting = false;
           if (response.success) {
+            this.reponsesService.triggerPendingRefresh();
             this.dialogService.showSuccess('Item créé avec succès!');
             setTimeout(() => this.router.navigate(['/items']), 1500);
           } else {
