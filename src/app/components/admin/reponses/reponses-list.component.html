@@ -194,15 +194,31 @@
                   </div>
                 </div>
 
+                <!-- Alerte item supprimé -->
+                <div *ngIf="expandedReponse.statut_approbation === 'item_supprime'"
+                     class="alert alert-danger d-flex align-items-center gap-2 mx-3 mb-2 py-2"
+                     role="alert">
+                  <i class="bi bi-trash3-fill flex-shrink-0"></i>
+                  <span>
+                    <strong>Demande annulée (non traitée)</strong> —
+                    L'item associé à cette demande a été supprimé du registre des acquisitions.
+                  </span>
+                </div>
+
                 <!-- Pied panneau -->
                 <div class="panel-footer">
                   <button class="pf-btn pf-btn--close" (click)="toggleDetails(reponse)">
                     <i class="bi bi-x me-1"></i>Fermer
                   </button>
                   <div class="pf-actions">
-                    <button class="pf-btn pf-btn--acq" (click)="ouvrirDecisionAcq()">
+                    <button *ngIf="expandedReponse.statut_approbation !== 'item_supprime'"
+                            class="pf-btn pf-btn--acq" (click)="ouvrirDecisionAcq()">
                       <i class="bi bi-check2-circle me-1"></i>Décision ACQ
                     </button>
+                    <span *ngIf="expandedReponse.statut_approbation === 'item_supprime'"
+                          class="badge bg-danger d-flex align-items-center gap-1 px-3 py-2">
+                      <i class="bi bi-x-circle"></i> Demande annulée (non traitée)
+                    </span>
                     <button class="pf-btn pf-btn--secondary" (click)="copyToClipboard()">
                       <i class="bi bi-copy me-1"></i>Copier JSON
                       <small *ngIf="copyFeedback" class="ms-1 pf-feedback">{{ copyFeedback }}</small>

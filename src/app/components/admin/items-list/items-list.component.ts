@@ -6,6 +6,7 @@ import { Item, ItemFormulaireService, ApiResponse } from '../../../services/item
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { AuthService } from '../../../services/auth.service';
+import { ReponsesService } from '../../../services/reponses.service';
 
 @Component({
   selector: 'app-items-list',
@@ -37,11 +38,12 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(
-    private itemService: ItemFormulaireService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private dialogService: DialogService,
-    public authService: AuthService
+    private itemService:     ItemFormulaireService,
+    private router:          Router,
+    private route:           ActivatedRoute,
+    private dialogService:   DialogService,
+    public  authService:     AuthService,
+    private reponsesService: ReponsesService
   ) {}
 
   ngOnInit(): void {
@@ -165,6 +167,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.itemService.delete(id).subscribe({
       next: () => {
         this.dialogService.showInfo('Item supprimé avec succès');
+        this.reponsesService.triggerPendingRefresh();
         if (this.pagedItems.length === 1 && this.currentPage > 1) {
           this.currentPage--;
         }

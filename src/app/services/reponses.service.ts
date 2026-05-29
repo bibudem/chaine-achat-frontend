@@ -32,6 +32,7 @@ export interface Reponse {
   reponses: any;
   dateA: string;
   item_id_cree?: number | null;
+  statut_approbation?: string | null;
 }
 
 export interface DemandeUsager {

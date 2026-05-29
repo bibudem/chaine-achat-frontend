@@ -89,6 +89,14 @@
   </div>
 </div>
 
+<!-- Alerte item supprimé ─────────────────────────────────────── -->
+<div *ngIf="reponse?.statut_approbation === 'item_supprime'"
+     class="alert alert-warning d-flex align-items-center gap-2 mx-3 mt-3 mb-0"
+     role="alert">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+  <span>L'item associé à cette demande a été supprimé du registre des acquisitions.</span>
+</div>
+
 <!-- Footer avec boutons ──────────────────────────────────────── -->
 <div class="modal-footer">
   <button
@@ -98,6 +106,7 @@
     {{ 'reponses.btn_fermer' | translate }}
   </button>
   <button
+    *ngIf="reponse?.statut_approbation !== 'item_supprime'"
     type="button"
     class="btn btn-warning btn-sm"
     (click)="creerItem()"
@@ -105,6 +114,7 @@
     <i class="bi bi-file-earmark-plus me-1"></i>Créer un item
   </button>
   <button
+    *ngIf="reponse?.statut_approbation !== 'item_supprime'"
     type="button"
     class="btn btn-sm"
     style="background: var(--secondary-blue, #00407F); color: #fff; border: none;"
