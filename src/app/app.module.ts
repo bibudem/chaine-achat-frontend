@@ -67,6 +67,7 @@ import { ReponsesListComponent } from './components/admin/reponses/reponses-list
 import { ReponsesDetailComponent } from './components/admin/reponses/reponses-detail/reponses-detail.component';
 import { FaqComponent } from './components/faq/faq.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
+import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
     ReponsesDetailComponent,
     FaqComponent,
     PebTipasaNumeriqueComponent,
+    UsagerProfilComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,

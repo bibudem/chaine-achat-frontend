@@ -22,6 +22,7 @@ import { RequeteAccessibiliteComponent } from './components/usager/pages/requete
 import { NouvelAbonnementComponent } from './components/usager/pages/nouvel-abonnement/nouvel-abonnement.component';
 import { ReponsesListComponent } from './components/admin/reponses/reponses-list.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
+import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
 import { EditGuard } from './services/edit-guard.service';
 import { StaffGuard } from './services/staff-guard.service';
@@ -53,6 +54,7 @@ const routes: Routes = [
       { path: 'requete-accessibilite', component: RequeteAccessibiliteComponent },
       { path: 'nouvel-abonnement', component: NouvelAbonnementComponent },
       { path: 'peb-tipasa-numerique', component: PebTipasaNumeriqueComponent },
+      { path: 'profil',              component: UsagerProfilComponent },
     ]
   },
   { path: 'page-not-found', component: PageNotFoundComponent  },

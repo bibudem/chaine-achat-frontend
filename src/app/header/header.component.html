@@ -4,8 +4,8 @@
   <!-- Zone logo + toggler sidebar -->
   <div class="navbar-brand-wrapper d-flex justify-content-center">
     <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-      <a class="navbar-brand brand-logo" href="/"><img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM"/></a>
-      <a class="navbar-brand brand-logo-mini" href="/"><img src="assets/images/favicon.ico" alt="Bibliothèques UdeM"/></a>
+      <a class="navbar-brand brand-logo" [routerLink]="authService.isUsager ? '/usager' : '/'"><img src="assets/images/biblio-logo.png" alt="Bibliothèques UdeM"/></a>
+      <a class="navbar-brand brand-logo-mini" [routerLink]="authService.isUsager ? '/usager' : '/'"><img src="assets/images/favicon.ico" alt="Bibliothèques UdeM"/></a>
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
         <span class="typcn typcn-th-menu"></span>
       </button>
@@ -154,6 +154,11 @@
             </div>
           </div>
           <div class="user-panel__body">
+            <button *ngIf="authService.isUsager" class="user-item" (click)="mesDemandes()">
+              <i class="bi bi-clock-history user-item__icon"></i>
+              <span class="user-item__label">Mes demandes</span>
+              <i class="bi bi-chevron-right user-item__arrow"></i>
+            </button>
             <button class="user-item" (click)="logout()">
               <i class="bi bi-box-arrow-right user-item__icon"></i>
               <span class="user-item__label">{{ 'login.logout-text' | translate }}</span>

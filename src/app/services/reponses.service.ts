@@ -34,6 +34,24 @@ export interface Reponse {
   item_id_cree?: number | null;
 }
 
+export interface DemandeUsager {
+  id: number;
+  type_formulaire: string;
+  titre_document: string | null;
+  dateA: string;
+  statut_approbation: string | null;
+  commentaire_admin: string | null;
+  date_traitement: string | null;
+  usager_statut: string | null;
+  isbn_issn: string | null;
+  editeur: string | null;
+  bibliotheque: string | null;
+  prix_cad: string | null;
+  devise_originale: string | null;
+  suivi_acq: string | null;
+  note_acq: string | null;
+}
+
 export interface PaginatedResponse {
   data: Reponse[];
   total: number;
@@ -252,6 +270,12 @@ export class ReponsesService {
     return this.http
       .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, { params: { limit } })
       .pipe(catchError(this.handleError('getPending')));
+  }
+
+  getByEmail(email: string): Observable<{ data: DemandeUsager[] }> {
+    return this.http
+      .get<{ data: DemandeUsager[] }>(`${this.baseUrl}/profil`, { params: { email } })
+      .pipe(catchError(this.handleError('getByEmail')));
   }
 
   // ──────────────────────────────────────────────────────────

@@ -136,6 +136,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
   }
 
+  mesDemandes(): void {
+    this.userOpen = false;
+    this.router.navigate(['/usager/profil']);
+  }
+
   logout(): void {
     this.authService.logout();
   }

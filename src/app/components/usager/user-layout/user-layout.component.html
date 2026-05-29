@@ -1,32 +1,58 @@
 <!-- user-layout.component.html -->
 <div class="container-scroller">
-  <header class="user-header d-flex justify-content-between align-items-center px-4 py-2 bg-usager text-white">
-    <!-- Bloc logo + texte -->
-  <div class="d-flex align-items-center">
-   <img src="assets/images/logo-udem-white.svg" alt="logo Udem" style="height: 45px;">
+  <header class="ul-header">
 
-    <!-- Texte ajouté -->
-    <span class="ms-3 mt-">
-      {{ 'user-layout.les-bibliotheques' | translate }}
-    </span>
-  </div>
-  <div class="d-flex align-items-center gap-3">
-    <!-- Sélecteur de langue -->
-    <div class="lang-toggle">
-      <i class="bi bi-globe2 lang-toggle__icon"></i>
-      <button class="lang-btn" [class.lang-btn--active]="currentLang === 'fr'" (click)="switchLanguage('fr')" title="Français">FR</button>
-      <span class="lang-sep">|</span>
-      <button class="lang-btn" [class.lang-btn--active]="currentLang === 'en'" (click)="switchLanguage('en')" title="English">EN</button>
+    <!-- Logo -->
+    <a routerLink="/usager" class="ul-logo">
+      <img src="assets/images/logo-udem-white.svg" alt="Bibliothèques UdeM" style="height: 40px;">
+      <span class="ul-logo__text">{{ 'user-layout.les-bibliotheques' | translate }}</span>
+    </a>
+
+    <!-- Droite -->
+    <div class="ul-right">
+
+      <!-- Switch langue -->
+      <div class="ul-lang">
+        <i class="bi bi-globe2 ul-lang__icon"></i>
+        <button class="ul-lang__btn" [class.ul-lang__btn--active]="currentLang === 'fr'"
+                (click)="switchLanguage('fr')" title="Français">FR</button>
+        <span class="ul-lang__sep">|</span>
+        <button class="ul-lang__btn" [class.ul-lang__btn--active]="currentLang === 'en'"
+                (click)="switchLanguage('en')" title="English">EN</button>
+      </div>
+
+      <!-- Menu utilisateur -->
+      <div class="ul-user" [class.ul-user--open]="userOpen">
+        <button class="ul-user__btn" (click)="toggleUser($event)">
+          <span class="ul-user__avatar">{{ initiales }}</span>
+          <span class="ul-user__name d-none d-sm-inline">{{ userName }}</span>
+          <i class="bi bi-chevron-down ul-user__caret d-none d-sm-inline"></i>
+        </button>
+
+        <div class="ul-user__panel" *ngIf="userOpen" (click)="$event.stopPropagation()">
+          <div class="ul-user__head">
+            <span class="ul-user__avatar ul-user__avatar--lg">{{ initiales }}</span>
+            <div>
+              <div class="ul-user__fullname">{{ userName }}</div>
+              <div class="ul-user__role">Usager</div>
+            </div>
+          </div>
+          <div class="ul-user__body">
+            <button class="ul-user__item" (click)="mesDemandes()">
+              <i class="bi bi-clock-history ul-user__item-icon"></i>
+              <span>Mes demandes</span>
+              <i class="bi bi-chevron-right ul-user__item-arrow"></i>
+            </button>
+            <button class="ul-user__item" (click)="logout()">
+              <i class="bi bi-box-arrow-right ul-user__item-icon"></i>
+              <span>{{ 'user-layout.deconnexion' | translate }}</span>
+              <i class="bi bi-chevron-right ul-user__item-arrow"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <!-- Utilisateur + déconnexion -->
-    <div>
-      <i class="bi bi-person-circle me-2"></i>
-      <span>{{ userName }}</span>
-      <button class="btn btn-sm btn-outline-light ms-3" (click)="logout()">
-        <i class="bi bi-box-arrow-right me-1"></i>{{ 'user-layout.deconnexion' | translate }}
-      </button>
-    </div>
-  </div>
   </header>
 
   <main class="container mt-4">

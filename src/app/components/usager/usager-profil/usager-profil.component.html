@@ -1,0 +1,111 @@
+<div class="up-page">
+
+  <!-- ── En-tête profil ─────────────────────────────────── -->
+  <div class="up-banner">
+    <div class="up-banner__inner">
+      <div class="up-banner__avatar">{{ initiales }}</div>
+      <div class="up-banner__info">
+        <h1 class="up-banner__name">{{ prenom }} {{ nom }}</h1>
+        <p class="up-banner__email"><i class="bi bi-envelope me-1"></i>{{ email }}</p>
+      </div>
+      <a routerLink="/usager" class="up-banner__back">
+        <i class="bi bi-arrow-left me-1"></i> Retour
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Corps ──────────────────────────────────────────── -->
+  <div class="up-body">
+
+    <!-- Titre section -->
+    <div class="up-section-head" *ngIf="!loading && demandes.length > 0">
+      <i class="bi bi-clock-history up-section-head__icon"></i>
+      <span class="up-section-head__title">Mes demandes</span>
+    </div>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="up-state">
+      <div class="spinner-border text-secondary" style="width:1.5rem;height:1.5rem;"></div>
+      <span>Chargement de vos demandes…</span>
+    </div>
+
+    <!-- Erreur -->
+    <div *ngIf="errorMessage" class="up-state up-state--error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Aucune demande -->
+    <div *ngIf="!loading && !errorMessage && demandes.length === 0" class="up-empty">
+      <div class="up-empty__icon"><i class="bi bi-inbox"></i></div>
+      <p class="up-empty__title">Aucune demande enregistrée</p>
+      <p class="up-empty__sub">Vos demandes d'acquisition apparaîtront ici une fois soumises.</p>
+      <a routerLink="/usager" class="up-empty__cta">
+        <i class="bi bi-plus-circle me-1"></i> Soumettre une demande
+      </a>
+    </div>
+
+    <!-- Liste des cartes -->
+    <div class="up-list" *ngIf="!loading && demandes.length > 0">
+      <div class="up-card" *ngFor="let d of demandes" [ngClass]="'up-card--' + statutKey(d)">
+
+        <!-- En-tête carte -->
+        <div class="up-card__head">
+          <div class="up-card__head-left">
+            <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKey(d)">
+              <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
+            </span>
+            <span class="up-type-label">{{ d.type_formulaire }}</span>
+          </div>
+          <span class="up-badge" [ngClass]="'up-badge--' + statutKey(d)">
+            {{ statutLabel(d) }}
+          </span>
+        </div>
+
+        <!-- Titre -->
+        <h3 class="up-card__titre">{{ d.titre_document || '—' }}</h3>
+
+        <!-- Grille de détails -->
+        <div class="up-card__details">
+          <div class="up-detail" *ngIf="d.isbn_issn">
+            <span class="up-detail__key">ISBN / ISSN</span>
+            <span class="up-detail__val">{{ d.isbn_issn }}</span>
+          </div>
+          <div class="up-detail" *ngIf="d.editeur">
+            <span class="up-detail__key">Éditeur</span>
+            <span class="up-detail__val">{{ d.editeur }}</span>
+          </div>
+          <div class="up-detail" *ngIf="d.bibliotheque">
+            <span class="up-detail__key">Bibliothèque</span>
+            <span class="up-detail__val">{{ d.bibliotheque }}</span>
+          </div>
+          <div class="up-detail" *ngIf="d.prix_cad">
+            <span class="up-detail__key">Prix estimé</span>
+            <span class="up-detail__val">{{ d.prix_cad | number:'1.2-2' }} {{ d.devise_originale || 'CAD' }}</span>
+          </div>
+        </div>
+
+        <!-- Pied de carte -->
+        <div class="up-card__foot">
+          <div class="up-card__dates">
+            <span><i class="bi bi-send"></i> Soumise le {{ formatDate(d.dateA) }}</span>
+            <span *ngIf="d.date_traitement"><i class="bi bi-check2-circle"></i> Traitée le {{ formatDate(d.date_traitement) }}</span>
+          </div>
+
+          <div class="up-card__suivi">
+            <span class="up-suivi__key">Suivi de la demande :</span>
+            <span *ngIf="d.suivi_acq" class="up-suivi__val">{{ d.suivi_acq }}</span>
+            <span *ngIf="!d.suivi_acq" class="up-suivi__default">En cours d'évaluation par l'équipe des acquisitions</span>
+          </div>
+
+          <div *ngIf="d.commentaire_admin || d.note_acq" class="up-card__note">
+            <i class="bi bi-chat-left-quote"></i>
+            <span>{{ d.commentaire_admin || d.note_acq }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
