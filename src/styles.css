@@ -2,3 +2,8 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@media (max-width: 991px) {
+  html { height: auto; }
+  body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; }
+}

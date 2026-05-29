@@ -26,7 +26,7 @@
   flex-shrink: 0;
   padding-bottom: 10px;
   border-bottom: 2px solid var(--extra-light-blue, #E5F0F8);
-  margin-top: 3rem;
+  margin-top: 2.5rem;
 }
 .db-title {
   font-family: 'Lora', Georgia, serif;
@@ -612,7 +612,7 @@
 /* ── < 992px ── */
 @media (max-width: 991px) {
   .db-wrap    { padding: 12px 14px 10px; gap: 10px; }
-  .db-header  { flex-wrap: wrap; gap: 6px; margin-top: 1.5rem; }
+  .db-header  { flex-wrap: wrap; gap: 6px; margin-top: 0.5rem; }
   .db-title   { font-size: 1.45rem; }
   .db-sub     { font-size: 0.78rem; }
   .db-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 6px; }
@@ -633,7 +633,7 @@
 /* ── < 768px ── */
 @media (max-width: 767px) {
   .db-wrap   { padding: 10px 10px 8px; gap: 8px; }
-  .db-header { margin-top: 1rem; }
+  .db-header { margin-top: 0; }
   .db-stats  { gap: 8px; }
   .sc {
     padding: 12px 14px 10px; min-height: 84px; border-radius: 10px;
@@ -664,8 +664,8 @@
 
 /* ── < 480px ── */
 @media (max-width: 479px) {
-  .db-wrap   { padding: 8px; gap: 6px; }
-  .db-header { margin-top: 0.75rem; padding-bottom: 8px; }
+  .db-wrap   { padding: 8px; gap: 6px; height: auto !important; overflow: visible !important; }
+  .db-header { margin-top: 0; padding-bottom: 8px; }
   .db-title  { font-size: 1.05rem; }
 
   /* Stats : 2 colonnes compactes */
@@ -683,6 +683,23 @@
 
   .mini-stats-grid { grid-template-columns: 1fr; }
   .statut-grid     { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile : libérer le scroll des panneaux ── */
+@media (max-width: 767px) {
+  .db-wrap    { height: auto !important; overflow: visible !important; }
+  .db-panels  { flex: none !important; min-height: unset !important; height: auto !important; }
+  .panel      { min-height: unset !important; height: auto !important; }
+  .panel__body {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    flex: none !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  .db-col-main,
+  .db-col-center,
+  .db-col-right { height: auto !important; min-height: unset !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
