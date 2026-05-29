@@ -558,9 +558,20 @@
   .lang-toggle { padding: 4px 8px; }
   .titre-initial { min-width: 0; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  /* Panneaux : position fixe sous la navbar, pleine largeur */
   .notif-panel,
   .forms-panel,
-  .user-panel { width: calc(100vw - 16px); right: -8px; }
+  .user-panel {
+    position: fixed;
+    top: 4.5rem;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    z-index: 1400;
+  }
 }
 
 /* Mobile portrait (< 480px) */
@@ -578,9 +589,14 @@
   .notif-btn,
   .forms-btn { width: 30px; font-size: 0.82rem; }
 
+  /* Panneaux : pleine largeur en portrait */
   .notif-panel,
   .forms-panel,
-  .user-panel { width: calc(100vw - 12px); right: -4px; }
+  .user-panel {
+    left: 4px;
+    right: 4px;
+    top: 4rem;
+  }
 
   .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item .nav-link {
     padding: 4px 7px;
