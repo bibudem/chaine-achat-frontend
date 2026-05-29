@@ -3,8 +3,8 @@
   <!-- En-tête ──────────────────────────────────────────────────────── -->
   <div class="d-flex justify-content-between align-items-start mb-3">
     <div>
-      <h2 class="h4 mb-0">Réponses aux formulaires</h2>
-      <p class="text-muted small mt-1 mb-0">Consulter et gérer les soumissions des formulaires usagers</p>
+      <h2 class="h4 mb-0">{{ 'reponses.titre' | translate }}</h2>
+      <p class="text-muted small mt-1 mb-0">{{ 'reponses.sous_titre' | translate }}</p>
     </div>
     <span class="badge bg-secondary fs-6" *ngIf="!loading">
       {{ totalItems }} réponse{{ totalItems !== 1 ? 's' : '' }}

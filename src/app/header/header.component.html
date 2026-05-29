@@ -50,12 +50,12 @@
         <div class="notif-panel" *ngIf="notifOpen" (click)="$event.stopPropagation()">
           <div class="notif-panel__head">
             <i class="bi bi-bell-fill me-2"></i>
-            <span>Réponses en attente</span>
+            <span>{{ 'header.notif-titre' | translate }}</span>
             <span class="notif-panel__count">{{ pendingCount }}</span>
           </div>
           <div class="notif-panel__body">
             <div *ngIf="pendingReponses.length === 0" class="notif-empty">
-              <i class="bi bi-check2-circle"></i> Tout est traité
+              <i class="bi bi-check2-circle"></i> {{ 'header.notif-vide' | translate }}
             </div>
             <button *ngFor="let r of pendingReponses" class="notif-item" (click)="ouvrirReponse(r)">
               <span class="notif-item__icon {{ typeClass(r.type_formulaire) }}">
@@ -66,12 +66,6 @@
                 <span class="notif-item__meta">#{{ r.id }} · {{ r.usager_nom }} · {{ formatDate(r.dateA) }}</span>
               </span>
               <i class="bi bi-chevron-right notif-item__arrow"></i>
-            </button>
-          </div>
-          <div class="notif-panel__foot">
-            <button class="notif-voir-tout" (click)="voirTout()">
-              Voir toutes les réponses
-              <i class="bi bi-arrow-right ms-1"></i>
             </button>
           </div>
         </div>
@@ -156,7 +150,7 @@
           <div class="user-panel__body">
             <button *ngIf="authService.isUsager" class="user-item" (click)="mesDemandes()">
               <i class="bi bi-clock-history user-item__icon"></i>
-              <span class="user-item__label">Mes demandes</span>
+              <span class="user-item__label">{{ 'header.mes-demandes' | translate }}</span>
               <i class="bi bi-chevron-right user-item__arrow"></i>
             </button>
             <button class="user-item" (click)="logout()">

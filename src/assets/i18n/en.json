@@ -143,7 +143,10 @@
     "modification-ccol": "Modification and CCOL",
     "peb-tipasa": "PEB Tipasa digital",
     "accessibilite": "Accessibility request",
-    "suggestion": "Purchase suggestion"
+    "suggestion": "Purchase suggestion",
+    "notif-titre": "Pending requests",
+    "notif-vide": "All caught up",
+    "mes-demandes": "My requests"
   },
   "login":{
         "messageConnexion": "You are connected.",
@@ -171,7 +174,7 @@
         "list-secteurs": "List of sectors",
         "logs": "Logs",
         "processus": "Workflow",
-        "reponses": "Form Responses"
+        "reponses": "Requests by Form"
       },
   "home": {
         "board": "Our statistics",
@@ -369,7 +372,7 @@
     "logs-menu": "Logs"
   },
   "reponses": {
-    "titre": "Form Responses",
+    "titre": "Requests by Form",
     "sous_titre": "View and manage all responses to suggestion and purchase forms",
     "filtre_type": "Form Type",
     "filtre_statut": "Approval Status",

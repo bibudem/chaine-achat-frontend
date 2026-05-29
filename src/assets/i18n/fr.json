@@ -123,13 +123,16 @@
   },
   "header": {
     "sous-titre-prod": "Outil web de gestion des acquisitions et abonnements des bibliothèques",
-    "formulaires": "Forms",
+    "formulaires": "Formulaires",
     "nouvel-achat": "Nouvel achat unique",
     "nouvel-abonnement": "Nouvel abonnement",
     "modification-ccol": "Modification et CCOL",
     "peb-tipasa": "PEB Tipasa numérique",
     "accessibilite": "Requête Accessibilité",
-    "suggestion": "Suggestion d'achat"
+    "suggestion": "Suggestion d'achat",
+    "notif-titre": "Demandes en attente",
+    "notif-vide": "Tout est traité",
+    "mes-demandes": "Mes demandes"
   },
   "login":{
     "messageConnexion": "Vous êtes bien connecté",
@@ -149,7 +152,7 @@
     "outils": "Registres",
     "list-fonds": "Liste de fonds",
     "rapports": "Rapports",
-    "reponses":    "Réponses forms",
+    "reponses":    "Demandes par formulaire",
     "import-logs": "Liste des imports"
   },
   "rapport": {
@@ -364,7 +367,7 @@
     "titre-logs-plateforme": "Journal des plateformes"
   },
   "reponses": {
-    "titre": "Réponses des formulaires",
+    "titre": "Demandes par formulaire",
     "sous_titre": "Consultez et gérez toutes les réponses aux formulaires de suggestion et de nouvel achat",
     "filtre_type": "Type de formulaire",
     "filtre_statut": "Statut d'approbation",
