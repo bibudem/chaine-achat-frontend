@@ -671,9 +671,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Responsive header ── */
 @media (max-width: 991px) {
-  .navbar .navbar-brand-wrapper { width: 60px; }
-  .brand-logo { display: none; }
-  .brand-logo-mini { display: block; }
+  .navbar .navbar-brand-wrapper { width: 72px; }
+  .brand-logo { display: none !important; }
+  .brand-logo-mini {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+  }
+  .brand-logo-mini img {
+    height: 38px;
+    width: 38px;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block !important;
+  }
   .navbar-menu-wrapper { padding: 0 12px; }
 }
 @media (max-width: 575px) {
@@ -781,7 +793,11 @@ select.typeahead, select.tt-query, select.tt-hint {
 /* =============================================
    CONTENT WRAPPER
    ============================================= */
-.content-wrapper { padding: 0 1rem 1rem !important; }
+.content-wrapper { padding: 0 1rem 2.5rem !important; }
+
+@media (max-width: 767px) {
+  .content-wrapper { padding: 0 0.5rem 5rem !important; }
+}
 
 /* =============================================
    DASHBOARD PRINCIPAL
@@ -1794,19 +1810,21 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: po
     min-width: 300px;
   }
 
-  /* Sidebar */
-  .sidebar {
-    width: 100%;
-    position: fixed;
-    top: var(--navbar-height);
-    left: -100%;
-    transition: left var(--transition);
-    z-index: 1020;
-    height: calc(100vh - var(--navbar-height));
+  /* Sidebar — slide depuis la gauche (override template right-based) */
+  .sidebar-offcanvas {
+    right: auto !important;
+    left: -260px !important;
+    width: 240px !important;
+    position: fixed !important;
+    top: 5rem !important;
+    height: calc(100vh - 5rem) !important;
     overflow-y: auto;
+    z-index: 1020;
+    transition: left 0.25s ease-out !important;
   }
-  .sidebar.open {
-    left: 0;
+  .sidebar-offcanvas.active {
+    left: 0 !important;
+    right: auto !important;
   }
 
   /* Content : pleine largeur */

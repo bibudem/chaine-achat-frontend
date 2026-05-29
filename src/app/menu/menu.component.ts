@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { MethodesGlobal } from '../lib/MethodesGlobal';
 import { filter } from 'rxjs/operators';
@@ -27,7 +26,6 @@ export class MenuComponent implements OnInit {
   isOutilsRoute  = false;
 
   constructor(
-    private translate: TranslateService,
     private router:    Router,
     public authService: AuthService
   ) {}
@@ -42,6 +40,16 @@ export class MenuComponent implements OnInit {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: any) => this.updateActiveRoutes(e.urlAfterRedirects));
+  }
+
+  closeSidebar(): void {
+    const sidebar  = document.querySelector('.sidebar-offcanvas');
+    const overlay  = document.getElementById('sidebarOverlay');
+    if (sidebar?.classList.contains('active')) {
+      sidebar.classList.remove('active');
+      overlay?.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
   }
 
   private updateActiveRoutes(url: string): void {

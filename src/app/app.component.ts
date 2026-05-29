@@ -44,6 +44,16 @@ export class AppComponent implements OnInit {
     this.translate.use(language);
   }
 
+  closeSidebar(): void {
+    const sidebar = document.querySelector('.sidebar-offcanvas');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar?.classList.contains('active')) {
+      sidebar.classList.remove('active');
+      overlay?.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
+  }
+
   async logout() {
     await this.authService.logout();
   }

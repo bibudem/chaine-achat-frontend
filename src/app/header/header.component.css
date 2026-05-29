@@ -3,6 +3,15 @@
    ══════════════════════════════════════════════════════ */
 .brand-logo { max-width: 200px; }
 
+.brand-logo-mini img {
+  height: 34px;
+  width: 34px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.navbar-toggler i { font-size: 1.25rem; }
+
 
 /* ══════════════════════════════════════════════════════
    Navbar — layout & surcharges Bootstrap

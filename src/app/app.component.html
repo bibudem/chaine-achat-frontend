@@ -9,6 +9,8 @@
     <app-header></app-header>
     <div class="container-fluid page-body-wrapper">
       <app-menu></app-menu>
+      <!-- Overlay mobile : ferme le sidebar au clic extérieur -->
+      <div class="sidebar-overlay" id="sidebarOverlay" (click)="closeSidebar()"></div>
       <div class="main-panel">
         <div class="content-wrapper">
           <app-dialog></app-dialog>

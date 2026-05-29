@@ -5,43 +5,39 @@
     <li class="nav-item"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
-      <a class="nav-link" routerLink="/accueil">
+      <a class="nav-link" routerLink="/accueil" (click)="closeSidebar()">
         <i class="bi bi-house-door menu-icon"></i>
         <span class="menu-title">{{ 'menu.accueil' | translate }}</span>
       </a>
     </li>
 
-    <!-- Rechercher — actif sur /items, /items/:id, /items/details/:id mais PAS /items/nouveau -->
+    <!-- Rechercher -->
     <li class="nav-item" [class.active]="isSearchRoute">
-      <a class="nav-link" routerLink="/items">
+      <a class="nav-link" routerLink="/items" (click)="closeSidebar()">
         <i class="bi bi-search menu-icon"></i>
         <span class="menu-title">{{ 'menu.rechercher' | translate }}</span>
       </a>
     </li>
 
-    <!-- Ajouter — actif uniquement sur /items/nouveau -->
+    <!-- Ajouter -->
     <li *ngIf="authService.canEdit" class="nav-item" [class.active]="isAddItemRoute">
-      <a class="nav-link" routerLink="/items/nouveau">
+      <a class="nav-link" routerLink="/items/nouveau" (click)="closeSidebar()">
         <i class="bi bi-file-earmark-plus menu-icon"></i>
         <span class="menu-title">{{ 'menu.ajouter' | translate }}</span>
       </a>
     </li>
 
     <!-- Rapports -->
-    <li class="nav-item"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }">
-      <a class="nav-link" routerLink="/rapport">
+    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+      <a class="nav-link" routerLink="/rapport" (click)="closeSidebar()">
         <i class="bi bi-bar-chart-line menu-icon"></i>
         <span class="menu-title">{{ 'menu.rapports' | translate }}</span>
       </a>
     </li>
 
     <!-- Processus / Import -->
-    <li *ngIf="authService.isAdmin" class="nav-item"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }">
-      <a class="nav-link" routerLink="/import">
+    <li *ngIf="authService.isAdmin" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+      <a class="nav-link" routerLink="/import" (click)="closeSidebar()">
         <i class="bi bi-database-down menu-icon"></i>
         <span class="menu-title">{{ 'menu.processus' | translate }}</span>
       </a>
@@ -61,17 +57,13 @@
 
       <div class="collapse" id="outils" [class.show]="isOutilsRoute">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }" *ngIf="!authService.isUsager">
-            <a class="nav-link" routerLink="/reponses">
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="!authService.isUsager">
+            <a class="nav-link" routerLink="/reponses" (click)="closeSidebar()">
               {{ 'menu.reponses' | translate }}
             </a>
           </li>
-          <li class="nav-item"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.isAdmin">
-            <a class="nav-link" routerLink="/import-logs">
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.isAdmin">
+            <a class="nav-link" routerLink="/import-logs" (click)="closeSidebar()">
               {{ 'menu.import-logs' | translate }}
             </a>
           </li>

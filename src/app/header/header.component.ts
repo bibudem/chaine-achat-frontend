@@ -136,6 +136,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
   }
 
+  toggleMinimize(): void {
+    document.body.classList.toggle('sidebar-icon-only');
+  }
+
+  toggleSidebar(): void {
+    const sidebar  = document.querySelector('.sidebar-offcanvas');
+    const overlay  = document.getElementById('sidebarOverlay');
+    if (sidebar) {
+      const isOpen = sidebar.classList.toggle('active');
+      overlay?.classList.toggle('active', isOpen);
+      document.body.classList.toggle('sidebar-open', isOpen);
+    }
+  }
+
   mesDemandes(): void {
     this.userOpen = false;
     this.router.navigate(['/usager/profil']);

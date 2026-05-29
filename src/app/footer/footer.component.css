@@ -1,0 +1,19 @@
+footer .container-fluid {
+  padding: 0.6rem 1rem !important;
+}
+
+footer a,
+footer span {
+  font-size: 0.78rem;
+}
+
+@media (max-width: 767px) {
+  footer .container-fluid {
+    padding: 0.5rem 0.75rem !important;
+    text-align: center;
+  }
+  footer span {
+    font-size: 0.72rem;
+    display: block;
+  }
+}

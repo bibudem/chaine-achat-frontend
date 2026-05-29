@@ -612,10 +612,10 @@
 /* ── < 992px ── */
 @media (max-width: 991px) {
   .db-wrap    { padding: 12px 14px 10px; gap: 10px; }
-  .db-header  { flex-wrap: wrap; gap: 8px; }
+  .db-header  { flex-wrap: wrap; gap: 6px; margin-top: 1.5rem; }
   .db-title   { font-size: 1.45rem; }
   .db-sub     { font-size: 0.78rem; }
-  .db-actions { width: 100%; justify-content: flex-end; }
+  .db-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 6px; }
 
   .db-stats   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .sc         { padding: 16px 16px 12px; min-height: 96px; }
@@ -632,8 +632,9 @@
 
 /* ── < 768px ── */
 @media (max-width: 767px) {
-  .db-wrap  { padding: 10px 10px 8px; gap: 8px; }
-  .db-stats { gap: 8px; }
+  .db-wrap   { padding: 10px 10px 8px; gap: 8px; }
+  .db-header { margin-top: 1rem; }
+  .db-stats  { gap: 8px; }
   .sc {
     padding: 12px 14px 10px; min-height: 84px; border-radius: 10px;
   }
@@ -658,25 +659,27 @@
   .priority-legend__item { font-size: 0.75rem; }
 
   .db-title { font-size: 1.2rem; }
-
   .statut-card__val { font-size: 1.35rem; }
 }
 
 /* ── < 480px ── */
 @media (max-width: 479px) {
-  .db-stats { grid-template-columns: 1fr; gap: 6px; }
-  .sc {
-    flex-direction: row; align-items: center;
-    min-height: auto; padding: 12px 14px; gap: 12px;
-  }
-  .sc__top    { flex-direction: column; align-items: flex-start; gap: 4px; flex: 1; }
-  .sc__bottom { flex-direction: column; align-items: flex-start; gap: 0; }
-  .sc__divider { display: none; }
-  .sc__val    { font-size: 1.8rem; }
-  .sc__badge  { margin-top: 0; }
+  .db-wrap   { padding: 8px; gap: 6px; }
+  .db-header { margin-top: 0.75rem; padding-bottom: 8px; }
+  .db-title  { font-size: 1.05rem; }
 
-  .db-wrap  { padding: 8px; gap: 6px; }
-  .db-title { font-size: 1.05rem; }
+  /* Stats : 2 colonnes compactes */
+  .db-stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .sc {
+    padding: 10px 12px 8px; min-height: 72px; border-radius: 10px;
+  }
+  .sc__val  { font-size: 1.4rem; }
+  .sc__lbl  { font-size: 0.68rem; white-space: normal; line-height: 1.2; }
+  .sc__badge { font-size: 0.58rem; }
+
+  /* Actions : masquer les chips secondaires, garder période + refresh */
+  .db-actions { gap: 4px; }
+  .db-actions-sep { display: none; }
 
   .mini-stats-grid { grid-template-columns: 1fr; }
   .statut-grid     { grid-template-columns: 1fr; }
