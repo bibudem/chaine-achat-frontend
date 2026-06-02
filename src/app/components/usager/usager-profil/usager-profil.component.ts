@@ -35,7 +35,7 @@ export class UsagerProfilComponent implements OnInit {
 
   statutKey(d: DemandeUsager): string {
     if (d.statut_approbation === 'refuse') return 'refuse';
-    if (d.suivi_acq)                       return 'traitee';
+    if (d.statut_bibliotheque)              return 'traitee';
     if (d.statut_approbation === 'approuve') return 'cours';
     return 'attente';
   }

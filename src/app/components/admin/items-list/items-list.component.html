@@ -24,8 +24,8 @@
   </div>
 
   <!-- Filtres -->
-  <div class="row mb-4 g-2">
-    <div class="col-12 col-md-3">
+  <div class="row g-2 mb-2">
+    <div class="col-12 col-md-4">
       <div class="input-group">
         <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control bib-input-icon"
@@ -35,39 +35,42 @@
                (input)="onSearch()">
       </div>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="col-6 col-md-4">
       <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
         <option value="">{{ 'items.type-formulaire-placeholder' | translate }}</option>
         <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
       </select>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="col-6 col-md-3">
       <select class="form-select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
         <option value="">{{ 'items.toutes-bibliotheques' | translate }}</option>
         <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
       </select>
     </div>
-    <div class="col-6 col-md-2">
-      <select class="form-select" [(ngModel)]="selectedStatut" (change)="onFilterChange()">
-        <option value="">{{ 'items.statut-placeholder' | translate }}</option>
-        <optgroup [label]="'items.groupe-bib' | translate">
-          <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
-        </optgroup>
-        <optgroup [label]="'items.groupe-acq' | translate">
-          <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">{{ statut }}</option>
-        </optgroup>
+    <div class="col-12 col-md-1 d-flex align-items-stretch">
+      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser les filtres">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+      <select class="form-select" [(ngModel)]="selectedStatutBib" (change)="onFilterChange()">
+        <option value="">{{ 'items.statut-bib-placeholder' | translate }}</option>
+        <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
       </select>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="col-6 col-md-4">
+      <select class="form-select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
+        <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
+        <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">{{ statut }}</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-4">
       <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
         <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
         <option *ngFor="let suivi of options.dircolAcqSuiviOptions" [value]="suivi">{{ suivi }}</option>
       </select>
-    </div>
-    <div class="col-12 col-md-1">
-      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser les filtres">
-        <i class="bi bi-arrow-clockwise"></i>
-      </button>
     </div>
   </div>
 
@@ -109,7 +112,10 @@
                     {{ 'items.col-bib' | translate }} <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
-                    {{ 'items.col-statut' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
+                    {{ 'items.col-statut-bib' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
+                  </th>
+                  <th class="col-statut sortable-col" (click)="sortBy('statut_acq')">
+                    {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
                   </th>
                   <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
                     {{ 'items.col-suivi' | translate }} <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
@@ -148,14 +154,14 @@
                     </div>
                   </td>
                   <td class="col-statut">
-                    <div class="d-flex flex-column gap-1">
-                      <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib align-self-start">
-                        {{ item.statut_bibliotheque }}
-                      </span>
-                      <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
-                        ACQ: {{ item.statut_acq }}
-                      </span>
-                    </div>
+                    <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib align-self-start">
+                      {{ item.statut_bibliotheque }}
+                    </span>
+                  </td>
+                  <td class="col-statut">
+                    <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
+                      {{ item.statut_acq }}
+                    </span>
                   </td>
                   <td class="col-suivi">
                     <span *ngIf="item.suivi_acq; else noSuivi" class="badge badge-statut-acq align-self-start">
@@ -224,12 +230,13 @@
                   <span class="item-card__label">{{ 'items.col-bib' | translate }}</span>
                   <span>{{ item.bibliotheque }}</span>
                 </div>
-                <div class="item-card__row" *ngIf="item.statut_bibliotheque || item.statut_acq">
-                  <span class="item-card__label">{{ 'items.col-statut' | translate }}</span>
-                  <div class="d-flex flex-wrap gap-1">
-                    <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
-                    <span *ngIf="item.statut_acq" class="badge badge-statut-acq">ACQ: {{ item.statut_acq }}</span>
-                  </div>
+                <div class="item-card__row" *ngIf="item.statut_bibliotheque">
+                  <span class="item-card__label">{{ 'items.col-statut-bib' | translate }}</span>
+                  <span class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.statut_acq">
+                  <span class="item-card__label">{{ 'items.col-statut-acq' | translate }}</span>
+                  <span class="badge badge-statut-acq">{{ item.statut_acq }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.suivi_acq">
                   <span class="item-card__label">{{ 'items.col-suivi' | translate }}</span>

@@ -93,14 +93,14 @@
           </div>
 
           <div class="up-card__suivi">
-            <span class="up-suivi__key">Suivi de la demande :</span>
-            <span *ngIf="d.suivi_acq" class="up-suivi__val">{{ d.suivi_acq }}</span>
-            <span *ngIf="!d.suivi_acq" class="up-suivi__default">En cours d'évaluation par l'équipe des acquisitions</span>
+            <span class="up-suivi__key">Statut de la demande :</span>
+            <span *ngIf="d.statut_bibliotheque" class="up-suivi__val">{{ d.statut_bibliotheque }}</span>
+            <span *ngIf="!d.statut_bibliotheque" class="up-suivi__default">En cours d'évaluation par les bibliothèques</span>
           </div>
 
-          <div *ngIf="d.commentaire_admin || d.note_acq" class="up-card__note">
+          <div *ngIf="d.commentaire_admin || d.note_commentaire" class="up-card__note">
             <i class="bi bi-chat-left-quote"></i>
-            <span>{{ d.commentaire_admin || d.note_acq }}</span>
+            <span>{{ d.commentaire_admin || d.note_commentaire }}</span>
           </div>
 
           <!-- Suppression (uniquement si aucun avis ACQ n'est encore pris) -->

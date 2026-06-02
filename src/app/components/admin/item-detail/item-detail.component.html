@@ -118,21 +118,21 @@
 
         <hr class="itd-sidebar__divider">
 
-        <!-- Décision ACQ -->
+        <!-- Statut Bibliothèque -->
         <div class="itd-sidebar__block itd-sidebar__block--acq">
           <div class="itd-sidebar__label itd-sidebar__label--acq">
             <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.section-decision-acq' | translate }}
           </div>
-          <span *ngIf="item.suivi_acq; else acqEnAttente" class="badge itd-badge-suivi mt-1">
-            {{ item.suivi_acq }}
+          <span *ngIf="item.statut_bibliotheque; else bibEnAttente" class="badge itd-badge-suivi mt-1">
+            {{ item.statut_bibliotheque }}
           </span>
-          <ng-template #acqEnAttente>
+          <ng-template #bibEnAttente>
             <span class="badge bg-warning text-white mt-1">
               <i class="bi bi-hourglass-split me-1"></i>{{ 'item-detail.en-attente' | translate }}
             </span>
           </ng-template>
-          <div class="itd-sidebar__value itd-note--sm mt-2" *ngIf="item.note_acq">
-            {{ item.note_acq }}
+          <div class="itd-sidebar__value itd-note--sm mt-2" *ngIf="item.note_commentaire">
+            {{ item.note_commentaire }}
           </div>
           <div class="itd-sidebar__value itd-note--interne-sm mt-1" *ngIf="item.bibliotheque_note_interne">
             <i class="bi bi-lock-fill me-1" style="font-size:.65rem"></i>{{ item.bibliotheque_note_interne }}

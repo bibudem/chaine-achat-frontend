@@ -20,7 +20,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
 
   searchTerm           = '';
   selectedBibliotheque = '';
-  selectedStatut       = '';
+  selectedStatutBib    = '';
+  selectedStatutAcq    = '';
   selectedSuiviAcq     = '';
   selectedFormulaireType = '';
 
@@ -72,7 +73,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       offset,
       search:          this.searchTerm         || undefined,
       bibliotheque:    this.selectedBibliotheque || undefined,
-      statut:          this.selectedStatut       || undefined,
+      statut_bibliotheque: this.selectedStatutBib  || undefined,
+      statut_acq:          this.selectedStatutAcq  || undefined,
       suivi_acq:       this.selectedSuiviAcq     || undefined,
       formulaire_type: this.selectedFormulaireType || undefined,
       sort:  this.sortColumn,
@@ -135,7 +137,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   resetFilters(): void {
     this.searchTerm             = '';
     this.selectedBibliotheque   = '';
-    this.selectedStatut         = '';
+    this.selectedStatutBib      = '';
+    this.selectedStatutAcq      = '';
     this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
     this.sortColumn             = 'date_creation';

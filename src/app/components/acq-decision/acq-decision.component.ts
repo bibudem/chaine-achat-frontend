@@ -41,8 +41,8 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
     private reponsesService: ReponsesService
   ) {
     this.form = this.fb.group({
-      suivi_acq:                 ['', Validators.required],
-      note_acq:                  [''],
+      statut_bibliotheque:       ['', Validators.required],
+      note_commentaire:          [''],
       bibliotheque_note_interne: [''],
     });
   }
@@ -63,7 +63,7 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
       this.errorMessage        = null;
       this.successMessage      = null;
       this.itemExisteDansItems = false;
-      this.form.reset({ suivi_acq: '', note_acq: '', bibliotheque_note_interne: '' });
+      this.form.reset({ statut_bibliotheque: '', note_commentaire: '', bibliotheque_note_interne: '' });
 
       if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
         this.errorMessage = 'Paramètre manquant : reponse_id, id ou item_id';
@@ -151,8 +151,8 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
 
   private patchFormFromItem(data: any): void {
     this.form.patchValue({
-      suivi_acq:                 data.suivi_acq                 || '',
-      note_acq:                  data.note_acq                  || '',
+      statut_bibliotheque:       data.statut_bibliotheque       || '',
+      note_commentaire:          data.note_commentaire          || '',
       bibliotheque_note_interne: data.bibliotheque_note_interne || '',
     }, { emitEvent: false });
   }
@@ -229,7 +229,7 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
     } as Item;
   }
 
-  private buildItemPayload(suivi_acq: string, note_acq: string | null): Record<string, any> {
+  private buildItemPayload(statut_bibliotheque: string, note_commentaire: string | null): Record<string, any> {
     const i = this.item as any;
 
     // Colonnes de tbl_items uniquement (baseData commun à tous les formulaires)
@@ -245,7 +245,7 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
       'note_commentaire', 'bibliotheque_note_interne'
     ];
 
-    const payload: Record<string, any> = { suivi_acq, note_acq };
+    const payload: Record<string, any> = { statut_bibliotheque, note_commentaire };
     baseKeys.forEach(k => { if (i[k] != null) { payload[k] = i[k]; } });
 
     // specificData → routé par le backend vers la bonne sous-table
@@ -341,21 +341,21 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.successMessage = null;
 
-    const suivi_acq                 = this.form.get('suivi_acq')?.value;
-    const note_acq                  = this.form.get('note_acq')?.value || null;
-    const bibliotheque_note_interne = this.form.get('bibliotheque_note_interne')?.value || null;
+    const statut_bibliotheque        = this.form.get('statut_bibliotheque')?.value;
+    const note_commentaire           = this.form.get('note_commentaire')?.value || null;
+    const bibliotheque_note_interne  = this.form.get('bibliotheque_note_interne')?.value || null;
 
     const specificData = this.buildSpecificData();
 
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, note_acq, bibliotheque_note_interne, ...(specificData ? { specificData } : {}) },
+          { item_id: this.itemId, statut_bibliotheque, note_commentaire, bibliotheque_note_interne, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), bibliotheque_note_interne, reponse_id: this.reponseId },
+          { ...this.buildItemPayload(statut_bibliotheque, note_commentaire), bibliotheque_note_interne, reponse_id: this.reponseId },
           this.httpOptions
         );
 
@@ -364,7 +364,7 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
         this.submitting = false;
         if (response.success) {
           this.successMessage = 'Décision enregistrée avec succès !';
-          if (this.reponseId) { this.notifyN8nDecision(suivi_acq, note_acq); }
+          if (this.reponseId) { this.notifyN8nDecision(statut_bibliotheque, note_commentaire); }
           this.reponsesService.triggerPendingRefresh();
           setTimeout(() => this.router.navigate(['/items']), 2000);
         } else {
@@ -380,11 +380,11 @@ export class AcqDecisionComponent implements OnInit, OnDestroy {
     });
   }
 
-  private notifyN8nDecision(suivi_acq: string, note_acq: string | null): void {
+  private notifyN8nDecision(statut_bibliotheque: string, note_commentaire: string | null): void {
     const payload = {
-      reponse_id:      this.reponseId,
-      suivi_acq,
-      note_acq,
+      reponse_id:          this.reponseId,
+      statut_bibliotheque,
+      note_commentaire,
       usager_courriel: this.item?.usager_courriel,
       usager_nom:      this.item?.demandeur,
       titre_document:  this.item?.titre_document,

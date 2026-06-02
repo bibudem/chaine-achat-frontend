@@ -71,22 +71,22 @@
 
           <div class="row g-3">
             <div class="col-12">
-              <label for="suivi_acq" class="form-label">
+              <label for="statut_bibliotheque" class="form-label">
                 {{ 'acq-decision.suivi-acq' | translate }} <span class="text-danger">*</span>
               </label>
-              <select id="suivi_acq" formControlName="suivi_acq" class="form-select">
+              <select id="statut_bibliotheque" formControlName="statut_bibliotheque" class="form-select">
                 <option value="" disabled>{{ 'acq-decision.selectionner-suivi' | translate }}</option>
-                <option *ngFor="let o of options.dircolAcqSuiviOptions" [value]="o">{{ o }}</option>
+                <option *ngFor="let o of options.statusOptions" [value]="o">{{ o }}</option>
               </select>
               <small class="text-danger"
-                *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
+                *ngIf="form.get('statut_bibliotheque')?.invalid && form.get('statut_bibliotheque')?.touched">
                 {{ 'acq-decision.champ-required' | translate }}
               </small>
             </div>
 
             <div class="col-md-6">
-              <label for="note_acq" class="form-label">{{ 'acq-decision.note' | translate }}</label>
-              <textarea id="note_acq" formControlName="note_acq" rows="8"
+              <label for="note_commentaire" class="form-label">{{ 'acq-decision.note' | translate }}</label>
+              <textarea id="note_commentaire" formControlName="note_commentaire" rows="8"
                         class="form-control"
                         [placeholder]="'acq-decision.note-placeholder' | translate"></textarea>
             </div>
@@ -136,7 +136,7 @@
             <div class="confirmation-detail__label">
               <i class="bi bi-clipboard-check"></i>{{ 'acq-decision.confirmation-suivi' | translate }}
             </div>
-            <div class="confirmation-detail__value">{{ form.get('suivi_acq')?.value }}</div>
+            <div class="confirmation-detail__value">{{ form.get('statut_bibliotheque')?.value }}</div>
           </div>
         </div>
       </div>

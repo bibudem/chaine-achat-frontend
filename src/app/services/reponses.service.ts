@@ -49,8 +49,8 @@ export interface DemandeUsager {
   bibliotheque: string | null;
   prix_cad: string | null;
   devise_originale: string | null;
-  suivi_acq: string | null;
-  note_acq: string | null;
+  statut_bibliotheque: string | null;
+  note_commentaire: string | null;
 }
 
 export interface PaginatedResponse {

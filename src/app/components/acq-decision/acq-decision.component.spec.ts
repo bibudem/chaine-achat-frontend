@@ -43,18 +43,18 @@ describe('AcqDecisionComponent', () => {
   });
 
   it('should initialize form with empty values', () => {
-    expect(component.form.get('suivi_acq')?.value).toBe('');
-    expect(component.form.get('note_acq')?.value).toBe('');
+    expect(component.form.get('statut_bibliotheque')?.value).toBe('');
+    expect(component.form.get('note_commentaire')?.value).toBe('');
   });
 
-  it('should mark suivi_acq as required', () => {
-    const control = component.form.get('suivi_acq');
+  it('should mark statut_bibliotheque as required', () => {
+    const control = component.form.get('statut_bibliotheque');
     control?.setValue('');
     expect(control?.hasError('required')).toBeTruthy();
   });
 
-  it('should allow note_acq to be optional', () => {
-    const control = component.form.get('note_acq');
+  it('should allow note_commentaire to be optional', () => {
+    const control = component.form.get('note_commentaire');
     control?.setValue('');
     expect(control?.valid).toBeTruthy();
   });

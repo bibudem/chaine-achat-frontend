@@ -167,7 +167,8 @@ export class ItemFormulaireService {
     offset?: number;
     search?: string;
     bibliotheque?: string;
-    statut?: string;
+    statut_bibliotheque?: string;
+    statut_acq?: string;
     suivi_acq?: string;
     formulaire_type?: string;
     sort?: string;
@@ -177,10 +178,11 @@ export class ItemFormulaireService {
       .set('limit',  String(opts.limit  ?? 50))
       .set('offset', String(opts.offset ?? 0));
 
-    if (opts.search)          p = p.set('search',          opts.search);
-    if (opts.bibliotheque)    p = p.set('bibliotheque',    opts.bibliotheque);
-    if (opts.statut)          p = p.set('statut',          opts.statut);
-    if (opts.suivi_acq)       p = p.set('suivi_acq',       opts.suivi_acq);
+    if (opts.search)               p = p.set('search',               opts.search);
+    if (opts.bibliotheque)         p = p.set('bibliotheque',         opts.bibliotheque);
+    if (opts.statut_bibliotheque)  p = p.set('statut_bibliotheque',  opts.statut_bibliotheque);
+    if (opts.statut_acq)           p = p.set('statut_acq',           opts.statut_acq);
+    if (opts.suivi_acq)            p = p.set('suivi_acq',            opts.suivi_acq);
     if (opts.formulaire_type) p = p.set('formulaire_type', opts.formulaire_type);
     if (opts.sort)            p = p.set('sort',            opts.sort);
     if (opts.order)           p = p.set('order',           opts.order);

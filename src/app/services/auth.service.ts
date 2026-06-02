@@ -47,11 +47,11 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
   },
   {
     role:        'Usager',
-    nom:         'Usager',
+    nom:         'Communauté UdeM',
     prenom:      'Test',
     courriel:    'usager@umontreal.ca',
     groupe:      'Usager',
-    label:       'Usager',
+    label:       'Communauté UdeM',
     description: 'Accès aux formulaires de demande uniquement',
     icon:        'bi-person-fill',
   },
