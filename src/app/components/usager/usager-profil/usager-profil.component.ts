@@ -9,8 +9,11 @@ import { ReponsesService, DemandeUsager } from '../../../services/reponses.servi
 export class UsagerProfilComponent implements OnInit {
 
   demandes: DemandeUsager[] = [];
-  loading      = false;
-  errorMessage = '';
+  loading              = false;
+  errorMessage         = '';
+  confirmingDeleteId: number | null = null;
+  deleting             = false;
+  deleteError          = false;
 
   get prenom():   string { return sessionStorage.getItem('prenomAdmin')   ?? ''; }
   get nom():      string { return sessionStorage.getItem('nomAdmin')       ?? ''; }
@@ -63,5 +66,25 @@ export class UsagerProfilComponent implements OnInit {
   formatDate(d: string | null): string {
     if (!d) return '—';
     return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  }
+
+  peutSupprimer(d: DemandeUsager): boolean {
+    return this.statutKey(d) === 'attente';
+  }
+
+  supprimerDemande(id: number): void {
+    this.deleting = true;
+    this.deleteError = false;
+    this.reponsesService.supprimer(id).subscribe({
+      next: () => {
+        this.demandes = this.demandes.filter(d => d.id !== id);
+        this.confirmingDeleteId = null;
+        this.deleting = false;
+      },
+      error: () => {
+        this.deleting = false;
+        this.deleteError = true;
+      }
+    });
   }
 }

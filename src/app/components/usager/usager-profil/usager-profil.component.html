@@ -102,6 +102,44 @@
             <i class="bi bi-chat-left-quote"></i>
             <span>{{ d.commentaire_admin || d.note_acq }}</span>
           </div>
+
+          <!-- Suppression (uniquement si aucun avis ACQ n'est encore pris) -->
+          <div *ngIf="peutSupprimer(d)" class="up-card__delete">
+            <ng-container *ngIf="confirmingDeleteId !== d.id; else confirmDelete">
+              <button class="up-btn-delete" (click)="confirmingDeleteId = d.id">
+                <i class="bi bi-trash3"></i> Retirer ma demande
+              </button>
+            </ng-container>
+            <ng-template #confirmDelete>
+              <div class="up-delete-confirm" [class.up-delete-confirm--error]="deleteError">
+                <span class="up-delete-confirm__msg">
+                  <ng-container *ngIf="!deleteError">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Cette demande sera définitivement supprimée. Confirmer ?
+                  </ng-container>
+                  <ng-container *ngIf="deleteError">
+                    <i class="bi bi-x-circle-fill"></i>
+                    La suppression a échoué. Veuillez réessayer plus tard.
+                  </ng-container>
+                </span>
+                <div class="up-delete-confirm__btns">
+                  <button *ngIf="!deleteError"
+                          class="up-btn-confirm-yes"
+                          (click)="supprimerDemande(d.id)"
+                          [disabled]="deleting">
+                    <span *ngIf="!deleting">Oui, retirer</span>
+                    <span *ngIf="deleting"
+                          class="spinner-border spinner-border-sm"
+                          role="status"></span>
+                  </button>
+                  <button class="up-btn-confirm-no"
+                          (click)="confirmingDeleteId = null; deleteError = false"
+                          [disabled]="deleting">Annuler</button>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
         </div>
 
       </div>

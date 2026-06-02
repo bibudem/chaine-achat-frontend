@@ -279,6 +279,12 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('getByEmail')));
   }
 
+  supprimer(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError('supprimer')));
+  }
+
   // ──────────────────────────────────────────────────────────
   // PRIVÉS
   // ──────────────────────────────────────────────────────────
