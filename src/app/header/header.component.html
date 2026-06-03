@@ -119,8 +119,8 @@
         </div>
       </li>
 
-      <!-- Sélecteur de langue -->
-      <li class="nav-item d-flex align-items-center">
+      <!-- Sélecteur de langue (masqué en production) -->
+      <li class="nav-item d-flex align-items-center" *ngIf="!isProduction">
         <div class="lang-toggle">
           <i class="bi bi-globe lang-toggle__icon d-none d-sm-inline"></i>
           <button class="lang-btn" [class.lang-btn--active]="currentLang === 'fr'" (click)="switchLanguage('fr')" title="Français">FR</button>
