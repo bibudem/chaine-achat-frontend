@@ -135,7 +135,7 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
 
   ouvrirDecisionAcq(): void {
     if (!this.expandedReponse) return;
-    this.router.navigate(['/acq-decision'], {
+    this.router.navigate(['/statut-decision'], {
       queryParams: { id: this.expandedReponse.id }
     });
   }

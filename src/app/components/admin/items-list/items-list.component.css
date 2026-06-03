@@ -1,18 +1,20 @@
 /* items-list.component.css */
 
 /* ── Tableau desktop ─────────────────────────────────────────────── */
+/* 11 colonnes — total = 100% */
 .items-table { table-layout: fixed; width: 100%; }
 
-.col-id        { width: 5%;  }
-.col-titre     { width: 18%; }
-.col-type      { width: 12%; }
-.col-isbn      { width: 9%;  }
-.col-demandeur { width: 9%;  }
-.col-bib       { width: 9%;  }
-.col-statut    { width: 10%; }
-.col-suivi     { width: 10%; }
-.col-date      { width: 8%;  }
-.col-actions   { width: 10%; }
+.col-id          { width: 4%;  }
+.col-titre       { width: 15%; }
+.col-type        { width: 10%; }
+.col-isbn        { width: 7%;  }
+.col-demandeur   { width: 8%;  }
+.col-bib         { width: 8%;  }
+.col-statut      { width: 9%;  }
+.col-statut-acq  { width: 9%;  }
+.col-suivi       { width: 9%;  }
+.col-date        { width: 7%;  }
+.col-actions     { width: 14%; }
 
 /* Cellules : hauteur extensible, texte qui wrappe */
 .items-table td,
@@ -43,16 +45,17 @@
 
 /* ── Tablette (≤ 991px) ──────────────────────────────────────────── */
 @media (max-width: 991px) {
-  .items-table { table-layout: auto; }
-  .col-isbn    { display: none; }
-  .col-suivi   { display: none; }
-  .col-titre   { width: auto; }
-  .col-type    { width: 100px; }
-  .col-demandeur { width: 100px; }
-  .col-bib     { width: 100px; }
-  .col-statut  { width: 100px; }
-  .col-date    { width: 85px;  }
-  .col-actions { width: 90px;  }
+  .items-table    { table-layout: auto; }
+  .col-isbn       { display: none; }
+  .col-statut-acq { display: none; }
+  .col-suivi      { display: none; }
+  .col-titre      { width: auto;   }
+  .col-type       { width: 100px;  }
+  .col-demandeur  { width: 90px;   }
+  .col-bib        { width: 90px;   }
+  .col-statut     { width: 100px;  }
+  .col-date       { width: 80px;   }
+  .col-actions    { width: 90px;   }
 }
 
 /* ── Mobile : cartes ─────────────────────────────────────────────── */

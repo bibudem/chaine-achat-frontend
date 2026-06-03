@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { AcqDecisionComponent } from './acq-decision.component';
+import { AcqDecisionComponent } from './statut-decision.component';
 import { DialogService } from '../../services/dialog.service';
 
 describe('AcqDecisionComponent', () => {

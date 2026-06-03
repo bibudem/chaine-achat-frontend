@@ -10,11 +10,11 @@ import { ReponsesService } from '../../services/reponses.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-acq-decision',
-  templateUrl: './acq-decision.component.html',
-  styleUrls: ['./acq-decision.component.css']
+  selector: 'app-statut-decision',
+  templateUrl: './statut-decision.component.html',
+  styleUrls: ['./statut-decision.component.css']
 })
-export class AcqDecisionComponent implements OnInit, OnDestroy {
+export class StatutDecisionComponent implements OnInit, OnDestroy {
   private routeSub?: Subscription;
   form: FormGroup;
   reponseId: number | null = null;

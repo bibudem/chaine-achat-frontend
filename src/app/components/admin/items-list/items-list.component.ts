@@ -18,12 +18,24 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   total     = 0;
   loading   = false;
 
-  searchTerm           = '';
-  selectedBibliotheque = '';
-  selectedStatutBib    = '';
-  selectedStatutAcq    = '';
-  selectedSuiviAcq     = '';
+  searchTerm             = '';
+  selectedBibliotheque   = '';
+  selectedStatutBib      = '';
+  selectedStatutAcq      = '';
+  selectedSuiviAcq       = '';
   selectedFormulaireType = '';
+  showAdvancedFilters    = false;
+
+  get activeFiltersCount(): number {
+    return [
+      this.searchTerm,
+      this.selectedFormulaireType,
+      this.selectedBibliotheque,
+      this.selectedStatutBib,
+      this.selectedStatutAcq,
+      this.selectedSuiviAcq
+    ].filter(v => !!v).length;
+  }
 
   currentPage  = 1;
   itemsPerPage = 25;
@@ -73,8 +85,9 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       offset,
       search:          this.searchTerm         || undefined,
       bibliotheque:    this.selectedBibliotheque || undefined,
-      statut_bibliotheque: this.selectedStatutBib  || undefined,
-      statut_acq:          this.selectedStatutAcq  || undefined,
+      statut:              this.selectedStatutBib || this.selectedStatutAcq || undefined,
+      statut_bibliotheque: this.selectedStatutBib   || undefined,
+      statut_acq:          this.selectedStatutAcq   || undefined,
       suivi_acq:       this.selectedSuiviAcq     || undefined,
       formulaire_type: this.selectedFormulaireType || undefined,
       sort:  this.sortColumn,

@@ -23,8 +23,8 @@
     </div>
   </div>
 
-  <!-- Filtres -->
-  <div class="row g-2 mb-2">
+  <!-- Filtres — rangée principale -->
+  <div class="row g-2 mb-2 align-items-center">
     <div class="col-12 col-md-4">
       <div class="input-group">
         <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
@@ -35,7 +35,7 @@
                (input)="onSearch()">
       </div>
     </div>
-    <div class="col-6 col-md-4">
+    <div class="col-6 col-md-3">
       <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
         <option value="">{{ 'items.type-formulaire-placeholder' | translate }}</option>
         <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
@@ -47,30 +47,61 @@
         <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
       </select>
     </div>
-    <div class="col-12 col-md-1 d-flex align-items-stretch">
-      <button class="btn btn-dark w-100" (click)="resetFilters()" title="Réinitialiser les filtres">
+    <div class="col-12 col-md-2 d-flex gap-2">
+      <button class="btn flex-grow-1 position-relative"
+              [class.btn-outline-secondary]="activeFiltersCount === 0"
+              [class.btn-primary]="activeFiltersCount > 0"
+              (click)="showAdvancedFilters = !showAdvancedFilters"
+              [title]="'items.filtres-avances' | translate">
+        <i class="bi" [class.bi-sliders2]="!showAdvancedFilters" [class.bi-sliders2-vertical]="showAdvancedFilters"></i>
+        <span *ngIf="activeFiltersCount > 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="font-size:.6rem; min-width:1.1rem">
+          {{ activeFiltersCount }}
+        </span>
+      </button>
+      <button class="btn btn-outline-dark" (click)="resetFilters()" [title]="'btn-reset' | translate">
         <i class="bi bi-arrow-clockwise"></i>
       </button>
     </div>
   </div>
-  <div class="row g-2 mb-4">
-    <div class="col-12 col-md-4">
-      <select class="form-select" [(ngModel)]="selectedStatutBib" (change)="onFilterChange()">
-        <option value="">{{ 'items.statut-bib-placeholder' | translate }}</option>
-        <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-4">
-      <select class="form-select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
-        <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
-        <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">{{ statut }}</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-4">
-      <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
-        <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
-        <option *ngFor="let suivi of options.dircolAcqSuiviOptions" [value]="suivi">{{ suivi }}</option>
-      </select>
+
+  <!-- Panneau filtres avancés -->
+  <div *ngIf="showAdvancedFilters" class="mb-4">
+    <div class="border rounded-3 bg-light px-3 pt-2 pb-3">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-sliders2 text-muted" style="font-size:.8rem"></i>
+          <span class="small fw-semibold text-muted text-uppercase" style="letter-spacing:.05em">
+            {{ 'items.filtres-avances' | translate }}
+          </span>
+        </div>
+        <button type="button" class="btn-close" style="font-size:.65rem"
+                (click)="showAdvancedFilters = false" aria-label="Fermer"></button>
+      </div>
+      <div class="row g-2">
+        <div class="col-12 col-md-4">
+          <label class="form-label small text-secondary mb-1">{{ 'items.statut-bib-placeholder' | translate }}</label>
+          <select class="form-select" [(ngModel)]="selectedStatutBib" (change)="onFilterChange()">
+            <option value="">—</option>
+            <option *ngFor="let s of options.statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label small text-secondary mb-1">{{ 'items.statut-acq-placeholder' | translate }}</label>
+          <select class="form-select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
+            <option value="">—</option>
+            <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label small text-secondary mb-1">{{ 'items.suivi-placeholder' | translate }}</label>
+          <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
+            <option value="">—</option>
+            <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -114,7 +145,7 @@
                   <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
                     {{ 'items.col-statut-bib' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
                   </th>
-                  <th class="col-statut sortable-col" (click)="sortBy('statut_acq')">
+                  <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
                     {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
                   </th>
                   <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
@@ -158,7 +189,7 @@
                       {{ item.statut_bibliotheque }}
                     </span>
                   </td>
-                  <td class="col-statut">
+                  <td class="col-statut-acq">
                     <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
                       {{ item.statut_acq }}
                     </span>
@@ -180,7 +211,7 @@
                         <i class="bi bi-eye"></i>
                       </button>
                       <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                              [routerLink]="['/acq-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
+                              [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
                       <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
@@ -209,7 +240,7 @@
                     <i class="bi bi-eye"></i>
                   </button>
                   <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                          [routerLink]="['/acq-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
+                          [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
                   <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">

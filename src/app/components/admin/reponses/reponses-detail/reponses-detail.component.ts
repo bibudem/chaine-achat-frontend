@@ -39,7 +39,7 @@ export class ReponsesDetailComponent implements OnInit {
 
   ouvrirDecisionAcq(): void {
     this.activeModal.close();
-    this.router.navigate(['/acq-decision'], {
+    this.router.navigate(['/statut-decision'], {
       queryParams: { id: this.reponse?.id }
     });
   }

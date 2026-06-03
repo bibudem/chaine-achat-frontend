@@ -50,7 +50,7 @@ import { ItemsListComponent } from './components/admin/items-list/items-list.com
 import { ItemFormulaireComponent } from './components/admin/item-formulaire/item-formulaire.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DialogService } from './services/dialog.service';
-import { AcqDecisionComponent } from './components/acq-decision/acq-decision.component';
+import { StatutDecisionComponent } from './components/statut-decision/statut-decision.component';
 import { RapportsComponent } from './components/admin/rapports/rapports.component';
 import { UserLayoutComponent } from './components/usager/user-layout/user-layout.component';
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
@@ -104,7 +104,7 @@ import { UsagerProfilComponent } from './components/usager/usager-profil/usager-
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,
-    AcqDecisionComponent
+    StatutDecisionComponent
   ],
     imports: [
         RouterModule,

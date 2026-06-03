@@ -167,6 +167,7 @@ export class ItemFormulaireService {
     offset?: number;
     search?: string;
     bibliotheque?: string;
+    statut?: string;
     statut_bibliotheque?: string;
     statut_acq?: string;
     suivi_acq?: string;
@@ -180,6 +181,7 @@ export class ItemFormulaireService {
 
     if (opts.search)               p = p.set('search',               opts.search);
     if (opts.bibliotheque)         p = p.set('bibliotheque',         opts.bibliotheque);
+    if (opts.statut)               p = p.set('statut',               opts.statut);
     if (opts.statut_bibliotheque)  p = p.set('statut_bibliotheque',  opts.statut_bibliotheque);
     if (opts.statut_acq)           p = p.set('statut_acq',           opts.statut_acq);
     if (opts.suivi_acq)            p = p.set('suivi_acq',            opts.suivi_acq);

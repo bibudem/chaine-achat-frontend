@@ -103,9 +103,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ouvrirReponse(r: { id: number; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null }): void {
     this.notifOpen = false;
     if (r.source === 'reponse') {
-      this.router.navigate(['/acq-decision'], { queryParams: { reponse_id: r.id } });
+      this.router.navigate(['/statut-decision'], { queryParams: { reponse_id: r.id } });
     } else {
-      this.router.navigate(['/acq-decision'], { queryParams: { item_id: r.item_id } });
+      this.router.navigate(['/statut-decision'], { queryParams: { item_id: r.item_id } });
     }
   }
 

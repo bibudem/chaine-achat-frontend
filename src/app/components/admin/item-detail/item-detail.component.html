@@ -30,7 +30,7 @@
           <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
         <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
-                [routerLink]="['/acq-decision']" [queryParams]="{item_id: item.item_id}">
+                [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
         <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
@@ -118,15 +118,15 @@
 
         <hr class="itd-sidebar__divider">
 
-        <!-- Statut Bibliothèque -->
+        <!-- Suivi ACQ -->
         <div class="itd-sidebar__block itd-sidebar__block--acq">
           <div class="itd-sidebar__label itd-sidebar__label--acq">
-            <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.section-decision-acq' | translate }}
+            <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.suivi-acq' | translate }}
           </div>
-          <span *ngIf="item.statut_bibliotheque; else bibEnAttente" class="badge itd-badge-suivi mt-1">
-            {{ item.statut_bibliotheque }}
+          <span *ngIf="item.suivi_acq; else suiviEnAttente" class="badge itd-badge-suivi mt-1">
+            {{ item.suivi_acq }}
           </span>
-          <ng-template #bibEnAttente>
+          <ng-template #suiviEnAttente>
             <span class="badge bg-warning text-white mt-1">
               <i class="bi bi-hourglass-split me-1"></i>{{ 'item-detail.en-attente' | translate }}
             </span>
