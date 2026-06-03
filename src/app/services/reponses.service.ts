@@ -269,7 +269,9 @@ export class ReponsesService {
     })[];
   }> {
     return this.http
-      .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, { params: { limit } })
+      .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, {
+        params: { limit, statut_field: 'statut_bibliotheque' }
+      })
       .pipe(catchError(this.handleError('getPending')));
   }
 
