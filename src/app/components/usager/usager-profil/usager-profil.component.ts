@@ -35,7 +35,8 @@ export class UsagerProfilComponent implements OnInit {
 
   statutKey(d: DemandeUsager): string {
     if (d.statut_approbation === 'refuse') return 'refuse';
-    if (d.statut_bibliotheque)              return 'traitee';
+    const s = d.statut_bibliotheque;
+    if (s && s !== '' && s !== 'Saisie en cours - En attente') return 'traitee';
     if (d.statut_approbation === 'approuve') return 'cours';
     return 'attente';
   }
@@ -69,7 +70,9 @@ export class UsagerProfilComponent implements OnInit {
   }
 
   peutSupprimer(d: DemandeUsager): boolean {
-    return this.statutKey(d) === 'attente';
+    if (d.statut_approbation === 'refuse') return false;
+    const s = d.statut_bibliotheque;
+    return !s || s === '' || s === 'Saisie en cours - En attente';
   }
 
   supprimerDemande(id: number): void {
