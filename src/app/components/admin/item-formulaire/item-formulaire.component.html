@@ -288,7 +288,7 @@
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }} <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
@@ -300,7 +300,7 @@
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
               <select class="form-select form-control" formControlName="devise_originale"
                       [class.is-invalid]="isInvalid('devise_originale')">
                 <option value="">--</option>
@@ -316,7 +316,7 @@
           </div>
           <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }} <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
               <input type="number" class="form-control" formControlName="prix_devise_originale"
                     [class.is-invalid]="isInvalid('prix_devise_originale')"
                     min="0" step="0.01" placeholder="0.00">
@@ -335,7 +335,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
               <input type="text" class="form-control" formControlName="fonds_budgetaire"
                      appFondsBudgetaireMask
                      [class.is-invalid]="isInvalid('fonds_budgetaire')"

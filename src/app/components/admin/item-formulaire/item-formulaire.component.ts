@@ -73,13 +73,31 @@ export class ItemFormulaireComponent implements OnInit {
     const statutCtrl = this.itemForm.get('statut_bibliotheque');
     if (statutCtrl) {
       this.updateSuiviAcqValidator(statutCtrl.value);
-      statutCtrl.valueChanges.subscribe(v => this.updateSuiviAcqValidator(v));
+      this.updateFinanceValidators(statutCtrl.value);
+      statutCtrl.valueChanges.subscribe(v => {
+        this.updateSuiviAcqValidator(v);
+        this.updateFinanceValidators(v);
+      });
     }
 
     const state = history.state as any;
     if (!this.isEditMode && state?.fromReponse) {
       this.prefillFromReponse(state.fromReponse);
     }
+  }
+
+  private updateFinanceValidators(statut: string): void {
+    const isSaisie = (statut ?? '').startsWith('Saisie en cours');
+    ['prix_cad', 'devise_originale', 'prix_devise_originale', 'fonds_budgetaire'].forEach(field => {
+      const ctrl = this.itemForm.get(field);
+      if (!ctrl) return;
+      isSaisie ? ctrl.clearValidators() : ctrl.setValidators(Validators.required);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  get financeFieldsRequired(): boolean {
+    return !(this.itemForm.get('statut_bibliotheque')?.value ?? '').startsWith('Saisie en cours');
   }
 
   private updateSuiviAcqValidator(statut: string): void {

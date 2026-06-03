@@ -42,7 +42,7 @@
           [class.panel-open]="notifOpen">
         <button class="notif-btn" (click)="toggleNotif($event)"
                 [class.notif-btn--active]="notifOpen"
-                title="Réponses en attente de décision">
+                title="Items en attente de statut bibliothèque">
           <i class="bi" [class.bi-bell-fill]="notifOpen" [class.bi-bell]="!notifOpen"></i>
           <span class="notif-badge" *ngIf="pendingCount > 0">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
         </button>
@@ -63,7 +63,12 @@
               </span>
               <span class="notif-item__body">
                 <span class="notif-item__type">{{ r.type_formulaire }}</span>
-                <span class="notif-item__meta">#{{ r.id }} · {{ r.usager_nom }} · {{ formatDate(r.dateA) }}</span>
+                <span class="notif-item__meta">
+                  #{{ r.item_id ?? r.id }}
+                  <ng-container *ngIf="r.usager_nom"> · {{ r.usager_nom }}</ng-container>
+                  <ng-container *ngIf="!r.usager_nom"> · <em>Import</em></ng-container>
+                  · {{ formatDate(r.dateA) }}
+                </span>
               </span>
               <i class="bi bi-chevron-right notif-item__arrow"></i>
             </button>
