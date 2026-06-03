@@ -60,9 +60,9 @@
       <!-- ========== ONGLET 1: INFORMATIONS DE BASE ========== -->
       <div class="tab-pane" [class.show]="activeTab === 'base'" [class.active]="activeTab === 'base'">
 
-        <!-- Rangée 1 : Identité (obligatoires) -->
+        <!-- Rangée 1 : Identité + Statut bibliothèque -->
         <div class="row mt-3">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">
                 <span class="text-danger">*</span> {{ 'item-formulaire.type-demande' | translate }}
@@ -92,7 +92,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.demandeur' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="demandeur"
@@ -103,18 +103,26 @@
               </div>
             </div>
           </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.statut-bib' | translate }}</label>
+              <select class="form-select form-control" formControlName="statut_bibliotheque">
+                <option *ngFor="let statut of options.statusOptions" [value]="statut">{{ statut }}</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- Rangée 2 : Bibliographique -->
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.sous-titre' | translate }}</label>
               <input type="text" class="form-control" formControlName="sous_titre"
                      [placeholder]="'item-formulaire.sous-titre-placeholder' | translate">
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.editeur' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="editeur"
@@ -123,7 +131,7 @@
               <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">{{ 'item-formulaire.editeur-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.isbn-issn' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
@@ -136,7 +144,7 @@
               </small>
             </div>
           </div>
-          <div class="col-md-2"
+          <div class="col-md-3"
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.date-publication' | translate }}</label>
@@ -183,8 +191,8 @@
               <div class="invalid-feedback" *ngIf="hasError('format_support', 'required')">{{ 'item-formulaire.format-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-md"
-               *ngIf="selectedFormulaireType && (isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()) ">
+          <div class="col-md-3"
+               *ngIf="selectedFormulaireType && (isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite())">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.priorite' | translate }}</label>
               <select class="form-select form-control" formControlName="priorite_demande">
@@ -195,12 +203,7 @@
         </div>
 
         <!-- Section : Support et accès -->
-        <div class="row mb-3 bg-light rounded p-2" *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value">
-          <div class="col-12 mb-2">
-            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-0">
-              <i class="bi bi-layers me-1"></i>{{ 'item-formulaire.section-support' | translate }}
-            </h6>
-          </div>
+        <div class="row" *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value">
 
           <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value == 'Imprimé/support physique'">
@@ -210,7 +213,7 @@
             </div>
           </div>
 
-          <div class="col-md-2"
+          <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value !== 'Électronique'">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.creation-notice' | translate }}</label>
@@ -266,97 +269,9 @@
                      placeholder="https://...">
             </div>
           </div>
-
-          <div class="col-12 mt-1"
-               *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
-            <div class="border-top pt-2">
-              <small class="text-muted fw-semibold d-block mb-2">
-                <i class="bi bi-bell me-1"></i>{{ 'item-formulaire.personne-aviser-section' | translate }}
-              </small>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-2">
-                    <label class="form-label">{{ 'item-formulaire.nom' | translate }}</label>
-                    <input type="text" class="form-control" formControlName="personne_a_aviser_nom"
-                           [placeholder]="'item-formulaire.nom-placeholder' | translate">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-2">
-                    <label class="form-label">{{ 'item-formulaire.courriel' | translate }}</label>
-                    <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
-                           appEmailMask
-                           [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
-                           placeholder="courriel@exemple.com">
-                    <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
-                      {{ 'item-formulaire.courriel-invalide' | translate }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <!-- Fonds budgétaire et statuts -->
+        <!-- Rangée 4 : Finances -->
         <div class="row">
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="fonds_budgetaire"
-                     appFondsBudgetaireMask
-                     [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                     [placeholder]="'item-formulaire.fonds-budgetaire-placeholder' | translate">
-              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
-                {{ 'item-formulaire.fonds-budgetaire-required' | translate }}
-              </div>
-            </div>
-          </div>
-          <div class="col-md" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() ">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.fonds-sn' | translate }}</label>
-              <input type="text" class="form-control" formControlName="fonds_sn_projet">
-            </div>
-          </div>
-          <div class="col-md-2"
-               *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.periode-couverte' | translate }}</label>
-              <input type="text" class="form-control" formControlName="periode_couverte"
-                    [placeholder]="'item-formulaire.periode-placeholder' | translate">
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.statut-bib' | translate }}</label>
-              <select class="form-select form-control" formControlName="statut_bibliotheque">
-                <option *ngFor="let statut of options.statusOptions" [value]="statut">
-                  {{ statut }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.statut-acq' | translate }}</label>
-              <select class="form-select form-control" formControlName="statut_acq">
-                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
-                <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">
-                  {{ statut }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Catalogage et source d'information -->
-        <div class="row mb-3">
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.catalogage' | translate }}</label>
-              <input type="text" class="form-control" formControlName="catalogue">
-            </div>
-          </div>
           <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.source-info' | translate }} <span class="text-danger">*</span></label>
@@ -408,20 +323,92 @@
               <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
             </div>
           </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.catalogage' | translate }}</label>
+              <input type="text" class="form-control" formControlName="catalogue">
+            </div>
+          </div>
         </div>
+
+        <!-- Rangée 5 : Fonds budgétaires -->
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="fonds_budgetaire"
+                     appFondsBudgetaireMask
+                     [class.is-invalid]="isInvalid('fonds_budgetaire')"
+                     [placeholder]="'item-formulaire.fonds-budgetaire-placeholder' | translate">
+              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
+                {{ 'item-formulaire.fonds-budgetaire-required' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.fonds-sn' | translate }}</label>
+              <input type="text" class="form-control" formControlName="fonds_sn_projet">
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.periode-couverte' | translate }}</label>
+              <input type="text" class="form-control" formControlName="periode_couverte"
+                    [placeholder]="'item-formulaire.periode-placeholder' | translate">
+            </div>
+          </div>
+        </div>
+        <!-- Rangée 6 :Personne a aviser -->
+           <div class="row"
+               *ngIf="selectedFormulaireType && itemForm.get('format_support')?.value === 'Électronique'">
+            <div class="border-top pt-2">
+              <small class="text-muted fw-semibold d-block mb-2">
+                <i class="bi bi-bell me-1"></i>{{ 'item-formulaire.personne-aviser-section' | translate }}
+              </small>
+            </div>
+                <div class="col-md-6">
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'item-formulaire.nom' | translate }}</label>
+                    <input type="text" class="form-control" formControlName="personne_a_aviser_nom"
+                           [placeholder]="'item-formulaire.nom-placeholder' | translate">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'item-formulaire.courriel' | translate }}</label>
+                    <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
+                           appEmailMask
+                           [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
+                           placeholder="courriel@exemple.com">
+                    <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
+                      {{ 'item-formulaire.courriel-invalide' | translate }}
+                    </div>
+                  </div>
+                </div>
+          </div><hr>
 
         <!-- Notes bibliothèque et TDM -->
         <div class="row mb-3">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
-              <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
-            </div>
-          </div>
-          <div class="col-md-6">
+          <div class="col-md">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.note-bib' | translate }}</label>
               <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-lock-fill me-1" style="font-size:.85rem"></i>{{ 'item-formulaire.note-interne' | translate }}
+              </label>
+              <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="4"
+                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
+              <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
             </div>
           </div>
         </div>
@@ -1081,7 +1068,10 @@
         <div class="row">
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.suivi-acq' | translate }}</label>
+              <label class="form-label">
+                <span *ngIf="suiviAcqRequired" class="text-danger">*</span>
+                {{ 'item-formulaire.suivi-acq' | translate }}
+              </label>
               <select class="form-select form-control" formControlName="suivi_acq"
                       [class.is-invalid]="isInvalid('suivi_acq')">
                 <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
@@ -1092,23 +1082,23 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.statut-acq' | translate }}</label>
+              <select class="form-select form-control" formControlName="statut_acq">
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                <option *ngFor="let statut of options.dircolAcqStatutOptions" [value]="statut">{{ statut }}</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.note-acq' | translate }}</label>
               <textarea class="form-control" formControlName="note_acq" rows="6"
                         [placeholder]="'item-formulaire.note-acq-placeholder' | translate"></textarea>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">
-                <i class="bi bi-lock-fill me-1" style="font-size:.85rem"></i>{{ 'item-formulaire.note-interne' | translate }}
-              </label>
-              <textarea class="form-control" formControlName="bibliotheque_note_interne" rows="6"
-                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
             </div>
           </div>
         </div>

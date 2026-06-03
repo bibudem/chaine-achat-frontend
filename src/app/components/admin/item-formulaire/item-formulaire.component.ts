@@ -70,10 +70,31 @@ export class ItemFormulaireComponent implements OnInit {
       this.onFormulaireTypeChange(value);
     });
 
+    const statutCtrl = this.itemForm.get('statut_bibliotheque');
+    if (statutCtrl) {
+      this.updateSuiviAcqValidator(statutCtrl.value);
+      statutCtrl.valueChanges.subscribe(v => this.updateSuiviAcqValidator(v));
+    }
+
     const state = history.state as any;
     if (!this.isEditMode && state?.fromReponse) {
       this.prefillFromReponse(state.fromReponse);
     }
+  }
+
+  private updateSuiviAcqValidator(statut: string): void {
+    const ctrl = this.itemForm.get('suivi_acq');
+    if (!ctrl) return;
+    if (statut === 'Saisie en cours - En attente') {
+      ctrl.clearValidators();
+    } else {
+      ctrl.setValidators(Validators.required);
+    }
+    ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  get suiviAcqRequired(): boolean {
+    return this.itemForm.get('statut_bibliotheque')?.value !== 'Saisie en cours - En attente';
   }
 
   private prefillFromReponse(reponse: any): void {
@@ -130,7 +151,7 @@ export class ItemFormulaireComponent implements OnInit {
       catalogue: ['', Validators.maxLength(200)],
       statut_bibliotheque: ['Saisie en cours - En attente'],
       statut_acq: ['En attente'],
-      suivi_acq: ['', Validators.required],
+      suivi_acq: [''],
       note_acq: [''],
       bibliotheque_note_interne: [''],
       date_modification: [{ value: '', disabled: true }],

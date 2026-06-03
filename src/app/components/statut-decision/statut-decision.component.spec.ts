@@ -2,12 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { AcqDecisionComponent } from './statut-decision.component';
+import { StatutDecisionComponent } from './statut-decision.component';
 import { DialogService } from '../../services/dialog.service';
 
-describe('AcqDecisionComponent', () => {
-  let component: AcqDecisionComponent;
-  let fixture: ComponentFixture<AcqDecisionComponent>;
+describe('StatutDecisionComponent', () => {
+  let component: StatutDecisionComponent;
+  let fixture: ComponentFixture<StatutDecisionComponent>;
   let mockActivatedRoute: any;
   let mockDialogService: any;
 
@@ -25,7 +25,7 @@ describe('AcqDecisionComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [AcqDecisionComponent],
+      declarations: [StatutDecisionComponent],
       imports: [ReactiveFormsModule],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -33,7 +33,7 @@ describe('AcqDecisionComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AcqDecisionComponent);
+    fixture = TestBed.createComponent(StatutDecisionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
