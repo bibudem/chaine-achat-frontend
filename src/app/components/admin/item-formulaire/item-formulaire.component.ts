@@ -77,6 +77,9 @@ export class ItemFormulaireComponent implements OnInit {
       statutCtrl.valueChanges.subscribe(v => {
         this.updateSuiviAcqValidator(v);
         this.updateFinanceValidators(v);
+        if (this.activeTab === 'acq-decision' && !this.showDecisionAcqTab) {
+          this.setActiveTab('base');
+        }
       });
     }
 
@@ -98,6 +101,11 @@ export class ItemFormulaireComponent implements OnInit {
 
   get financeFieldsRequired(): boolean {
     return !(this.itemForm.get('statut_bibliotheque')?.value ?? '').startsWith('Saisie en cours');
+  }
+
+  get showDecisionAcqTab(): boolean {
+    const s = this.itemForm.get('statut_bibliotheque')?.value ?? '';
+    return !!s && s !== '' && s !== 'Saisie en cours - En attente';
   }
 
   private updateSuiviAcqValidator(statut: string): void {

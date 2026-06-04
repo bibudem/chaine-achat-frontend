@@ -24,8 +24,18 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   submitting = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  emailSent = false;
   options = new ListeChoixOptions();
   itemExisteDansItems = false;
+
+  notifTargets: Array<{
+    key: string;
+    label: string;
+    icon: string;
+    email: string;
+    description: string;
+    selected: boolean;
+  }> = [];
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -155,6 +165,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       note_commentaire:          data.note_commentaire          || '',
       bibliotheque_note_interne: data.bibliotheque_note_interne || '',
     }, { emitEvent: false });
+    this.buildNotifTargets();
   }
 
   private mapReponseToItem(r: any): void {
@@ -227,6 +238,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       verification_sqla:              sd.verification_sqla,
       verification_emma:              sd.verification_emma,
     } as Item;
+    this.buildNotifTargets();
   }
 
   private buildItemPayload(statut_bibliotheque: string, note_commentaire: string | null): Record<string, any> {
@@ -330,7 +342,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return icons[this.formulaireType] || 'bi-lightbulb';
   }
 
-  submitForm(): void {
+  submitForm(sendEmail = false): void {
     if (!this.form.valid || (!this.reponseId && !this.itemId)) {
       this.form.markAllAsTouched();
       this.errorMessage = 'Veuillez remplir tous les champs requis.';
@@ -364,7 +376,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         this.submitting = false;
         if (response.success) {
           this.successMessage = 'Décision enregistrée avec succès !';
-          if (this.reponseId) { this.notifyN8nDecision(statut_bibliotheque, note_commentaire); }
+          if (sendEmail && this.hasNotifEmail) {
+            this.notifyN8nDecision(statut_bibliotheque, note_commentaire);
+            this.emailSent = true;
+          }
           this.reponsesService.triggerPendingRefresh();
           setTimeout(() => this.router.navigate(['/items']), 2000);
         } else {
@@ -380,18 +395,73 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     });
   }
 
+  buildNotifTargets(): void {
+    this.notifTargets = [];
+    if (!this.item) return;
+
+    // Courriel demandeur / usager — tous types
+    if (this.item.usager_courriel) {
+      this.notifTargets.push({
+        key: 'usager', label: 'Demandeur', icon: 'bi-person-fill',
+        email: this.item.usager_courriel,
+        description: 'Informer le demandeur du statut de sa demande',
+        selected: true
+      });
+    }
+
+    // Aviser réservation — si le champ est renseigné (Nouvel achat + Nouvel abonnement)
+    if ((this.isNouvelAchat || this.isNouvelAbonnement)
+        && this.item.usager_aviser_reservation) {
+      this.notifTargets.push({
+        key: 'reservation', label: 'Aviser — Réservation', icon: 'bi-bookmark-fill',
+        email: this.item.usager_aviser_reservation,
+        description: 'Notifier lors de la mise en réservation',
+        selected: true
+      });
+    }
+
+    // Aviser activation — si le champ est renseigné (Nouvel achat + Modification CCOL + Accessibilité)
+    if ((this.isNouvelAchat || this.isModificationCcol || this.isAccessibilite)
+        && this.item.usager_aviser_activation) {
+      this.notifTargets.push({
+        key: 'activation', label: 'Aviser — Activation', icon: 'bi-lightning-fill',
+        email: this.item.usager_aviser_activation,
+        description: 'Notifier lors de l\'activation de la ressource',
+        selected: true
+      });
+    }
+
+    // Personne à aviser — si le champ courriel est renseigné
+    if (this.item.personne_a_aviser_courriel) {
+      this.notifTargets.push({
+        key: 'personne', label: 'Personne à aviser', icon: 'bi-person-badge-fill',
+        email: this.item.personne_a_aviser_courriel,
+        description: 'Responsable à notifier lors de l\'activation',
+        selected: true
+      });
+    }
+  }
+
+  get hasNotifEmail(): boolean {
+    return this.notifTargets.some(t => t.selected);
+  }
+
   private notifyN8nDecision(statut_bibliotheque: string, note_commentaire: string | null): void {
-    const payload = {
-      reponse_id:          this.reponseId,
-      statut_bibliotheque,
-      note_commentaire,
-      usager_courriel: this.item?.usager_courriel,
-      usager_nom:      this.item?.demandeur,
-      titre_document:  this.item?.titre_document,
-      type_formulaire: this.item?.formulaire_type
-    };
-    this.http
-      .post(`${environment.n8nWebhookUrl}/acq-decision`, payload, this.httpOptions)
-      .subscribe({ error: err => console.warn('[n8n/acq-decision]', err) });
+    const selected = this.notifTargets.filter(t => t.selected);
+    selected.forEach(target => {
+      const payload = {
+        reponse_id:          this.reponseId,
+        statut_bibliotheque,
+        note_commentaire,
+        usager_courriel:     target.email,
+        usager_nom:          this.item?.demandeur,
+        titre_document:      this.item?.titre_document,
+        type_formulaire:     this.item?.formulaire_type,
+        notif_role:          target.label
+      };
+      this.http
+        .post(`${environment.n8nWebhookUrl}/statut-decision`, payload, this.httpOptions)
+        .subscribe({ error: err => console.warn(`[n8n/statut-decision/${target.key}]`, err) });
+    });
   }
 }

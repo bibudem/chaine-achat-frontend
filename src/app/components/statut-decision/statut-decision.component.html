@@ -1,80 +1,106 @@
-<div class="form-page">
-  <div class="form-container">
+<div class="container-fluid mt-5">
 
-    <!-- ── En-tête ── -->
-    <div class="form-header d-flex gap-3 align-items-center mt-5">
-      <div class="form-header__icon">
-        <i class="bi" [ngClass]="item ? typeIcon : 'bi-clipboard-check'"></i>
-      </div>
-      <div class="flex-grow-1">
-        <h1 class="form-header__title">
-          {{ 'acq-decision.section-demande' | translate }}:
-          {{ item ? (item.formulaire_type || ('acq-decision.titre-defaut' | translate)) : ('acq-decision.titre-defaut' | translate) }}
-        </h1>
-        <p class="form-header__subtitle">
-          {{ 'acq-decision.confirmation-demande' | translate }}&nbsp;#{{ itemId }}
-          <span *ngIf="item?.priorite_demande" class="acq-badge ms-2"
-            [ngClass]="{
-              'acq-badge--urgent':      item!.priorite_demande === 'Urgent',
-              'acq-badge--prioritaire': item!.priorite_demande === 'Prioritaire',
-              'acq-badge--regulier':    item!.priorite_demande === 'Régulier'
-            }">{{ item!.priorite_demande }}</span>
-        </p>
-      </div>
-    </div>
+  <!-- ── Chargement ── -->
+  <div *ngIf="loadingItem" class="text-center py-5">
+    <div class="spinner-border text-secondary" role="status"></div>
+    <p class="mt-3 text-muted small">{{ 'acq-decision.chargement' | translate }}</p>
+  </div>
 
-    <!-- ── Chargement ── -->
-    <div *ngIf="loadingItem" class="form-section text-center py-5">
-      <div class="spinner-border text-secondary" role="status"></div>
-      <p class="mt-3 text-muted small">{{ 'acq-decision.chargement' | translate }}</p>
-    </div>
+  <ng-container *ngIf="!loadingItem">
 
-    <ng-container *ngIf="!loadingItem">
-
-      <!-- ── Résumé de la demande ── -->
-      <div class="form-section form-section--item-summary" *ngIf="item">
-        <div class="d-flex justify-content-between align-items-start gap-3">
+    <!-- ════════ EN-TÊTE ════════ -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-start">
           <div>
-            <div class="fw-semibold lh-sm">{{ item.titre_document }}</div>
-            <div class="text-muted small mt-1">
-              <i class="bi bi-person me-1"></i>{{ item.demandeur }}
-              <span *ngIf="item.bibliotheque" class="ms-3">
-                <i class="bi bi-building me-1"></i>{{ item.bibliotheque }}
+            <h1 class="h3 mb-1">{{ 'acq-decision.section-decision' | translate }}</h1>
+            <p class="text-muted mb-0 small" *ngIf="item">
+              <i class="bi me-1" [ngClass]="typeIcon" [style.color]="typeHeaderColor"></i>
+              {{ item.formulaire_type }}
+              <span class="mx-1">·</span>
+              <span class="text-truncate" style="max-width:400px;display:inline-block;vertical-align:bottom">
+                {{ item.titre_document }}
               </span>
-            </div>
+              <span class="badge bg-secondary fw-normal ms-2">#{{ itemId }}</span>
+              <span *ngIf="item.priorite_demande" class="acq-badge ms-2"
+                [ngClass]="{
+                  'acq-badge--urgent':      item.priorite_demande === 'Urgent',
+                  'acq-badge--prioritaire': item.priorite_demande === 'Prioritaire',
+                  'acq-badge--regulier':    item.priorite_demande === 'Régulier'
+                }">{{ item.priorite_demande }}</span>
+            </p>
           </div>
-          <button type="button" class="btn acq-btn-outline btn-sm flex-shrink-0"
-                  (click)="showDetailModal = true">
-            <i class="bi bi-eye me-1"></i>{{ 'acq-decision.voir-tout' | translate }}
+          <button type="button" class="btn btn-outline-secondary btn-sm flex-shrink-0" (click)="goBack()">
+            <i class="bi bi-arrow-left me-1"></i>{{ 'btn-return' | translate }}
           </button>
         </div>
+        <hr>
       </div>
+    </div>
 
-      <!-- ── Formulaire décision ── -->
-      <form [formGroup]="form" (ngSubmit)="submitForm()" *ngIf="!successMessage" novalidate>
+    <!-- ════════ CARTE UNIQUE ════════ -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
 
-        <div class="form-section">
-          <h2 class="form-section__title">
-            <i class="bi bi-clipboard-check"></i>{{ 'acq-decision.section-decision' | translate }}
-          </h2>
-
-          <!-- Info : nouvel item -->
-          <div *ngIf="item && !itemExisteDansItems" class="alert alert-warning mb-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>{{ 'acq-decision.nouvelle-demande' | translate }}</strong> {{ 'acq-decision.nouvelle-demande-desc' | translate }}
+        <!-- ── Info demande ── -->
+        <div class="sd-requester sd-requester--with-action border-bottom" *ngIf="item">
+          <div class="sd-requester__item">
+            <i class="bi bi-person-fill sd-requester__icon"></i>
+            <div>
+              <div class="sd-requester__label">Demandeur</div>
+              <div class="sd-requester__value">{{ item.demandeur || '—' }}</div>
+            </div>
           </div>
-
-          <!-- Erreur -->
-          <div *ngIf="errorMessage" class="alert alert--danger mb-3">
-            <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+          <div class="sd-requester__item">
+            <i class="bi bi-envelope-fill sd-requester__icon"></i>
+            <div>
+              <div class="sd-requester__label">Courriel demandeur</div>
+              <div class="sd-requester__value">{{ item.usager_courriel || '—' }}</div>
+            </div>
           </div>
+          <div class="sd-requester__item" *ngIf="item.usager_aviser_reservation">
+            <i class="bi bi-bell-fill sd-requester__icon" style="color:#d97706"></i>
+            <div>
+              <div class="sd-requester__label">Aviser — Réservation</div>
+              <div class="sd-requester__value">{{ item.usager_aviser_reservation }}</div>
+            </div>
+          </div>
+          <div class="sd-requester__item" *ngIf="item.bibliotheque">
+            <i class="bi bi-building-fill sd-requester__icon"></i>
+            <div>
+              <div class="sd-requester__label">Bibliothèque</div>
+              <div class="sd-requester__value">{{ item.bibliotheque }}</div>
+            </div>
+          </div>
+          <button type="button" class="sd-requester__detail-btn ms-auto"
+                  (click)="showDetailModal = true"
+                  [title]="'acq-decision.voir-tout' | translate">
+            <i class="bi bi-card-list"></i>
+          </button>
+        </div>
 
-          <div class="row g-3">
-            <div class="col-12">
-              <label for="statut_bibliotheque" class="form-label">
-                {{ 'acq-decision.suivi-acq' | translate }} <span class="text-danger">*</span>
+        <!-- ── Formulaire ── -->
+        <form [formGroup]="form" *ngIf="!successMessage" novalidate>
+          <div class="p-4">
+
+            <!-- Alertes -->
+            <div *ngIf="item && !itemExisteDansItems" class="alert alert-warning mb-4">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>{{ 'acq-decision.nouvelle-demande' | translate }}</strong>
+              {{ 'acq-decision.nouvelle-demande-desc' | translate }}
+            </div>
+            <div *ngIf="errorMessage" class="alert alert-danger mb-4">
+              <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+            </div>
+
+            <!-- Statut -->
+            <div class="mb-4">
+              <label for="statut_bibliotheque" class="form-label fw-semibold">
+                {{ 'acq-decision.suivi-acq' | translate }}
+                <span class="text-danger ms-1">*</span>
               </label>
-              <select id="statut_bibliotheque" formControlName="statut_bibliotheque" class="form-select">
+              <select id="statut_bibliotheque" formControlName="statut_bibliotheque"
+                      class="form-select form-select-lg">
                 <option value="" disabled>{{ 'acq-decision.selectionner-suivi' | translate }}</option>
                 <option *ngFor="let o of options.statusOptions" [value]="o">{{ o }}</option>
               </select>
@@ -84,208 +110,175 @@
               </small>
             </div>
 
-            <div class="col-md-6">
-              <label for="note_commentaire" class="form-label">{{ 'acq-decision.note' | translate }}</label>
-              <textarea id="note_commentaire" formControlName="note_commentaire" rows="8"
-                        class="form-control"
-                        [placeholder]="'acq-decision.note-placeholder' | translate"></textarea>
+            <!-- Notes -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label for="note_commentaire" class="form-label">
+                  {{ 'acq-decision.note' | translate }}
+                </label>
+                <textarea id="note_commentaire" formControlName="note_commentaire" rows="10"
+                          class="form-control"
+                          [placeholder]="'acq-decision.note-placeholder' | translate"></textarea>
+                <small class="text-muted" *ngIf="notifTargets.length > 0">
+                  <i class="bi bi-info-circle me-1"></i>Inclus dans le courriel à l'usager.
+                </small>
+              </div>
+              <div class="col-md-6">
+                <label for="bibliotheque_note_interne" class="form-label">
+                  <i class="bi bi-lock-fill me-1" style="font-size:.8rem;opacity:.6"></i>
+                  {{ 'item-formulaire.note-interne' | translate }}
+                </label>
+                <textarea id="bibliotheque_note_interne" formControlName="bibliotheque_note_interne" rows="10"
+                          class="form-control"
+                          [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
+                <small class="text-muted">
+                  <i class="bi bi-eye-slash me-1"></i>Non envoyée à l'usager.
+                </small>
+              </div>
             </div>
 
-            <div class="col-md-6">
-              <label for="bibliotheque_note_interne" class="form-label">{{ 'item-formulaire.note-interne' | translate }}</label>
-              <textarea id="bibliotheque_note_interne" formControlName="bibliotheque_note_interne" rows="8"
-                        class="form-control"
-                        [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
+            <!-- Aperçu + Notifications côte à côte -->
+            <div class="row g-3 align-items-stretch">
+              <div class="col-md-6"
+                   *ngIf="notifTargets.length > 0 && form.get('statut_bibliotheque')?.value">
+                <div class="sd-email-preview h-100">
+                  <div class="sd-email-preview__header">
+                    <i class="bi bi-eye me-2"></i>Contenu inclus dans le courriel
+                  </div>
+                  <div class="sd-email-preview__body">
+                    <div class="sd-email-preview__row">
+                      <span class="sd-email-preview__key">Statut</span>
+                      <span class="sd-email-preview__value fw-semibold">{{ form.get('statut_bibliotheque')?.value }}</span>
+                    </div>
+                    <div class="sd-email-preview__row" *ngIf="form.get('note_commentaire')?.value">
+                      <span class="sd-email-preview__key">Note</span>
+                      <span class="sd-email-preview__value fst-italic">{{ form.get('note_commentaire')?.value }}</span>
+                    </div>
+                    <div class="sd-email-preview__row" *ngIf="!form.get('note_commentaire')?.value">
+                      <span class="sd-email-preview__key">Note</span>
+                      <span class="sd-email-preview__value" style="opacity:.45">Aucune note ajoutée</span>
+                    </div>
+                  </div>
+                  <div class="sd-email-preview__notice">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Le statut et la note seront visibles par l'usager.
+                    La note interne <strong>ne sera pas incluse</strong>.
+                  </div>
+                </div>
+              </div>
+              <div [class.col-md-6]="notifTargets.length > 0 && form.get('statut_bibliotheque')?.value"
+                   [class.col-12]="!(notifTargets.length > 0 && form.get('statut_bibliotheque')?.value)">
+                <div class="sd-notif-panel h-100">
+                  <div class="sd-notif-panel__header">
+                    <i class="bi bi-send-fill me-2"></i>Notifications à envoyer
+                  </div>
+                  <div class="sd-notif-empty" *ngIf="notifTargets.length === 0">
+                    <i class="bi bi-envelope-slash me-2"></i>
+                    Aucun courriel de notification disponible pour cette demande.
+                  </div>
+                  <div class="sd-notif-list" *ngIf="notifTargets.length > 0">
+                    <label *ngFor="let t of notifTargets"
+                           class="sd-notif-target"
+                           [class.sd-notif-target--selected]="t.selected">
+                      <input type="checkbox" class="sd-notif-checkbox" [(ngModel)]="t.selected">
+                      <div class="sd-notif-target__icon"><i class="bi {{ t.icon }}"></i></div>
+                      <div class="sd-notif-target__body">
+                        <div class="sd-notif-target__label">{{ t.label }}</div>
+                        <div class="sd-notif-target__email">{{ t.email }}</div>
+                        <div class="sd-notif-target__desc">{{ t.description }}</div>
+                      </div>
+                      <div class="sd-notif-target__check">
+                        <i class="bi" [class.bi-check-circle-fill]="t.selected"
+                           [class.bi-circle]="!t.selected"></i>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /p-4 -->
+
+          <!-- Actions -->
+          <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 py-3 px-4">
+            <button type="button" class="btn acq-btn-outline"
+                    [disabled]="submitting || form.invalid"
+                    (click)="submitForm(false)">
+              <span *ngIf="!submitting">
+                <i class="bi bi-floppy me-2"></i>{{ 'acq-decision.enregistrer' | translate }}
+              </span>
+              <span *ngIf="submitting" class="d-flex align-items-center gap-2">
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                {{ 'acq-decision.enregistrement' | translate }}
+              </span>
+            </button>
+            <button type="button" class="btn acq-btn-primary"
+                    [disabled]="submitting || form.invalid || !hasNotifEmail"
+                    [title]="!hasNotifEmail ? 'Aucun courriel usager enregistré pour cette demande' : ''"
+                    (click)="submitForm(true)">
+              <span *ngIf="!submitting">
+                <i class="bi bi-envelope-check me-2"></i>{{ 'acq-decision.enregistrer-courriel' | translate }}
+              </span>
+              <span *ngIf="submitting" class="d-flex align-items-center gap-2">
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                {{ 'acq-decision.enregistrement' | translate }}
+              </span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- ════════ CONFIRMATION ════════ -->
+        <div *ngIf="successMessage" class="p-4">
+          <div class="confirmation-screen">
+            <div class="confirmation-icon" [class.confirmation-icon--email]="emailSent"
+                 [class.confirmation-icon--acq]="!emailSent">
+              <i class="bi" [class.bi-envelope-check-fill]="emailSent" [class.bi-check-lg]="!emailSent"></i>
+            </div>
+            <h2 class="confirmation-title">{{ 'acq-decision.confirmation-titre' | translate }}</h2>
+            <p class="confirmation-message">{{ 'acq-decision.confirmation-message' | translate }}</p>
+
+            <div class="sd-confirm-email" *ngIf="emailSent">
+              <i class="bi bi-send-check-fill sd-confirm-email__icon"></i>
+              <div>
+                <div class="sd-confirm-email__title">
+                  Courriel{{ notifTargets.length > 1 ? 's' : '' }} envoyé{{ notifTargets.length > 1 ? 's' : '' }}
+                </div>
+                <div class="sd-confirm-email__sub">
+                  <ng-container *ngFor="let t of notifTargets; let last = last">
+                    <ng-container *ngIf="t.selected">
+                      <strong>{{ t.email }}</strong>
+                      <span class="text-muted"> ({{ t.label }})</span>
+                      <span *ngIf="!last"> · </span>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <div class="confirmation-details" *ngIf="item">
+              <div class="confirmation-detail">
+                <div class="confirmation-detail__label">
+                  <i class="bi bi-file-text"></i>{{ 'acq-decision.confirmation-demande' | translate }}
+                </div>
+                <div class="confirmation-detail__value">{{ item.titre_document }}</div>
+              </div>
+              <div class="confirmation-detail">
+                <div class="confirmation-detail__label">
+                  <i class="bi bi-sliders2"></i>{{ 'acq-decision.confirmation-suivi' | translate }}
+                </div>
+                <div class="confirmation-detail__value">{{ form.get('statut_bibliotheque')?.value }}</div>
+              </div>
             </div>
           </div>
         </div>
 
+      </div><!-- /card-body -->
+    </div><!-- /card -->
 
-        <div class="form-actions d-flex justify-content-between">
-          <button type="button" class="btn acq-btn-outline" (click)="goBack()">
-            <i class="bi bi-arrow-left me-2"></i>{{ 'btn-return' | translate }}
-          </button>
-          <button type="submit" class="btn acq-btn-primary" [disabled]="submitting || form.invalid">
-            <span *ngIf="!submitting">
-              <i class="bi bi-check-circle me-2"></i>{{ 'acq-decision.enregistrer' | translate }}
-            </span>
-            <span *ngIf="submitting">
-              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-              {{ 'acq-decision.enregistrement' | translate }}
-            </span>
-          </button>
-        </div>
-
-      </form>
-
-      <!-- ── Confirmation ── -->
-      <div *ngIf="successMessage" class="confirmation-screen">
-        <div class="confirmation-icon confirmation-icon--acq">
-          <i class="bi bi-check-lg"></i>
-        </div>
-        <h2 class="confirmation-title">{{ 'acq-decision.confirmation-titre' | translate }}</h2>
-        <p class="confirmation-message">{{ 'acq-decision.confirmation-message' | translate }}</p>
-        <div class="confirmation-details" *ngIf="item">
-          <div class="confirmation-detail">
-            <div class="confirmation-detail__label">
-              <i class="bi bi-file-text"></i>{{ 'acq-decision.confirmation-demande' | translate }}
-            </div>
-            <div class="confirmation-detail__value">{{ item.titre_document }}</div>
-          </div>
-          <div class="confirmation-detail">
-            <div class="confirmation-detail__label">
-              <i class="bi bi-clipboard-check"></i>{{ 'acq-decision.confirmation-suivi' | translate }}
-            </div>
-            <div class="confirmation-detail__value">{{ form.get('statut_bibliotheque')?.value }}</div>
-          </div>
-        </div>
-      </div>
-
-    </ng-container>
-  </div>
+  </ng-container>
 </div>
 
 <!-- ══════════════════════════════════════════
      Modal — Détails complets de la demande
 ══════════════════════════════════════════ -->
-<ng-container *ngIf="item && showDetailModal">
-
-  <div class="modal-backdrop fade show" (click)="showDetailModal = false"></div>
-
-  <div class="modal fade show d-block" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-      <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
-
-        <div class="modal-header">
-          <h5 class="modal-title">{{ item.formulaire_type }} — {{ 'acq-decision.confirmation-demande' | translate }} #{{ itemId }}</h5>
-          <button type="button" class="btn-close" (click)="showDetailModal = false"></button>
-        </div>
-
-        <div class="modal-body p-0">
-          <table class="table table-sm table-hover mb-0 detail-table">
-            <tbody>
-
-              <tr>
-                <th>{{ 'acq-decision.col-titre' | translate }}</th>
-                <td class="fw-semibold">
-                  {{ item.titre_document }}
-                  <span *ngIf="item.sous_titre" class="d-block fw-normal text-muted small">{{ item.sous_titre }}</span>
-                </td>
-              </tr>
-              <tr>
-                <th>{{ 'acq-decision.col-demandeur' | translate }}</th>
-                <td>{{ item.demandeur || '—' }}</td>
-              </tr>
-              <tr>
-                <th>{{ 'acq-decision.col-bibliotheque' | translate }}</th>
-                <td>{{ item.bibliotheque || '—' }}</td>
-              </tr>
-              <tr *ngIf="item.categorie_document">
-                <th>{{ 'acq-decision.col-categorie' | translate }}</th>
-                <td>{{ item.categorie_document }}</td>
-              </tr>
-              <tr *ngIf="item.format_support">
-                <th>{{ 'acq-decision.col-type-traitement' | translate }}</th>
-                <td>{{ item.format_support }}</td>
-              </tr>
-              <tr *ngIf="item.priorite_demande">
-                <th>{{ 'acq-decision.col-priorite' | translate }}</th>
-                <td>
-                  <span class="acq-badge"
-                    [ngClass]="{
-                      'acq-badge--urgent':      item.priorite_demande === 'Urgent',
-                      'acq-badge--prioritaire': item.priorite_demande === 'Prioritaire',
-                      'acq-badge--regulier':    item.priorite_demande === 'Régulier'
-                    }">{{ item.priorite_demande }}</span>
-                </td>
-              </tr>
-
-              <ng-container *ngIf="isSuggestion">
-                <tr *ngIf="item.auteur"><th>{{ 'acq-decision.col-auteur' | translate }}</th><td>{{ item.auteur }}</td></tr>
-                <tr *ngIf="item.usager_statut"><th>{{ 'acq-decision.col-statut-usager' | translate }}</th><td>{{ item.usager_statut }}</td></tr>
-                <tr *ngIf="item.usager_faculte"><th>{{ 'acq-decision.col-faculte' | translate }}</th><td>{{ item.usager_faculte }}</td></tr>
-                <tr *ngIf="item.usager_courriel"><th>{{ 'acq-decision.col-courriel-usager' | translate }}</th><td>{{ item.usager_courriel }}</td></tr>
-                <tr *ngIf="item.date_requise_cours"><th>{{ 'acq-decision.col-requis-cours' | translate }}</th><td>{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</td></tr>
-              </ng-container>
-
-              <tr *ngIf="item.editeur"><th>{{ 'acq-decision.col-editeur' | translate }}</th><td>{{ item.editeur }}</td></tr>
-              <tr *ngIf="item.isbn_issn"><th>{{ 'acq-decision.col-isbn-issn' | translate }}</th><td>{{ item.isbn_issn }}</td></tr>
-              <tr *ngIf="item.date_publication"><th>{{ 'acq-decision.col-date-publication' | translate }}</th><td>{{ item.date_publication | date:'yyyy-MM-dd' }}</td></tr>
-
-              <tr *ngIf="item.fonds_budgetaire"><th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
-              <tr *ngIf="item.fonds_sn_projet"><th>{{ 'acq-decision.col-fonds-sn' | translate }}</th><td>{{ item.fonds_sn_projet }}</td></tr>
-              <tr *ngIf="item.periode_couverte"><th>{{ 'acq-decision.col-periode-couverte' | translate }}</th><td>{{ item.periode_couverte }}</td></tr>
-              <tr *ngIf="item.source_information"><th>{{ 'acq-decision.col-source-info' | translate }}</th><td>{{ item.source_information }}</td></tr>
-              <tr *ngIf="item.prix_cad"><th>{{ 'acq-decision.col-prix-cad' | translate }}</th><td class="fw-semibold text-success">{{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}</td></tr>
-              <tr *ngIf="item.devise_originale"><th>{{ 'acq-decision.col-devise' | translate }}</th><td>{{ item.devise_originale }}</td></tr>
-              <tr *ngIf="item.prix_devise_originale"><th>{{ 'acq-decision.col-prix-devise' | translate }}</th><td>{{ item.prix_devise_originale }}</td></tr>
-
-              <tr *ngIf="item.localisation_emplacement"><th>{{ 'acq-decision.col-localisation' | translate }}</th><td>{{ item.localisation_emplacement }}</td></tr>
-              <tr *ngIf="item.nombre_titres_inclus"><th>{{ 'acq-decision.col-nb-titres' | translate }}</th><td>{{ item.nombre_titres_inclus }}</td></tr>
-              <tr *ngIf="item.nombre_utilisateurs"><th>{{ 'acq-decision.col-nb-utilisateurs' | translate }}</th><td>{{ item.nombre_utilisateurs }}</td></tr>
-              <tr *ngIf="item.format_pret_numerique"><th>{{ 'acq-decision.col-format-pret' | translate }}</th><td>{{ item.format_pret_numerique }}</td></tr>
-              <tr *ngIf="item.lien_plateforme"><th>{{ 'acq-decision.col-lien-plateforme' | translate }}</th><td><a [href]="item.lien_plateforme" target="_blank" rel="noopener noreferrer">{{ item.lien_plateforme }}</a></td></tr>
-              <tr *ngIf="item.personne_a_aviser_nom"><th>{{ 'acq-decision.col-personne-aviser' | translate }}</th><td>{{ item.personne_a_aviser_nom }}</td></tr>
-              <tr *ngIf="item.personne_a_aviser_courriel"><th>{{ 'acq-decision.col-courriel-aviser' | translate }}</th><td>{{ item.personne_a_aviser_courriel }}</td></tr>
-              <tr *ngIf="item.usager_aviser_reservation"><th>{{ 'acq-decision.col-aviser-resa' | translate }}</th><td>{{ item.usager_aviser_reservation }}</td></tr>
-              <tr *ngIf="item.usager_aviser_activation"><th>{{ 'acq-decision.col-aviser-activ' | translate }}</th><td>{{ item.usager_aviser_activation }}</td></tr>
-
-              <ng-container *ngIf="isNouvelAchat">
-                <tr *ngIf="item.quantite"><th>{{ 'acq-decision.col-quantite' | translate }}</th><td>{{ item.quantite }}</td></tr>
-                <tr *ngIf="item.projets_speciaux"><th>{{ 'acq-decision.col-projet-special' | translate }}</th><td>{{ item.projets_speciaux }}</td></tr>
-                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
-                <tr *ngIf="item.reserve_cours">
-                  <th>{{ 'acq-decision.col-reserve-cours' | translate }}</th>
-                  <td>
-                    {{ item.reserve_cours_sigle || ('acq-decision.confirmation-demande' | translate) }}
-                    <span *ngIf="item.reserve_cours_session"> — {{ item.reserve_cours_session }}</span>
-                    <span *ngIf="item.reserve_cours_enseignant" class="d-block text-muted small">{{ item.reserve_cours_enseignant }}</span>
-                  </td>
-                </tr>
-              </ng-container>
-
-              <ng-container *ngIf="isModificationCcol">
-                <tr *ngIf="item.precision_demande"><th>{{ 'acq-decision.col-precision-demande' | translate }}</th><td>{{ item.precision_demande }}</td></tr>
-                <tr *ngIf="item.numero_oclc"><th>{{ 'acq-decision.col-numero-oclc' | translate }}</th><td>{{ item.numero_oclc }}</td></tr>
-                <tr *ngIf="item.date_debut_abonnement"><th>{{ 'acq-decision.col-date-debut-abo' | translate }}</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
-              </ng-container>
-
-              <ng-container *ngIf="isNouvelAbonnement">
-                <tr *ngIf="item.date_debut_abonnement"><th>{{ 'acq-decision.col-date-debut-abo' | translate }}</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
-                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
-              </ng-container>
-
-              <ng-container *ngIf="isPebTipasa">
-                <tr *ngIf="item.gobi_vu_format_numerique"><th>{{ 'acq-decision.col-gobi-numerique' | translate }}</th><td>{{ item.gobi_vu_format_numerique }}</td></tr>
-                <tr *ngIf="item.gobi_version_moins_365_usd"><th>{{ 'acq-decision.col-gobi-365' | translate }}</th><td>{{ item.gobi_version_moins_365_usd }}</td></tr>
-                <tr *ngIf="item.reference_tipasa"><th>{{ 'acq-decision.col-reference-tipasa' | translate }}</th><td>{{ item.reference_tipasa }}</td></tr>
-              </ng-container>
-
-              <ng-container *ngIf="isAccessibilite">
-                <tr *ngIf="item.reference_usager"><th>{{ 'acq-decision.col-reference-usager' | translate }}</th><td>{{ item.reference_usager }}</td></tr>
-                <tr *ngIf="item.besoin_specifique_format"><th>{{ 'acq-decision.col-besoin-format' | translate }}</th><td>{{ item.besoin_specifique_format }}</td></tr>
-                <tr *ngIf="item.permalien_sofia"><th>{{ 'acq-decision.col-permalien-sofia' | translate }}</th><td><a [href]="item.permalien_sofia" target="_blank" rel="noopener noreferrer">{{ item.permalien_sofia }}</a></td></tr>
-                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
-                <tr *ngIf="item.exemplaire_detenu"><th>{{ 'acq-decision.col-exemplaire-detenu' | translate }}</th><td>{{ item.exemplaire_detenu }}</td></tr>
-                <tr *ngIf="item.fournisseur_contacte_sans_succes"><th>{{ 'acq-decision.col-fournisseur-contacte' | translate }}</th><td>{{ item.fournisseur_contacte_sans_succes }}</td></tr>
-                <tr *ngIf="item.verification_caeb"><th>{{ 'acq-decision.col-caeb' | translate }}</th><td>{{ item.verification_caeb }}</td></tr>
-                <tr *ngIf="item.verification_sqla"><th>{{ 'acq-decision.col-sqla' | translate }}</th><td>{{ item.verification_sqla }}</td></tr>
-                <tr *ngIf="item.verification_emma"><th>{{ 'acq-decision.col-emma' | translate }}</th><td>{{ item.verification_emma }}</td></tr>
-              </ng-container>
-
-              <tr *ngIf="item.note_commentaire"><th>{{ 'acq-decision.col-note-commentaire' | translate }}</th><td class="fst-italic text-muted">{{ item.note_commentaire }}</td></tr>
-              <tr *ngIf="isSuggestion && item.note_usager"><th>{{ 'acq-decision.col-note-usager' | translate }}</th><td class="fst-italic text-muted">{{ item.note_usager }}</td></tr>
-
-            </tbody>
-          </table>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn acq-btn-outline btn-sm" (click)="showDetailModal = false">{{ 'acq-decision.fermer' | translate }}</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-</ng-container>

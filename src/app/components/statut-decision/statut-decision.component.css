@@ -1,11 +1,7 @@
 /* ============================================================
-   acq-decision.component.css
+   statut-decision.component.css
    Palette projet : #00407F (secondary-blue) · #2380D1 (light-blue)
-   Structure, responsive et composants partagés → css_udem.css
    ============================================================ */
-.form-page {
-  padding: 1.5rem 5% 0;
-}
 
 /* ── En-tête ────────────────────────────────────────────────── */
 .form-header {
@@ -151,6 +147,279 @@
 .confirmation-icon--acq {
   background: linear-gradient(135deg, #2380D1, #00407F);
   box-shadow: 0 4px 16px rgba(0, 64, 127, 0.25);
+}
+
+
+/* ── Carte demandeur ────────────────────────────────────────── */
+.sd-requester {
+  display:        flex;
+  flex-wrap:      wrap;
+  gap:            .5rem 1.5rem;
+  background:     #f8f9fb;
+  border:         1px solid #eaedf0;
+  border-radius:  10px;
+  padding:        .85rem 1.25rem;
+  margin-bottom:  1rem;
+}
+.sd-requester__item {
+  display:        flex;
+  align-items:    center;
+  gap:            .6rem;
+}
+.sd-requester--with-action { align-items: center; }
+
+.sd-requester__detail-btn {
+  background:   transparent;
+  border:       1px solid rgba(0, 64, 127, 0.2);
+  border-radius: 8px;
+  width:        34px;
+  height:       34px;
+  display:      flex;
+  align-items:  center;
+  justify-content: center;
+  color:        #607386;
+  font-size:    1rem;
+  flex-shrink:  0;
+  transition:   background .15s, color .15s, border-color .15s;
+  cursor:       pointer;
+}
+.sd-requester__detail-btn:hover {
+  background:   rgba(0, 64, 127, 0.08);
+  border-color: #00407F;
+  color:        #00407F;
+}
+
+.sd-requester__icon {
+  font-size:      .9rem;
+  color:          #2380D1;
+  flex-shrink:    0;
+}
+.sd-requester__label {
+  font-size:      .68rem;
+  font-weight:    600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color:          #9DABB9;
+  line-height:    1.2;
+}
+.sd-requester__value {
+  font-size:      .875rem;
+  font-weight:    500;
+  color:          #1E2631;
+  line-height:    1.3;
+}
+
+/* ── Statut — champ principal ───────────────────────────────── */
+.sd-statut-block {
+  padding: 0;
+}
+.sd-statut-select {
+  font-weight: 500;
+}
+
+/* ── Bandeau courriel disponible ────────────────────────────── */
+.sd-email-hint {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            .85rem;
+  background:     #f0fdf4;
+  border:         1px solid #bbf7d0;
+  border-radius:  10px;
+  padding:        .85rem 1.25rem;
+  margin-top:     1.25rem;
+}
+.sd-email-hint__icon {
+  font-size:      1.2rem;
+  color:          #16a34a;
+  flex-shrink:    0;
+  margin-top:     2px;
+}
+.sd-email-hint__title {
+  font-weight:    600;
+  font-size:      .875rem;
+  color:          #15803d;
+  margin-bottom:  .15rem;
+}
+.sd-email-hint__sub {
+  font-size:      .8rem;
+  color:          #166534;
+}
+
+/* ── Aperçu courriel ────────────────────────────────────────── */
+.sd-email-preview {
+  border:         1px solid #bae6fd;
+  border-radius:  10px;
+  overflow:       hidden;
+}
+.sd-email-preview__header {
+  background:     #e0f2fe;
+  padding:        .6rem 1rem;
+  font-size:      .75rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color:          #0369a1;
+}
+.sd-email-preview__body {
+  background:  #f0f9ff;
+  padding:     .85rem 1rem;
+  display:     flex;
+  flex-direction: column;
+  gap:         .55rem;
+}
+.sd-email-preview__row {
+  display:   flex;
+  gap:       .75rem;
+  align-items: flex-start;
+}
+.sd-email-preview__key {
+  flex-shrink:    0;
+  min-width:      170px;
+  font-size:      .72rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color:          #0369a1;
+  padding-top:    2px;
+}
+.sd-email-preview__value {
+  font-size:   .875rem;
+  color:       #1E2631;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.sd-email-preview__notice {
+  background:  #e0f2fe;
+  border-top:  1px solid #bae6fd;
+  padding:     .55rem 1rem;
+  font-size:   .78rem;
+  color:       #0369a1;
+  line-height: 1.5;
+}
+
+/* ── Panel notifications ────────────────────────────────────── */
+.sd-notif-panel {
+  border:         1px solid #eaedf0;
+  border-radius:  10px;
+  overflow:       hidden;
+}
+.sd-notif-panel__header {
+  background:     #f8f9fb;
+  border-bottom:  1px solid #eaedf0;
+  padding:        .65rem 1rem;
+  font-size:      .78rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color:          #607386;
+}
+.sd-notif-empty {
+  padding:    1rem;
+  font-size:  .85rem;
+  color:      #9DABB9;
+}
+.sd-notif-list {
+  display: flex;
+  flex-direction: column;
+}
+.sd-notif-target {
+  display:        flex;
+  align-items:    center;
+  gap:            .85rem;
+  padding:        .85rem 1rem;
+  border-bottom:  1px solid #f0f2f5;
+  cursor:         pointer;
+  transition:     background .12s;
+  background:     #fff;
+  user-select:    none;
+}
+.sd-notif-target:last-child { border-bottom: none; }
+.sd-notif-target:hover { background: #f8f9fb; }
+.sd-notif-target--selected { background: #f0fdf4; }
+.sd-notif-target--selected:hover { background: #dcfce7; }
+
+.sd-notif-checkbox { display: none; }
+
+.sd-notif-target__icon {
+  width:          34px;
+  height:         34px;
+  border-radius:  8px;
+  background:     #f0f2f5;
+  display:        flex;
+  align-items:    center;
+  justify-content:center;
+  font-size:      .9rem;
+  color:          #607386;
+  flex-shrink:    0;
+  transition:     background .12s, color .12s;
+}
+.sd-notif-target--selected .sd-notif-target__icon {
+  background: #dcfce7;
+  color:      #16a34a;
+}
+
+.sd-notif-target__body { flex: 1; min-width: 0; }
+.sd-notif-target__label {
+  font-size:   .82rem;
+  font-weight: 600;
+  color:       #1E2631;
+  line-height: 1.3;
+}
+.sd-notif-target__email {
+  font-size:  .78rem;
+  color:      #2380D1;
+  font-family: monospace;
+  margin:     .1rem 0;
+  word-break: break-all;
+}
+.sd-notif-target__desc {
+  font-size: .72rem;
+  color:     #9DABB9;
+  line-height: 1.3;
+}
+
+.sd-notif-target__check {
+  font-size:  1rem;
+  color:      #d1d5db;
+  flex-shrink: 0;
+  transition: color .12s;
+}
+.sd-notif-target--selected .sd-notif-target__check { color: #16a34a; }
+
+/* ── Bandeau confirmation courriel envoyé ───────────────────── */
+.sd-confirm-email {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            .85rem;
+  background:     #f0fdf4;
+  border:         1px solid #bbf7d0;
+  border-radius:  10px;
+  padding:        .85rem 1.25rem;
+  margin:         1rem auto;
+  max-width:      460px;
+  text-align:     left;
+}
+.sd-confirm-email__icon {
+  font-size:      1.3rem;
+  color:          #16a34a;
+  flex-shrink:    0;
+  margin-top:     1px;
+}
+.sd-confirm-email__title {
+  font-weight:    600;
+  font-size:      .875rem;
+  color:          #15803d;
+  margin-bottom:  .15rem;
+}
+.sd-confirm-email__sub {
+  font-size:      .8rem;
+  color:          #166534;
+}
+
+/* ── Icône confirmation courriel envoyé ─────────────────────── */
+.confirmation-icon--email {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.25);
 }
 
 /* ── En-tête de la modal ────────────────────────────────────── */

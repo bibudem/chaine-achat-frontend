@@ -46,7 +46,7 @@
           {{ 'item-formulaire.onglet-specifique' | translate }}
         </button>
       </li>
-      <li class="nav-item" role="presentation" *ngIf="selectedFormulaireType">
+      <li class="nav-item" role="presentation" *ngIf="selectedFormulaireType && showDecisionAcqTab">
         <button class="nav-link" [class.active]="activeTab === 'acq-decision'"
                 type="button" (click)="setActiveTab('acq-decision')">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-formulaire.onglet-acq-decision' | translate }}
@@ -519,7 +519,7 @@
             </div>
           </div>
           <div class="row"
-               *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
+               *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique'">
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.usager-aviser-reservation' | translate }}</label>
