@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-start">
           <div>
             <h1 class="h3 mb-1">{{ 'acq-decision.section-decision' | translate }}</h1>
-            <p class="text-muted mb-0 small" *ngIf="item">
+            <p class="text-muted mb-0" *ngIf="item">
               <i class="bi me-1" [ngClass]="typeIcon" [style.color]="typeHeaderColor"></i>
               {{ item.formulaire_type }}
               <span class="mx-1">·</span>
