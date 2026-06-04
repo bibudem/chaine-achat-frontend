@@ -282,3 +282,143 @@
 <!-- ══════════════════════════════════════════
      Modal — Détails complets de la demande
 ══════════════════════════════════════════ -->
+<ng-container *ngIf="item && showDetailModal">
+
+  <div class="modal-backdrop fade show" (click)="showDetailModal = false"></div>
+
+  <div class="modal fade show d-block" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+
+        <div class="modal-header">
+          <h5 class="modal-title">{{ item.formulaire_type }} — {{ 'acq-decision.confirmation-demande' | translate }} #{{ itemId }}</h5>
+          <button type="button" class="btn-close" (click)="showDetailModal = false"></button>
+        </div>
+
+        <div class="modal-body p-0">
+          <table class="table table-sm table-hover mb-0 detail-table">
+            <tbody>
+              <tr>
+                <th>{{ 'acq-decision.col-titre' | translate }}</th>
+                <td class="fw-semibold">
+                  {{ item.titre_document }}
+                  <span *ngIf="item.sous_titre" class="d-block fw-normal text-muted small">{{ item.sous_titre }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th>{{ 'acq-decision.col-demandeur' | translate }}</th>
+                <td>{{ item.demandeur || '—' }}</td>
+              </tr>
+              <tr>
+                <th>{{ 'acq-decision.col-bibliotheque' | translate }}</th>
+                <td>{{ item.bibliotheque || '—' }}</td>
+              </tr>
+              <tr *ngIf="item.categorie_document">
+                <th>{{ 'acq-decision.col-categorie' | translate }}</th>
+                <td>{{ item.categorie_document }}</td>
+              </tr>
+              <tr *ngIf="item.format_support">
+                <th>{{ 'acq-decision.col-type-traitement' | translate }}</th>
+                <td>{{ item.format_support }}</td>
+              </tr>
+              <tr *ngIf="item.priorite_demande">
+                <th>{{ 'acq-decision.col-priorite' | translate }}</th>
+                <td>
+                  <span class="acq-badge"
+                    [ngClass]="{
+                      'acq-badge--urgent':      item.priorite_demande === 'Urgent',
+                      'acq-badge--prioritaire': item.priorite_demande === 'Prioritaire',
+                      'acq-badge--regulier':    item.priorite_demande === 'Régulier'
+                    }">{{ item.priorite_demande }}</span>
+                </td>
+              </tr>
+
+              <ng-container *ngIf="isSuggestion">
+                <tr *ngIf="item.auteur"><th>{{ 'acq-decision.col-auteur' | translate }}</th><td>{{ item.auteur }}</td></tr>
+                <tr *ngIf="item.usager_statut"><th>{{ 'acq-decision.col-statut-usager' | translate }}</th><td>{{ item.usager_statut }}</td></tr>
+                <tr *ngIf="item.usager_faculte"><th>{{ 'acq-decision.col-faculte' | translate }}</th><td>{{ item.usager_faculte }}</td></tr>
+                <tr *ngIf="item.usager_courriel"><th>{{ 'acq-decision.col-courriel-usager' | translate }}</th><td>{{ item.usager_courriel }}</td></tr>
+                <tr *ngIf="item.date_requise_cours"><th>{{ 'acq-decision.col-requis-cours' | translate }}</th><td>{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</td></tr>
+              </ng-container>
+
+              <tr *ngIf="item.editeur"><th>{{ 'acq-decision.col-editeur' | translate }}</th><td>{{ item.editeur }}</td></tr>
+              <tr *ngIf="item.isbn_issn"><th>{{ 'acq-decision.col-isbn-issn' | translate }}</th><td>{{ item.isbn_issn }}</td></tr>
+              <tr *ngIf="item.date_publication"><th>{{ 'acq-decision.col-date-publication' | translate }}</th><td>{{ item.date_publication | date:'yyyy-MM-dd' }}</td></tr>
+
+              <tr *ngIf="item.fonds_budgetaire"><th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
+              <tr *ngIf="item.fonds_sn_projet"><th>{{ 'acq-decision.col-fonds-sn' | translate }}</th><td>{{ item.fonds_sn_projet }}</td></tr>
+              <tr *ngIf="item.periode_couverte"><th>{{ 'acq-decision.col-periode-couverte' | translate }}</th><td>{{ item.periode_couverte }}</td></tr>
+              <tr *ngIf="item.source_information"><th>{{ 'acq-decision.col-source-info' | translate }}</th><td>{{ item.source_information }}</td></tr>
+              <tr *ngIf="item.prix_cad"><th>{{ 'acq-decision.col-prix-cad' | translate }}</th><td class="fw-semibold text-success">{{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}</td></tr>
+              <tr *ngIf="item.devise_originale"><th>{{ 'acq-decision.col-devise' | translate }}</th><td>{{ item.devise_originale }}</td></tr>
+              <tr *ngIf="item.prix_devise_originale"><th>{{ 'acq-decision.col-prix-devise' | translate }}</th><td>{{ item.prix_devise_originale }}</td></tr>
+
+              <tr *ngIf="item.localisation_emplacement"><th>{{ 'acq-decision.col-localisation' | translate }}</th><td>{{ item.localisation_emplacement }}</td></tr>
+              <tr *ngIf="item.nombre_titres_inclus"><th>{{ 'acq-decision.col-nb-titres' | translate }}</th><td>{{ item.nombre_titres_inclus }}</td></tr>
+              <tr *ngIf="item.nombre_utilisateurs"><th>{{ 'acq-decision.col-nb-utilisateurs' | translate }}</th><td>{{ item.nombre_utilisateurs }}</td></tr>
+              <tr *ngIf="item.format_pret_numerique"><th>{{ 'acq-decision.col-format-pret' | translate }}</th><td>{{ item.format_pret_numerique }}</td></tr>
+              <tr *ngIf="item.lien_plateforme"><th>{{ 'acq-decision.col-lien-plateforme' | translate }}</th><td><a [href]="item.lien_plateforme" target="_blank" rel="noopener noreferrer">{{ item.lien_plateforme }}</a></td></tr>
+              <tr *ngIf="item.personne_a_aviser_nom"><th>{{ 'acq-decision.col-personne-aviser' | translate }}</th><td>{{ item.personne_a_aviser_nom }}</td></tr>
+              <tr *ngIf="item.personne_a_aviser_courriel"><th>{{ 'acq-decision.col-courriel-aviser' | translate }}</th><td>{{ item.personne_a_aviser_courriel }}</td></tr>
+              <tr *ngIf="item.usager_aviser_reservation"><th>{{ 'acq-decision.col-aviser-resa' | translate }}</th><td>{{ item.usager_aviser_reservation }}</td></tr>
+              <tr *ngIf="item.usager_aviser_activation"><th>{{ 'acq-decision.col-aviser-activ' | translate }}</th><td>{{ item.usager_aviser_activation }}</td></tr>
+
+              <ng-container *ngIf="isNouvelAchat">
+                <tr *ngIf="item.quantite"><th>{{ 'acq-decision.col-quantite' | translate }}</th><td>{{ item.quantite }}</td></tr>
+                <tr *ngIf="item.projets_speciaux"><th>{{ 'acq-decision.col-projet-special' | translate }}</th><td>{{ item.projets_speciaux }}</td></tr>
+                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
+                <tr *ngIf="item.reserve_cours">
+                  <th>{{ 'acq-decision.col-reserve-cours' | translate }}</th>
+                  <td>
+                    {{ item.reserve_cours_sigle || '—' }}
+                    <span *ngIf="item.reserve_cours_session"> — {{ item.reserve_cours_session }}</span>
+                    <span *ngIf="item.reserve_cours_enseignant" class="d-block text-muted small">{{ item.reserve_cours_enseignant }}</span>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="isModificationCcol">
+                <tr *ngIf="item.precision_demande"><th>{{ 'acq-decision.col-precision-demande' | translate }}</th><td>{{ item.precision_demande }}</td></tr>
+                <tr *ngIf="item.numero_oclc"><th>{{ 'acq-decision.col-numero-oclc' | translate }}</th><td>{{ item.numero_oclc }}</td></tr>
+                <tr *ngIf="item.date_debut_abonnement"><th>{{ 'acq-decision.col-date-debut-abo' | translate }}</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isNouvelAbonnement">
+                <tr *ngIf="item.date_debut_abonnement"><th>{{ 'acq-decision.col-date-debut-abo' | translate }}</th><td>{{ item.date_debut_abonnement | date:'yyyy-MM-dd' }}</td></tr>
+                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isPebTipasa">
+                <tr *ngIf="item.gobi_vu_format_numerique"><th>{{ 'acq-decision.col-gobi-numerique' | translate }}</th><td>{{ item.gobi_vu_format_numerique }}</td></tr>
+                <tr *ngIf="item.gobi_version_moins_365_usd"><th>{{ 'acq-decision.col-gobi-365' | translate }}</th><td>{{ item.gobi_version_moins_365_usd }}</td></tr>
+                <tr *ngIf="item.reference_tipasa"><th>{{ 'acq-decision.col-reference-tipasa' | translate }}</th><td>{{ item.reference_tipasa }}</td></tr>
+              </ng-container>
+
+              <ng-container *ngIf="isAccessibilite">
+                <tr *ngIf="item.reference_usager"><th>{{ 'acq-decision.col-reference-usager' | translate }}</th><td>{{ item.reference_usager }}</td></tr>
+                <tr *ngIf="item.besoin_specifique_format"><th>{{ 'acq-decision.col-besoin-format' | translate }}</th><td>{{ item.besoin_specifique_format }}</td></tr>
+                <tr *ngIf="item.permalien_sofia"><th>{{ 'acq-decision.col-permalien-sofia' | translate }}</th><td><a [href]="item.permalien_sofia" target="_blank" rel="noopener noreferrer">{{ item.permalien_sofia }}</a></td></tr>
+                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
+                <tr *ngIf="item.exemplaire_detenu"><th>{{ 'acq-decision.col-exemplaire-detenu' | translate }}</th><td>{{ item.exemplaire_detenu }}</td></tr>
+                <tr *ngIf="item.fournisseur_contacte_sans_succes"><th>{{ 'acq-decision.col-fournisseur-contacte' | translate }}</th><td>{{ item.fournisseur_contacte_sans_succes }}</td></tr>
+                <tr *ngIf="item.verification_caeb"><th>{{ 'acq-decision.col-caeb' | translate }}</th><td>{{ item.verification_caeb }}</td></tr>
+                <tr *ngIf="item.verification_sqla"><th>{{ 'acq-decision.col-sqla' | translate }}</th><td>{{ item.verification_sqla }}</td></tr>
+                <tr *ngIf="item.verification_emma"><th>{{ 'acq-decision.col-emma' | translate }}</th><td>{{ item.verification_emma }}</td></tr>
+              </ng-container>
+
+              <tr *ngIf="item.note_commentaire"><th>{{ 'acq-decision.col-note-commentaire' | translate }}</th><td class="fst-italic text-muted">{{ item.note_commentaire }}</td></tr>
+              <tr *ngIf="isSuggestion && item.note_usager"><th>{{ 'acq-decision.col-note-usager' | translate }}</th><td class="fst-italic text-muted">{{ item.note_usager }}</td></tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn acq-btn-outline btn-sm" (click)="showDetailModal = false">{{ 'acq-decision.fermer' | translate }}</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-container>
