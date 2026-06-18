@@ -3,6 +3,19 @@
      ============================================================ -->
 
 <div class="form-page">
+
+  <!-- ══ NAVIGATION ═══════════════════════════════════════ -->
+  <nav class="form-nav">
+    <a routerLink="/usager" class="form-nav__back">
+      <i class="bi bi-arrow-left"></i> Retour
+    </a>
+    <span class="form-nav__breadcrumb">
+      <a routerLink="/usager" class="form-nav__crumb-link">Portail acquisitions</a>
+      <i class="bi bi-chevron-right form-nav__sep"></i>
+      <span class="form-nav__crumb-current">Requête ACQ Accessibilité</span>
+    </span>
+  </nav>
+
   <div class="form-container">
 
     <!-- ══ EN-TÊTE ══════════════════════════════════════════ -->
@@ -18,49 +31,8 @@
       </div>
     </div>
 
-    <!-- ══ ÉCRAN DE CONFIRMATION ════════════════════════════ -->
-    <div *ngIf="success" class="confirmation-screen">
-      <div class="confirmation-icon confirmation-icon--acces">
-        <i class="fas fa-check"></i>
-      </div>
-      <h2 class="confirmation-title">{{ 'form-accessibilite.confirmation-titre' | translate }}</h2>
-      <p class="confirmation-message">
-        {{ 'form-accessibilite.confirmation-message' | translate }}<br>
-        {{ 'forms-usager.confirmation-meilleurs-delais' | translate }}
-      </p>
-      <div class="confirmation-details">
-        <div class="confirmation-detail" *ngIf="derniereTitre">
-          <span class="confirmation-detail__label">
-            <i class="fas fa-book me-1"></i>{{ 'forms-usager.label-document' | translate }}
-          </span>
-          <span class="confirmation-detail__value">{{ derniereTitre }}</span>
-        </div>
-        <div class="confirmation-detail" *ngIf="derniereBibliotheque">
-          <span class="confirmation-detail__label">
-            <i class="fas fa-university me-1"></i>{{ 'forms-usager.label-bibliotheque' | translate }}
-          </span>
-          <span class="confirmation-detail__value">{{ derniereBibliotheque }}</span>
-        </div>
-      </div>
-      <div class="confirmation-actions">
-        <button type="button" class="btn btn-primary" (click)="onReset()">
-          <i class="fas fa-plus-circle me-1"></i>{{ 'forms-usager.soumettre-autre-requete' | translate }}
-        </button>
-      </div>
-    </div>
-
-    <!-- ══ MESSAGE ERREUR ═══════════════════════════════════ -->
-    <div *ngIf="error" class="alert alert--danger">
-      <i class="fas fa-exclamation-circle"></i>
-      <div>
-        <strong>{{ 'forms-usager.erreur-titre' | translate }}</strong><br>
-        {{ 'forms-usager.erreur-contact' | translate }}
-        <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
-      </div>
-    </div>
-
     <!-- ══ FORMULAIRE ═══════════════════════════════════════ -->
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!success" novalidate>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
       <!-- SECTION 1 — IDENTIFICATION -->
       <div class="form-section">
@@ -399,8 +371,27 @@
             </div>
           </div>
 
-          <div class="col-12">
-            <label class="form-label">{{ 'forms-usager.section-note' | translate }}</label>
+        </div>
+      </div>
+
+      <!-- SECTION — BIBLIOTHÈQUE -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-university"></i>Bibliothèque
+        </h2>
+        <div class="row g-3 align-items-start">
+          <div class="col-md-4">
+            <label class="form-label">Statut de la demande</label>
+            <select formControlName="statut_bibliotheque" class="form-select">
+              <option value="">— Sélectionner —</option>
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+            <small class="form-text">
+              <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.
+            </small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Note / Commentaire</label>
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
                       rows="4"
@@ -409,21 +400,38 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.note-max' | translate }}
             </div>
             <div class="d-flex justify-content-end">
-              <small class="form-text">
-                {{ form.get('note_commentaire')?.value?.length || 0 }} / 1000
-              </small>
+              <small class="form-text">{{ form.get('note_commentaire')?.value?.length || 0 }} / 1000</small>
             </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">
+              <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>Note interne
+            </label>
+            <textarea formControlName="note_interne_bib" class="form-control" rows="4"
+                      placeholder="Note interne de la bibliothèque…"></textarea>
           </div>
         </div>
       </div>
 
+      <!-- ERREUR -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible mt-3" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        Une erreur est survenue. Veuillez réessayer ou contacter
+        <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
+        <button type="button" class="btn-close" (click)="error = false" aria-label="Fermer"></button>
+      </div>
+
       <!-- BOUTONS -->
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="onReset()"
+
+        <button type="button" class="btn btn-outline-primary" (click)="onSave()"
                 [disabled]="isLoading">
-          <i class="fas fa-times"></i>{{ 'forms-usager.btn-annuler' | translate }}
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isLoading" class="fas fa-save"></i>
+          Enregistrer
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        <button type="submit" class="btn btn-primary"
+                [disabled]="isLoading || form.get('statut_bibliotheque')?.value !== 'Soumettre aux ACQ'">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isLoading" class="fas fa-paper-plane"></i>
           {{ isLoading ? ('forms-usager.envoi-en-cours' | translate) : ('forms-usager.btn-soumettre-requete' | translate) }}

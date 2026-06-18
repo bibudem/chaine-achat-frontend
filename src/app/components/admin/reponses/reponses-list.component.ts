@@ -31,8 +31,9 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
   totalItems = 0;
   pageSizeOptions = [10, 20, 50, 100];
 
-  selectedType = '';
-  searchText = '';
+  selectedType     = '';
+  searchText       = '';
+  selectedSuiviAcq = '';
 
   sortColumn = '';
   sortDirection: SortDirection = '';
@@ -133,6 +134,12 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
+  getStatutBibliotheque(reponse: Reponse): string | null {
+    const r = reponse.reponses;
+    if (!r || typeof r !== 'object') return null;
+    return r?.baseData?.statut_bibliotheque || r?.statut_bibliotheque || null;
+  }
+
   ouvrirDecisionAcq(): void {
     if (!this.expandedReponse) return;
     this.router.navigate(['/statut-decision'], {
@@ -165,7 +172,8 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
       this.selectedType || undefined,
       undefined,
       this.currentPage,
-      this.pageSize
+      this.pageSize,
+      this.selectedSuiviAcq || undefined
     ).subscribe({
       next: (response: PaginatedResponse) => {
         this.reponses = response.data;
@@ -269,13 +277,14 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
   }
 
   resetFilters(): void {
-    this.selectedType = '';
-    this.searchText = '';
-    this.sortColumn = '';
-    this.sortDirection = '';
-    this.currentPage = 1;
-    this.expandedId = null;
-    this.expandedReponse = null;
+    this.selectedType     = '';
+    this.searchText       = '';
+    this.selectedSuiviAcq = '';
+    this.sortColumn       = '';
+    this.sortDirection    = '';
+    this.currentPage      = 1;
+    this.expandedId       = null;
+    this.expandedReponse  = null;
     this.loadReponses();
   }
 

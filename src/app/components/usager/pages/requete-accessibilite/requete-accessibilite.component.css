@@ -1,12 +1,15 @@
 /* ============================================================
    requete-accessibilite.component.css
-   ACCENT : violet accessibilité (--acces-*)
+   ACCENT : gris foncé ACQ (--acces-*), aligné admin
    Structure, responsive et composants partagés → css_udem.css
    ============================================================ */
-/* ── Gradient d'en-tête ────────────────────────────────────── */
+/* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
-  background: var(--dark-gray);
-  border-bottom: 5px solid var(--border-gray);
+  border-bottom: 2px solid rgba(55, 66, 77, .35);
+}
+.form-header__icon {
+  background: var(--acces-mid);
+  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -22,33 +25,33 @@
 }
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--border-gray)                  !important;
-  box-shadow:   0 0 0 3px rgba(123, 61, 184, 0.15) !important;
-  outline:      none                               !important;
+  border-color: var(--acces-mid)                    !important;
+  box-shadow:   0 0 0 3px rgba(55, 66, 77, 0.15)   !important;
+  outline:      none                                !important;
 }
 
 /* ── Chips de format ────────────────────────────────────────── */
 .btn-format:hover {
   background:   var(--acces-light);
-  color:        var(--border-gray);
-  border-color: var(--border-gray);
+  color:        var(--acces-mid);
+  border-color: var(--acces-mid);
 }
 .btn-format--active {
-  background:   var(--text-gray) !important;
-  border-color: var(--text-gray) !important;
+  background:   var(--acces-mid) !important;
+  border-color: var(--acces-mid) !important;
   color:        #fff             !important;
 }
 
 /* ── Interrupteur ──────────────────────────────────────────── */
 .form-switch .form-check-input:checked {
-  background-color: var(--text-gray);
-  border-color:     var(--text-gray);
+  background-color: var(--acces-mid);
+  border-color:     var(--acces-mid);
 }
 
 /* ── Zone conditionnelle électronique ──────────────────────── */
 .electronique-fields {
   background:    var(--acces-light);
-  border:        1px solid rgba(123, 61, 184, 0.2);
+  border:        1px solid rgba(55, 66, 77, 0.2);
   border-radius: 8px;
   padding:       16px 18px 8px;
   margin-top:    8px;
@@ -57,29 +60,12 @@
 /* ── Barre d'actions ───────────────────────────────────────── */
 .form-actions { border-top: 2px solid var(--acces-light); }
 
-/* ── Bouton soumettre ──────────────────────────────────────── */
-.btn-primary {
-  background: var(--acces-mid);
-  color:      #fff;
-  border:     none;
-}
-.btn-primary:hover:not(:disabled) {
-  background: var(--acces-dark);
-  transform:  translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-.btn-primary:disabled {
-  opacity:    0.55;
-  cursor:     not-allowed;
-  transform:  none  !important;
-  box-shadow: none  !important;
-}
 
 /* ── Confirmation ──────────────────────────────────────────── */
 .confirmation-detail { background: var(--acces-light); }
-.confirmation-detail__label i { color: var(--text-gray); }
+.confirmation-detail__label i { color: var(--acces-mid); }
 
 .confirmation-icon--acces {
-  background:  var(--text-gray);
-  box-shadow: 0 4px 16px rgba(123, 61, 184, 0.28);
+  background: linear-gradient(135deg, var(--acces-mid), var(--acces-dark));
+  box-shadow: 0 4px 16px rgba(55, 66, 77, 0.28);
 }

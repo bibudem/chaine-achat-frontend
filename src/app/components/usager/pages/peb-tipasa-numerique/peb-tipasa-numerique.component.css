@@ -5,15 +5,18 @@
    ============================================================ */
 
 :host {
-  --peb-light: #cffafe;
-  --peb-mid:   #0891b2;
-  --peb-dark:  #0e7490;
+  --peb-light: #E0F2FE;
+  --peb-mid:   #0369A1;
+  --peb-dark:  #0C4A6E;
 }
 
-/* ── Gradient d'en-tête ────────────────────────────────────── */
+/* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
-  background: var(--dark-gray);
-  border-bottom: 5px solid var(--peb-mid);
+  border-bottom: 2px solid rgba(3, 105, 161, .35);
+}
+.form-header__icon {
+  background: var(--peb-mid);
+  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -71,23 +74,6 @@
 /* ── Barre d'actions ───────────────────────────────────────── */
 .form-actions { border-top: 2px solid var(--peb-light); }
 
-/* ── Bouton soumettre ──────────────────────────────────────── */
-.btn-primary {
-  background: var(--peb-mid);
-  color:      var(--white);
-  border:     none;
-}
-.btn-primary:hover:not(:disabled) {
-  background: var(--peb-dark);
-  transform:  translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-.btn-primary:disabled {
-  opacity:    0.55;
-  cursor:     not-allowed;
-  transform:  none  !important;
-  box-shadow: none  !important;
-}
 
 /* ── Écran de confirmation ──────────────────────────────────── */
 .confirmation-detail { background: var(--peb-light); }

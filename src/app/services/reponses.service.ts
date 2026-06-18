@@ -33,6 +33,7 @@ export interface Reponse {
   dateA: string;
   item_id_cree?: number | null;
   statut_approbation?: string | null;
+  suivi_acq?: string | null;
 }
 
 export interface DemandeUsager {
@@ -50,6 +51,7 @@ export interface DemandeUsager {
   prix_cad: string | null;
   devise_originale: string | null;
   statut_bibliotheque: string | null;
+  suivi_acq: string | null;
   note_commentaire: string | null;
 }
 
@@ -235,11 +237,13 @@ export class ReponsesService {
     type?: string,
     statut?: string,
     page: number = 1,
-    limit: number = 20
+    limit: number = 20,
+    suivi_acq?: string
   ): Observable<PaginatedResponse> {
     const params: any = { page, limit };
-    if (type) params['type'] = type;
-    if (statut) params['statut'] = statut;
+    if (type)      params['type']      = type;
+    if (statut)    params['statut']    = statut;
+    if (suivi_acq) params['suivi_acq'] = suivi_acq;
     return this.http
       .get<PaginatedResponse>(this.baseUrl, { params })
       .pipe(catchError(this.handleError('getAll')));
@@ -270,15 +274,41 @@ export class ReponsesService {
   }> {
     return this.http
       .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, {
-        params: { limit, statut_field: 'statut_bibliotheque' }
+        params: { limit }
       })
       .pipe(catchError(this.handleError('getPending')));
+  }
+
+  getPendingAcq(limit = 5): Observable<{
+    count: number;
+    reponses: (Pick<Reponse, 'id' | 'type_formulaire' | 'usager_nom' | 'dateA'> & {
+      source: 'reponse' | 'import' | 'reponse-created';
+      item_id: number | null;
+    })[];
+  }> {
+    return this.http
+      .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, {
+        params: { limit, statut_field: 'suivi_acq', statut_value: 'En attente de traitement' }
+      })
+      .pipe(catchError(this.handleError('getPendingAcq')));
   }
 
   getByEmail(email: string): Observable<{ data: DemandeUsager[] }> {
     return this.http
       .get<{ data: DemandeUsager[] }>(`${this.baseUrl}/profil`, { params: { email } })
       .pipe(catchError(this.handleError('getByEmail')));
+  }
+
+  getReponseById(id: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError('getReponseById')));
+  }
+
+  updateReponse(id: number, reponses: any): Observable<{ success: boolean }> {
+    return this.http
+      .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, { reponses })
+      .pipe(catchError(this.handleError('updateReponse')));
   }
 
   supprimer(id: number): Observable<void> {

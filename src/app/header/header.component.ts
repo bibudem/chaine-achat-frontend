@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -17,7 +18,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentLang: string = localStorage.getItem('lang') ?? 'fr';
 
   pendingCount    = 0;
-  pendingReponses: { id: number; type_formulaire: string; usager_nom: string; dateA: string; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null }[] = [];
+  pendingReponses: { id: number; type_formulaire: string; usager_nom: string; dateA: string; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null; notifType: 'biblio' | 'acq' }[] = [];
   notifOpen       = false;
   formsOpen       = false;
   userOpen        = false;
@@ -54,10 +55,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private chargerPending(): void {
-    this.reponsesService.getPending(5).subscribe({
-      next: (r) => {
-        this.pendingCount    = r.count;
-        this.pendingReponses = r.reponses;
+    forkJoin([
+      this.reponsesService.getPending(5),
+      this.reponsesService.getPendingAcq(5).pipe(
+        catchError(() => of({ count: 0, reponses: [] as any[] }))
+      )
+    ]).subscribe({
+      next: ([biblio, acq]) => {
+        const seen = new Set<string>();
+        const tagged = [
+          ...biblio.reponses.map(r => ({ ...r, notifType: 'biblio' as const })),
+          ...acq.reponses.map(r =>    ({ ...r, notifType: 'acq'   as const }))
+        ];
+        const unique = tagged.filter(r => {
+          const key = r.item_id != null ? `item-${r.item_id}` : `rep-${r.id}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        this.pendingCount    = biblio.count + acq.count;
+        this.pendingReponses = unique.slice(0, 5);
       }
     });
   }
@@ -100,12 +117,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/reponses']);
   }
 
-  ouvrirReponse(r: { id: number; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null }): void {
+  ouvrirReponse(r: { id: number; source: 'reponse' | 'import' | 'reponse-created'; item_id: number | null; notifType: 'biblio' | 'acq' }): void {
     this.notifOpen = false;
     if (r.source === 'reponse') {
       this.router.navigate(['/statut-decision'], { queryParams: { reponse_id: r.id } });
+    } else if (r.notifType === 'acq') {
+      this.router.navigate(['/items', r.item_id], { queryParams: { tab: 'acq-decision' } });
     } else {
-      this.router.navigate(['/statut-decision'], { queryParams: { item_id: r.item_id } });
+      this.router.navigate(['/items', r.item_id]);
     }
   }
 

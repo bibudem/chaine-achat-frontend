@@ -43,12 +43,12 @@ describe('StatutDecisionComponent', () => {
   });
 
   it('should initialize form with empty values', () => {
-    expect(component.form.get('statut_bibliotheque')?.value).toBe('');
+    expect(component.form.get('suivi_acq')?.value).toBe('');
     expect(component.form.get('note_commentaire')?.value).toBe('');
   });
 
-  it('should mark statut_bibliotheque as required', () => {
-    const control = component.form.get('statut_bibliotheque');
+  it('should mark suivi_acq as required', () => {
+    const control = component.form.get('suivi_acq');
     control?.setValue('');
     expect(control?.hasError('required')).toBeTruthy();
   });

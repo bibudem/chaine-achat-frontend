@@ -363,6 +363,10 @@ export class ItemFormulaireComponent implements OnInit {
           this.applyValidatorsForEditMode(this.selectedFormulaireType);
 
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
+
+          // Ouvre l'onglet demandé via le paramètre ?tab= (ex : ?tab=acq-decision)
+          const tabParam = this.route.snapshot.queryParamMap.get('tab');
+          if (tabParam) { this.setActiveTab(tabParam); }
         } else {
           this.dialogService.showError(response.error || 'Impossible de charger l\'item');
         }

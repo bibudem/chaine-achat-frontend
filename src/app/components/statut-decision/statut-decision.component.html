@@ -93,19 +93,19 @@
               <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
             </div>
 
-            <!-- Statut -->
+            <!-- Suivi ACQ -->
             <div class="mb-4">
-              <label for="statut_bibliotheque" class="form-label fw-semibold">
+              <label for="suivi_acq" class="form-label fw-semibold">
                 {{ 'acq-decision.suivi-acq' | translate }}
                 <span class="text-danger ms-1">*</span>
               </label>
-              <select id="statut_bibliotheque" formControlName="statut_bibliotheque"
+              <select id="suivi_acq" formControlName="suivi_acq"
                       class="form-select form-select-lg">
                 <option value="" disabled>{{ 'acq-decision.selectionner-suivi' | translate }}</option>
-                <option *ngFor="let o of options.statusOptions" [value]="o">{{ o }}</option>
+                <option *ngFor="let o of options.dircolAcqSuiviOptions" [value]="o">{{ o }}</option>
               </select>
               <small class="text-danger"
-                *ngIf="form.get('statut_bibliotheque')?.invalid && form.get('statut_bibliotheque')?.touched">
+                *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
                 {{ 'acq-decision.champ-required' | translate }}
               </small>
             </div>
@@ -140,7 +140,7 @@
             <!-- Aperçu + Notifications côte à côte -->
             <div class="row g-3 align-items-stretch">
               <div class="col-md-6"
-                   *ngIf="notifTargets.length > 0 && form.get('statut_bibliotheque')?.value">
+                   *ngIf="notifTargets.length > 0 && form.get('suivi_acq')?.value">
                 <div class="sd-email-preview h-100">
                   <div class="sd-email-preview__header">
                     <i class="bi bi-eye me-2"></i>Contenu inclus dans le courriel
@@ -148,7 +148,7 @@
                   <div class="sd-email-preview__body">
                     <div class="sd-email-preview__row">
                       <span class="sd-email-preview__key">Statut</span>
-                      <span class="sd-email-preview__value fw-semibold">{{ form.get('statut_bibliotheque')?.value }}</span>
+                      <span class="sd-email-preview__value fw-semibold">{{ form.get('suivi_acq')?.value }}</span>
                     </div>
                     <div class="sd-email-preview__row" *ngIf="form.get('note_commentaire')?.value">
                       <span class="sd-email-preview__key">Note</span>
@@ -166,8 +166,8 @@
                   </div>
                 </div>
               </div>
-              <div [class.col-md-6]="notifTargets.length > 0 && form.get('statut_bibliotheque')?.value"
-                   [class.col-12]="!(notifTargets.length > 0 && form.get('statut_bibliotheque')?.value)">
+              <div [class.col-md-6]="notifTargets.length > 0 && form.get('suivi_acq')?.value"
+                   [class.col-12]="!(notifTargets.length > 0 && form.get('suivi_acq')?.value)">
                 <div class="sd-notif-panel h-100">
                   <div class="sd-notif-panel__header">
                     <i class="bi bi-send-fill me-2"></i>Notifications à envoyer
@@ -267,7 +267,7 @@
                 <div class="confirmation-detail__label">
                   <i class="bi bi-sliders2"></i>{{ 'acq-decision.confirmation-suivi' | translate }}
                 </div>
-                <div class="confirmation-detail__value">{{ form.get('statut_bibliotheque')?.value }}</div>
+                <div class="confirmation-detail__value">{{ form.get('suivi_acq')?.value }}</div>
               </div>
             </div>
           </div>

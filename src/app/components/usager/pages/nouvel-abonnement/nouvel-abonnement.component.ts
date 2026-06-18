@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
@@ -11,12 +13,14 @@ export class NouvelAbonnementComponent implements OnInit {
   form!: FormGroup;
   submitted              = false;
   success                = false;
+
   error                  = false;
   isLoading              = false;
   showElectronique       = false;
   showImprime            = true;
   showMixte              = false;
   showMonographie        = false;
+  editId: number | null  = null;
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -38,6 +42,16 @@ export class NouvelAbonnementComponent implements OnInit {
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
+
+  statusOptions: string[] = [
+    'Saisie en cours - En attente',
+    'Saisie en cours – À valider ou compléter',
+    'Saisie en cours – Annuler',
+    'Saisie en cours - Publication à paraître',
+    'À autoriser en bibliothèque',
+    'Soumettre aux ACQ',
+  ];
+
   devises: { label: string; code: string }[] = [
     { label: 'CAD — Dollar Canadien', code: 'CAD' },
     { label: 'USD — Dollar US',       code: 'USD' },
@@ -53,7 +67,9 @@ export class NouvelAbonnementComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -62,63 +78,49 @@ export class NouvelAbonnementComponent implements OnInit {
     const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
 
     this.form = this.fb.group({
-
-      /* ── Identification ── */
       nom:              [nom,      Validators.required],
       statut:           [statut],
       courriel:         [courriel, [Validators.required, Validators.email]],
       bibliotheque:     ['',       Validators.required],
       priorite_demande: ['Régulier', Validators.required],
-
-      /* ── Informations bibliographiques ── */
       titre_document:   ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:       ['',  Validators.maxLength(500)],
       editeur:          ['', [Validators.required, Validators.maxLength(300)]],
       isbn_issn:        ['', [Validators.required, this.isbnValidator]],
       categorie_document: ['', Validators.required],
       type_monographie: [{ value: '', disabled: true }],
-
-      /* ── Abonnement (spécifiques) ── */
       date_debut_abonnement:    ['', Validators.required],
       periode_couverte:         [''],
       usager_aviser_reservation:[{ value: '', disabled: true }, Validators.email],
-
-      /* ── Format et support ── */
       format_support:       ['Électronique', Validators.required],
       nombre_titres_inclus: [null, Validators.min(1)],
       nombre_utilisateurs:  ['Accès illimité'],
       lien_plateforme:      ['', [Validators.required, Validators.pattern('https?://.+')]],
       personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
-
-      /* ── Finances ── */
       prix_cad:             [null, [Validators.required, Validators.min(0.01)]],
       devise_originale:     ['',   Validators.required],
       prix_devise_originale:[null, [Validators.required, Validators.min(0.01)]],
       fonds_budgetaire:     ['',   [Validators.required, Validators.maxLength(200),
                                     Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
-
-      /* ── Source et notes ── */
       source_information:   ['', [Validators.required, Validators.pattern('https?://.+')]],
       note_commentaire:     ['',  Validators.maxLength(1000)],
+      statut_bibliotheque:  ['Saisie en cours - En attente'],
+      note_interne_bib:     ['', Validators.maxLength(1000)],
     });
 
-    // Catégorie → activer type_monographie si Monographie
     this.form.get('categorie_document')!.valueChanges.subscribe(val => {
       this.showMonographie = val === 'Monographie';
       const ctrl = this.form.get('type_monographie')!;
       this.showMonographie ? ctrl.enable() : ctrl.disable();
     });
 
-    // Format — champs conditionnels
     this.form.get('format_support')!.valueChanges.subscribe(val => {
       this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
       this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
       this.showMixte        = val === 'Imprimé et électronique';
-
       const lien      = this.form.get('lien_plateforme')!;
       const personne  = this.form.get('personne_a_aviser_courriel')!;
       const aviserRes = this.form.get('usager_aviser_reservation')!;
-
       if (this.showElectronique) {
         lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
         personne.enable();
@@ -135,13 +137,54 @@ export class NouvelAbonnementComponent implements OnInit {
       aviserRes.updateValueAndValidity();
     });
 
-    // Conversion automatique du prix en CAD
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
 
-    // Initialiser l'état pour le format par défaut (Électronique)
     this.showElectronique = true;
     this.showImprime      = false;
+
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
+      if (params['id']) {
+        this.editId = +params['id'];
+        this.loadDemande(this.editId);
+      }
+    });
+  }
+
+  private loadDemande(id: number): void {
+    this.reponsesService.getReponseById(id).subscribe({
+      next: (row) => {
+        const bd = row.reponses?.baseData ?? {};
+        const sd = row.reponses?.specificData ?? {};
+        if (bd.format_support)     this.form.get('format_support')!.setValue(bd.format_support);
+        if (bd.categorie_document) this.form.get('categorie_document')!.setValue(bd.categorie_document);
+        this.form.patchValue({
+          nom:                        bd.demandeur,
+          bibliotheque:               bd.bibliotheque,
+          priorite_demande:           bd.priorite_demande,
+          titre_document:             bd.titre_document,
+          sous_titre:                 bd.sous_titre,
+          editeur:                    bd.editeur,
+          isbn_issn:                  bd.isbn_issn,
+          date_debut_abonnement:      sd.date_debut_abonnement,
+          periode_couverte:           sd.periode_couverte,
+          usager_aviser_reservation:  sd.usager_aviser_reservation,
+          nombre_titres_inclus:       bd.nombre_titres_inclus,
+          nombre_utilisateurs:        bd.nombre_utilisateurs,
+          lien_plateforme:            bd.lien_plateforme,
+          personne_a_aviser_courriel: bd.personne_a_aviser_courriel,
+          type_monographie:           sd.type_monographie,
+          prix_cad:                   bd.prix_cad,
+          devise_originale:           bd.devise_originale,
+          prix_devise_originale:      bd.prix_devise_originale,
+          fonds_budgetaire:           bd.fonds_budgetaire,
+          source_information:         bd.source_information,
+          note_commentaire:           bd.note_commentaire,
+          statut_bibliotheque:        bd.statut_bibliotheque,
+          note_interne_bib:           bd.note_interne_bib,
+        });
+      }
+    });
   }
 
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
@@ -191,6 +234,7 @@ export class NouvelAbonnementComponent implements OnInit {
       priorite_demande:    'Régulier',
       format_support:      'Électronique',
       nombre_utilisateurs: 'Accès illimité',
+      statut_bibliotheque: 'Saisie en cours - En attente',
     });
   }
 
@@ -227,7 +271,8 @@ export class NouvelAbonnementComponent implements OnInit {
         fonds_budgetaire:           v.fonds_budgetaire,
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
-        statut_bibliotheque:        'Saisie en cours en bibliothèque',
+        statut_bibliotheque:        v.statut_bibliotheque,
+        note_interne_bib:           v.note_interne_bib,
         statut_acq:                 'En attente',
       },
       specificData: {
@@ -237,15 +282,66 @@ export class NouvelAbonnementComponent implements OnInit {
       },
     };
 
-    this.reponsesService.envoyerNouvelAbonnement(payload).subscribe({
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerNouvelAbonnement(payload);
+
+    obs.subscribe({
       next: () => {
-        this.success   = true;
         this.isLoading = false;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
       },
-      error: () => {
-        this.error     = true;
+      error: () => { this.isLoading = false; this.error = true; }
+    });
+  }
+
+  onSave(): void {
+    this.submitted = true;
+    if (this.form.invalid) return;
+    this.isLoading = true;
+    const v = this.form.getRawValue();
+    const payload = {
+      baseData: {
+        formulaire_type:            'Nouvel abonnement',
+        demandeur:                  v.nom,
+        bibliotheque:               v.bibliotheque,
+        priorite_demande:           v.priorite_demande,
+        titre_document:             v.titre_document,
+        sous_titre:                 v.sous_titre,
+        editeur:                    v.editeur,
+        isbn_issn:                  v.isbn_issn,
+        categorie_document:         v.categorie_document,
+        format_support:             v.format_support,
+        nombre_titres_inclus:       (this.showElectronique || this.showMixte) ? v.nombre_titres_inclus : null,
+        nombre_utilisateurs:        this.showElectronique ? v.nombre_utilisateurs : null,
+        lien_plateforme:            this.showElectronique ? v.lien_plateforme : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
+        prix_cad:                   v.prix_cad,
+        devise_originale:           v.devise_originale,
+        prix_devise_originale:      v.prix_devise_originale,
+        fonds_budgetaire:           v.fonds_budgetaire,
+        source_information:         v.source_information,
+        note_commentaire:           v.note_commentaire,
+        statut_bibliotheque:        v.statut_bibliotheque || 'Saisie en cours - En attente',
+        note_interne_bib:           v.note_interne_bib,
+        statut_acq:                 'En attente',
+      },
+      specificData: {
+        date_debut_abonnement:    v.date_debut_abonnement,
+        type_monographie:         this.showMonographie ? v.type_monographie : null,
+        usager_aviser_reservation:this.showImprime ? v.usager_aviser_reservation : null,
+      },
+    };
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerNouvelAbonnement(payload);
+    obs.subscribe({
+      next: (res: any) => {
         this.isLoading = false;
-      }
+        if (!this.editId && res?.id) this.editId = res.id;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
+      },
+      error: () => { this.isLoading = false; this.error = true; }
     });
   }
 }

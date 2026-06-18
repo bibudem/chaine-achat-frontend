@@ -1,26 +1,44 @@
 <div class="up-page">
 
-  <!-- ── En-tête profil ─────────────────────────────────── -->
+  <!-- ── Navigation ───────────────────────────────────── -->
+  <nav class="up-nav">
+    <div class="up-nav__inner">
+      <a routerLink="/usager" class="up-nav__back">
+        <i class="bi bi-arrow-left"></i> Retour
+      </a>
+      <span class="up-nav__breadcrumb">
+        <a routerLink="/usager" class="up-nav__crumb-link">Portail acquisitions</a>
+        <i class="bi bi-chevron-right up-nav__sep"></i>
+        <span>Mes demandes</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- ── Identité usager ───────────────────────────────── -->
   <div class="up-banner">
     <div class="up-banner__inner">
       <div class="up-banner__avatar">{{ initiales }}</div>
       <div class="up-banner__info">
         <h1 class="up-banner__name">{{ prenom }} {{ nom }}</h1>
-        <p class="up-banner__email"><i class="bi bi-envelope me-1"></i>{{ email }}</p>
+        <p class="up-banner__email">
+          <i class="bi bi-envelope-fill"></i>{{ email }}
+        </p>
       </div>
-      <a routerLink="/usager" class="up-banner__back">
-        <i class="bi bi-arrow-left me-1"></i> Retour
-      </a>
+      <div class="up-banner__stat" *ngIf="!loading">
+        <span class="up-banner__stat-num">{{ demandes.length }}</span>
+        <span class="up-banner__stat-label">demande(s)</span>
+      </div>
     </div>
   </div>
 
   <!-- ── Corps ──────────────────────────────────────────── -->
   <div class="up-body">
 
-    <!-- Titre section -->
-    <div class="up-section-head" *ngIf="!loading && demandes.length > 0">
-      <i class="bi bi-clock-history up-section-head__icon"></i>
-      <span class="up-section-head__title">Mes demandes</span>
+    <!-- Succès -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible d-flex align-items-center gap-2 mb-3" role="alert">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>{{ successMessage }}</span>
+      <button type="button" class="btn-close ms-auto" (click)="successMessage = ''" aria-label="Fermer"></button>
     </div>
 
     <!-- Chargement -->
@@ -45,105 +63,158 @@
       </a>
     </div>
 
-    <!-- Liste des cartes -->
-    <div class="up-list" *ngIf="!loading && demandes.length > 0">
-      <div class="up-card" *ngFor="let d of demandes" [ngClass]="'up-card--' + statutKey(d)">
+    <!-- Barre de filtres + liste -->
+    <ng-container *ngIf="!loading && demandes.length > 0">
 
-        <!-- En-tête carte -->
-        <div class="up-card__head">
-          <div class="up-card__head-left">
-            <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKey(d)">
-              <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
-            </span>
-            <span class="up-type-label">{{ d.type_formulaire }}</span>
-          </div>
-          <span class="up-badge" [ngClass]="'up-badge--' + statutKey(d)">
-            {{ statutLabel(d) }}
-          </span>
-        </div>
-
-        <!-- Titre -->
-        <h3 class="up-card__titre">{{ d.titre_document || '—' }}</h3>
-
-        <!-- Grille de détails -->
-        <div class="up-card__details">
-          <div class="up-detail" *ngIf="d.isbn_issn">
-            <span class="up-detail__key">ISBN / ISSN</span>
-            <span class="up-detail__val">{{ d.isbn_issn }}</span>
-          </div>
-          <div class="up-detail" *ngIf="d.editeur">
-            <span class="up-detail__key">Éditeur</span>
-            <span class="up-detail__val">{{ d.editeur }}</span>
-          </div>
-          <div class="up-detail" *ngIf="d.bibliotheque">
-            <span class="up-detail__key">Bibliothèque</span>
-            <span class="up-detail__val">{{ d.bibliotheque }}</span>
-          </div>
-          <div class="up-detail" *ngIf="d.prix_cad">
-            <span class="up-detail__key">Prix estimé</span>
-            <span class="up-detail__val">{{ d.prix_cad | number:'1.2-2' }} {{ d.devise_originale || 'CAD' }}</span>
-          </div>
-        </div>
-
-        <!-- Pied de carte -->
-        <div class="up-card__foot">
-          <div class="up-card__dates">
-            <span><i class="bi bi-send"></i> Soumise le {{ formatDate(d.dateA) }}</span>
-            <span *ngIf="d.date_traitement"><i class="bi bi-check2-circle"></i> Traitée le {{ formatDate(d.date_traitement) }}</span>
-          </div>
-
-          <div class="up-card__suivi">
-            <span class="up-suivi__key">Statut de la demande :</span>
-            <span *ngIf="d.statut_bibliotheque" class="up-suivi__val">{{ d.statut_bibliotheque }}</span>
-            <span *ngIf="!d.statut_bibliotheque" class="up-suivi__default">En cours d'évaluation par les bibliothèques</span>
-          </div>
-
-          <div *ngIf="d.commentaire_admin || d.note_commentaire" class="up-card__note">
-            <i class="bi bi-chat-left-quote"></i>
-            <span>{{ d.commentaire_admin || d.note_commentaire }}</span>
-          </div>
-
-          <!-- Suppression (uniquement si aucun avis ACQ n'est encore pris) -->
-          <div *ngIf="peutSupprimer(d)" class="up-card__delete">
-            <ng-container *ngIf="confirmingDeleteId !== d.id; else confirmDelete">
-              <button class="up-btn-delete" (click)="confirmingDeleteId = d.id">
-                <i class="bi bi-trash3"></i> Retirer ma demande
-              </button>
-            </ng-container>
-            <ng-template #confirmDelete>
-              <div class="up-delete-confirm" [class.up-delete-confirm--error]="deleteError">
-                <span class="up-delete-confirm__msg">
-                  <ng-container *ngIf="!deleteError">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    Cette demande sera définitivement supprimée. Confirmer ?
-                  </ng-container>
-                  <ng-container *ngIf="deleteError">
-                    <i class="bi bi-x-circle-fill"></i>
-                    La suppression a échoué. Veuillez réessayer plus tard.
-                  </ng-container>
-                </span>
-                <div class="up-delete-confirm__btns">
-                  <button *ngIf="!deleteError"
-                          class="up-btn-confirm-yes"
-                          (click)="supprimerDemande(d.id)"
-                          [disabled]="deleting">
-                    <span *ngIf="!deleting">Oui, retirer</span>
-                    <span *ngIf="deleting"
-                          class="spinner-border spinner-border-sm"
-                          role="status"></span>
-                  </button>
-                  <button class="up-btn-confirm-no"
-                          (click)="confirmingDeleteId = null; deleteError = false"
-                          [disabled]="deleting">Annuler</button>
-                </div>
-              </div>
-            </ng-template>
-          </div>
-
-        </div>
-
+      <!-- Filtres -->
+      <div class="up-filters">
+        <select class="up-filter-select" [(ngModel)]="filtreType">
+          <option value="">Tous les types</option>
+          <option *ngFor="let t of typesDisponibles" [value]="t">{{ t }}</option>
+        </select>
+        <select class="up-filter-select" [(ngModel)]="filtreStatut">
+          <option value="">Tous les statuts</option>
+          <option *ngFor="let s of statutsDisponibles" [value]="s">{{ s }}</option>
+        </select>
+        <button *ngIf="filtreType || filtreStatut"
+                class="up-filter-reset"
+                (click)="filtreType = ''; filtreStatut = ''">
+          <i class="bi bi-x"></i> Réinitialiser
+        </button>
+        <span class="up-filter-count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
       </div>
-    </div>
+
+      <!-- Liste compacte -->
+      <div class="up-list">
+        <ng-container *ngIf="demandesFiltrees.length > 0; else aucunResultat">
+
+          <div class="up-card" *ngFor="let d of demandesFiltrees" [ngClass]="'up-card--' + statutKey(d)">
+
+            <!-- Ligne principale -->
+            <div class="up-card__row">
+
+              <!-- Icône type -->
+              <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKey(d)">
+                <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
+              </span>
+
+              <!-- Contenu -->
+              <div class="up-card__main">
+
+                <!-- Type + badge + supprimer -->
+                <div class="up-card__top">
+                  <span class="up-type-label">{{ d.type_formulaire }}</span>
+                  <span class="up-badge"
+                        [ngClass]="d.statut_bibliotheque === 'Soumettre aux ACQ' ? 'up-badge--soumise' : (d.suivi_acq ? 'up-badge--traitee' : 'up-badge--attente')">
+                    {{ d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq || 'En attente de traitement') : (d.suivi_acq || 'Non envoyée aux ACQ') }}
+                  </span>
+                  <div class="up-card__actions">
+                    <a *ngIf="peutSupprimer(d)"
+                       [routerLink]="routeFormulaire(d)"
+                       [queryParams]="{ id: d.id }"
+                       class="up-btn-edit-icon"
+                       title="Modifier / compléter cette demande">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <button class="up-btn-detail-icon"
+                            [class.active]="expandedId === d.id"
+                            (click)="toggleDetails(d)"
+                            [title]="expandedId === d.id ? 'Masquer les détails' : 'Voir les détails'">
+                      <i class="bi" [ngClass]="expandedId === d.id ? 'bi-chevron-up' : 'bi-list-ul'"></i>
+                    </button>
+                    <button *ngIf="peutSupprimer(d) && confirmingDeleteId !== d.id"
+                            class="up-btn-delete-icon"
+                            (click)="confirmingDeleteId = d.id; deleteError = false"
+                            title="Retirer ma demande">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Titre -->
+                <div class="up-card__titre">{{ d.titre_document || '—' }}</div>
+
+                <!-- Meta ligne -->
+                <div class="up-card__meta">
+                  <span class="up-meta__date"><i class="bi bi-calendar3"></i> {{ formatDate(d.dateA) }}</span>
+                  <span *ngIf="d.bibliotheque" class="up-meta__chip"><i class="bi bi-building"></i> {{ d.bibliotheque }}</span>
+                  <span *ngIf="d.isbn_issn"    class="up-meta__chip">{{ d.isbn_issn }}</span>
+                  <span *ngIf="d.prix_cad"     class="up-meta__chip">{{ d.prix_cad | number:'1.2-2' }} {{ d.devise_originale || 'CAD' }}</span>
+                  <span class="up-meta__statut"
+                        [class.up-meta__statut--default]="!d.statut_bibliotheque">
+                    <i class="bi bi-circle-fill" style="font-size:.45rem;vertical-align:middle;margin-right:.25rem"></i>
+                    {{ d.statut_bibliotheque || 'En cours d\'évaluation' }}
+                  </span>
+                </div>
+
+                <!-- Note -->
+                <div *ngIf="d.commentaire_admin || d.note_commentaire" class="up-card__note">
+                  <i class="bi bi-chat-left-quote"></i>
+                  <span>{{ d.commentaire_admin || d.note_commentaire }}</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Détails de la demande -->
+            <div *ngIf="expandedId === d.id" class="up-details">
+              <div *ngIf="loadingDetails" class="up-details__loading">
+                <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+                <span>Chargement des détails…</span>
+              </div>
+              <ng-container *ngIf="!loadingDetails">
+                <dl *ngIf="expandedData.length > 0" class="up-details__grid">
+                  <ng-container *ngFor="let item of expandedData">
+                    <dt>{{ item.label }}</dt>
+                    <dd>{{ item.value }}</dd>
+                  </ng-container>
+                </dl>
+                <p *ngIf="expandedData.length === 0" class="up-details__empty">
+                  Aucun détail disponible pour cette demande.
+                </p>
+              </ng-container>
+            </div>
+
+            <!-- Confirmation suppression -->
+            <div *ngIf="confirmingDeleteId === d.id"
+                 class="up-delete-confirm"
+                 [class.up-delete-confirm--error]="deleteError">
+              <span class="up-delete-confirm__msg">
+                <ng-container *ngIf="!deleteError">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                  Supprimer définitivement cette demande ?
+                </ng-container>
+                <ng-container *ngIf="deleteError">
+                  <i class="bi bi-x-circle-fill"></i>
+                  La suppression a échoué. Réessayez plus tard.
+                </ng-container>
+              </span>
+              <div class="up-delete-confirm__btns">
+                <button *ngIf="!deleteError"
+                        class="up-btn-confirm-yes"
+                        (click)="supprimerDemande(d.id)"
+                        [disabled]="deleting">
+                  <span *ngIf="!deleting">Confirmer</span>
+                  <span *ngIf="deleting" class="spinner-border spinner-border-sm" role="status"></span>
+                </button>
+                <button class="up-btn-confirm-no"
+                        (click)="confirmingDeleteId = null; deleteError = false"
+                        [disabled]="deleting">Annuler</button>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+
+        <ng-template #aucunResultat>
+          <div class="up-state" style="padding:2rem 1rem;">
+            <i class="bi bi-funnel text-muted"></i>
+            <span>Aucune demande ne correspond aux filtres sélectionnés.</span>
+          </div>
+        </ng-template>
+      </div>
+
+    </ng-container>
   </div>
 
 </div>

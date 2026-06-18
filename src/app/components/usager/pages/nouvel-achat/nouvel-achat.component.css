@@ -4,10 +4,13 @@
    Structure, responsive et composants partagés → css_udem.css
    ============================================================ */
 
-/* ── Gradient d'en-tête ────────────────────────────────────── */
+/* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
-  background: var(--dark-gray);
-  border-bottom: 5px solid var(--achat-mid);
+  border-bottom: 2px solid var(--achat-border);
+}
+.form-header__icon {
+  background: var(--achat-mid);
+  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -73,23 +76,6 @@
 /* ── Barre d'actions ───────────────────────────────────────── */
 .form-actions { border-top: 2px solid var(--achat-light); }
 
-/* ── Bouton soumettre ──────────────────────────────────────── */
-.btn-primary {
-  background: var(--achat-mid);
-  color:      var(--white);
-  border:     none;
-}
-.btn-primary:hover:not(:disabled) {
-  background:  var(--achat-dark);
-  transform:   translateY(-1px);
-  box-shadow:  var(--shadow-md);
-}
-.btn-primary:disabled {
-  opacity:   0.55;
-  cursor:    not-allowed;
-  transform: none  !important;
-  box-shadow: none !important;
-}
 
 /* ── Écran de confirmation — surcharges couleur achat ──────── */
 /* Structure et responsive définis dans css_udem.css */

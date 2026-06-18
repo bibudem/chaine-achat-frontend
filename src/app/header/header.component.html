@@ -42,7 +42,7 @@
           [class.panel-open]="notifOpen">
         <button class="notif-btn" (click)="toggleNotif($event)"
                 [class.notif-btn--active]="notifOpen"
-                title="Items en attente de statut bibliothèque">
+                title="Demandes en attente (statut bibliothèque + décision ACQ)">
           <i class="bi" [class.bi-bell-fill]="notifOpen" [class.bi-bell]="!notifOpen"></i>
           <span class="notif-badge" *ngIf="pendingCount > 0">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
         </button>

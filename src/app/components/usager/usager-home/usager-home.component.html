@@ -1,53 +1,84 @@
 <div class="uh-wrap">
 
-  <!-- ── Bienvenue ─────────────────────────────── -->
-  <div class="uh-greeting">
-    <div class="uh-greeting__icon">
-      <i class="bi bi-grid-3x3-gap-fill"></i>
-    </div>
-    <div>
-      <h2 class="uh-greeting__title">
-        {{ 'usager-home.bonjour' | translate }}<span *ngIf="prenomAdmin">, {{ prenomAdmin }}</span>
-      </h2>
-      <p class="uh-greeting__sub">
-        {{ 'usager-home.subtitle' | translate }}
+  <!-- ── En-tête ──────────────────────────────────────── -->
+  <div class="uh-header">
+    <div class="uh-header__avatar">{{ initiales }}</div>
+    <div class="uh-header__text">
+      <h1 class="uh-header__title">
+        Bonjour<span *ngIf="prenomAdmin">, {{ prenomAdmin }}</span>
+      </h1>
+      <p class="uh-header__sub">
+        Portail de gestion des acquisitions — Bibliothèques UdeM
       </p>
     </div>
   </div>
 
-  <!-- ── Grille des formulaires ─────────────────── -->
-  <div class="uh-grid">
-    <a *ngFor="let f of formulaires"
-       [routerLink]="f.route"
-       class="uh-card"
-       [style.--c-accent]="f.accentColor"
-       [style.--c-bg]="f.bgColor"
-       [style.--c-text]="f.textColor">
+  <!-- ── Corps ──────────────────────────────────────────── -->
+  <div class="uh-body">
 
-      <!-- Bandeau coloré -->
-      <div class="uh-card__band">
-        <div class="uh-card__icon-wrap">
-          <i class="bi {{ f.icon }}"></i>
+    <!-- Colonne gauche -->
+    <aside class="uh-sidebar">
+
+      <!-- Accès rapide -->
+      <div class="uh-action-card">
+        <div class="uh-action-card__icon">
+          <i class="bi bi-clock-history"></i>
+        </div>
+        <h3 class="uh-action-card__title">Mes demandes</h3>
+        <p class="uh-action-card__desc">
+          Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
+        </p>
+        <a routerLink="/usager/profil" class="uh-action-card__btn">
+          <i class="bi bi-list-check"></i> Accéder à mes demandes
+        </a>
+      </div>
+
+      <!-- À propos -->
+      <div class="uh-info-card">
+        <p class="uh-info-card__label">
+          <i class="bi bi-info-circle-fill"></i> À propos
+        </p>
+        <p class="uh-info-card__body">
+          Ce portail vous permet de soumettre des demandes d'acquisition auprès
+          des bibliothèques de l'Université de Montréal.
+        </p>
+        <p class="uh-info-card__body">
+          Vos demandes sont traitées par les bibliothécaires disciplinaires avant
+          d'être acheminées au service des acquisitions.
+        </p>
+        <div class="uh-info-card__contact">
+          <i class="bi bi-envelope-fill"></i>
+          <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>
         </div>
       </div>
 
-      <!-- Corps texte -->
-      <div class="uh-card__body">
-        <h3 class="uh-card__title">{{ f.titre }}</h3>
-        <p class="uh-card__desc">{{ f.description }}</p>
-        <span class="uh-card__cta">
-          {{ 'usager-home.acceder' | translate }}
-          <i class="bi bi-arrow-right"></i>
-        </span>
+    </aside>
+
+    <!-- Colonne droite : formulaires -->
+    <section class="uh-forms">
+
+      <div class="uh-forms__header">
+        <h2 class="uh-forms__title">Soumettre une demande</h2>
+        <p class="uh-forms__sub">Choisissez le formulaire correspondant à votre besoin</p>
       </div>
 
-    </a>
-  </div>
+      <div class="uh-forms__list">
+        <a *ngFor="let f of formulaires" [routerLink]="f.route" class="uh-form-row">
+          <span class="uh-form-row__icon"
+                [style.background]="f.bgColor"
+                [style.color]="f.accentColor">
+            <i class="bi {{ f.icon }}"></i>
+          </span>
+          <div class="uh-form-row__text">
+            <span class="uh-form-row__title">{{ f.titre }}</span>
+            <span class="uh-form-row__desc">{{ f.description }}</span>
+          </div>
+          <i class="bi bi-chevron-right uh-form-row__arrow"></i>
+        </a>
+      </div>
 
-  <!-- ── Note ──────────────────────────────────── -->
-  <p class="uh-note">
-    <i class="bi bi-info-circle"></i>
-    {{ 'usager-home.note' | translate }}
-  </p>
+    </section>
+
+  </div>
 
 </div>

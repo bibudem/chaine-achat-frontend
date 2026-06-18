@@ -42,15 +42,15 @@
   --suggest-light: #FDF3E3;
   --suggest-border:rgba(200, 135, 42, 0.25);
 
-  /* ── Modification et CCOL (formulaire usager — bleu acier) ── */
-  --ccol-dark:  #1E3F73;
-  --ccol-mid:   #3A6EA5;
-  --ccol-light: #EBF0FB;
+  /* ── Modification et CCOL (formulaire usager — indigo, aligné admin) ── */
+  --ccol-dark:  #312E81;
+  --ccol-mid:   #3730A3;
+  --ccol-light: #EDE9FE;
 
-  /* ── Requête Accessibilité (formulaire usager — violet) ────── */
-  --acces-dark:  #4A1580;
-  --acces-mid:   #7B3DB8;
-  --acces-light: #F3EAFB;
+  /* ── Requête Accessibilité (formulaire usager — gris foncé, aligné admin) ── */
+  --acces-dark:  #2D3748;
+  --acces-mid:   #37424D;
+  --acces-light: #F4F5F7;
 
 /* ── Statut ACQ (backoffice admin — indigo) ──────────────── */
   --acq-dark:      #3730A3;
@@ -753,13 +753,24 @@ select.typeahead, select.tt-query, select.tt-hint {
 .btn-primary,
 .bg-primary {
   background-color: var(--secondary-blue) !important;
-  border-color: var(--secondary-blue) !important;
+  border-color:     var(--secondary-blue) !important;
+  color:            var(--white) !important;
 }
-.btn-primary.disabled,
-.btn-primary:disabled {
-  color: var(--white);
-  background-color: var(--secondary-blue);
-  border-color: var(--secondary-blue);
+.btn-primary:hover:not(:disabled) {
+  background-color: #003568 !important;
+  border-color:     #003568 !important;
+  transform:        translateY(-1px);
+  box-shadow:       var(--shadow-md);
+}
+.btn-primary:disabled,
+.btn-primary.disabled {
+  background-color: var(--secondary-blue) !important;
+  border-color:     var(--secondary-blue) !important;
+  color:            var(--white) !important;
+  opacity:          0.55 !important;
+  cursor:           not-allowed !important;
+  transform:        none !important;
+  box-shadow:       none !important;
 }
 .btn-outline-primary {
   color: var(--secondary-blue) !important;
@@ -1380,11 +1391,11 @@ select.typeahead, select.tt-query, select.tt-hint {
    future liste. Ne pas modifier les couleurs sans mettre à jour
    les 7 types dans toute l'application.
    ============================================= */
-.badge-type--ccol     { background: #EDE9FE; color: #3730A3; border: 1px solid rgba(55,48,163,.3); }   /* Modif. CCOL — Indigo    */
+.badge-type--ccol     { background: #EDE9FE; color: #312E81; border: 1px solid rgba(55,48,163,.3); }  /* Modif. CCOL — Indigo     */
 .badge-type--abo      { background: #DCFCE7; color: #14532D; border: 1px solid rgba(21,128,61,.25); } /* Nouvel abonnement — Vert émeraude */
 .badge-type--achat    { background: #D9F0EE; color: #1B5E6E; border: 1px solid rgba(42,144,134,.3); }  /* Achat unique — Teal     */
-.badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }   /* PEB Tipasa — Cyan       */
-.badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }   /* Requête ACQ — Gris foncé */
+.badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }  /* PEB Tipasa — Sky        */
+.badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }  /* Requête ACQ — Gris foncé */
 .badge-type--suggest  { background: #FDF3E3; color: #7B4A15; border: 1px solid rgba(200,135,42,.3); }  /* Suggestion — Ambre      */
 .badge-type--autre    { background: var(--light-gray);       color: var(--medium-gray); }               /* Autre — Neutre          */
 
@@ -2028,41 +2039,92 @@ body.sidebar-open { overflow: hidden; }
    fond readonly, états actifs) restent dans le fichier composant.
    ============================================================ */
 
+/* ── Barre de navigation / fil d'Ariane ──────────────────── */
+.form-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem 0 1rem;
+  margin-bottom: .25rem;
+}
+
+.form-nav__back {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .81rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: .32rem .75rem;
+  border-radius: 7px;
+  transition: background .12s, border-color .12s, color .12s;
+  /* même style que btn-secondary */
+  background:   var(--white) !important;
+  color:        var(--text-gray) !important;
+  border:       1px solid var(--light-gray) !important;
+}
+.form-nav__back:hover {
+  background:   var(--light-gray) !important;
+  color:        var(--medium-gray) !important;
+  border-color: var(--border-gray) !important;
+  text-decoration: none;
+}
+
+.form-nav__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .77rem;
+  color: #9ca3af;
+}
+.form-nav__crumb-link {
+  color: #6b7280;
+  text-decoration: none;
+}
+.form-nav__crumb-link:hover { color: #0B113A; text-decoration: none; }
+.form-nav__sep { font-size: .62rem; }
+.form-nav__crumb-current { color: #374151; font-weight: 500; }
+
+@media (max-width: 575px) {
+  .form-nav__breadcrumb { display: none; }
+}
+
 /* Conteneur de page */
 .form-container { margin-bottom: 20px; }
 
-/* En-tête (gradient et border-bottom définis dans le composant) */
+/* En-tête — fond gris pâle commun ; border-bottom + icône colorés dans chaque composant */
 .form-header {
   display:       flex;
   align-items:   center;
   gap:           16px;
-  color:         var(--white);
-  padding:       22px 28px;
+  padding:       20px 28px;
   border-radius: 12px 12px 0 0;
+  background:    #f8f9fb;
+  /* border-bottom : overridé dans chaque composant */
 }
 .form-header__icon {
   width:           46px;
   height:          46px;
-  background:      rgba(255,255,255,.15);
   border-radius:   10px;
   display:         flex;
   align-items:     center;
   justify-content: center;
   font-size:       1.2rem;
   flex-shrink:     0;
+  /* background + color : overridés dans chaque composant */
 }
 .form-header__title {
-  font-family: 'Lora', Georgia, serif;
-  font-size:   1.25rem;
+  font-size:   1.15rem;
   font-weight: 700;
   margin:      0;
-  color:       var(--white);
+  color:       #0B113A;
+  line-height: 1.25;
 }
 .form-header__subtitle {
-  font-family: 'Figtree', sans-serif;
-  font-size:   0.82rem;
-  opacity:     0.78;
-  margin:      3px 0 0;
+  font-size: 0.82rem;
+  margin:    4px 0 0;
+  color:     #6b7280;
+  opacity:   1;
 }
 
 /* Badge type de formulaire dans l'en-tête */

@@ -18,6 +18,12 @@ export interface FormulaireCard {
 export class UsagerHomeComponent {
 
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
+  get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
+  get initiales():   string {
+    const p = this.prenomAdmin.charAt(0);
+    const n = this.nomAdmin.charAt(0);
+    return (p + n).toUpperCase() || '?';
+  }
 
   readonly formulaires: FormulaireCard[] = [
     {
@@ -45,7 +51,7 @@ export class UsagerHomeComponent {
       route:       '/usager/modification-ccol',
       accentColor: '#3730A3',
       bgColor:     '#EDE9FE',
-      textColor:   '#3730A3',
+      textColor:   '#312E81',
     },
     {
       titre:       'Nouvel abonnement',
@@ -72,7 +78,7 @@ export class UsagerHomeComponent {
       route:       '/usager/requete-accessibilite',
       accentColor: '#37424D',
       bgColor:     '#F4F5F7',
-      textColor:   '#37424D',
+      textColor:   '#2D3748',
     },
   ];
 }

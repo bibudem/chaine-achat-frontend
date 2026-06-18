@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
@@ -11,12 +13,14 @@ export class NouvelAchatComponent implements OnInit {
   form!: FormGroup;
   submitted             = false;
   success               = false;
+
   error                 = false;
   isLoading             = false;
   showReserveCours      = false;
   showElectronique      = false;
   showMonographie       = false;
-  showAviserReservation = true; // format par défaut = Imprimé
+  showAviserReservation = true;
+  editId: number | null = null;
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -48,13 +52,24 @@ export class NouvelAchatComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
+  statusOptions: string[] = [
+    'Saisie en cours - En attente',
+    'Saisie en cours – À valider ou compléter',
+    'Saisie en cours – Annuler',
+    'Saisie en cours - Publication à paraître',
+    'À autoriser en bibliothèque',
+    'Soumettre aux ACQ',
+  ];
+
   derniereTitre: string = '';
   derniereBibliotheque: string = '';
   dernierPrixCAD: number | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -63,15 +78,11 @@ export class NouvelAchatComponent implements OnInit {
     const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
 
     this.form = this.fb.group({
-
-      /* ── Identification ── */
       nom:                         [nom,       Validators.required],
       statut:                      [statut],
       courriel:                    [courriel,  [Validators.required, Validators.email]],
       bibliotheque:                ['',        Validators.required],
       priorite_demande:            ['Régulier', Validators.required],
-
-      /* ── Informations bibliographiques ── */
       titre_document:              ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:                  ['', Validators.maxLength(500)],
       editeur:                     ['', [Validators.required, Validators.maxLength(300)]],
@@ -80,35 +91,26 @@ export class NouvelAchatComponent implements OnInit {
       source_information:          ['', [Validators.required, Validators.pattern('https?://.+')]],
       categorie_document:          ['', Validators.required],
       type_monographie:            [{ value: '', disabled: true }],
-
-      /* ── Format ── */
       format_support:              ['Imprimé/support physique', Validators.required],
       format_pret_numerique:       ["Ne s'applique pas"],
       nombre_utilisateurs:         ['Accès illimité'],
       lien_plateforme:             [''],
       aviser_reservation:          ['', Validators.email],
       aviser_activation:           [{ value: '', disabled: true }, Validators.email],
-
-      /* ── Finances ── */
       prix_cad:                    [null, [Validators.required, Validators.min(0.01)]],
       devise_originale:            ['',   Validators.required],
       prix_devise_originale:       [null, [Validators.required, Validators.min(0.01)]],
       fonds_budgetaire:            ['',   [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
-
-      /* ── Quantité ── */
       quantite:                    [1, [Validators.required, Validators.min(1)]],
-
-      /* ── Réserve de cours ── */
       mettreReserve:               [false],
       reserve_cours_sigle:         [{ value: '', disabled: true }],
       reserve_cours_session:       [{ value: '', disabled: true }],
       reserve_cours_enseignant:    [{ value: '', disabled: true }],
-
-      /* ── Notes ── */
       note_commentaire:            ['', Validators.maxLength(1000)],
+      statut_bibliotheque:         ['Saisie en cours - En attente'],
+      note_interne_bib:            ['', Validators.maxLength(1000)],
     });
 
-    // Catégorie → activer type_monographie uniquement pour Monographie
     this.form.get('categorie_document')!.valueChanges.subscribe(val => {
       this.showMonographie = val === 'Monographie';
       const typeMonographie = this.form.get('type_monographie')!;
@@ -121,7 +123,6 @@ export class NouvelAchatComponent implements OnInit {
       }
     });
 
-    // Réserve de cours — activer/désactiver les sous-champs
     this.form.get('mettreReserve')!.valueChanges.subscribe(val => {
       this.showReserveCours = val;
       const sigle      = this.form.get('reserve_cours_sigle')!;
@@ -141,15 +142,12 @@ export class NouvelAchatComponent implements OnInit {
       enseignant.updateValueAndValidity();
     });
 
-    // Format — champs conditionnels + champs aviseur
     this.form.get('format_support')!.valueChanges.subscribe(val => {
       this.showElectronique      = val === 'Électronique';
       this.showAviserReservation = val === 'Imprimé/support physique';
-
       const lien      = this.form.get('lien_plateforme')!;
       const aviserRes = this.form.get('aviser_reservation')!;
       const aviserAct = this.form.get('aviser_activation')!;
-
       if (this.showElectronique) {
         lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
         aviserAct.enable();
@@ -164,12 +162,57 @@ export class NouvelAchatComponent implements OnInit {
       aviserAct.updateValueAndValidity();
     });
 
-    // Conversion automatique du prix en CAD
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
+
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
+      if (params['id']) {
+        this.editId = +params['id'];
+        this.loadDemande(this.editId);
+      }
+    });
   }
 
-  // Validateur ISBN / ISSN — tirets refusés (auto-supprimés à la saisie)
+  private loadDemande(id: number): void {
+    this.reponsesService.getReponseById(id).subscribe({
+      next: (row) => {
+        const bd = row.reponses?.baseData ?? {};
+        const sd = row.reponses?.specificData ?? {};
+        if (bd.format_support)     this.form.get('format_support')!.setValue(bd.format_support);
+        if (bd.categorie_document) this.form.get('categorie_document')!.setValue(bd.categorie_document);
+        if (sd.reserve_cours)      this.form.get('mettreReserve')!.setValue(sd.reserve_cours);
+        this.form.patchValue({
+          nom:                    bd.demandeur,
+          bibliotheque:           bd.bibliotheque,
+          priorite_demande:       bd.priorite_demande,
+          titre_document:         bd.titre_document,
+          sous_titre:             bd.sous_titre,
+          editeur:                bd.editeur,
+          isbn_issn:              bd.isbn_issn,
+          date_publication:       bd.date_publication,
+          source_information:     bd.source_information,
+          format_pret_numerique:  bd.format_pret_numerique,
+          nombre_utilisateurs:    bd.nombre_utilisateurs,
+          lien_plateforme:        bd.lien_plateforme,
+          aviser_reservation:     sd.usager_aviser_reservation,
+          aviser_activation:      sd.usager_aviser_activation,
+          prix_cad:               bd.prix_cad,
+          devise_originale:       bd.devise_originale,
+          prix_devise_originale:  bd.prix_devise_originale,
+          fonds_budgetaire:       bd.fonds_budgetaire,
+          quantite:               sd.quantite,
+          type_monographie:       sd.type_monographie,
+          reserve_cours_sigle:    sd.reserve_cours_sigle,
+          reserve_cours_session:  sd.reserve_cours_session,
+          reserve_cours_enseignant: sd.reserve_cours_enseignant,
+          note_commentaire:       bd.note_commentaire,
+          statut_bibliotheque:    bd.statut_bibliotheque,
+          note_interne_bib:       bd.note_interne_bib,
+        });
+      }
+    });
+  }
+
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) return null;
@@ -181,7 +224,6 @@ export class NouvelAchatComponent implements OnInit {
     return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
   }
 
-  // Suppression automatique des tirets dans isbn_issn à la saisie
   stripDashes(event: Event): void {
     const input    = event.target as HTMLInputElement;
     const stripped = input.value.replace(/-/g, '');
@@ -221,6 +263,7 @@ export class NouvelAchatComponent implements OnInit {
       nombre_utilisateurs:   'Accès illimité',
       mettreReserve:         false,
       quantite:              1,
+      statut_bibliotheque:   'Saisie en cours - En attente',
     });
   }
 
@@ -257,7 +300,8 @@ export class NouvelAchatComponent implements OnInit {
         prix_devise_originale: v.prix_devise_originale,
         fonds_budgetaire:      v.fonds_budgetaire,
         note_commentaire:      v.note_commentaire,
-        statut_bibliotheque:   'Saisie en cours en bibliothèque',
+        statut_bibliotheque:   v.statut_bibliotheque,
+        note_interne_bib:      v.note_interne_bib,
         statut_acq:            'En attente',
       },
       specificData: {
@@ -273,15 +317,72 @@ export class NouvelAchatComponent implements OnInit {
       },
     };
 
-    this.reponsesService.envoyerNouvelAchat(payload).subscribe({
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerNouvelAchat(payload);
+
+    obs.subscribe({
       next: () => {
-        this.success   = true;
         this.isLoading = false;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
       },
-      error: () => {
-        this.error     = true;
+      error: () => { this.isLoading = false; this.error = true; }
+    });
+  }
+
+  onSave(): void {
+    this.submitted = true;
+    if (this.form.invalid) return;
+    this.isLoading = true;
+    const v = this.form.getRawValue();
+    const payload = {
+      baseData: {
+        formulaire_type:       'Nouvel achat unique',
+        demandeur:             v.nom,
+        bibliotheque:          v.bibliotheque,
+        priorite_demande:      v.priorite_demande,
+        titre_document:        v.titre_document,
+        sous_titre:            v.sous_titre,
+        editeur:               v.editeur,
+        isbn_issn:             v.isbn_issn,
+        date_publication:      v.date_publication,
+        source_information:    v.source_information,
+        categorie_document:    v.categorie_document,
+        format_support:        v.format_support,
+        format_pret_numerique: v.format_pret_numerique,
+        nombre_utilisateurs:   this.showElectronique ? v.nombre_utilisateurs : null,
+        lien_plateforme:       this.showElectronique ? v.lien_plateforme : null,
+        prix_cad:              v.prix_cad,
+        devise_originale:      v.devise_originale,
+        prix_devise_originale: v.prix_devise_originale,
+        fonds_budgetaire:      v.fonds_budgetaire,
+        note_commentaire:      v.note_commentaire,
+        statut_bibliotheque:   v.statut_bibliotheque || 'Saisie en cours - En attente',
+        note_interne_bib:      v.note_interne_bib,
+        statut_acq:            'En attente',
+      },
+      specificData: {
+        type_monographie:          this.showMonographie ? v.type_monographie : null,
+        format_electronique:       this.showElectronique ? v.format_pret_numerique : null,
+        quantite:                  v.quantite,
+        usager_aviser_reservation: this.showAviserReservation ? v.aviser_reservation : null,
+        usager_aviser_activation:  this.showElectronique ? v.aviser_activation : null,
+        reserve_cours:             v.mettreReserve,
+        reserve_cours_sigle:       v.mettreReserve ? v.reserve_cours_sigle     : null,
+        reserve_cours_session:     v.mettreReserve ? v.reserve_cours_session    : null,
+        reserve_cours_enseignant:  v.mettreReserve ? v.reserve_cours_enseignant : null,
+      },
+    };
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerNouvelAchat(payload);
+    obs.subscribe({
+      next: (res: any) => {
         this.isLoading = false;
-      }
+        if (!this.editId && res?.id) this.editId = res.id;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
+      },
+      error: () => { this.isLoading = false; this.error = true; }
     });
   }
 }

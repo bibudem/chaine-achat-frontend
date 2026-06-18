@@ -211,7 +211,7 @@
                         <i class="bi bi-eye"></i>
                       </button>
                       <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                              [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
+                              [routerLink]="['/items', item.item_id]" [queryParams]="{tab: 'acq-decision'}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
                       <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
@@ -240,7 +240,7 @@
                     <i class="bi bi-eye"></i>
                   </button>
                   <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                          [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
+                          [routerLink]="['/items', item.item_id]" [queryParams]="{tab: 'acq-decision'}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
                   <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">

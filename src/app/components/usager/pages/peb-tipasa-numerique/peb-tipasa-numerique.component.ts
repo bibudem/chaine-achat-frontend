@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class PebTipasaNumeriqueComponent implements OnInit {
   isLoading        = false;
   showElectronique = true;
   showImprime      = false;
+  editId: number | null = null;
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -30,17 +33,26 @@ export class PebTipasaNumeriqueComponent implements OnInit {
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
-
   devises: string[] = ['CAD', 'USD', 'EUR', 'GBP', 'CHF'];
-
   gobiBooleans: string[] = ['Oui', 'Non'];
+
+  statusOptions: string[] = [
+    'Saisie en cours - En attente',
+    'Saisie en cours – À valider ou compléter',
+    'Saisie en cours – Annuler',
+    'Saisie en cours - Publication à paraître',
+    'À autoriser en bibliothèque',
+    'Soumettre aux ACQ',
+  ];
 
   derniereTitre        = '';
   derniereBibliotheque = '';
 
   constructor(
     private fb: FormBuilder,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,42 +61,32 @@ export class PebTipasaNumeriqueComponent implements OnInit {
     const statut   = sessionStorage.getItem('groupeAdmin')   ?? '';
 
     this.form = this.fb.group({
-
-      /* ── Identification ── */
       nom:              [nom,          Validators.required],
       statut:           [statut],
       courriel:         [courriel,     [Validators.required, Validators.email]],
       bibliotheque:     ['',           Validators.required],
       fonds_budgetaire: ['',           [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
       priorite_demande: ['Régulier',   Validators.required],
-
-      /* ── Document ── */
       titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
       isbn_issn:          ['', [Validators.required, this.isbnValidator]],
       date_publication:   [''],
       categorie_document: ['', Validators.required],
-
-      /* ── Disponibilité numérique (spécifique PEB Tipasa) ── */
       gobi_vu_format_numerique: ['', Validators.required],
       reference_tipasa:         [''],
-
-      /* ── Format et support ── */
       format_support:            ['Électronique', Validators.required],
       creation_notice_dtdm:      [false],
       localisation_emplacement:  [''],
       nombre_titres_inclus:      [null, Validators.min(1)],
       personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
-
-      /* ── Finances ── */
       devise_originale:      ['',   Validators.required],
       prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
       prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
-
-      /* ── Source et notes ── */
       source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
       note_commentaire:   ['', Validators.maxLength(1000)],
+      statut_bibliotheque: ['Saisie en cours - En attente'],
+      note_interne_bib:    ['', Validators.maxLength(1000)],
     });
 
     this.form.get('format_support')!.valueChanges.subscribe(val => {
@@ -95,6 +97,48 @@ export class PebTipasaNumeriqueComponent implements OnInit {
 
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
+
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
+      if (params['id']) {
+        this.editId = +params['id'];
+        this.loadDemande(this.editId);
+      }
+    });
+  }
+
+  private loadDemande(id: number): void {
+    this.reponsesService.getReponseById(id).subscribe({
+      next: (row) => {
+        const bd = row.reponses?.baseData ?? {};
+        const sd = row.reponses?.specificData ?? {};
+        if (bd.format_support) this.form.get('format_support')!.setValue(bd.format_support);
+        this.form.patchValue({
+          nom:                        bd.demandeur,
+          bibliotheque:               bd.bibliotheque,
+          fonds_budgetaire:           bd.fonds_budgetaire,
+          priorite_demande:           bd.priorite_demande,
+          titre_document:             bd.titre_document,
+          sous_titre:                 bd.sous_titre,
+          editeur:                    bd.editeur,
+          isbn_issn:                  bd.isbn_issn,
+          date_publication:           bd.date_publication,
+          categorie_document:         bd.categorie_document,
+          gobi_vu_format_numerique:   sd.gobi_vu_format_numerique,
+          reference_tipasa:           sd.reference_tipasa,
+          creation_notice_dtdm:       bd.creation_notice_dtdm,
+          localisation_emplacement:   bd.localisation_emplacement,
+          nombre_titres_inclus:       bd.nombre_titres_inclus,
+          personne_a_aviser_courriel: bd.personne_a_aviser_courriel,
+          devise_originale:           bd.devise_originale,
+          prix_devise_originale:      bd.prix_devise_originale,
+          prix_cad:                   bd.prix_cad,
+          source_information:         bd.source_information,
+          note_commentaire:           bd.note_commentaire,
+          statut_bibliotheque:        bd.statut_bibliotheque,
+          note_interne_bib:           bd.note_interne_bib,
+        });
+      }
+    });
   }
 
   private convertirPrix(): void {
@@ -142,6 +186,7 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       priorite_demande:     'Régulier',
       format_support:       'Électronique',
       creation_notice_dtdm: false,
+      statut_bibliotheque:  'Saisie en cours - En attente',
     });
   }
 
@@ -178,7 +223,8 @@ export class PebTipasaNumeriqueComponent implements OnInit {
         prix_devise_originale:      v.prix_devise_originale,
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
-        statut_bibliotheque:        'Saisie en cours - En attente',
+        statut_bibliotheque:        v.statut_bibliotheque,
+        note_interne_bib:           v.note_interne_bib,
         statut_acq:                 'En attente',
       },
       specificData: {
@@ -189,15 +235,68 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       },
     };
 
-    this.reponsesService.envoyerPebTipasa(payload).subscribe({
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerPebTipasa(payload);
+
+    obs.subscribe({
       next: () => {
-        this.success   = true;
         this.isLoading = false;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
       },
-      error: () => {
-        this.error     = true;
+      error: () => { this.isLoading = false; this.error = true; }
+    });
+  }
+
+  onSave(): void {
+    this.submitted = true;
+    if (this.form.invalid) return;
+    this.isLoading = true;
+    const v = this.form.getRawValue();
+    const payload = {
+      baseData: {
+        formulaire_type:            'PEB Tipasa numérique',
+        demandeur:                  v.nom,
+        bibliotheque:               v.bibliotheque,
+        fonds_budgetaire:           v.fonds_budgetaire,
+        priorite_demande:           v.priorite_demande,
+        titre_document:             v.titre_document,
+        sous_titre:                 v.sous_titre,
+        editeur:                    v.editeur,
+        isbn_issn:                  v.isbn_issn,
+        date_publication:           v.date_publication,
+        categorie_document:         v.categorie_document,
+        format_support:             v.format_support,
+        localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
+        creation_notice_dtdm:       v.creation_notice_dtdm,
+        nombre_titres_inclus:       this.showElectronique ? v.nombre_titres_inclus       : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
+        prix_cad:                   v.prix_cad,
+        devise_originale:           v.devise_originale,
+        prix_devise_originale:      v.prix_devise_originale,
+        source_information:         v.source_information,
+        note_commentaire:           v.note_commentaire,
+        statut_bibliotheque:        v.statut_bibliotheque || 'Saisie en cours - En attente',
+        note_interne_bib:           v.note_interne_bib,
+        statut_acq:                 'En attente',
+      },
+      specificData: {
+        reference_tipasa:           v.reference_tipasa,
+        gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
+        gobi_version_moins_365_usd: "Ne s'applique pas",
+        acq_responsable_courriel:   null,
+      },
+    };
+    const obs = this.editId
+      ? this.reponsesService.updateReponse(this.editId, payload)
+      : this.reponsesService.envoyerPebTipasa(payload);
+    obs.subscribe({
+      next: (res: any) => {
         this.isLoading = false;
-      }
+        if (!this.editId && res?.id) this.editId = res.id;
+        this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
+      },
+      error: () => { this.isLoading = false; this.error = true; }
     });
   }
 }

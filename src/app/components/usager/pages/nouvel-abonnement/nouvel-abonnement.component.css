@@ -10,10 +10,13 @@
   --abo-dark:  #14532d;
 }
 
-/* ── Gradient d'en-tête ────────────────────────────────────── */
+/* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
-  background: var(--dark-gray);
-  border-bottom: 5px solid var(--abo-mid);
+  border-bottom: 2px solid rgba(22, 163, 74, .35);
+}
+.form-header__icon {
+  background: var(--abo-mid);
+  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -71,23 +74,6 @@
 /* ── Barre d'actions ───────────────────────────────────────── */
 .form-actions { border-top: 2px solid var(--abo-light); }
 
-/* ── Bouton soumettre ──────────────────────────────────────── */
-.btn-primary {
-  background: var(--abo-mid);
-  color:      var(--white);
-  border:     none;
-}
-.btn-primary:hover:not(:disabled) {
-  background: var(--abo-dark);
-  transform:  translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-.btn-primary:disabled {
-  opacity:    0.55;
-  cursor:     not-allowed;
-  transform:  none  !important;
-  box-shadow: none  !important;
-}
 
 /* ── Écran de confirmation ──────────────────────────────────── */
 .confirmation-detail { background: var(--abo-light); }

@@ -11,16 +11,6 @@
     <!-- Droite -->
     <div class="ul-right">
 
-      <!-- Switch langue -->
-      <div class="ul-lang">
-        <i class="bi bi-globe2 ul-lang__icon"></i>
-        <button class="ul-lang__btn" [class.ul-lang__btn--active]="currentLang === 'fr'"
-                (click)="switchLanguage('fr')" title="Français">FR</button>
-        <span class="ul-lang__sep">|</span>
-        <button class="ul-lang__btn" [class.ul-lang__btn--active]="currentLang === 'en'"
-                (click)="switchLanguage('en')" title="English">EN</button>
-      </div>
-
       <!-- Menu utilisateur -->
       <div class="ul-user" [class.ul-user--open]="userOpen">
         <button class="ul-user__btn" (click)="toggleUser($event)">
