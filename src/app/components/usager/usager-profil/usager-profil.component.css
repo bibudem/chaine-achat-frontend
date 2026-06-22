@@ -305,6 +305,37 @@
 }
 .up-btn-delete-icon:hover { background: #fff1f2; border-color: #f87171; }
 
+/* Bloc ACQ */
+.up-acq-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .25rem .6rem;
+  margin-top: .3rem;
+  padding: .3rem .55rem;
+  background: #f0f9ff;
+  border-left: 2px solid #7dd3fc;
+  border-radius: 0 5px 5px 0;
+}
+.up-acq-block__label {
+  font-size: .62rem; font-weight: 800;
+  color: #0284c7; text-transform: uppercase; letter-spacing: .07em;
+  margin-right: .2rem; flex-shrink: 0;
+}
+.up-acq-item {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+.up-acq-item__key {
+  font-size: .67rem; color: #64748b; white-space: nowrap;
+}
+.up-acq-item__val {
+  font-size: .72rem; font-weight: 700; color: #0B113A;
+  background: #e0f2fe; border-radius: 4px;
+  padding: .08rem .4rem; white-space: nowrap;
+}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CONFIRMATION SUPPRESSION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

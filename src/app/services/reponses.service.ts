@@ -52,6 +52,8 @@ export interface DemandeUsager {
   devise_originale: string | null;
   statut_bibliotheque: string | null;
   suivi_acq: string | null;
+  statut_acq: string | null;
+  note_acq: string | null;
   note_commentaire: string | null;
 }
 

@@ -77,7 +77,7 @@ export class SuggestionPublicComponent implements OnInit {
       reserve_cours_session:        [{ value: '', disabled: true }],
       reserve_cours_enseignant:     [{ value: '', disabled: true }],
       statut_bibliotheque:          ['Saisie en cours - En attente'],
-      note_interne_bib:             ['', Validators.maxLength(1000)],
+      bibliotheque_note_interne:             ['', Validators.maxLength(1000)],
     });
 
     this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
@@ -126,7 +126,7 @@ export class SuggestionPublicComponent implements OnInit {
           reserve_cours_session:        d.reserve_cours_session,
           reserve_cours_enseignant:     d.reserve_cours_enseignant,
           statut_bibliotheque:          d.statut_bibliotheque,
-          note_interne_bib:             d.note_interne_bib,
+          bibliotheque_note_interne:             d.bibliotheque_note_interne,
         });
       }
     });
@@ -209,7 +209,7 @@ export class SuggestionPublicComponent implements OnInit {
       acq_raison_annulation:        null,
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque,
-      note_interne_bib:             v.note_interne_bib,
+      bibliotheque_note_interne:             v.bibliotheque_note_interne,
     };
 
     const obs = this.editId
@@ -261,7 +261,7 @@ export class SuggestionPublicComponent implements OnInit {
       acq_raison_annulation:        null,
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque || 'Saisie en cours - En attente',
-      note_interne_bib:             v.note_interne_bib,
+      bibliotheque_note_interne:             v.bibliotheque_note_interne,
     };
     const obs = this.editId
       ? this.reponsesService.updateReponse(this.editId, payload)

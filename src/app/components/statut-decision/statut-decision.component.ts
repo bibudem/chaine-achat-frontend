@@ -51,9 +51,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     private reponsesService: ReponsesService
   ) {
     this.form = this.fb.group({
-      suivi_acq:                 ['', Validators.required],
-      note_commentaire:          [''],
-      bibliotheque_note_interne: [''],
+      suivi_acq:  ['', Validators.required],
+      statut_acq: [''],
+      note_acq:   [''],
     });
   }
 
@@ -73,7 +73,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.errorMessage        = null;
       this.successMessage      = null;
       this.itemExisteDansItems = false;
-      this.form.reset({ suivi_acq: '', note_commentaire: '', bibliotheque_note_interne: '' });
+      this.form.reset({ suivi_acq: '', statut_acq: '', note_acq: '' });
 
       if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
         this.errorMessage = 'Paramètre manquant : reponse_id, id ou item_id';
@@ -161,9 +161,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
 
   private patchFormFromItem(data: any): void {
     this.form.patchValue({
-      suivi_acq:                 data.suivi_acq                 || '',
-      note_commentaire:          data.note_commentaire          || '',
-      bibliotheque_note_interne: data.bibliotheque_note_interne || '',
+      suivi_acq:  data.suivi_acq  || '',
+      statut_acq: data.statut_acq || '',
+      note_acq:   data.note_acq   || '',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -241,7 +241,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     this.buildNotifTargets();
   }
 
-  private buildItemPayload(suivi_acq: string, note_commentaire: string | null): Record<string, any> {
+  private buildItemPayload(suivi_acq: string, note_acq: string | null): Record<string, any> {
     const i = this.item as any;
 
     // Colonnes de tbl_items uniquement (baseData commun à tous les formulaires)
@@ -254,10 +254,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       'source_information', 'prix_cad', 'devise_originale', 'prix_devise_originale',
       'nombre_titres_inclus', 'nombre_utilisateurs', 'lien_plateforme',
       'format_pret_numerique', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
-      'note_commentaire', 'bibliotheque_note_interne'
+      'note_commentaire'
     ];
 
-    const payload: Record<string, any> = { suivi_acq, note_commentaire };
+    const payload: Record<string, any> = { suivi_acq, note_acq };
     baseKeys.forEach(k => { if (i[k] != null) { payload[k] = i[k]; } });
 
     // specificData → routé par le backend vers la bonne sous-table
@@ -353,21 +353,21 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.successMessage = null;
 
-    const suivi_acq                  = this.form.get('suivi_acq')?.value;
-    const note_commentaire           = this.form.get('note_commentaire')?.value || null;
-    const bibliotheque_note_interne  = this.form.get('bibliotheque_note_interne')?.value || null;
+    const suivi_acq  = this.form.get('suivi_acq')?.value;
+    const statut_acq = this.form.get('statut_acq')?.value || null;
+    const note_acq   = this.form.get('note_acq')?.value   || null;
 
     const specificData = this.buildSpecificData();
 
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, note_commentaire, bibliotheque_note_interne, ...(specificData ? { specificData } : {}) },
+          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_commentaire), bibliotheque_note_interne, reponse_id: this.reponseId },
+          { ...this.buildItemPayload(suivi_acq, note_acq), statut_acq, reponse_id: this.reponseId },
           this.httpOptions
         );
 
@@ -377,7 +377,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         if (response.success) {
           this.successMessage = 'Décision enregistrée avec succès !';
           if (sendEmail && this.hasNotifEmail) {
-            this.notifyN8nDecision(suivi_acq, note_commentaire);
+            this.notifyN8nDecision(suivi_acq, note_acq);
             this.emailSent = true;
           }
           this.reponsesService.triggerPendingRefresh();
@@ -446,13 +446,13 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return this.notifTargets.some(t => t.selected);
   }
 
-  private notifyN8nDecision(suivi_acq: string, note_commentaire: string | null): void {
+  private notifyN8nDecision(suivi_acq: string, note_acq: string | null): void {
     const selected = this.notifTargets.filter(t => t.selected);
     selected.forEach(target => {
       const payload = {
         reponse_id:          this.reponseId,
         suivi_acq,
-        note_commentaire,
+        note_acq,
         usager_courriel:     target.email,
         usager_nom:          this.item?.demandeur,
         titre_document:      this.item?.titre_document,

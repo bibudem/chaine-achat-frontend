@@ -23,86 +23,118 @@
     </div>
   </div>
 
-  <!-- Filtres — rangée principale -->
-  <div class="row g-2 mb-2 align-items-center">
-    <div class="col-12 col-md-5">
-      <div class="input-group">
-        <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control bib-input-icon"
-               [placeholder]="'items.recherche-placeholder' | translate"
-               [(ngModel)]="searchTerm"
-               (keyup.enter)="onSearch()"
-               (input)="onSearch()">
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <select class="form-select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
-        <option value="">{{ 'items.type-formulaire-placeholder' | translate }}</option>
-        <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-3">
-      <select class="form-select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
-        <option value="">{{ 'items.toutes-bibliotheques' | translate }}</option>
-        <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
-      </select>
-    </div>
-    <div class="col-12 col-md-1 d-flex gap-2 justify-content-end">
-      <button class="btn position-relative px-3"
-              [class.btn-outline-secondary]="activeFiltersCount === 0"
-              [class.btn-primary]="activeFiltersCount > 0"
-              (click)="showAdvancedFilters = !showAdvancedFilters"
-              [title]="'items.filtres-avances' | translate">
-        <i class="bi" [class.bi-sliders2]="!showAdvancedFilters" [class.bi-sliders2-vertical]="showAdvancedFilters"></i>
-        <span *ngIf="activeFiltersCount > 0"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              style="font-size:.6rem; min-width:1.1rem">
-          {{ activeFiltersCount }}
-        </span>
-      </button>
-      <button class="btn btn-outline-secondary px-3" (click)="resetFilters()" [title]="'btn-reset' | translate">
-        <i class="bi bi-arrow-clockwise"></i>
-      </button>
-    </div>
-  </div>
+  <!-- Barre de filtres -->
+  <div class="il-filterbar mb-3">
 
-  <!-- Panneau filtres avancés -->
-  <div *ngIf="showAdvancedFilters" class="mb-4">
-    <div class="border rounded-3 bg-light px-3 pt-2 pb-3">
-      <div class="d-flex align-items-center justify-content-between mb-2">
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-sliders2 text-muted" style="font-size:.8rem"></i>
-          <span class="small fw-semibold text-muted text-uppercase" style="letter-spacing:.05em">
-            {{ 'items.filtres-avances' | translate }}
-          </span>
-        </div>
-        <button type="button" class="btn-close" style="font-size:.65rem"
-                (click)="showAdvancedFilters = false" aria-label="Fermer"></button>
-      </div>
-      <div class="row g-2">
-        <div class="col-12 col-md-4">
-          <label class="form-label small text-secondary mb-1">{{ 'items.statut-bib-placeholder' | translate }}</label>
-          <select class="form-select" [(ngModel)]="selectedStatutBib" (change)="onFilterChange()">
-            <option value="">—</option>
-            <option *ngFor="let s of options.statusOptions" [value]="s">{{ s }}</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="form-label small text-secondary mb-1">{{ 'items.statut-acq-placeholder' | translate }}</label>
-          <select class="form-select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
-            <option value="">—</option>
-            <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="form-label small text-secondary mb-1">{{ 'items.suivi-placeholder' | translate }}</label>
-          <select class="form-select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
-            <option value="">—</option>
-            <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
-          </select>
-        </div>
-      </div>
+    <div class="il-filterbar__search">
+      <i class="bi bi-search il-filterbar__search-icon"></i>
+      <input type="text" class="il-filterbar__search-input"
+             [placeholder]="'items.recherche-placeholder' | translate"
+             [(ngModel)]="searchTerm"
+             (keyup.enter)="onSearch()"
+             (input)="onSearch()">
     </div>
+
+    <div class="il-filterbar__sep"></div>
+
+    <select class="il-filterbar__select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
+      <option value="">Type</option>
+      <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+
+    <select class="il-filterbar__select il-filterbar__select--bib" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
+      <option value="">Bibliothèque</option>
+      <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
+    </select>
+
+    <input type="text" class="il-filterbar__input"
+           placeholder="Fonds…"
+           [(ngModel)]="selectedFonds"
+           (input)="onFilterChange()"
+           (keyup.enter)="onFilterChange()">
+
+    <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
+      <option value="">Statut ACQ</option>
+      <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
+    </select>
+
+    <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
+      <option value="">Suivi ACQ</option>
+      <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
+    </select>
+
+    <div class="il-filterbar__actions" (click)="$event.stopPropagation()">
+
+      <!-- Favoris -->
+      <div class="il-fav">
+        <button class="il-filterbar__fav"
+                [class.il-filterbar__fav--active]="favoris.length > 0"
+                (click)="showFavorisPanel = !showFavorisPanel">
+          <i class="bi" [class.bi-star-fill]="favoris.length > 0" [class.bi-star]="favoris.length === 0"></i>
+          Favoris
+          <span *ngIf="favoris.length > 0" class="il-fav__count">{{ favoris.length }}</span>
+        </button>
+
+        <div class="il-fav__panel" *ngIf="showFavorisPanel">
+          <div class="il-fav__panel-header">Filtres sauvegardés</div>
+
+          <div class="il-fav__item">
+            <button class="il-fav__apply il-fav__apply--reset" (click)="resetFilters(); showFavorisPanel = false">
+              <i class="bi bi-list-ul"></i> Tous les items (sans filtre)
+            </button>
+          </div>
+
+          <div *ngIf="favoris.length === 0 && !savingFavori" class="il-fav__empty">
+            Aucun favori pour l'instant
+          </div>
+
+          <div *ngFor="let f of favoris; let i = index" class="il-fav__item">
+            <button class="il-fav__apply" (click)="appliquerFavori(f)" [title]="'Appliquer : ' + f.nom">
+              <i class="bi bi-play-fill"></i> {{ f.nom }}
+            </button>
+            <button class="il-fav__delete" (click)="supprimerFavori(i)" title="Supprimer">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+
+          <div class="il-fav__footer">
+            <ng-container *ngIf="!savingFavori">
+              <button class="il-fav__save-btn"
+                      (click)="savingFavori = true"
+                      [disabled]="activeFiltersCount === 0">
+                <i class="bi bi-bookmark-plus"></i>
+                Sauvegarder les filtres actuels
+              </button>
+            </ng-container>
+            <div *ngIf="savingFavori" class="il-fav__save-form">
+              <input type="text" class="il-fav__save-input"
+                     placeholder="Nom du favori…"
+                     [(ngModel)]="nouveauFavoriNom"
+                     (keyup.enter)="ajouterFavori()"
+                     autofocus>
+              <button class="il-fav__confirm" (click)="ajouterFavori()" [disabled]="!nouveauFavoriNom.trim()">
+                <i class="bi bi-check"></i>
+              </button>
+              <button class="il-fav__cancel" (click)="savingFavori = false; nouveauFavoriNom = ''">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Réinitialiser -->
+      <button class="il-filterbar__reset"
+              [class.il-filterbar__reset--active]="activeFiltersCount > 0"
+              (click)="resetFilters()"
+              [title]="'btn-reset' | translate">
+        <i class="bi bi-x-circle"></i>
+        <span *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }} filtre{{ activeFiltersCount > 1 ? 's' : '' }}</span>
+        <span *ngIf="activeFiltersCount === 0">Réinitialiser</span>
+      </button>
+
+    </div>
+
   </div>
 
   <!-- Chargement -->
@@ -116,12 +148,11 @@
   <!-- Tableau -->
   <div *ngIf="!loading" class="row">
     <div class="col">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body p-0">
+      <div class="il-table-card">
 
           <!-- Desktop / tablette : tableau classique -->
           <div class="table-responsive d-none d-md-block">
-            <table class="table table-border mb-0 items-table">
+            <table class="table mb-0 items-table">
               <thead class="table-light">
                 <tr>
                   <th class="col-id sortable-col" (click)="sortBy('item_id')">
@@ -142,8 +173,8 @@
                   <th class="col-bib sortable-col" (click)="sortBy('bibliotheque')">
                     {{ 'items.col-bib' | translate }} <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
-                  <th class="col-statut sortable-col" (click)="sortBy('statut_bibliotheque')">
-                    {{ 'items.col-statut-bib' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
+                  <th class="col-fonds sortable-col" (click)="sortBy('fonds_budgetaire')">
+                    Fonds <i class="bi {{ getSortIcon('fonds_budgetaire') }} ms-1"></i>
                   </th>
                   <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
                     {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
@@ -184,10 +215,8 @@
                       {{ item.localisation_emplacement }}
                     </div>
                   </td>
-                  <td class="col-statut">
-                    <span *ngIf="item.statut_bibliotheque" class="badge badge-statut-bib align-self-start">
-                      {{ item.statut_bibliotheque }}
-                    </span>
+                  <td class="col-fonds">
+                    {{ item.fonds_budgetaire || '—' }}
                   </td>
                   <td class="col-statut-acq">
                     <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
@@ -211,7 +240,7 @@
                         <i class="bi bi-eye"></i>
                       </button>
                       <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                              [routerLink]="['/items', item.item_id]" [queryParams]="{tab: 'acq-decision'}" [title]="'items.decision-acq' | translate">
+                              [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
                       <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
@@ -240,7 +269,7 @@
                     <i class="bi bi-eye"></i>
                   </button>
                   <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
-                          [routerLink]="['/items', item.item_id]" [queryParams]="{tab: 'acq-decision'}" [title]="'items.decision-acq' | translate">
+                          [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
                   <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
@@ -261,9 +290,9 @@
                   <span class="item-card__label">{{ 'items.col-bib' | translate }}</span>
                   <span>{{ item.bibliotheque }}</span>
                 </div>
-                <div class="item-card__row" *ngIf="item.statut_bibliotheque">
-                  <span class="item-card__label">{{ 'items.col-statut-bib' | translate }}</span>
-                  <span class="badge badge-statut-bib">{{ item.statut_bibliotheque }}</span>
+                <div class="item-card__row" *ngIf="item.fonds_budgetaire">
+                  <span class="item-card__label">Fonds</span>
+                  <span>{{ item.fonds_budgetaire }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.statut_acq">
                   <span class="item-card__label">{{ 'items.col-statut-acq' | translate }}</span>
@@ -286,22 +315,20 @@
             </div>
           </div>
 
-        </div>
-      </div>
+          <!-- Aucun résultat -->
+          <div *ngIf="total === 0" class="text-center py-5">
+            <i class="bi bi-inbox display-1 text-muted"></i>
+            <h5 class="mt-3">{{ 'items.aucun-item' | translate }}</h5>
+            <p class="text-muted">{{ 'items.aucun-item-desc' | translate }}</p>
+            <button *ngIf="authService.canEdit" class="btn btn-primary mt-2" [routerLink]="['/items/nouveau']">
+              <i class="bi bi-plus-circle me-2"></i>{{ 'items.creer-nouvel' | translate }}
+            </button>
+          </div>
 
-      <!-- Aucun résultat -->
-      <div *ngIf="total === 0" class="text-center py-5">
-        <i class="bi bi-inbox display-1 text-muted"></i>
-        <h5 class="mt-3">{{ 'items.aucun-item' | translate }}</h5>
-        <p class="text-muted">{{ 'items.aucun-item-desc' | translate }}</p>
-        <button *ngIf="authService.canEdit" class="btn btn-primary mt-2" [routerLink]="['/items/nouveau']">
-          <i class="bi bi-plus-circle me-2"></i>{{ 'items.creer-nouvel' | translate }}
-        </button>
-      </div>
+          <!-- Pagination (dans le card) -->
+          <div *ngIf="total > 0"
+               class="pagination-wrapper d-flex justify-content-between align-items-center">
 
-      <!-- Pagination -->
-      <div *ngIf="total > 0"
-           class="pagination-wrapper d-flex justify-content-between align-items-center mt-0 mb-3">
         <div class="text-muted small">
           {{ 'items.affichage-de' | translate }} <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
           {{ 'items.a' | translate }} <strong>{{ getLastItemIndex() }}</strong>
@@ -346,6 +373,7 @@
         </nav>
       </div>
 
-    </div>
-  </div>
-</div>
+      </div><!-- /il-table-card -->
+    </div><!-- /col -->
+  </div><!-- /row -->
+</div><!-- /container-fluid -->

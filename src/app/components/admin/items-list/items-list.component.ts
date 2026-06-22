@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -7,6 +7,16 @@ import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { AuthService } from '../../../services/auth.service';
 import { ReponsesService } from '../../../services/reponses.service';
+
+interface FavoriFilter {
+  nom: string;
+  searchTerm: string;
+  selectedFormulaireType: string;
+  selectedBibliotheque: string;
+  selectedFonds: string;
+  selectedStatutAcq: string;
+  selectedSuiviAcq: string;
+}
 
 @Component({
   selector: 'app-items-list',
@@ -24,16 +34,29 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   selectedStatutAcq      = '';
   selectedSuiviAcq       = '';
   selectedFormulaireType = '';
-  showAdvancedFilters    = false;
+  selectedFonds          = '';
+
+  favoris:          FavoriFilter[] = [];
+  showFavorisPanel  = false;
+  savingFavori      = false;
+  nouveauFavoriNom  = '';
+
+  private get STORAGE_KEY(): string {
+    const user = sessionStorage.getItem('courrielAdmin') || 'default';
+    return `items-list-favoris-${user}`;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void { this.showFavorisPanel = false; }
 
   get activeFiltersCount(): number {
     return [
       this.searchTerm,
       this.selectedFormulaireType,
       this.selectedBibliotheque,
-      this.selectedStatutBib,
       this.selectedStatutAcq,
-      this.selectedSuiviAcq
+      this.selectedSuiviAcq,
+      this.selectedFonds
     ].filter(v => !!v).length;
   }
 
@@ -70,6 +93,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
         .subscribe(() => { this.currentPage = 1; this.loadItems(); })
     );
     this.loadItems();
+    this.loadFavoris();
   }
 
   ngOnDestroy(): void {
@@ -86,10 +110,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       search:          this.searchTerm         || undefined,
       bibliotheque:    this.selectedBibliotheque || undefined,
       statut:              this.selectedStatutBib || this.selectedStatutAcq || undefined,
-      statut_bibliotheque: this.selectedStatutBib   || undefined,
-      statut_acq:          this.selectedStatutAcq   || undefined,
-      suivi_acq:       this.selectedSuiviAcq     || undefined,
-      formulaire_type: this.selectedFormulaireType || undefined,
+      statut_bibliotheque: this.selectedStatutBib      || undefined,
+      statut_acq:          this.selectedStatutAcq      || undefined,
+      suivi_acq:           this.selectedSuiviAcq       || undefined,
+      formulaire_type:     this.selectedFormulaireType || undefined,
+      fonds_budgetaire:    this.selectedFonds           || undefined,
       sort:  this.sortColumn,
       order: this.sortDirection
     }).subscribe({
@@ -154,10 +179,56 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedStatutAcq      = '';
     this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
+    this.selectedFonds          = '';
     this.sortColumn             = 'date_creation';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
     this.loadItems();
+  }
+
+  loadFavoris(): void {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      this.favoris = stored ? JSON.parse(stored) : [];
+    } catch { this.favoris = []; }
+  }
+
+  private saveFavorisToStorage(): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.favoris));
+  }
+
+  ajouterFavori(): void {
+    const nom = this.nouveauFavoriNom.trim();
+    if (!nom) return;
+    this.favoris.push({
+      nom,
+      searchTerm:             this.searchTerm,
+      selectedFormulaireType: this.selectedFormulaireType,
+      selectedBibliotheque:   this.selectedBibliotheque,
+      selectedFonds:          this.selectedFonds,
+      selectedStatutAcq:      this.selectedStatutAcq,
+      selectedSuiviAcq:       this.selectedSuiviAcq,
+    });
+    this.saveFavorisToStorage();
+    this.nouveauFavoriNom = '';
+    this.savingFavori = false;
+  }
+
+  appliquerFavori(f: FavoriFilter): void {
+    this.searchTerm             = f.searchTerm;
+    this.selectedFormulaireType = f.selectedFormulaireType;
+    this.selectedBibliotheque   = f.selectedBibliotheque;
+    this.selectedFonds          = f.selectedFonds;
+    this.selectedStatutAcq      = f.selectedStatutAcq;
+    this.selectedSuiviAcq       = f.selectedSuiviAcq;
+    this.currentPage            = 1;
+    this.loadItems();
+    this.showFavorisPanel = false;
+  }
+
+  supprimerFavori(index: number): void {
+    this.favoris.splice(index, 1);
+    this.saveFavorisToStorage();
   }
 
   get pages(): number[] {

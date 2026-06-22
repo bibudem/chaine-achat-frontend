@@ -172,6 +172,7 @@ export class ItemFormulaireService {
     statut_acq?: string;
     suivi_acq?: string;
     formulaire_type?: string;
+    fonds_budgetaire?: string;
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -185,9 +186,10 @@ export class ItemFormulaireService {
     if (opts.statut_bibliotheque)  p = p.set('statut_bibliotheque',  opts.statut_bibliotheque);
     if (opts.statut_acq)           p = p.set('statut_acq',           opts.statut_acq);
     if (opts.suivi_acq)            p = p.set('suivi_acq',            opts.suivi_acq);
-    if (opts.formulaire_type) p = p.set('formulaire_type', opts.formulaire_type);
-    if (opts.sort)            p = p.set('sort',            opts.sort);
-    if (opts.order)           p = p.set('order',           opts.order);
+    if (opts.formulaire_type)      p = p.set('formulaire_type',      opts.formulaire_type);
+    if (opts.fonds_budgetaire)     p = p.set('fonds_budgetaire',     opts.fonds_budgetaire);
+    if (opts.sort)                 p = p.set('sort',                 opts.sort);
+    if (opts.order)                p = p.set('order',                opts.order);
 
     return this.http
       .get<ApiResponse<Item[]>>(`${this.url}/all`, { headers: this.httpOptions.headers, params: p })

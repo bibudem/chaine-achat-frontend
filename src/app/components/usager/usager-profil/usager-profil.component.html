@@ -105,8 +105,8 @@
                 <div class="up-card__top">
                   <span class="up-type-label">{{ d.type_formulaire }}</span>
                   <span class="up-badge"
-                        [ngClass]="d.statut_bibliotheque === 'Soumettre aux ACQ' ? 'up-badge--soumise' : (d.suivi_acq ? 'up-badge--traitee' : 'up-badge--attente')">
-                    {{ d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq || 'En attente de traitement') : (d.suivi_acq || 'Non envoyée aux ACQ') }}
+                        [ngClass]="d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq ? 'up-badge--traitee' : 'up-badge--soumise') : 'up-badge--attente'">
+                    {{ d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq ? 'ACQ traité' : 'En attente ACQ') : 'Non envoyé aux ACQ' }}
                   </span>
                   <div class="up-card__actions">
                     <a *ngIf="peutSupprimer(d)"
@@ -147,10 +147,23 @@
                   </span>
                 </div>
 
+                <!-- Bloc ACQ -->
+                <div *ngIf="d.suivi_acq || d.statut_acq" class="up-acq-block">
+                  <span class="up-acq-block__label">ACQ</span>
+                  <div *ngIf="d.suivi_acq" class="up-acq-item">
+                    <span class="up-acq-item__key">Suivi de la demande</span>
+                    <span class="up-acq-item__val">{{ d.suivi_acq }}</span>
+                  </div>
+                  <div *ngIf="d.statut_acq" class="up-acq-item">
+                    <span class="up-acq-item__key">Statut de la demande</span>
+                    <span class="up-acq-item__val">{{ d.statut_acq }}</span>
+                  </div>
+                </div>
+
                 <!-- Note -->
-                <div *ngIf="d.commentaire_admin || d.note_commentaire" class="up-card__note">
+                <div *ngIf="d.commentaire_admin || d.note_acq || d.note_commentaire" class="up-card__note">
                   <i class="bi bi-chat-left-quote"></i>
-                  <span>{{ d.commentaire_admin || d.note_commentaire }}</span>
+                  <span>{{ d.commentaire_admin || d.note_acq || d.note_commentaire }}</span>
                 </div>
 
               </div>

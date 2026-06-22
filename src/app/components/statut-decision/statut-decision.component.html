@@ -93,48 +93,46 @@
               <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
             </div>
 
-            <!-- Suivi ACQ -->
-            <div class="mb-4">
-              <label for="suivi_acq" class="form-label fw-semibold">
-                {{ 'acq-decision.suivi-acq' | translate }}
-                <span class="text-danger ms-1">*</span>
-              </label>
-              <select id="suivi_acq" formControlName="suivi_acq"
-                      class="form-select form-select-lg">
-                <option value="" disabled>{{ 'acq-decision.selectionner-suivi' | translate }}</option>
-                <option *ngFor="let o of options.dircolAcqSuiviOptions" [value]="o">{{ o }}</option>
-              </select>
-              <small class="text-danger"
-                *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
-                {{ 'acq-decision.champ-required' | translate }}
-              </small>
-            </div>
-
-            <!-- Notes -->
+            <!-- Suivi ACQ + Statut ACQ -->
             <div class="row g-3 mb-4">
               <div class="col-md-6">
-                <label for="note_commentaire" class="form-label">
-                  {{ 'acq-decision.note' | translate }}
+                <label for="suivi_acq" class="form-label fw-semibold">
+                  {{ 'item-formulaire.suivi-acq' | translate }}
+                  <span class="text-danger ms-1">*</span>
                 </label>
-                <textarea id="note_commentaire" formControlName="note_commentaire" rows="10"
-                          class="form-control"
-                          [placeholder]="'acq-decision.note-placeholder' | translate"></textarea>
-                <small class="text-muted" *ngIf="notifTargets.length > 0">
-                  <i class="bi bi-info-circle me-1"></i>Inclus dans le courriel à l'usager.
+                <select id="suivi_acq" formControlName="suivi_acq"
+                        class="form-select form-select-lg">
+                  <option value="" disabled>{{ 'acq-decision.selectionner-suivi' | translate }}</option>
+                  <option *ngFor="let o of options.dircolAcqSuiviOptions" [value]="o">{{ o }}</option>
+                </select>
+                <small class="text-danger"
+                  *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
+                  {{ 'acq-decision.champ-required' | translate }}
                 </small>
               </div>
               <div class="col-md-6">
-                <label for="bibliotheque_note_interne" class="form-label">
-                  <i class="bi bi-lock-fill me-1" style="font-size:.8rem;opacity:.6"></i>
-                  {{ 'item-formulaire.note-interne' | translate }}
+                <label for="statut_acq" class="form-label fw-semibold">
+                  {{ 'item-formulaire.statut-acq' | translate }}
                 </label>
-                <textarea id="bibliotheque_note_interne" formControlName="bibliotheque_note_interne" rows="10"
-                          class="form-control"
-                          [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
-                <small class="text-muted">
-                  <i class="bi bi-eye-slash me-1"></i>Non envoyée à l'usager.
-                </small>
+                <select id="statut_acq" formControlName="statut_acq"
+                        class="form-select form-select-lg">
+                  <option value="">{{ 'acq-decision.selectionner-suivi' | translate }}</option>
+                  <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
+                </select>
               </div>
+            </div>
+
+            <!-- Note ACQ -->
+            <div class="mb-4">
+              <label for="note_acq" class="form-label fw-semibold">
+                {{ 'item-formulaire.note-acq' | translate }}
+              </label>
+              <textarea id="note_acq" formControlName="note_acq" rows="6"
+                        class="form-control"
+                        [placeholder]="'item-formulaire.note-acq-placeholder' | translate"></textarea>
+              <small class="text-muted" *ngIf="notifTargets.length > 0">
+                <i class="bi bi-info-circle me-1"></i>Inclus dans le courriel à l'usager.
+              </small>
             </div>
 
             <!-- Aperçu + Notifications côte à côte -->
@@ -150,11 +148,11 @@
                       <span class="sd-email-preview__key">Statut</span>
                       <span class="sd-email-preview__value fw-semibold">{{ form.get('suivi_acq')?.value }}</span>
                     </div>
-                    <div class="sd-email-preview__row" *ngIf="form.get('note_commentaire')?.value">
+                    <div class="sd-email-preview__row" *ngIf="form.get('note_acq')?.value">
                       <span class="sd-email-preview__key">Note</span>
-                      <span class="sd-email-preview__value fst-italic">{{ form.get('note_commentaire')?.value }}</span>
+                      <span class="sd-email-preview__value fst-italic">{{ form.get('note_acq')?.value }}</span>
                     </div>
-                    <div class="sd-email-preview__row" *ngIf="!form.get('note_commentaire')?.value">
+                    <div class="sd-email-preview__row" *ngIf="!form.get('note_acq')?.value">
                       <span class="sd-email-preview__key">Note</span>
                       <span class="sd-email-preview__value" style="opacity:.45">Aucune note ajoutée</span>
                     </div>

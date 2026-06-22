@@ -105,7 +105,7 @@ export class NouvelAbonnementComponent implements OnInit {
       source_information:   ['', [Validators.required, Validators.pattern('https?://.+')]],
       note_commentaire:     ['',  Validators.maxLength(1000)],
       statut_bibliotheque:  ['Saisie en cours - En attente'],
-      note_interne_bib:     ['', Validators.maxLength(1000)],
+      bibliotheque_note_interne:     ['', Validators.maxLength(1000)],
     });
 
     this.form.get('categorie_document')!.valueChanges.subscribe(val => {
@@ -181,7 +181,7 @@ export class NouvelAbonnementComponent implements OnInit {
           source_information:         bd.source_information,
           note_commentaire:           bd.note_commentaire,
           statut_bibliotheque:        bd.statut_bibliotheque,
-          note_interne_bib:           bd.note_interne_bib,
+          bibliotheque_note_interne:           bd.bibliotheque_note_interne,
         });
       }
     });
@@ -272,7 +272,7 @@ export class NouvelAbonnementComponent implements OnInit {
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
         statut_bibliotheque:        v.statut_bibliotheque,
-        note_interne_bib:           v.note_interne_bib,
+        bibliotheque_note_interne:           v.bibliotheque_note_interne,
         statut_acq:                 'En attente',
       },
       specificData: {
@@ -323,7 +323,7 @@ export class NouvelAbonnementComponent implements OnInit {
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
         statut_bibliotheque:        v.statut_bibliotheque || 'Saisie en cours - En attente',
-        note_interne_bib:           v.note_interne_bib,
+        bibliotheque_note_interne:           v.bibliotheque_note_interne,
         statut_acq:                 'En attente',
       },
       specificData: {

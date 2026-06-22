@@ -66,7 +66,7 @@ export class UsagerProfilComponent implements OnInit {
     note_usager: 'Note usager',
     note_commentaire: 'Note / Commentaire',
     statut_bibliotheque: 'Statut de la demande',
-    note_interne_bib: 'Note interne bibliothèque',
+    bibliotheque_note_interne: 'Note interne bibliothèque',
   };
 
   private readonly FIELD_ORDER = [
@@ -84,7 +84,7 @@ export class UsagerProfilComponent implements OnInit {
     'reserve_cours', 'reserve_cours_sigle', 'reserve_cours_session', 'reserve_cours_enseignant',
     'date_requise_cours', 'aviser_reservation', 'aviser_reception',
     'note_usager', 'note_commentaire',
-    'statut_bibliotheque', 'note_interne_bib',
+    'statut_bibliotheque', 'bibliotheque_note_interne',
   ];
 
   filtreType   = '';
