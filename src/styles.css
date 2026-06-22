@@ -7,3 +7,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   html { height: auto; }
   body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; }
 }
+
+/* ── Textes d'aide sous les champs (tous formulaires) ───────── */
+.form-text {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.775rem;
+  font-style: italic;
+  color: #5b85ae;
+  margin-top: 4px;
+  line-height: 1;
+}
+
+.form-text::before {
+  font-family: 'bootstrap-icons';
+  font-style: normal;
+  content: '\f431';
+  font-size: 0.72rem;
+  color: #5b85ae;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.mt-neg-20{
+  margin-top: -20px!important;
+}

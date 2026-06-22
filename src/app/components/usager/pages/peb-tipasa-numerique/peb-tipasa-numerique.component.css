@@ -12,11 +12,11 @@
 
 /* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
+  border-top:    2px solid rgba(3, 105, 161, .35);
   border-bottom: 2px solid rgba(3, 105, 161, .35);
 }
 .form-header__icon {
   background: var(--peb-mid);
-  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -50,17 +50,12 @@
   color:      var(--peb-mid);
 }
 
-/* ── Chips de format ────────────────────────────────────────── */
-.btn-format:hover {
-  background:   var(--peb-light);
-  color:        var(--peb-mid);
-  border-color: var(--peb-mid);
-}
-.btn-format--active {
-  background:   var(--peb-mid) !important;
-  border-color: var(--peb-mid) !important;
-  color:        var(--white)   !important;
-}
+/* ── Contrôle segmenté Format — surcharges couleur bleu PEB ─── */
+.format-toggle-btn:hover   { background: var(--peb-light); color: var(--peb-mid); }
+.format-toggle-btn--active { background: var(--peb-light); color: var(--peb-mid); }
+
+/* ── Interrupteur — couleur cochée ─────────────────────────── */
+.form-switch .form-check-input:checked { background-color: var(--peb-mid); border-color: var(--peb-mid); }
 
 /* ── Zone conditionnelle électronique ───────────────────────── */
 .electronique-fields {

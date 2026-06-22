@@ -25,7 +25,7 @@
       </div>
       <div>
         <h1 class="form-header__title">{{ 'form-nouvel-achat.titre' | translate }}</h1>
-        <p class="form-header__subtitle">
+        <p class="form-header__subtitle mt-neg-20">
           {{ 'form-nouvel-achat.sous-titre' | translate }}
         </p>
       </div>
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -73,7 +73,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
@@ -96,7 +96,7 @@
           <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
@@ -106,7 +106,7 @@
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.sous-titre' | translate }}</label>
             <input type="text" formControlName="sous_titre" class="form-control"
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
@@ -197,20 +197,48 @@
           <i class="fas fa-layer-group"></i>{{ 'forms-usager.section-format' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
-            <div class="format-chips">
-              <button type="button" class="btn btn-format"
-                      [class.btn-format--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
-                      (click)="form.patchValue({ format_support: 'Imprimé/support physique' })">
-                <i class="fas fa-print me-2"></i>{{ 'forms-usager.imprime-physique' | translate }}
-              </button>
-              <button type="button" class="btn btn-format"
-                      [class.btn-format--active]="form.get('format_support')?.value === 'Électronique'"
-                      (click)="form.patchValue({ format_support: 'Électronique' })">
-                <i class="fas fa-laptop me-2"></i>{{ 'forms-usager.electronique' | translate }}
-              </button>
+            <div class="format-toggle">
+              <div class="format-toggle-btn"
+                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
+                   role="button" tabindex="0"
+                   (click)="form.patchValue({ format_support: 'Imprimé/support physique' })"
+                   (keydown.enter)="form.patchValue({ format_support: 'Imprimé/support physique' })">
+                <i class="fas fa-book"></i>{{ 'forms-usager.imprime-physique' | translate }}
+              </div>
+              <div class="format-toggle-btn"
+                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Électronique'"
+                   role="button" tabindex="0"
+                   (click)="form.patchValue({ format_support: 'Électronique' })"
+                   (keydown.enter)="form.patchValue({ format_support: 'Électronique' })">
+                <i class="fas fa-laptop"></i>{{ 'forms-usager.electronique' | translate }}
+              </div>
             </div>
+          </div>
+
+          <!-- Champ courriel — ancré à droite du format, peu importe la sélection -->
+          <div class="col-md-6">
+            <ng-container *ngIf="showAviserReservation">
+              <label class="form-label">{{ 'forms-usager.aviser-reservation' | translate }}</label>
+              <input type="email" formControlName="aviser_reservation" class="form-control"
+                     [class.is-invalid]="isInvalid('aviser_reservation')"
+                     placeholder="courriel@umontreal.ca">
+              <div *ngIf="isInvalid('aviser_reservation')" class="invalid-feedback">
+                <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
+              </div>
+              <small class="form-text">{{ 'forms-usager.aviser-reservation-hint' | translate }}</small>
+            </ng-container>
+            <ng-container *ngIf="showElectronique">
+              <label class="form-label">{{ 'forms-usager.aviser-activation' | translate }}</label>
+              <input type="email" formControlName="aviser_activation" class="form-control"
+                     [class.is-invalid]="isInvalid('aviser_activation')"
+                     placeholder="courriel@umontreal.ca">
+              <div *ngIf="isInvalid('aviser_activation')" class="invalid-feedback">
+                <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
+              </div>
+              <small class="form-text">{{ 'forms-usager.aviser-activation-hint' | translate }}</small>
+            </ng-container>
           </div>
 
           <div class="col-12" *ngIf="showElectronique">
@@ -245,30 +273,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Usager à aviser — Imprimé/support physique -->
-          <div class="col-md-6" *ngIf="showAviserReservation">
-            <label class="form-label">{{ 'forms-usager.aviser-reservation' | translate }}</label>
-            <input type="email" formControlName="aviser_reservation" class="form-control"
-                   [class.is-invalid]="isInvalid('aviser_reservation')"
-                   placeholder="courriel@umontreal.ca">
-            <div *ngIf="isInvalid('aviser_reservation')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.aviser-reservation-hint' | translate }}</small>
-          </div>
-
-          <!-- Usager à aviser — Électronique -->
-          <div class="col-md-6" *ngIf="showElectronique">
-            <label class="form-label">{{ 'forms-usager.aviser-activation' | translate }}</label>
-            <input type="email" formControlName="aviser_activation" class="form-control"
-                   [class.is-invalid]="isInvalid('aviser_activation')"
-                   placeholder="courriel@umontreal.ca">
-            <div *ngIf="isInvalid('aviser_activation')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.aviser-activation-hint' | translate }}</small>
           </div>
         </div>
       </div>
@@ -384,7 +388,7 @@
           <i class="fas fa-university"></i>Bibliothèque
         </h2>
         <div class="row g-3 align-items-start">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Statut de la demande</label>
             <select formControlName="statut_bibliotheque" class="form-select">
               <option value="">— Sélectionner —</option>
@@ -394,7 +398,9 @@
               <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.
             </small>
           </div>
-          <div class="col-md-4">
+        </div>
+        <div class="row g-3 align-items-start mt-1">
+          <div class="col-md-6">
             <label class="form-label">Note / Commentaire</label>
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
@@ -407,7 +413,7 @@
               <small class="form-text">{{ form.get('note_commentaire')?.value?.length || 0 }} / 1000</small>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">
               <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>Note interne
             </label>

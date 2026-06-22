@@ -12,11 +12,11 @@
 
 /* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
+  border-top:    2px solid rgba(22, 163, 74, .35);
   border-bottom: 2px solid rgba(22, 163, 74, .35);
 }
 .form-header__icon {
   background: var(--abo-mid);
-  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -50,17 +50,9 @@
   color:      var(--abo-mid);
 }
 
-/* ── Chips de format ────────────────────────────────────────── */
-.btn-format:hover {
-  background:   var(--abo-light);
-  color:        var(--abo-mid);
-  border-color: var(--abo-mid);
-}
-.btn-format--active {
-  background:   var(--abo-mid) !important;
-  border-color: var(--abo-mid) !important;
-  color:        var(--white)   !important;
-}
+/* ── Contrôle segmenté Format — surcharges couleur vert ─────── */
+.format-toggle-btn:hover   { background: var(--abo-light); color: var(--abo-mid); }
+.format-toggle-btn--active { background: var(--abo-light); color: var(--abo-mid); }
 
 /* ── Zone conditionnelle électronique ───────────────────────── */
 .electronique-fields {

@@ -25,7 +25,7 @@
       </div>
       <div>
         <h1 class="form-header__title">{{ 'form-peb-tipasa.titre' | translate }}</h1>
-        <p class="form-header__subtitle">
+        <p class="form-header__subtitle mt-neg-20">
           {{ 'form-peb-tipasa.sous-titre' | translate }}
         </p>
       </div>
@@ -98,13 +98,14 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DOCUMENT -->
+      <!-- SECTION 2 — DOCUMENT ET DISPONIBILITÉ NUMÉRIQUE -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>{{ 'forms-usager.label-document' | translate }}
+          <i class="fas fa-book-open"></i>Document et disponibilité numérique
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
@@ -114,19 +115,19 @@
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.sous-titre' | translate }}</label>
             <input type="text" formControlName="sous_titre" class="form-control"
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    placeholder="Maison d'édition">
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
@@ -138,12 +139,19 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="date" formControlName="date_publication" class="form-control">
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-3">
+            <label class="form-label">{{ 'form-peb-tipasa.reference-tipasa' | translate }}</label>
+            <input type="text" formControlName="reference_tipasa" class="form-control"
+                   [placeholder]="'form-peb-tipasa.reference-tipasa-placeholder' | translate">
+            <small class="form-text">{{ 'form-peb-tipasa.reference-tipasa-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -154,20 +162,9 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.categorie-required' | translate }}
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- SECTION 3 — DISPONIBILITÉ NUMÉRIQUE -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="fas fa-laptop"></i>{{ 'form-peb-tipasa.section-disponibilite' | translate }}
-        </h2>
-        <div class="row g-3">
-
-          <div class="col-md-6">
-            <label class="form-label required">
-              {{ 'form-peb-tipasa.gobi-disponible' | translate }}
-            </label>
+          <div class="col-md-4">
+            <label class="form-label required">{{ 'form-peb-tipasa.gobi-disponible' | translate }}</label>
             <select formControlName="gobi_vu_format_numerique" class="form-select"
                     [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -179,14 +176,7 @@
             <small class="form-text">{{ 'form-peb-tipasa.gobi-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ 'form-peb-tipasa.reference-tipasa' | translate }}</label>
-            <input type="text" formControlName="reference_tipasa" class="form-control"
-                   [placeholder]="'form-peb-tipasa.reference-tipasa-placeholder' | translate">
-            <small class="form-text">{{ 'form-peb-tipasa.reference-tipasa-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-3">
+          <div class="col-md-5">
             <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
@@ -206,29 +196,35 @@
           <i class="fas fa-layer-group"></i>{{ 'forms-usager.section-format' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <div class="col-md-8">
             <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
-            <div class="format-chips">
-              <button type="button" class="btn btn-format"
-                      [class.btn-format--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
-                      (click)="form.patchValue({ format_support: 'Imprimé/support physique' })">
-                <i class="fas fa-print me-2"></i>{{ 'forms-usager.imprime-physique' | translate }}
-              </button>
-              <button type="button" class="btn btn-format"
-                      [class.btn-format--active]="form.get('format_support')?.value === 'Électronique'"
-                      (click)="form.patchValue({ format_support: 'Électronique' })">
-                <i class="fas fa-laptop me-2"></i>{{ 'forms-usager.electronique' | translate }}
-              </button>
-              <button type="button" class="btn btn-format"
-                      [class.btn-format--active]="form.get('format_support')?.value === 'Imprimé et électronique'"
-                      (click)="form.patchValue({ format_support: 'Imprimé et électronique' })">
-                <i class="fas fa-layer-group me-2"></i>{{ 'forms-usager.imprime-et-electronique' | translate }}
-              </button>
+            <div class="format-toggle">
+              <div class="format-toggle-btn"
+                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
+                   role="button" tabindex="0"
+                   (click)="form.patchValue({ format_support: 'Imprimé/support physique' })"
+                   (keydown.enter)="form.patchValue({ format_support: 'Imprimé/support physique' })">
+                <i class="fas fa-print"></i>{{ 'forms-usager.imprime-physique' | translate }}
+              </div>
+              <div class="format-toggle-btn"
+                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Électronique'"
+                   role="button" tabindex="0"
+                   (click)="form.patchValue({ format_support: 'Électronique' })"
+                   (keydown.enter)="form.patchValue({ format_support: 'Électronique' })">
+                <i class="fas fa-laptop"></i>{{ 'forms-usager.electronique' | translate }}
+              </div>
+              <div class="format-toggle-btn"
+                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé et électronique'"
+                   role="button" tabindex="0"
+                   (click)="form.patchValue({ format_support: 'Imprimé et électronique' })"
+                   (keydown.enter)="form.patchValue({ format_support: 'Imprimé et électronique' })">
+                <i class="fas fa-layer-group"></i>{{ 'forms-usager.imprime-et-electronique' | translate }}
+              </div>
             </div>
           </div>
 
           <!-- Création de notice TDM — visible si non Électronique pur -->
-          <div class="col-md-6" *ngIf="showImprime">
+          <div class="col-md-4 d-flex align-items-center" *ngIf="showImprime">
             <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox"
                      formControlName="creation_notice_dtdm"
@@ -327,7 +323,7 @@
           <i class="fas fa-university"></i>Bibliothèque
         </h2>
         <div class="row g-3 align-items-start">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Statut de la demande</label>
             <select formControlName="statut_bibliotheque" class="form-select">
               <option value="">— Sélectionner —</option>
@@ -337,7 +333,9 @@
               <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.
             </small>
           </div>
-          <div class="col-md-4">
+        </div>
+        <div class="row g-3 align-items-start mt-1">
+          <div class="col-md-6">
             <label class="form-label">Note / Commentaire</label>
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
@@ -350,7 +348,7 @@
               <small class="form-text">{{ form.get('note_commentaire')?.value?.length || 0 }} / 1000</small>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">
               <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>Note interne
             </label>

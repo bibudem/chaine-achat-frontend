@@ -2092,38 +2092,40 @@ body.sidebar-open { overflow: hidden; }
 /* Conteneur de page */
 .form-container { margin-bottom: 20px; }
 
-/* En-tête — fond gris pâle commun ; border-bottom + icône colorés dans chaque composant */
+/* En-tête — cohérent avec up-banner ; border-bottom coloré dans chaque composant */
 .form-header {
   display:       flex;
   align-items:   center;
-  gap:           16px;
-  padding:       20px 28px;
+  gap:           1rem;
+  padding:       0.85rem 1.5rem;
   border-radius: 12px 12px 0 0;
-  background:    #f8f9fb;
-  /* border-bottom : overridé dans chaque composant */
+  background:    #f8fafc;
+  /* border-top + border-bottom : overridés dans chaque composant */
 }
 .form-header__icon {
-  width:           46px;
-  height:          46px;
-  border-radius:   10px;
+  width:           40px;
+  height:          40px;
+  border-radius:   9px;
   display:         flex;
   align-items:     center;
   justify-content: center;
-  font-size:       1.2rem;
+  font-size:       1rem;
   flex-shrink:     0;
-  /* background + color : overridés dans chaque composant */
+  background:      #0B113A;
+  color:           #fff;
+  /* background overridé dans chaque composant */
 }
 .form-header__title {
-  font-size:   1.15rem;
+  font-size:   1rem;
   font-weight: 700;
   margin:      0;
   color:       #0B113A;
-  line-height: 1.25;
+  line-height: 1.15;
 }
 .form-header__subtitle {
-  font-size: 0.82rem;
-  margin:    4px 0 0;
-  color:     #6b7280;
+  font-size: 0.76rem;
+  margin:    0;
+  color:     #607386;
   opacity:   1;
 }
 
@@ -2272,6 +2274,41 @@ body.sidebar-open { overflow: hidden; }
   background:   var(--light-gray) !important;
   color:        var(--medium-gray) !important;
   border-color: var(--border-gray) !important;
+}
+
+/* ── Contrôle segmenté Format/Support (partagé entre formulaires) ── */
+.format-toggle {
+  display: flex;
+  border: 1.5px solid #ced4da;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.format-toggle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: #6c757d;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, color 0.15s;
+}
+.format-toggle-btn + .format-toggle-btn {
+  border-left: 1.5px solid #ced4da;
+}
+.format-toggle-btn:hover {
+  background: #f0f4f8;
+  color: #495057;
+}
+.format-toggle-btn--active {
+  background: #e8edf2;
+  color: #2c3e50;
+  font-weight: 600;
 }
 
 /* Barre d'actions en bas du formulaire (border-top dans le composant) */

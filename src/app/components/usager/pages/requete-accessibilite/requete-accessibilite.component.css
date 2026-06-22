@@ -5,11 +5,11 @@
    ============================================================ */
 /* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
+  border-top:    2px solid rgba(55, 66, 77, .35);
   border-bottom: 2px solid rgba(55, 66, 77, .35);
 }
 .form-header__icon {
   background: var(--acces-mid);
-  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -30,17 +30,9 @@
   outline:      none                                !important;
 }
 
-/* ── Chips de format ────────────────────────────────────────── */
-.btn-format:hover {
-  background:   var(--acces-light);
-  color:        var(--acces-mid);
-  border-color: var(--acces-mid);
-}
-.btn-format--active {
-  background:   var(--acces-mid) !important;
-  border-color: var(--acces-mid) !important;
-  color:        #fff             !important;
-}
+/* ── Contrôle segmenté Format — surcharges couleur gris ACQ ─── */
+.format-toggle-btn:hover   { background: var(--acces-light); color: var(--acces-mid); }
+.format-toggle-btn--active { background: var(--acces-light); color: var(--acces-mid); }
 
 /* ── Interrupteur ──────────────────────────────────────────── */
 .form-switch .form-check-input:checked {

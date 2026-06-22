@@ -6,11 +6,11 @@
 
 /* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
+  border-top:    2px solid var(--suggest-border);
   border-bottom: 2px solid var(--suggest-border);
 }
 .form-header__icon {
   background: var(--suggest-mid);
-  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */

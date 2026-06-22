@@ -6,11 +6,11 @@
 
 /* ── En-tête clair ─────────────────────────────────────────── */
 .form-header {
+  border-top:    2px solid var(--achat-border);
   border-bottom: 2px solid var(--achat-border);
 }
 .form-header__icon {
   background: var(--achat-mid);
-  color:      #fff;
 }
 
 /* ── Titre de section ──────────────────────────────────────── */
@@ -45,17 +45,9 @@
   color:      var(--achat-mid);
 }
 
-/* ── Chips de format ────────────────────────────────────────── */
-.btn-format:hover {
-  background:   var(--achat-light);
-  color:        var(--achat-mid);
-  border-color: var(--achat-mid);
-}
-.btn-format--active {
-  background:   var(--achat-mid) !important;
-  border-color: var(--achat-mid) !important;
-  color:        var(--white)     !important;
-}
+/* ── Contrôle segmenté Format — surcharges couleur teal ─────── */
+.format-toggle-btn:hover        { background: var(--achat-light); color: var(--achat-mid); }
+.format-toggle-btn--active      { background: var(--achat-light); color: var(--achat-mid); }
 
 /* ── Interrupteur (réserve de cours) — couleur cochée ──────── */
 .form-switch .form-check-input:checked {
@@ -72,6 +64,13 @@
 }
 .reserve-cours-fields { margin-top: 4px; }
 .electronique-fields  { margin-top: 8px; }
+
+/* ── Notes d'aide sous les champs ─────────────────────────── */
+.form-text {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  margin-top: 0.3rem;
+}
 
 /* ── Barre d'actions ───────────────────────────────────────── */
 .form-actions { border-top: 2px solid var(--achat-light); }
