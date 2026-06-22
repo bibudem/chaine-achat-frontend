@@ -46,6 +46,41 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     return `items-list-favoris-${user}`;
   }
 
+  private readonly FILTER_STATE_KEY = 'items-list-filter-state';
+
+  private saveFilterState(): void {
+    sessionStorage.setItem(this.FILTER_STATE_KEY, JSON.stringify({
+      searchTerm:             this.searchTerm,
+      selectedBibliotheque:   this.selectedBibliotheque,
+      selectedStatutBib:      this.selectedStatutBib,
+      selectedStatutAcq:      this.selectedStatutAcq,
+      selectedSuiviAcq:       this.selectedSuiviAcq,
+      selectedFormulaireType: this.selectedFormulaireType,
+      selectedFonds:          this.selectedFonds,
+      currentPage:            this.currentPage,
+      sortColumn:             this.sortColumn,
+      sortDirection:          this.sortDirection,
+    }));
+  }
+
+  private restoreFilterState(): void {
+    try {
+      const stored = sessionStorage.getItem(this.FILTER_STATE_KEY);
+      if (!stored) return;
+      const s = JSON.parse(stored);
+      this.searchTerm             = s.searchTerm             ?? '';
+      this.selectedBibliotheque   = s.selectedBibliotheque   ?? '';
+      this.selectedStatutBib      = s.selectedStatutBib      ?? '';
+      this.selectedStatutAcq      = s.selectedStatutAcq      ?? '';
+      this.selectedSuiviAcq       = s.selectedSuiviAcq       ?? '';
+      this.selectedFormulaireType = s.selectedFormulaireType ?? '';
+      this.selectedFonds          = s.selectedFonds          ?? '';
+      this.currentPage            = s.currentPage            ?? 1;
+      this.sortColumn             = s.sortColumn             ?? 'date_creation';
+      this.sortDirection          = s.sortDirection          ?? 'desc';
+    } catch { /* état corrompu, on ignore */ }
+  }
+
   @HostListener('document:click')
   onDocumentClick(): void { this.showFavorisPanel = false; }
 
@@ -84,9 +119,12 @@ export class ItemsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.lireDecisionParams();
+    this.restoreFilterState();
 
     const typeParam = this.route.snapshot.queryParamMap.get('formulaire_type');
-    if (typeParam) this.selectedFormulaireType = typeParam;
+    if (typeParam && !sessionStorage.getItem(this.FILTER_STATE_KEY)) {
+      this.selectedFormulaireType = typeParam;
+    }
 
     this.subs.add(
       this.searchSubject.pipe(debounceTime(300), distinctUntilChanged())
@@ -183,6 +221,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.sortColumn             = 'date_creation';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
+    sessionStorage.removeItem(this.FILTER_STATE_KEY);
     this.loadItems();
   }
 
@@ -269,11 +308,13 @@ export class ItemsListComponent implements OnInit, OnDestroy {
 
   viewItem(id?: number): void {
     if (!id) return;
+    this.saveFilterState();
     this.router.navigate(['/items/details', id]);
   }
 
   editItem(id?: number): void {
     if (!id) return;
+    this.saveFilterState();
     this.router.navigate(['/items', id]);
   }
 
