@@ -89,9 +89,11 @@ export class UsagerProfilComponent implements OnInit {
 
   filtreRecherche  = '';
   filtreType       = '';
-  filtreStatut     = '';
   filtreDateDebut  = '';
   filtreDateFin    = '';
+
+  currentPage          = 1;
+  readonly itemsPerPage = 8;
 
   get prenom():   string { return sessionStorage.getItem('prenomAdmin')   ?? ''; }
   get nom():      string { return sessionStorage.getItem('nomAdmin')       ?? ''; }
@@ -104,22 +106,33 @@ export class UsagerProfilComponent implements OnInit {
     return [...new Set(this.demandes.map(d => d.type_formulaire))].sort();
   }
 
-  get statutsDisponibles(): string[] {
-    return [...new Set(
-      this.demandes.map(d => d.statut_bibliotheque ?? '').filter(s => s !== '')
-    )].sort();
-  }
-
   get demandesFiltrees(): DemandeUsager[] {
     return this.demandes.filter(d => {
-      const rechercheOk  = !this.filtreRecherche  ||
+      const rechercheOk = !this.filtreRecherche ||
         (d.titre_document ?? '').toLowerCase().includes(this.filtreRecherche.toLowerCase());
-      const typeOk       = !this.filtreType       || d.type_formulaire    === this.filtreType;
-      const statutOk     = !this.filtreStatut     || d.statut_bibliotheque === this.filtreStatut;
-      const dateDebutOk  = !this.filtreDateDebut  || (d.dateA ?? '') >= this.filtreDateDebut;
-      const dateFinOk    = !this.filtreDateFin    || (d.dateA ?? '').substring(0, 10) <= this.filtreDateFin;
-      return rechercheOk && typeOk && statutOk && dateDebutOk && dateFinOk;
+      const typeOk      = !this.filtreType      || d.type_formulaire === this.filtreType;
+      const dateDebutOk = !this.filtreDateDebut || (d.dateA ?? '') >= this.filtreDateDebut;
+      const dateFinOk   = !this.filtreDateFin   || (d.dateA ?? '').substring(0, 10) <= this.filtreDateFin;
+      return rechercheOk && typeOk && dateDebutOk && dateFinOk;
     });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.demandesFiltrees.length / this.itemsPerPage);
+  }
+
+  get demandesPage(): DemandeUsager[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.demandesFiltrees.slice(start, start + this.itemsPerPage);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
   }
 
   constructor(private reponsesService: ReponsesService) {}

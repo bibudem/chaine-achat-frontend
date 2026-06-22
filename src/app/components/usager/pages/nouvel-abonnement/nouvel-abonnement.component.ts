@@ -278,6 +278,7 @@ export class NouvelAbonnementComponent implements OnInit {
         statut_bibliotheque:        v.statut_bibliotheque,
         bibliotheque_note_interne:           v.bibliotheque_note_interne,
         statut_acq:                 'En attente',
+        send_notification:          v.statut_bibliotheque === 'Soumettre aux ACQ',
       },
       specificData: {
         date_debut_abonnement:    v.date_debut_abonnement,
@@ -329,6 +330,7 @@ export class NouvelAbonnementComponent implements OnInit {
         statut_bibliotheque:        v.statut_bibliotheque || 'Saisie en cours - En attente',
         bibliotheque_note_interne:           v.bibliotheque_note_interne,
         statut_acq:                 'En attente',
+        send_notification:          v.statut_bibliotheque === 'Soumettre aux ACQ',
       },
       specificData: {
         date_debut_abonnement:    v.date_debut_abonnement,

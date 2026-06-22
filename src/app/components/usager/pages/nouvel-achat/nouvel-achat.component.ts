@@ -307,6 +307,7 @@ export class NouvelAchatComponent implements OnInit {
         statut_bibliotheque:   v.statut_bibliotheque,
         bibliotheque_note_interne:      v.bibliotheque_note_interne,
         statut_acq:            'En attente',
+        send_notification:     v.statut_bibliotheque === 'Soumettre aux ACQ',
       },
       specificData: {
         type_monographie:          this.showMonographie ? v.type_monographie : null,
@@ -364,6 +365,7 @@ export class NouvelAchatComponent implements OnInit {
         statut_bibliotheque:   v.statut_bibliotheque || 'Saisie en cours - En attente',
         bibliotheque_note_interne:      v.bibliotheque_note_interne,
         statut_acq:            'En attente',
+        send_notification:     v.statut_bibliotheque === 'Soumettre aux ACQ',
       },
       specificData: {
         type_monographie:          this.showMonographie ? v.type_monographie : null,

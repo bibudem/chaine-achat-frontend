@@ -381,6 +381,58 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PAGINATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.up-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .3rem;
+  margin-top: 1rem;
+}
+.up-pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 .5rem;
+  font-size: .8rem;
+  font-weight: 500;
+  color: #607386;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.up-pagination__btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0B113A;
+}
+.up-pagination__btn:disabled {
+  opacity: .35;
+  cursor: default;
+}
+.up-pagination__btn--active {
+  background: #0B113A;
+  border-color: #0B113A;
+  color: #fff;
+  font-weight: 700;
+}
+.up-pagination__btn--active:hover {
+  background: #0B113A;
+}
+.up-pagination__info {
+  font-size: .74rem;
+  color: #94a3b8;
+  margin-left: .5rem;
+  white-space: nowrap;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    RESPONSIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media (max-width: 640px) {

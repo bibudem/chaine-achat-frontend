@@ -72,27 +72,24 @@
           <i class="bi bi-search filterbar__search-icon"></i>
           <input type="text" class="filterbar__search-input"
                  [(ngModel)]="filtreRecherche"
+                 (ngModelChange)="currentPage = 1"
                  placeholder="Rechercher un titre…">
         </div>
         <span class="filterbar__sep"></span>
-        <select class="filterbar__select" [(ngModel)]="filtreType">
+        <select class="filterbar__select" [(ngModel)]="filtreType" (ngModelChange)="currentPage = 1">
           <option value="">Tous les types</option>
           <option *ngFor="let t of typesDisponibles" [value]="t">{{ t }}</option>
         </select>
-        <select class="filterbar__select" [(ngModel)]="filtreStatut">
-          <option value="">Tous les statuts</option>
-          <option *ngFor="let s of statutsDisponibles" [value]="s">{{ s }}</option>
-        </select>
         <span class="filterbar__sep"></span>
         <div class="filterbar__dategroup">
-          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut">
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut" (ngModelChange)="currentPage = 1">
           <span class="filterbar__date-sep">→</span>
-          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin">
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin" (ngModelChange)="currentPage = 1">
         </div>
         <div class="filterbar__actions">
-          <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreStatut || filtreDateDebut || filtreDateFin"
+          <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreDateDebut || filtreDateFin"
                   class="filterbar__reset"
-                  (click)="filtreRecherche = ''; filtreType = ''; filtreStatut = ''; filtreDateDebut = ''; filtreDateFin = ''">
+                  (click)="filtreRecherche = ''; filtreType = ''; filtreDateDebut = ''; filtreDateFin = ''; currentPage = 1">
             <i class="bi bi-x"></i> Réinitialiser
           </button>
           <span class="filterbar__count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
@@ -103,7 +100,7 @@
       <div class="up-list">
         <ng-container *ngIf="demandesFiltrees.length > 0; else aucunResultat">
 
-          <div class="up-card" *ngFor="let d of demandesFiltrees" [ngClass]="'up-card--' + statutKey(d)">
+          <div class="up-card" *ngFor="let d of demandesPage" [ngClass]="'up-card--' + statutKey(d)">
 
             <!-- Ligne principale -->
             <div class="up-card__row">
@@ -240,6 +237,31 @@
             <span>Aucune demande ne correspond aux filtres sélectionnés.</span>
           </div>
         </ng-template>
+      </div>
+
+      <!-- Pagination -->
+      <div class="up-pagination" *ngIf="totalPages > 1">
+        <button class="up-pagination__btn"
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <ng-container *ngFor="let p of pages">
+          <button class="up-pagination__btn"
+                  [class.up-pagination__btn--active]="p === currentPage"
+                  (click)="goToPage(p)">{{ p }}</button>
+        </ng-container>
+
+        <button class="up-pagination__btn"
+                [disabled]="currentPage === totalPages"
+                (click)="goToPage(currentPage + 1)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <span class="up-pagination__info">
+          {{ (currentPage - 1) * itemsPerPage + 1 }}–{{ currentPage * itemsPerPage > demandesFiltrees.length ? demandesFiltrees.length : currentPage * itemsPerPage }} sur {{ demandesFiltrees.length }}
+        </span>
       </div>
 
     </ng-container>
