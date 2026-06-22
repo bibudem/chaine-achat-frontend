@@ -305,9 +305,10 @@
             <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
-              <input type="number" formControlName="prix_cad" class="form-control"
+              <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
                      [class.is-invalid]="isInvalid('prix_cad')"
-                     readonly [placeholder]="'forms-usager.converti-auto' | translate">
+                     [readonly]="form.get('devise_originale')?.value === 'USD'"
+                     [placeholder]="form.get('devise_originale')?.value === 'USD' ? ('forms-usager.converti-auto' | translate) : '0.00'">
             </div>
             <div *ngIf="isInvalid('prix_cad')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.entrez-devise-prix' | translate }}

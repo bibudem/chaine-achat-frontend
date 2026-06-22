@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface AppConfig {
@@ -27,6 +28,19 @@ export class ConfigService {
 
   getConfig(): Observable<ApiResponse<AppConfig>> {
     return this.http.get<ApiResponse<AppConfig>>(this.baseUrl);
+  }
+
+  getTauxUsd(): Observable<number> {
+    return this.getConfig().pipe(
+      map(res => {
+        if (res.success && res.data?.acq_taux_usd) {
+          const t = parseFloat(res.data.acq_taux_usd.replace(',', '.'));
+          return isNaN(t) ? 1.368 : t;
+        }
+        return 1.368;
+      }),
+      catchError(() => of(1.368))
+    );
   }
 
   updateConfig(cle: string, valeur: string): Observable<ApiResponse<any>> {

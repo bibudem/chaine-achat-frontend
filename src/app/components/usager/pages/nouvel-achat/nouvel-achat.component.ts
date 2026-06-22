@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
+import { ConfigService } from '../../../../services/config.service';
 
 @Component({
   selector: 'app-nouvel-achat',
@@ -20,7 +21,8 @@ export class NouvelAchatComponent implements OnInit {
   showElectronique      = false;
   showMonographie       = false;
   showAviserReservation = true;
-  editId: number | null = null;
+  editId:  number | null = null;
+  tauxUsd = 1.368;
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -69,7 +71,8 @@ export class NouvelAchatComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -162,8 +165,14 @@ export class NouvelAchatComponent implements OnInit {
       aviserAct.updateValueAndValidity();
     });
 
-    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
-    this.form.get('devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
+    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => {
+      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+    });
+    this.form.get('devise_originale')!.valueChanges.subscribe(() => {
+      this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
+      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+    });
+    this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -233,12 +242,9 @@ export class NouvelAchatComponent implements OnInit {
   }
 
   private convertirPrix(): void {
-    const prix   = this.form.get('prix_devise_originale')?.value;
-    const devise = this.form.get('devise_originale')?.value;
-    if (!prix || !devise) return;
-    const taux: { [k: string]: number } = { USD: 1.368, EUR: 1.48, GBP: 1.73, CHF: 1.52 };
-    const prixCAD = devise === 'CAD' ? prix : prix * (taux[devise] || 1);
-    this.form.get('prix_cad')?.setValue(parseFloat(prixCAD.toFixed(2)), { emitEvent: false });
+    const prix = this.form.get('prix_devise_originale')?.value;
+    if (!prix) return;
+    this.form.get('prix_cad')?.setValue(parseFloat((prix * this.tauxUsd).toFixed(2)), { emitEvent: false });
   }
 
   get f() { return this.form.controls; }
