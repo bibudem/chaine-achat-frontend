@@ -399,23 +399,22 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     this.notifTargets = [];
     if (!this.item) return;
 
-    // Courriel demandeur / usager — tous types
-    if (this.item.usager_courriel) {
+    const hasReservation = (this.isNouvelAchat || this.isNouvelAbonnement)
+                           && !!this.item.usager_aviser_reservation;
+
+    // Priorité : Aviser réservation si disponible, sinon courriel demandeur
+    if (hasReservation) {
+      this.notifTargets.push({
+        key: 'reservation', label: 'Aviser — Réservation', icon: 'bi-bookmark-fill',
+        email: this.item.usager_aviser_reservation!,
+        description: 'Notifier lors de la mise en réservation',
+        selected: true
+      });
+    } else if (this.item.usager_courriel) {
       this.notifTargets.push({
         key: 'usager', label: 'Demandeur', icon: 'bi-person-fill',
         email: this.item.usager_courriel,
         description: 'Informer le demandeur du statut de sa demande',
-        selected: true
-      });
-    }
-
-    // Aviser réservation — si le champ est renseigné (Nouvel achat + Nouvel abonnement)
-    if ((this.isNouvelAchat || this.isNouvelAbonnement)
-        && this.item.usager_aviser_reservation) {
-      this.notifTargets.push({
-        key: 'reservation', label: 'Aviser — Réservation', icon: 'bi-bookmark-fill',
-        email: this.item.usager_aviser_reservation,
-        description: 'Notifier lors de la mise en réservation',
         selected: true
       });
     }

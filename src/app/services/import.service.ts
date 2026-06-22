@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -295,10 +296,20 @@ export class ImportService {
     );
   }
 
-  downloadTemplate(type: FormType): void {
-    window.open(
+  downloadTemplate(type: FormType): Observable<void> {
+    const filename = `modele_import_${type.replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
+    return this.http.get(
       `${this.baseUrl}/template/${encodeURIComponent(type)}`,
-      '_blank'
+      { responseType: 'blob' }
+    ).pipe(
+      map(blob => {
+        const url = URL.createObjectURL(blob);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      })
     );
   }
 }
