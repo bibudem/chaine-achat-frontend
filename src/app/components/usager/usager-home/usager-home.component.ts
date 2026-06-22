@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ReponsesService } from '../../../services/reponses.service';
 
 export interface FormulaireCard {
   titre:       string;
@@ -15,7 +16,12 @@ export interface FormulaireCard {
   templateUrl: './usager-home.component.html',
   styleUrls:   ['./usager-home.component.css']
 })
-export class UsagerHomeComponent {
+export class UsagerHomeComponent implements OnInit {
+
+  totalDemandes: number | null = null;
+  loadingDemandes = true;
+
+  constructor(private reponsesService: ReponsesService) {}
 
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
   get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
@@ -23,6 +29,16 @@ export class UsagerHomeComponent {
     const p = this.prenomAdmin.charAt(0);
     const n = this.nomAdmin.charAt(0);
     return (p + n).toUpperCase() || '?';
+  }
+
+  ngOnInit(): void {
+    const email = sessionStorage.getItem('courrielAdmin') ?? '';
+    if (!email) { this.loadingDemandes = false; return; }
+
+    this.reponsesService.getByEmail(email).subscribe({
+      next:  res  => { this.totalDemandes = res.data?.length ?? 0; this.loadingDemandes = false; },
+      error: ()   => { this.totalDemandes = null;                  this.loadingDemandes = false; }
+    });
   }
 
   readonly formulaires: FormulaireCard[] = [

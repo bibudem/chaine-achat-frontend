@@ -100,6 +100,7 @@
 
 /* ── Carte "Mes demandes" ── */
 .uh-action-card {
+  position: relative;
   background: #fff;
   border: 1.5px solid #e0e7ef;
   border-left: 4px solid #00407F;
@@ -135,21 +136,84 @@
   margin: 0 0 1rem;
 }
 
-.uh-action-card__btn {
+/* ── Badge total demandes — haut droite ── */
+.uh-action-card__count {
+  position: absolute;
+  top: .9rem;
+  right: .9rem;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 20px;
+  background: #00407F;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .4rem;
-  background: #00407F;
-  color: #fff;
-  border-radius: 8px;
-  padding: .55rem 1rem;
-  font-size: .82rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background .15s;
+  padding: 0 .45rem;
+  letter-spacing: -.01em;
 }
-.uh-action-card__btn:hover { background: #003568; color: #fff; text-decoration: none; }
+
+.uh-action-card__count--loading {
+  background: linear-gradient(90deg, #b8d4ef 25%, #d0e6f7 50%, #b8d4ef 75%);
+  background-size: 200% 100%;
+  animation: uh-shimmer 1.4s ease-in-out infinite;
+  min-width: 2.2rem;
+}
+
+@keyframes uh-shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.uh-action-card__btn {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  background: #fff;
+  color: #00407F;
+  border: 1.5px solid #b8d4ef;
+  border-radius: 9px;
+  padding: .6rem .85rem;
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .16s, border-color .16s, color .16s;
+}
+.uh-action-card__btn:hover {
+  background: #EBF3FB;
+  border-color: #00407F;
+  color: #003568;
+  text-decoration: none;
+}
+
+.uh-action-card__btn-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  background: #EBF3FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  flex-shrink: 0;
+  transition: background .16s;
+}
+.uh-action-card__btn:hover .uh-action-card__btn-icon { background: #d0e6f7; }
+
+.uh-action-card__btn-text { flex: 1; }
+
+.uh-action-card__btn-arrow {
+  font-size: .75rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform .18s, color .16s;
+}
+.uh-action-card__btn:hover .uh-action-card__btn-arrow {
+  transform: translateX(4px);
+  color: #00407F;
+}
 
 /* ── Carte "À propos" ── */
 .uh-info-card {
