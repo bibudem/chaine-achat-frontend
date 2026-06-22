@@ -5,7 +5,7 @@
   "lngApp": "Français",
   "lngFr": "Français",
   "lngEn": "Anglais",
-  "filtre-text":"Filtrer votre recherche",
+  "filtre-text": "Filtrer votre recherche",
   "btn-enregistrer": "Enregistrer",
   "btn-suivant": "Suivant",
   "btn-ajouter": "Ajouter",
@@ -15,7 +15,7 @@
   "btn-modifier": "Modifier",
   "btn-export": "Exporter les données",
   "btn-ajouter-plateforme": "Ajouter une plateforme",
-  "btn-reset":"Réinitialiser" ,
+  "btn-reset": "Réinitialiser",
   "choisissez": "Choisissez",
   "numero": "No",
   "titre": "Titre",
@@ -108,7 +108,6 @@
   "nombrePretSimulAutorises": "Nr. de prêts simultanés autorisés",
   "dateExpiration": "Date d'expiration",
   "dateEpuisement": "Date d'épuisement",
-
   "message": {
     "confirmer-titre": "Confirmer votre action",
     "confirmer-text": "Êtes-vous certain de vouloir enregistrer vos modifications?",
@@ -119,7 +118,7 @@
     "column-choisi": "Colonnes obligatoires",
     "action-suppression": "La suppression est effectuée",
     "alert-erreur": "Attention! Une erreur est survenue dans la création du rapport.",
-    "action-text-consultation2022":"Ce périodique est ajouté dans la liste « Consultation 2022 » "
+    "action-text-consultation2022": "Ce périodique est ajouté dans la liste « Consultation 2022 » "
   },
   "header": {
     "sous-titre-prod": "Outil web de gestion des acquisitions et abonnements des bibliothèques",
@@ -134,17 +133,17 @@
     "notif-vide": "Tout est traité",
     "mes-demandes": "Mes demandes"
   },
-  "login":{
+  "login": {
     "messageConnexion": "Vous êtes bien connecté",
     "messageErrorConnexion": "Identifiant ou mot de passe incorrect",
     "login-text": "Authentification",
     "logout-text": "Déconnexion"
   },
-  "liste":{
+  "liste": {
     "liste-notes": "Liste des notes",
     "liste-fonds": "Liste des fonds"
   },
-  "menu":{
+  "menu": {
     "accueil": "Accueil",
     "rechercher": "Rechercher",
     "ajouter": "Nouveau",
@@ -152,7 +151,7 @@
     "outils": "Registres",
     "list-fonds": "Liste de fonds",
     "rapports": "Rapports",
-    "reponses":    "Demandes par forms",
+    "reponses": "Demandes par forms",
     "import-logs": "Liste des imports"
   },
   "rapport": {
@@ -185,7 +184,6 @@
   "labels-rapport": {
     "item_id": "ID de l'item",
     "formulaire_type": "Type de formulaire",
-
     "titre_document": "Titre",
     "sous_titre": "Sous-titre",
     "isbn_issn": "ISBN / ISSN",
@@ -194,12 +192,10 @@
     "date_publication": "Date de publication",
     "categorie_document": "Catégorie du document",
     "format_support": "Format / Support",
-
     "bibliotheque": "Bibliothèque",
     "localisation_emplacement": "Localisation / Emplacement",
     "projet_special": "Projet spécial",
     "creation_notice_dtdm": "Création notice DTDM",
-
     "fonds_budgetaire": "Fonds budgétaire",
     "fonds_sn_projet": "Fonds SN – No projet",
     "source_information": "Source d'information",
@@ -208,37 +204,30 @@
     "prix_devise_originale": "Prix (devise orig.)",
     "periode_couverte": "Période couverte",
     "nombre_titres_inclus": "Nombre de titres inclus",
-
     "nombre_utilisateurs": "Nombre d'utilisateurs",
     "format_pret_numerique": "Format PrêtNumérique",
     "lien_plateforme": "Lien plateforme",
-
     "demandeur": "Demandeur",
     "personne_a_aviser_nom": "Personne à aviser — Nom",
     "personne_a_aviser_courriel": "Personne à aviser — Courriel",
     "statut_bibliotheque": "Statut bibliothèque",
     "statut_acq": "Statut ACQ",
     "priorite_demande": "Priorité",
-
     "numero_oclc": "Numéro OCLC",
     "precision_demande": "Précision de la demande",
-
     "date_debut_abonnement": "Date début abonnement",
     "usager_aviser_activation": "Usager à aviser (activation)",
     "usager_aviser_reservation": "Usager à aviser (réservation)",
     "type_monographie": "Type de monographie",
-
     "format_electronique": "Format électronique",
     "bordereau_imprime": "Bordereau imprimé",
     "reserve_cours": "Réserve de cours",
     "reserve_cours_sigle": "Sigle du cours",
     "reserve_cours_session": "Session",
     "reserve_cours_enseignant": "Enseignant",
-
     "reference_tipasa": "Référence Tipasa",
     "gobi_vu_format_numerique": "GOBI vu format numérique",
     "gobi_version_moins_365_usd": "GOBI version -365 USD",
-
     "reference_usager": "Référence usager",
     "besoin_specifique_format": "Besoin spécifique de format",
     "permalien_sofia": "Permalien Sofia",
@@ -250,10 +239,8 @@
     "acq_numerisation_recommandee": "Numérisation recommandée (ACQ)",
     "acq_date_demande_editeur": "Date demande éditeur (ACQ)",
     "acq_date_livraison_estimee": "Date livraison estimée (ACQ)",
-
     "quantite": "Quantité",
     "projets_speciaux": "Projets spéciaux",
-
     "auteur": "Auteur",
     "usager_nom": "Nom de l'usager",
     "usager_statut": "Statut de l'usager",
@@ -268,13 +255,11 @@
     "acq_raison_annulation": "Raison d'annulation (ACQ)",
     "acq_isbn": "ISBN (ACQ)",
     "acq_responsable_courriel": "Responsable ACQ (courriel)",
-
     "note_dtdm": "Note DTDM (Catalogage)",
     "note_commentaire": "Note / Commentaire bibliothèque",
     "suivi_acq": "Suivi de la demande (ACQ)",
     "note_acq": "Note ACQ",
     "bibliotheque_note_interne": "Note interne (Bibliothèque)",
-
     "utilisateur_modification": "Modifié par",
     "date_creation": "Date de création",
     "date_modification": "Date de modification"
@@ -361,7 +346,7 @@
       "col-manquantes": "Colonnes obligatoires manquantes :"
     }
   },
-  "logs":{
+  "logs": {
     "menu-logs": "Les journaux d'importation",
     "titre-logs-revue": "Journal des données non-importées",
     "titre-logs-plateforme": "Journal des plateformes"
@@ -402,7 +387,7 @@
     "btn_telecharger": "Télécharger JSON",
     "btn_telecharger_titre": "Télécharger le fichier JSON"
   },
-  "processus":{
+  "processus": {
     "titre-processus": "Sommaire des processus",
     "titre-processus-details": "Détails sur le processus",
     "id_processus": "IDProcessus",
@@ -420,7 +405,6 @@
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
   },
-
   "accueil": {
     "titre": "Tableau de bord",
     "sous-titre": "Vue d'ensemble des demandes et statistiques",
@@ -465,7 +449,6 @@
     "priorite-reguliere": "Priorité régulière",
     "du-total": "% du total"
   },
-
   "items": {
     "titre": "Gestion des demandes",
     "sous-titre": "Liste des items enregistrés",
@@ -508,9 +491,17 @@
     "decision-acq": "Statut bibliothèque",
     "modifier": "Modifier",
     "supprimer": "Supprimer",
-    "fermer": "Fermer"
+    "fermer": "Fermer",
+    "bib-placeholder": "Bibliothèque",
+    "col-fonds": "Fonds",
+    "favoris": "Favoris",
+    "favoris-filtres": "Filtres sauvegardés",
+    "favoris-tous-items": "Tous les items (sans filtre)",
+    "favoris-aucun": "Aucun favori pour l'instant",
+    "favoris-appliquer": "Appliquer : ",
+    "favoris-sauvegarder": "Sauvegarder les filtres actuels",
+    "favoris-nom-placeholder": "Nom du favori…"
   },
-
   "item-detail": {
     "chargement": "Chargement...",
     "introuvable": "Item introuvable.",
@@ -610,7 +601,6 @@
     "oui": "Oui",
     "non": "Non"
   },
-
   "item-formulaire": {
     "titre-modifier": "Modifier l'item",
     "titre-ajouter": "Ajouter un nouvel item",
@@ -778,7 +768,6 @@
     "raison-annulation": "Raison d'annulation",
     "raison-placeholder": "Motif si la suggestion est refusée ou annulée..."
   },
-
   "acq-decision": {
     "titre-defaut": "Décision ACQ",
     "chargement": "Chargement de la demande...",
@@ -851,7 +840,6 @@
     "col-note-commentaire": "Note / Commentaire",
     "col-note-usager": "Note usager"
   },
-
   "login-page": {
     "app-name": "Gestion des acquisitions",
     "org-name": "Bibliothèques de l'Université de Montréal",
@@ -860,20 +848,17 @@
     "hint": "Sélectionnez un profil pour accéder à l'application",
     "acces-refuse": "Votre profil actuel n'a pas les droits nécessaires pour accéder à cette page."
   },
-
   "usager-home": {
     "bonjour": "Bonjour",
     "subtitle": "Sélectionnez le formulaire correspondant à votre demande.",
     "acceder": "Accéder au formulaire",
     "note": "Pour toute question, contactez votre bibliothécaire disciplinaire."
   },
-
   "user-layout": {
     "les-bibliotheques": "| Les bibliothèques",
     "role": "Communauté UdeM",
     "deconnexion": "Déconnexion"
   },
-
   "forms-usager": {
     "confirmation-soumise": "Demande soumise !",
     "confirmation-requete-soumise": "Requête soumise !",
@@ -981,7 +966,6 @@
     "personne-aviser-courriel": "Courriel de l'usager à aviser",
     "personne-aviser-hint": "L'usager qui a fait la demande PEB originale (optionnel)"
   },
-
   "form-nouvel-achat": {
     "titre": "Nouvel achat unique",
     "sous-titre": "Formulaire pour les achats ponctuels sans frais récurrents",
@@ -1010,7 +994,6 @@
     "enseignant-required": "L'enseignant est requis.",
     "lien-plateforme-hint": "Ex : EBSCO, Elsevier, Oxford, MUSE…"
   },
-
   "form-abonnement": {
     "titre": "Nouvel abonnement",
     "sous-titre": "Demande de souscription à une ressource périodique ou sérielle",
@@ -1028,7 +1011,6 @@
     "lien-plateforme-hint": "Ex : EBSCO, Elsevier, Springer…",
     "fonds-hint": "Ex : PE-001, AB-120"
   },
-
   "form-modification-ccol": {
     "titre": "Modification et CCOL",
     "sous-titre": "Modifications d'abonnements, compléments de collection et demandes CCOL",
@@ -1052,7 +1034,6 @@
     "fonds-sn-required": "Max 50 caractères.",
     "note-placeholder": "Informations complémentaires sur la modification demandée…"
   },
-
   "form-peb-tipasa": {
     "titre": "PEB Tipasa numérique",
     "sous-titre": "Demande d'achat d'un livre numérique en remplacement d'un prêt entre bibliothèques",
@@ -1070,7 +1051,6 @@
     "fonds-sn-required": "Max 50 caractères.",
     "source-info-url": "Source d'information (URL)"
   },
-
   "form-accessibilite": {
     "titre": "Requête ACQ Accessibilité",
     "sous-titre": "Demandes d'acquisition et de modification pour les ressources accessibles",
@@ -1100,7 +1080,6 @@
     "courriel-aviser": "Courriel de l'usager à aviser lors de l'activation",
     "courriel-aviser-hint": "Courriel de l'usager à notifier (optionnel)"
   },
-
   "usager-formulaire": {
     "titre": "Nouvelle demande",
     "succes-titre": "Votre demande a bien été envoyée !",
@@ -1120,7 +1099,6 @@
     "envoi": "Envoi…",
     "soumettre": "Soumettre"
   },
-
   "form-suggestion": {
     "titre": "Suggestion d'achat",
     "sous-titre": "Proposez un document que vous souhaitez voir acquis par les bibliothèques",

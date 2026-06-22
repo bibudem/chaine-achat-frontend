@@ -43,7 +43,7 @@
     </select>
 
     <select class="il-filterbar__select il-filterbar__select--bib" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
-      <option value="">Bibliothèque</option>
+      <option value="">{{ 'items.bib-placeholder' | translate }}</option>
       <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
     </select>
 
@@ -54,12 +54,12 @@
            (keyup.enter)="onFilterChange()">
 
     <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
-      <option value="">Statut ACQ</option>
+      <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
     </select>
 
     <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
-      <option value="">Suivi ACQ</option>
+      <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
     </select>
 
@@ -71,28 +71,28 @@
                 [class.il-filterbar__fav--active]="favoris.length > 0"
                 (click)="showFavorisPanel = !showFavorisPanel">
           <i class="bi" [class.bi-star-fill]="favoris.length > 0" [class.bi-star]="favoris.length === 0"></i>
-          Favoris
+          {{ 'items.favoris' | translate }}
           <span *ngIf="favoris.length > 0" class="il-fav__count">{{ favoris.length }}</span>
         </button>
 
         <div class="il-fav__panel" *ngIf="showFavorisPanel">
-          <div class="il-fav__panel-header">Filtres sauvegardés</div>
+          <div class="il-fav__panel-header">{{ 'items.favoris-filtres' | translate }}</div>
 
           <div class="il-fav__item">
             <button class="il-fav__apply il-fav__apply--reset" (click)="resetFilters(); showFavorisPanel = false">
-              <i class="bi bi-list-ul"></i> Tous les items (sans filtre)
+              <i class="bi bi-list-ul"></i> {{ 'items.favoris-tous-items' | translate }}
             </button>
           </div>
 
           <div *ngIf="favoris.length === 0 && !savingFavori" class="il-fav__empty">
-            Aucun favori pour l'instant
+            {{ 'items.favoris-aucun' | translate }}
           </div>
 
           <div *ngFor="let f of favoris; let i = index" class="il-fav__item">
-            <button class="il-fav__apply" (click)="appliquerFavori(f)" [title]="'Appliquer : ' + f.nom">
+            <button class="il-fav__apply" (click)="appliquerFavori(f)" [title]="('items.favoris-appliquer' | translate) + f.nom">
               <i class="bi bi-play-fill"></i> {{ f.nom }}
             </button>
-            <button class="il-fav__delete" (click)="supprimerFavori(i)" title="Supprimer">
+            <button class="il-fav__delete" (click)="supprimerFavori(i)" [title]="'items.supprimer' | translate">
               <i class="bi bi-x"></i>
             </button>
           </div>
@@ -103,12 +103,12 @@
                       (click)="savingFavori = true"
                       [disabled]="activeFiltersCount === 0">
                 <i class="bi bi-bookmark-plus"></i>
-                Sauvegarder les filtres actuels
+                {{ 'items.favoris-sauvegarder' | translate }}
               </button>
             </ng-container>
             <div *ngIf="savingFavori" class="il-fav__save-form">
               <input type="text" class="il-fav__save-input"
-                     placeholder="Nom du favori…"
+                     [placeholder]="'items.favoris-nom-placeholder' | translate"
                      [(ngModel)]="nouveauFavoriNom"
                      (keyup.enter)="ajouterFavori()"
                      autofocus>
@@ -130,7 +130,7 @@
               [title]="'btn-reset' | translate">
         <i class="bi bi-x-circle"></i>
         <span *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }} filtre{{ activeFiltersCount > 1 ? 's' : '' }}</span>
-        <span *ngIf="activeFiltersCount === 0">Réinitialiser</span>
+        <span *ngIf="activeFiltersCount === 0">{{ 'btn-reset' | translate }}</span>
       </button>
 
     </div>
@@ -174,7 +174,7 @@
                     {{ 'items.col-bib' | translate }} <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-fonds sortable-col" (click)="sortBy('fonds_budgetaire')">
-                    Fonds <i class="bi {{ getSortIcon('fonds_budgetaire') }} ms-1"></i>
+                    {{ 'items.col-fonds' | translate }} <i class="bi {{ getSortIcon('fonds_budgetaire') }} ms-1"></i>
                   </th>
                   <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
                     {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
@@ -291,7 +291,7 @@
                   <span>{{ item.bibliotheque }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.fonds_budgetaire">
-                  <span class="item-card__label">Fonds</span>
+                  <span class="item-card__label">{{ 'items.col-fonds' | translate }}</span>
                   <span>{{ item.fonds_budgetaire }}</span>
                 </div>
                 <div class="item-card__row" *ngIf="item.statut_acq">

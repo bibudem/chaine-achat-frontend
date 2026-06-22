@@ -7,7 +7,7 @@
   "lngFr": "French",
   "lngEn": "English",
   "choisissez": "Choose",
-  "filtre-text":"Filter your search",
+  "filtre-text": "Filter your search",
   "btn-enregistrer": "Save",
   "btn-suivant": "Next",
   "btn-ajouter": "Add",
@@ -17,7 +17,7 @@
   "btn-modifier": "Modify",
   "btn-export": "Export data",
   "btn-ajouter-plateforme": "Add a platform",
-  "btn-reset":"Reset" ,
+  "btn-reset": "Reset",
   "numero": "Number",
   "titre": "Title",
   "abonnement": "Subscription",
@@ -148,58 +148,58 @@
     "notif-vide": "All caught up",
     "mes-demandes": "My requests"
   },
-  "login":{
-        "messageConnexion": "You are connected.",
-        "messageErrorConnexion": "Incorrect username or password.",
-        "login-text": "Connection",
-        "logout-text": "Logout"
-   },
-  "menu":{
-        "accueil": "Home",
-        "rechercher": "Search",
-        "ajouter": "Add",
-        "statistique": "Statistics",
-        "importation": "Import",
-        "importation-sushi": "Import-sushi",
-        "importation-InCites": "Import-InCites",
-       "importation-excel": "Import statistics",
-        "historique": "Historical",
-        "rapport": "Reports",
-        "rapport-periodique": "Periodic reports",
-        "rapport-statistique": "Statistics report",
-        "rapport-plateforme": "Platform reports",
-        "outils": "Tools",
-        "list-plateforme": "Platform list",
-        "list-domaines": "List of domains",
-        "list-secteurs": "List of sectors",
-        "logs": "Logs",
-        "processus": "Workflow",
-        "reponses": "Requests by Form"
-      },
-  "home": {
-        "board": "Our statistics",
-        "periodique": "Periodicals",
-        "tele": "Downloads",
-        "citations": "Quotes",
-        "article-udem": "Udem Articles",
-        "home-description": "The « matrix of periodicals » is a web tool used to collect statistics on scientific, printed or electronic periodicals.",
-        "home-titre": "For technical problems:",
-        "apropos": "About",
-        "direction-collections": "Collections Department",
-        "direction-technologies": "Technology Department",
-        "dir-collections-tel": "555-555 5555",
-        "dir-collections-courriel": "courriel@umontreal.ca",
-        "dir-technologies-tel": "555-555 5555",
-        "dir-technologies-courriel": "courriel@umontreal.ca"
+  "login": {
+    "messageConnexion": "You are connected.",
+    "messageErrorConnexion": "Incorrect username or password.",
+    "login-text": "Connection",
+    "logout-text": "Logout"
   },
-  "liste":{
+  "menu": {
+    "accueil": "Home",
+    "rechercher": "Search",
+    "ajouter": "Add",
+    "statistique": "Statistics",
+    "importation": "Import",
+    "importation-sushi": "Import-sushi",
+    "importation-InCites": "Import-InCites",
+    "importation-excel": "Import statistics",
+    "historique": "Historical",
+    "rapport": "Reports",
+    "rapport-periodique": "Periodic reports",
+    "rapport-statistique": "Statistics report",
+    "rapport-plateforme": "Platform reports",
+    "outils": "Tools",
+    "list-plateforme": "Platform list",
+    "list-domaines": "List of domains",
+    "list-secteurs": "List of sectors",
+    "logs": "Logs",
+    "processus": "Workflow",
+    "reponses": "Requests by Form"
+  },
+  "home": {
+    "board": "Our statistics",
+    "periodique": "Periodicals",
+    "tele": "Downloads",
+    "citations": "Quotes",
+    "article-udem": "Udem Articles",
+    "home-description": "The « matrix of periodicals » is a web tool used to collect statistics on scientific, printed or electronic periodicals.",
+    "home-titre": "For technical problems:",
+    "apropos": "About",
+    "direction-collections": "Collections Department",
+    "direction-technologies": "Technology Department",
+    "dir-collections-tel": "555-555 5555",
+    "dir-collections-courriel": "courriel@umontreal.ca",
+    "dir-technologies-tel": "555-555 5555",
+    "dir-technologies-courriel": "courriel@umontreal.ca"
+  },
+  "liste": {
     "liste-archive": "List of archives",
     "liste-notes": "List of Notes",
     "liste-core": "The core history",
     "liste-statistiques": "List of statistics",
     "liste-prix": "List of prices"
   },
- "import": {
+  "import": {
     "titre": "Data Import",
     "description": "Insert requests in bulk from an Excel file",
     "btn-retour": "Back",
@@ -263,7 +263,7 @@
       "col-manquantes": "Missing required columns:"
     }
   },
-  "rapport":{
+  "rapport": {
     "titre-periodique": "Periodicals report",
     "titre-statistique": "Statistics report",
     "titre-plateforme": "Platforms report",
@@ -276,12 +276,12 @@
     "rapport-total-statistique": "General report",
     "rapport-statistique-plateforme": "Statistics report by platform"
   },
-  "logs":{
+  "logs": {
     "menu-logs": "Import logs",
     "titre-logs-revue": "Periodicals logs",
     "titre-logs-plateforme": "Platform logs"
   },
-  "processus":{
+  "processus": {
     "titre-processus": "Processes Overview",
     "id_processus": "Process ID",
     "titre": "Name",
@@ -289,14 +289,14 @@
     "h_debut": "Start time",
     "h_fin": "Finish time"
   },
-  "codes":{
+  "codes": {
     "400": "400- This error indicates a bad request from the client. The cause of this error is usually a wrongly deleted URL or content.",
     "401": "401- Means that you do not have permission for the requested website and that you need to log in first.",
     "404": "404- This error is a web page that people land on after clicking on a link that no longer exists. They can take all kinds of shapes.",
     "429": "429- You receive the error message because the user sent too many requests in a period of time. It is a server that asks you to stop sending requests.",
     "500": "Error 500, with its Internal Server Error message, indicates an internal server error in the http communication protocol. The web server then encounters a difficulty in finding a web page, without being able to precisely identify the source of the problem."
   },
-  "labels-rapport-periodique":{
+  "labels-rapport-periodique": {
     "ISSN": "ISSN",
     "EISSN": "EISSN",
     "statut": "Status",
@@ -322,7 +322,7 @@
     "prixUtil": "User price",
     "dateM": "Modification date"
   },
-  "labels-rapport-statistique":{
+  "labels-rapport-statistique": {
     "idRevue": "Id periodic",
     "titre": "Title",
     "ISSN": "ISSN",
@@ -348,7 +348,7 @@
     "citation_moyenn": "Average quotes",
     "articlesUdem_moyenn": "Average articles Udem"
   },
-  "labels-rapport-plateforme":{
+  "labels-rapport-plateforme": {
     "PlatformID": "Acronym",
     "titrePlateforme": "Titre",
     "annee": "Year",
@@ -358,7 +358,7 @@
     "dateA": "Date Added",
     "dateM": "Date of modification"
   },
-  "routes":{
+  "routes": {
     "accueil": "Home page",
     "periodique/liste": "Periodic management",
     "periodique/add": "Add periodique",
@@ -407,7 +407,6 @@
     "btn_telecharger": "Download JSON",
     "btn_telecharger_titre": "Download JSON file"
   },
-
   "accueil": {
     "titre": "Dashboard",
     "sous-titre": "Overview of requests and statistics",
@@ -452,7 +451,6 @@
     "priorite-reguliere": "Regular priority",
     "du-total": "% of total"
   },
-
   "items": {
     "titre": "Request management",
     "sous-titre": "List of registered items",
@@ -495,9 +493,17 @@
     "decision-acq": "Library status",
     "modifier": "Edit",
     "supprimer": "Delete",
-    "fermer": "Close"
+    "fermer": "Close",
+    "bib-placeholder": "Library",
+    "col-fonds": "Funds",
+    "favoris": "Favourites",
+    "favoris-filtres": "Saved filters",
+    "favoris-tous-items": "All items (no filter)",
+    "favoris-aucun": "No favourites yet",
+    "favoris-appliquer": "Apply: ",
+    "favoris-sauvegarder": "Save current filters",
+    "favoris-nom-placeholder": "Favourite name…"
   },
-
   "item-detail": {
     "chargement": "Loading...",
     "introuvable": "Item not found.",
@@ -594,7 +600,6 @@
     "oui": "Yes",
     "non": "No"
   },
-
   "item-formulaire": {
     "titre-modifier": "Edit item",
     "titre-ajouter": "Add a new item",
@@ -762,7 +767,6 @@
     "raison-annulation": "Cancellation reason",
     "raison-placeholder": "Reason if the suggestion is refused or cancelled..."
   },
-
   "acq-decision": {
     "titre-defaut": "ACQ Decision",
     "chargement": "Loading request...",
@@ -835,7 +839,6 @@
     "col-note-commentaire": "Note / Comment",
     "col-note-usager": "User note"
   },
-
   "login-page": {
     "app-name": "Acquisitions management",
     "org-name": "University of Montreal Libraries",
@@ -844,20 +847,17 @@
     "hint": "Select a profile to access the application",
     "acces-refuse": "Your current profile does not have the required permissions to access this page."
   },
-
   "usager-home": {
     "bonjour": "Hello",
     "subtitle": "Select the form corresponding to your request.",
     "acceder": "Access the form",
     "note": "For any questions, contact your subject librarian."
   },
-
   "user-layout": {
     "les-bibliotheques": "| The libraries",
     "role": "Communauté UdeM",
     "deconnexion": "Sign out"
   },
-
   "forms-usager": {
     "confirmation-soumise": "Request submitted!",
     "confirmation-requete-soumise": "Request submitted!",
@@ -965,7 +965,6 @@
     "personne-aviser-courriel": "User email to notify",
     "personne-aviser-hint": "The user who made the original ILL request (optional)"
   },
-
   "form-nouvel-achat": {
     "titre": "New one-time purchase",
     "sous-titre": "Form for one-time purchases without recurring fees",
@@ -994,7 +993,6 @@
     "enseignant-required": "Instructor is required.",
     "lien-plateforme-hint": "e.g. EBSCO, Elsevier, Oxford, MUSE…"
   },
-
   "form-abonnement": {
     "titre": "New subscription",
     "sous-titre": "Request for subscription to a periodic or serial resource",
@@ -1012,7 +1010,6 @@
     "lien-plateforme-hint": "e.g. EBSCO, Elsevier, Springer…",
     "fonds-hint": "e.g. PE-001, AB-120"
   },
-
   "form-modification-ccol": {
     "titre": "Modification and CCOL",
     "sous-titre": "Subscription modifications, collection additions, and CCOL requests",
@@ -1036,7 +1033,6 @@
     "fonds-sn-required": "Max 50 characters.",
     "note-placeholder": "Additional information about the requested modification…"
   },
-
   "form-peb-tipasa": {
     "titre": "PEB Tipasa digital",
     "sous-titre": "Request to purchase a digital book as a replacement for an interlibrary loan",
@@ -1054,7 +1050,6 @@
     "fonds-sn-required": "Max 50 characters.",
     "source-info-url": "Information source (URL)"
   },
-
   "form-accessibilite": {
     "titre": "ACQ Accessibility Request",
     "sous-titre": "Acquisition and modification requests for accessible resources",
@@ -1084,7 +1079,6 @@
     "courriel-aviser": "User email to notify upon activation",
     "courriel-aviser-hint": "User email to notify (optional)"
   },
-
   "form-suggestion": {
     "titre": "Purchase suggestion",
     "sous-titre": "Suggest a document you would like the libraries to acquire",
@@ -1138,7 +1132,6 @@
     "session": "Session",
     "enseignant": "Instructor"
   },
-
   "usager-formulaire": {
     "titre": "New request",
     "succes-titre": "Your request has been sent!",
