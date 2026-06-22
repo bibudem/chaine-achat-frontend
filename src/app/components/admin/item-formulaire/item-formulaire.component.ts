@@ -6,6 +6,7 @@ import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { ReponsesService } from '../../../services/reponses.service';
+import { ConfigService } from '../../../services/config.service';
 
 @Component({
   selector: 'app-item-formulaire',
@@ -22,6 +23,9 @@ export class ItemFormulaireComponent implements OnInit {
 
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
+
+  tauxUsd = 1.368;
+  devises = this.options.devisesOptions;
 
   readonly OUI_NON_NA: string[] = ['OUI', 'NON', "Ne s'applique pas"];
   readonly besoinsFormat: string[] = [
@@ -52,7 +56,8 @@ export class ItemFormulaireComponent implements OnInit {
     private itemService:     ItemFormulaireService,
     private dialogService:   DialogService,
     private location:        Location,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private configService:   ConfigService
   ) {
     this.itemForm = this.createForm();
   }
@@ -87,6 +92,17 @@ export class ItemFormulaireComponent implements OnInit {
     if (!this.isEditMode && state?.fromReponse) {
       this.prefillFromReponse(state.fromReponse);
     }
+
+    this.itemForm.get('prix_devise_originale')!.valueChanges.subscribe(() => {
+      const d = this.itemForm.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
+    });
+    this.itemForm.get('devise_originale')!.valueChanges.subscribe(() => {
+      this.itemForm.get('prix_cad')?.setValue(null, { emitEvent: false });
+      const d = this.itemForm.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
+    });
+    this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
   }
 
   private updateFinanceValidators(statut: string): void {
@@ -608,6 +624,14 @@ export class ItemFormulaireComponent implements OnInit {
       default:
         return {};
     }
+  }
+
+  private convertirPrix(): void {
+    const prix = this.itemForm.get('prix_devise_originale')?.value;
+    const devise = this.itemForm.get('devise_originale')?.value;
+    if (!prix) return;
+    const result = devise === 'CAD' ? prix : parseFloat((prix * this.tauxUsd).toFixed(2));
+    this.itemForm.get('prix_cad')?.setValue(result, { emitEvent: false });
   }
 
   async onCancel(): Promise<void> {

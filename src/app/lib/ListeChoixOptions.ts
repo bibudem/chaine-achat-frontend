@@ -1,6 +1,16 @@
 // liste-choix-options.ts
 export class ListeChoixOptions {
 
+  // Options pour la devise originale
+  devisesOptions: { label: string; code: string }[] = [
+    { label: 'CAD — Dollar Canadien', code: 'CAD' },
+    { label: 'USD — Dollar US',       code: 'USD' },
+    { label: 'EUR — Euro',            code: 'EUR' },
+    { label: 'GBP — Livre Sterling',  code: 'GBP' },
+    { label: 'CHF — Franc Suisse',    code: 'CHF' },
+    { label: 'Autre',                 code: 'Autre' }
+  ];
+
   // Options pour le statut (bibliothèque)
 statusOptions = [
   'Saisie en cours - En attente',

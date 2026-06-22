@@ -293,9 +293,13 @@
                 <span class="input-group-text">$</span>
                 <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
                       [class.is-invalid]="isInvalid('prix_cad')"
-                      min="0" step="0.01" placeholder="0.00">
+                      min="0" step="0.01" placeholder="0.00"
+                      [readonly]="itemForm.get('devise_originale')?.value === 'USD' || itemForm.get('devise_originale')?.value === 'CAD'">
                 <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
               </div>
+              <small class="form-text" *ngIf="itemForm.get('devise_originale')?.value">
+                {{ (itemForm.get('devise_originale')?.value === 'USD' || itemForm.get('devise_originale')?.value === 'CAD') ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+              </small>
             </div>
           </div>
           <div class="col-md-2">
@@ -304,12 +308,7 @@
               <select class="form-select form-control" formControlName="devise_originale"
                       [class.is-invalid]="isInvalid('devise_originale')">
                 <option value="">--</option>
-                <option value="CAD">CAD</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
-                <option value="CHF">CHF</option>
-                <option value="Autre">Autre</option>
+                <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
               </select>
               <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">{{ 'item-formulaire.devise-required' | translate }}</div>
             </div>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { ConfigService } from '../../../../services/config.service';
+import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-requete-accessibilite',
@@ -46,7 +47,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
   readonly OUI_NON_NA = ['OUI', 'NON', "Ne s'applique pas"];
 
-  devises: string[] = ['CAD', 'USD', 'EUR', 'GBP', 'CHF'];
+  devises = new ListeChoixOptions().devisesOptions;
 
   statusOptions: string[] = [
     'Saisie en cours - En attente',
@@ -116,11 +117,13 @@ export class RequeteAccessibiliteComponent implements OnInit {
     });
 
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => {
-      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+      const d = this.form.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
     });
     this.form.get('devise_originale')!.valueChanges.subscribe(() => {
       this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
-      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+      const d = this.form.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
     });
     this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
 
@@ -174,8 +177,10 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
   private convertirPrix(): void {
     const prix = this.form.get('prix_devise_originale')?.value;
+    const devise = this.form.get('devise_originale')?.value;
     if (!prix) return;
-    this.form.get('prix_cad')?.setValue(parseFloat((prix * this.tauxUsd).toFixed(2)), { emitEvent: false });
+    const result = devise === 'CAD' ? prix : parseFloat((prix * this.tauxUsd).toFixed(2));
+    this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
   }
 
   private isbnValidator(control: AbstractControl): ValidationErrors | null {

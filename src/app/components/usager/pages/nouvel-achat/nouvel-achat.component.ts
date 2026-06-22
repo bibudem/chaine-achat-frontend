@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { ConfigService } from '../../../../services/config.service';
+import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-nouvel-achat',
@@ -43,14 +44,7 @@ export class NouvelAchatComponent implements OnInit {
     'Autres (microfilm, etc.)', "Ne s'applique pas"
   ];
 
-  devises: { label: string; code: string }[] = [
-    { label: 'CAD — Dollar Canadien', code: 'CAD' },
-    { label: 'USD — Dollar US',       code: 'USD' },
-    { label: 'EUR — Euro',            code: 'EUR' },
-    { label: 'GBP — Livre Sterling',  code: 'GBP' },
-    { label: 'CHF — Franc Suisse',    code: 'CHF' },
-    { label: 'Autre',                 code: 'Autre' }
-  ];
+  devises = new ListeChoixOptions().devisesOptions;
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
@@ -166,11 +160,13 @@ export class NouvelAchatComponent implements OnInit {
     });
 
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => {
-      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+      const d = this.form.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
     });
     this.form.get('devise_originale')!.valueChanges.subscribe(() => {
       this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
-      if (this.form.get('devise_originale')?.value === 'USD') { this.convertirPrix(); }
+      const d = this.form.get('devise_originale')?.value;
+      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
     });
     this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
 
@@ -243,8 +239,10 @@ export class NouvelAchatComponent implements OnInit {
 
   private convertirPrix(): void {
     const prix = this.form.get('prix_devise_originale')?.value;
+    const devise = this.form.get('devise_originale')?.value;
     if (!prix) return;
-    this.form.get('prix_cad')?.setValue(parseFloat((prix * this.tauxUsd).toFixed(2)), { emitEvent: false });
+    const result = devise === 'CAD' ? prix : parseFloat((prix * this.tauxUsd).toFixed(2));
+    this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
   }
 
   get f() { return this.form.controls; }

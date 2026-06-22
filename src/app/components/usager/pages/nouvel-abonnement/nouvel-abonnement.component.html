@@ -306,19 +306,22 @@
               <input type="number" step="0.01" min="0" formControlName="prix_cad"
                      class="form-control" [class.is-invalid]="isInvalid('prix_cad')"
                      placeholder="0.00"
-                     [readonly]="form.get('devise_originale')?.value === 'USD'">
+                     [readonly]="form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD'">
             </div>
-            <small class="form-text" *ngIf="form.get('devise_originale')?.value === 'USD'">{{ 'forms-usager.calcule-auto' | translate }}</small>
+            <small class="form-text" *ngIf="form.get('devise_originale')?.value">
+              {{ (form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD') ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+            </small>
           </div>
 
           <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
             <input type="text" formControlName="fonds_budgetaire" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   [placeholder]="'form-abonnement.fonds-hint' | translate">
+                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-requis' | translate }}
             </div>
+            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
           </div>
         </div>
       </div>
