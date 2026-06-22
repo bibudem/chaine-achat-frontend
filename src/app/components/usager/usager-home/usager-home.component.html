@@ -22,14 +22,13 @@
       <!-- Accès rapide -->
       <div class="uh-action-card">
 
-        <!-- Badge total — haut droite -->
-        <span class="uh-action-card__count" *ngIf="!loadingDemandes && totalDemandes !== null">
-          {{ totalDemandes }}
-        </span>
-        <span class="uh-action-card__count uh-action-card__count--loading" *ngIf="loadingDemandes"></span>
-
-        <div class="uh-action-card__icon">
-          <i class="bi bi-clock-history"></i>
+        <div class="uh-action-card__icon-wrap">
+          <div class="uh-action-card__icon">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <span class="uh-action-card__badge" *ngIf="!loadingDemandes && totalDemandes">
+            {{ totalDemandes }}
+          </span>
         </div>
         <h3 class="uh-action-card__title">Mes demandes</h3>
         <p class="uh-action-card__desc">
