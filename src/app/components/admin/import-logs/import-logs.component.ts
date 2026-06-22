@@ -25,8 +25,11 @@ export class ImportLogsComponent implements OnInit {
   loading      = false;
   errorMessage = '';
 
-  filterType   = '';
-  filterStatut = '';
+  filterType        = '';
+  filterStatut      = '';
+  filterUtilisateur = '';
+  filterDateDebut   = '';
+  filterDateFin     = '';
 
   selectedLog: ImportLog | null = null;
   loadingDetail = false;
@@ -43,10 +46,13 @@ export class ImportLogsComponent implements OnInit {
     this.errorMessage = '';
 
     this.importLogsService.getAll({
-      page:   this.page,
-      limit:  this.limit,
-      type:   this.filterType   || undefined,
-      statut: this.filterStatut || undefined,
+      page:        this.page,
+      limit:       this.limit,
+      type:        this.filterType        || undefined,
+      statut:      this.filterStatut      || undefined,
+      utilisateur: this.filterUtilisateur || undefined,
+      dateDebut:   this.filterDateDebut   || undefined,
+      dateFin:     this.filterDateFin     || undefined,
     }).subscribe({
       next: (res) => {
         this.logs    = res.logs;
@@ -66,9 +72,12 @@ export class ImportLogsComponent implements OnInit {
   }
 
   resetFilters(): void {
-    this.filterType   = '';
-    this.filterStatut = '';
-    this.page         = 1;
+    this.filterType        = '';
+    this.filterStatut      = '';
+    this.filterUtilisateur = '';
+    this.filterDateDebut   = '';
+    this.filterDateFin     = '';
+    this.page              = 1;
     this.load();
   }
 

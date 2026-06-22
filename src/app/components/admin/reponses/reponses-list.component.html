@@ -24,40 +24,43 @@
   </div>
 
   <!-- Filtres ──────────────────────────────────────────────────────── -->
-  <div class="row g-2 mb-3 align-items-end">
-    <div class="col-md-3">
-      <label class="form-label small fw-semibold mb-1">Type de formulaire</label>
-      <select class="form-select form-select-sm" [(ngModel)]="selectedType" (ngModelChange)="applyFilters()">
-        <option *ngFor="let t of formTypes" [value]="t.value">{{ t.label }}</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label class="form-label small fw-semibold mb-1">ACQ : Suivi de la demande</label>
-      <select class="form-select form-select-sm" [(ngModel)]="selectedSuiviAcq" (ngModelChange)="applyFilters()">
-        <option value="">— Tous les suivis —</option>
-        <option value="En attente de traitement">En attente de traitement</option>
-        <option value="Commande créée">Commande créée</option>
-        <option value="Abonnement modifié / annulé">Abonnement modifié / annulé</option>
-        <option value="Ressource électronique activée">Ressource électronique activée</option>
-        <option value="Demande annulée (non traitée)">Demande annulée (non traitée)</option>
-        <option value="Demande reportée (budget atteint)">Demande reportée (budget atteint)</option>
-        <option value="Envoi en bibliothèque sans catalogage">Envoi en bibliothèque sans catalogage</option>
-        <option value="MONOS : saisie en cours">MONOS : saisie en cours</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label class="form-label small fw-semibold mb-1">Recherche rapide</label>
-      <input type="text" class="form-control form-control-sm"
+  <div class="rl-filterbar mb-3">
+
+    <div class="rl-filterbar__search">
+      <i class="bi bi-search rl-filterbar__search-icon"></i>
+      <input type="text" class="rl-filterbar__search-input"
+             placeholder="Filtrer par nom ou courriel..."
              [(ngModel)]="searchText"
-             (ngModelChange)="onSearchChange()"
-             placeholder="Filtrer par nom ou courriel...">
+             (ngModelChange)="onSearchChange()">
     </div>
-    <div class="col-md-1 d-flex align-items-end">
-      <button class="btn btn-outline-secondary w-100" style="height:31px; padding:0"
-              (click)="resetFilters()" title="Réinitialiser les filtres">
-        <i class="bi bi-arrow-clockwise"></i>
-      </button>
-    </div>
+
+    <div class="rl-filterbar__sep"></div>
+
+    <select class="rl-filterbar__select rl-filterbar__select--narrow" [(ngModel)]="selectedType" (ngModelChange)="applyFilters()">
+      <option *ngFor="let t of formTypes" [value]="t.value">{{ t.label }}</option>
+    </select>
+
+    <select class="rl-filterbar__select rl-filterbar__select--wide" [(ngModel)]="selectedSuiviAcq" (ngModelChange)="applyFilters()">
+      <option value="">Suivi ACQ</option>
+      <option value="En attente de traitement">En attente</option>
+      <option value="Commande créée">Commande créée</option>
+      <option value="Abonnement modifié / annulé">Abonnement modifié</option>
+      <option value="Ressource électronique activée">Ressource activée</option>
+      <option value="Demande annulée (non traitée)">Demande annulée</option>
+      <option value="Demande reportée (budget atteint)">Demande reportée</option>
+      <option value="Envoi en bibliothèque sans catalogage">Envoi sans catalogage</option>
+      <option value="MONOS : saisie en cours">MONOS : saisie</option>
+    </select>
+
+    <button class="rl-filterbar__reset"
+            [class.rl-filterbar__reset--active]="selectedType || selectedSuiviAcq || searchText"
+            (click)="resetFilters()"
+            title="Réinitialiser les filtres">
+      <i class="bi bi-x-circle"></i>
+      <span *ngIf="selectedType || selectedSuiviAcq || searchText">Réinitialiser</span>
+      <span *ngIf="!selectedType && !selectedSuiviAcq && !searchText">Réinitialiser</span>
+    </button>
+
   </div>
 
   <!-- Chargement ───────────────────────────────────────────────────── -->
@@ -73,9 +76,10 @@
   </div>
 
   <!-- Tableau ──────────────────────────────────────────────────────── -->
-  <div class="table-responsive" *ngIf="!loading && filteredReponses.length > 0">
-    <table class="table table-sm table-hover table-bordered align-middle mb-0">
-      <thead class="table-light">
+  <div class="rl-table-card" *ngIf="!loading && filteredReponses.length > 0">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover align-middle mb-0 rl-table">
+      <thead>
         <tr>
           <th style="width:4%">
             <div class="th-header" (click)="toggleSort('id')">#
@@ -114,15 +118,15 @@
               [class.row-highlighted]="highlightId === reponse.id">
             <td class="text-muted small">#{{ reponse.id }}</td>
             <td>
-              <span class="badge" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
-                {{ reponse.type_formulaire }}
-              </span>
-              <span *ngIf="reponse.suivi_acq"
-                    class="badge bg-primary d-inline-block mt-1 fw-normal text-truncate"
-                    style="max-width:100%; font-size:.7rem"
-                    title="{{ reponse.suivi_acq }}">
-                {{ reponse.suivi_acq }}
-              </span>
+              <div class="rl-badges">
+                <span class="badge-type" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
+                  {{ reponse.type_formulaire }}
+                </span>
+                <div *ngIf="reponse.suivi_acq" class="rl-suivi-text" [title]="reponse.suivi_acq">
+                  <i class="bi" [ngClass]="getSuiviIcon(reponse.suivi_acq)"></i>
+                  {{ reponse.suivi_acq }}
+                </div>
+              </div>
             </td>
             <td class="small fw-semibold">{{ reponse.usager_nom || '—' }}</td>
             <td class="small text-muted">{{ reponse.usager_courriel || '—' }}</td>
@@ -255,6 +259,7 @@
       </tbody>
     </table>
   </div>
+  </div><!-- /rl-table-card -->
 
   <!-- Pagination ───────────────────────────────────────────────────── -->
   <div *ngIf="!loading && totalItems > pageSize" class="mt-3">

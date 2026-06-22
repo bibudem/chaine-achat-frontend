@@ -327,6 +327,18 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     return 'badge-type--autre';
   }
 
+  getSuiviIcon(suivi: string): string {
+    const s = (suivi ?? '').toLowerCase();
+    if (s.includes('annulée') || s.includes('annulé'))  return 'bi-x-circle';
+    if (s.includes('reportée') || s.includes('budget')) return 'bi-pause-circle';
+    if (s.includes('activée') || s.includes('activé'))  return 'bi-check-circle';
+    if (s.includes('commande'))                         return 'bi-cart-check';
+    if (s.includes('envoi') || s.includes('catalogage'))return 'bi-send';
+    if (s.includes('monos') || s.includes('saisie'))    return 'bi-pencil';
+    if (s.includes('abonnement'))                       return 'bi-arrow-repeat';
+    return 'bi-clock';
+  }
+
   // ── Icône de tri ──────────────────────────────────────────────────
   getSortIcon(column: string): string {
     if (this.sortColumn !== column) return 'arrow-down-up';

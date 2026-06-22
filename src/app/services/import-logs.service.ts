@@ -37,12 +37,15 @@ export class ImportLogsService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(params: { page?: number; limit?: number; type?: string; statut?: string } = {}): Observable<ImportLogsResponse> {
+  getAll(params: { page?: number; limit?: number; type?: string; statut?: string; utilisateur?: string; dateDebut?: string; dateFin?: string } = {}): Observable<ImportLogsResponse> {
     const query: any = {};
-    if (params.page)   { query['page']   = params.page; }
-    if (params.limit)  { query['limit']  = params.limit; }
-    if (params.type)   { query['type']   = params.type; }
-    if (params.statut) { query['statut'] = params.statut; }
+    if (params.page)        { query['page']        = params.page; }
+    if (params.limit)       { query['limit']       = params.limit; }
+    if (params.type)        { query['type']        = params.type; }
+    if (params.statut)      { query['statut']      = params.statut; }
+    if (params.utilisateur) { query['utilisateur'] = params.utilisateur; }
+    if (params.dateDebut)   { query['date_debut']  = params.dateDebut; }
+    if (params.dateFin)     { query['date_fin']    = params.dateFin; }
 
     return this.http
       .get<ImportLogsResponse>(this.baseUrl, { params: query })

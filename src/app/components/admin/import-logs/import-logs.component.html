@@ -16,24 +16,46 @@
 
   <!-- ── FILTRES ───────────────────────────────────────────────────── -->
   <div class="ilog-filters">
-    <select class="form-select form-select-sm ilog-filters__select"
-            [(ngModel)]="filterType" (change)="applyFilters()">
-      <option value="">Tous les types</option>
+
+    <select class="ilog-filters__select" [(ngModel)]="filterType" (change)="applyFilters()">
+      <option value="">Type de formulaire</option>
       <option *ngFor="let t of formTypes" [value]="t">{{ t }}</option>
     </select>
 
-    <select class="form-select form-select-sm ilog-filters__select"
-            [(ngModel)]="filterStatut" (change)="applyFilters()">
-      <option value="">Tous les statuts</option>
+    <select class="ilog-filters__select" [(ngModel)]="filterStatut" (change)="applyFilters()">
+      <option value="">Statut</option>
       <option value="succès">Succès</option>
       <option value="partiel">Partiel</option>
       <option value="échec">Échec</option>
     </select>
 
-    <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()"
-            *ngIf="filterType || filterStatut">
-      <i class="bi bi-x-circle me-1"></i>Réinitialiser
+    <input type="text"
+           class="ilog-filters__input"
+           [(ngModel)]="filterUtilisateur"
+           (keyup.enter)="applyFilters()"
+           (blur)="applyFilters()"
+           placeholder="Utilisateur">
+
+    <div class="ilog-filters__dategroup">
+      <input type="date" class="ilog-filters__date"
+             [(ngModel)]="filterDateDebut"
+             (ngModelChange)="filterDateDebut = $event; applyFilters()"
+             title="Date de début">
+      <span class="ilog-filters__date-sep">–</span>
+      <input type="date" class="ilog-filters__date"
+             [(ngModel)]="filterDateFin"
+             (ngModelChange)="filterDateFin = $event; applyFilters()"
+             title="Date de fin">
+    </div>
+
+    <button class="ilog-filters__reset"
+            [class.ilog-filters__reset--active]="filterType || filterStatut || filterUtilisateur || filterDateDebut || filterDateFin"
+            (click)="resetFilters()"
+            title="Réinitialiser les filtres">
+      <i class="bi bi-x-circle"></i>
+      <span>Réinitialiser</span>
     </button>
+
   </div>
 
   <!-- ── LOADING ───────────────────────────────────────────────────── -->

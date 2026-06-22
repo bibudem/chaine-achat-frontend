@@ -27,35 +27,125 @@
 
 /* ── Filtres ───────────────────────────────────────────────────────── */
 .ilog-filters {
-  display:     flex;
-  gap:         .6rem;
-  flex-wrap:   wrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: .45rem .6rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
   margin-bottom: 1rem;
 }
-.ilog-filters__select { max-width: 260px; }
+.ilog-filters__select {
+  flex: 1 1 160px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: .32rem 1.6rem .32rem .55rem;
+  font-size: .8rem;
+  color: #334155;
+  outline: none;
+  height: 30px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 16 16'%3E%3Cpath fill='%2394a3b8' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .55rem center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.ilog-filters__select:has(option[value=""]:checked) { color: #aab4c0; }
+.ilog-filters__select option { color: #334155; }
+.ilog-filters__select:focus {
+  border-color: #93c5fd; background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55; outline: none;
+}
+.ilog-filters__input {
+  flex: 1 1 140px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: .32rem .55rem;
+  font-size: .8rem;
+  color: #334155;
+  outline: none;
+  height: 30px;
+  transition: border-color .15s, background .15s;
+}
+.ilog-filters__input::placeholder { color: #aab4c0; }
+.ilog-filters__input:focus {
+  border-color: #93c5fd; background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55; outline: none;
+}
+.ilog-filters__dategroup {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  flex: 1 1 210px;
+}
+.ilog-filters__date {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: .32rem .4rem;
+  font-size: .75rem;
+  color: #334155;
+  outline: none;
+  height: 30px;
+  transition: border-color .15s, background .15s;
+}
+.ilog-filters__date:focus {
+  border-color: #93c5fd; background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55; outline: none;
+}
+.ilog-filters__date-sep { font-size: .75rem; color: #94a3b8; flex-shrink: 0; }
+.ilog-filters__reset {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .78rem; font-weight: 500; color: #64748b;
+  background: none; border: 1.5px solid #e2e8f0;
+  border-radius: 6px; padding: .28rem .7rem;
+  cursor: pointer; white-space: nowrap; height: 30px;
+  transition: all .15s; margin-left: auto;
+}
+.ilog-filters__reset:hover { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+.ilog-filters__reset--active {
+  background: #fff1f2; border-color: #fca5a5; color: #dc2626; font-weight: 600;
+}
+.ilog-filters__reset--active:hover { background: #fee2e2; border-color: #f87171; }
 
 /* ── Tableau ───────────────────────────────────────────────────────── */
 .ilog-table-wrap {
   background:    #fff;
+  border:        1.5px solid #e2e8f0;
   border-radius: 10px;
-  box-shadow:    0 1px 4px rgba(0,0,0,.06);
-  overflow-x:    auto;
+  box-shadow:    0 1px 4px rgba(0,0,0,.05);
+  overflow:      hidden;
 }
-.ilog-table { margin: 0; font-size: .83rem; }
+.ilog-table { margin: 0; font-size: .83rem; border-collapse: collapse; width: 100%; }
 .ilog-table thead th {
-  background:     #F3F7FB;
-  color:          #607386;
-  font-size:      .68rem;
+  background:     #f8fafc;
+  color:          #64748b;
+  font-size:      .7rem;
   font-weight:    700;
   text-transform: uppercase;
-  letter-spacing: .04em;
-  border-bottom:  2px solid #E7EBEE;
+  letter-spacing: .06em;
+  border-bottom:  1.5px solid #e2e8f0;
+  border-top:     none;
   white-space:    nowrap;
   padding:        .6rem .75rem;
 }
 .ilog-table tbody tr { transition: background .1s; }
-.ilog-table tbody tr:hover { background: #F8FBFE; }
-.ilog-table tbody td { padding: .55rem .75rem; vertical-align: middle; border-color: #F0F4F8; }
+.ilog-table tbody tr:hover td { background: #f8fafc; }
+.ilog-table tbody td {
+  padding: .6rem .75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+.ilog-table tbody tr:last-child td { border-bottom: none; }
 
 .ilog-row--echec  { background: #FFF5F5 !important; }
 .ilog-row--partiel { background: #FFFBF0 !important; }
