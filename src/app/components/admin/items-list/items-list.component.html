@@ -24,46 +24,46 @@
   </div>
 
   <!-- Barre de filtres -->
-  <div class="il-filterbar mb-3">
+  <div class="filterbar mb-3">
 
-    <div class="il-filterbar__search">
-      <i class="bi bi-search il-filterbar__search-icon"></i>
-      <input type="text" class="il-filterbar__search-input"
+    <div class="filterbar__search">
+      <i class="bi bi-search filterbar__search-icon"></i>
+      <input type="text" class="filterbar__search-input"
              [placeholder]="'items.recherche-placeholder' | translate"
              [(ngModel)]="searchTerm"
              (keyup.enter)="onSearch()"
              (input)="onSearch()">
     </div>
 
-    <div class="il-filterbar__sep"></div>
+    <span class="filterbar__sep"></span>
 
-    <select class="il-filterbar__select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
+    <select class="filterbar__select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
       <option value="">Type</option>
       <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
     </select>
 
-    <select class="il-filterbar__select il-filterbar__select--bib" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
+    <select class="filterbar__select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
       <option value="">{{ 'items.bib-placeholder' | translate }}</option>
       <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
     </select>
 
-    <input type="text" class="il-filterbar__input"
+    <input type="text" class="filterbar__input"
            placeholder="Fonds…"
            [(ngModel)]="selectedFonds"
            (input)="onFilterChange()"
            (keyup.enter)="onFilterChange()">
 
-    <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
+    <select class="filterbar__select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
       <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
     </select>
 
-    <select class="il-filterbar__select il-filterbar__select--acq" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
+    <select class="filterbar__select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
       <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
     </select>
 
-    <div class="il-filterbar__actions" (click)="$event.stopPropagation()">
+    <div class="filterbar__actions" (click)="$event.stopPropagation()">
 
       <!-- Favoris -->
       <div class="il-fav">
@@ -124,8 +124,8 @@
       </div>
 
       <!-- Réinitialiser -->
-      <button class="il-filterbar__reset"
-              [class.il-filterbar__reset--active]="activeFiltersCount > 0"
+      <button class="filterbar__reset"
+              [class.filterbar__reset--active]="activeFiltersCount > 0"
               (click)="resetFilters()"
               [title]="'btn-reset' | translate">
         <i class="bi bi-x-circle"></i>

@@ -32,3 +32,174 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mt-neg-20{
   margin-top: -20px!important;
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FILTERBAR — barre de filtres partagée
+   Pattern BEM réutilisable utilisé dans :
+     - admin/items-list (+ favoris dans items-list.component.css)
+     - usager/usager-profil (+ plage de dates dans usager-profil.component.css)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Conteneur */
+.filterbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: .45rem .6rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+/* Champ de recherche texte */
+.filterbar__search {
+  position: relative;
+  flex: 1 1 200px;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+}
+.filterbar__search-icon {
+  position: absolute;
+  left: .6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: .8rem;
+  pointer-events: none;
+}
+.filterbar__search-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 .65rem 0 1.9rem;
+  font-size: .82rem;
+  color: #1e293b;
+  background: #f8fafc;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.filterbar__search-input::placeholder { color: #94a3b8; }
+.filterbar__search-input:focus {
+  border-color: #93c5fd;
+  background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55;
+}
+
+/* Séparateur vertical entre groupes de contrôles */
+.filterbar__sep {
+  width: 1px;
+  height: 20px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Selects et champs texte (fonds, etc.) */
+.filterbar__select,
+.filterbar__input {
+  height: 30px;
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 0 .55rem;
+  font-size: .8rem;
+  color: #334155;
+  background: #f8fafc;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.filterbar__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 16 16'%3E%3Cpath fill='%2394a3b8' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .55rem center;
+  padding-right: 1.6rem;
+  cursor: pointer;
+}
+.filterbar__select:focus,
+.filterbar__input:focus {
+  border-color: #93c5fd;
+  background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55;
+}
+/* Placeholder discret quand aucune option sélectionnée */
+.filterbar__select:has(option[value=""]:checked) { color: #aab4c0; }
+.filterbar__select option { color: #334155; }
+.filterbar__input::placeholder { color: #aab4c0; }
+
+/* Plage de dates */
+.filterbar__dategroup {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+}
+.filterbar__date {
+  height: 30px;
+  width: 128px;
+  padding: 0 .45rem;
+  font-size: .75rem;
+  color: #334155;
+  background: #f8fafc;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.filterbar__date:focus {
+  border-color: #93c5fd;
+  background: #fff;
+  box-shadow: 0 0 0 3px #dbeafe55;
+}
+.filterbar__date-sep { font-size: .7rem; color: #94a3b8; }
+
+/* Zone d'actions à droite (reset, favoris, compteur…) */
+.filterbar__actions {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Bouton de réinitialisation */
+.filterbar__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  height: 30px;
+  padding: 0 .7rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: #64748b;
+  background: none;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.filterbar__reset:hover { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+.filterbar__reset--active { background: #fff1f2; border-color: #fca5a5; color: #dc2626; font-weight: 600; }
+.filterbar__reset--active:hover { background: #fee2e2; border-color: #f87171; }
+
+/* Compteur de résultats */
+.filterbar__count { font-size: .74rem; color: #a0aec0; white-space: nowrap; }
+
+/* Responsive */
+@media (max-width: 991px) {
+  .filterbar { gap: .4rem; padding: .5rem .65rem; }
+  .filterbar__search { max-width: 100%; flex: 1 1 100%; }
+  .filterbar__sep { display: none; }
+  .filterbar__select { flex: 1 1 130px; }
+  .filterbar__input  { flex: 1 1 80px; }
+  .filterbar__actions { margin-left: 0; }
+  .filterbar__date { width: 110px; }
+  .filterbar__count { display: none; }
+}

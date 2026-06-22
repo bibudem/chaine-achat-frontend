@@ -123,41 +123,9 @@
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FILTRES
+   Style de la barre de filtres (.filterbar, .filterbar__*) → voir styles.css
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.up-filters {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .5rem;
-  margin-bottom: .85rem;
-}
-.up-filter-select {
-  font-size: .78rem;
-  color: #334155;
-  border: 1px solid #CBD5E1;
-  border-radius: 6px;
-  padding: .28rem .6rem;
-  background: #fff;
-  cursor: pointer;
-  outline: none;
-  max-width: 240px;
-}
-.up-filter-select:focus { border-color: #3b82f6; }
-
-.up-filter-reset {
-  font-size: .75rem; font-weight: 600;
-  color: #607386; background: none;
-  border: 1px solid #CBD5E1; border-radius: 6px;
-  padding: .28rem .65rem; cursor: pointer;
-  display: flex; align-items: center; gap: .25rem;
-  transition: background .15s;
-}
-.up-filter-reset:hover { background: #F4F7FB; }
-
-.up-filter-count {
-  margin-left: auto;
-  font-size: .74rem; color: #A0AEC0; white-space: nowrap;
-}
+.filterbar { margin-bottom: .85rem; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    LISTE COMPACTE
@@ -422,10 +390,7 @@
   .up-banner__avatar { width: 38px; height: 38px; font-size: .88rem; border-radius: 8px; }
   .up-banner__name { font-size: .9rem; }
   .up-banner__stat { display: none; }
-  .up-body         { padding: .75rem 1rem 2.5rem; }
-  .up-filters      { flex-wrap: wrap; gap: .5rem; }
-  .up-filters select { flex: 1; min-width: 0; }
-  .up-filters__count { display: none; }
+  .up-body { padding: .75rem 1rem 2.5rem; }
   .up-card         { padding: .85rem .9rem; }
   .up-card__meta   { flex-wrap: wrap; gap: .3rem .6rem; }
   .up-details      { padding-left: 1rem; }

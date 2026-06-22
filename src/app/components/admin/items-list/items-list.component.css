@@ -1,141 +1,9 @@
 /* items-list.component.css */
+/* Style de la barre de filtres (.filterbar, .filterbar__*) → voir styles.css */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BARRE DE FILTRES
+   BOUTON FAVORIS + PANEL  (admin uniquement)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.il-filterbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .35rem;
-  background: #fff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  padding: .45rem .6rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,.05);
-}
-
-/* Recherche */
-.il-filterbar__search {
-  position: relative;
-  flex: 1 1 200px;
-  min-width: 160px;
-  max-width: 280px;
-}
-.il-filterbar__search-icon {
-  position: absolute;
-  left: .6rem; top: 50%; transform: translateY(-50%);
-  color: #94a3b8; font-size: .8rem; pointer-events: none;
-}
-.il-filterbar__search-input {
-  width: 100%;
-  border: 1.5px solid transparent;
-  border-radius: 6px;
-  background: #f8fafc;
-  padding: .32rem .65rem .32rem 1.9rem;
-  font-size: .82rem;
-  color: #1e293b;
-  outline: none;
-  transition: border-color .15s, background .15s, box-shadow .15s;
-}
-.il-filterbar__search-input::placeholder { color: #94a3b8; }
-.il-filterbar__search-input:focus {
-  border-color: #93c5fd;
-  background: #fff;
-  box-shadow: 0 0 0 3px #dbeafe55;
-}
-
-/* Séparateur vertical */
-.il-filterbar__sep {
-  width: 1px; height: 20px;
-  background: #e2e8f0;
-  flex-shrink: 0;
-  margin: 0 .1rem;
-}
-
-/* Selects et input Fonds */
-.il-filterbar__select,
-.il-filterbar__input {
-  flex: 0 0 auto;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 6px;
-  background: #f8fafc;
-  padding: .32rem .55rem;
-  font-size: .8rem;
-  color: #334155;
-  outline: none;
-  transition: border-color .15s, background .15s, box-shadow .15s;
-  min-width: 0;
-  height: 30px;
-}
-.il-filterbar__select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 16 16'%3E%3Cpath fill='%2394a3b8' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right .55rem center;
-  padding-right: 1.6rem;
-  cursor: pointer;
-  flex: 1 1 120px;
-}
-.il-filterbar__input { flex: 1 1 80px; }
-
-.il-filterbar__select:focus,
-.il-filterbar__input:focus {
-  border-color: #93c5fd;
-  background: #fff;
-  box-shadow: 0 0 0 3px #dbeafe55;
-}
-
-/* Placeholder discret, options de la liste lisibles */
-.il-filterbar__select:has(option[value=""]:checked) { color: #aab4c0; }
-.il-filterbar__select option { color: #334155; }
-.il-filterbar__input::placeholder { color: #aab4c0; }
-
-/* Bouton reset */
-.il-filterbar__actions { margin-left: auto; flex-shrink: 0; }
-
-.il-filterbar__reset {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  font-size: .78rem;
-  font-weight: 500;
-  color: #64748b;
-  background: none;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 6px;
-  padding: .28rem .7rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all .15s;
-  height: 30px;
-}
-.il-filterbar__reset:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #334155;
-}
-.il-filterbar__reset--active {
-  background: #fff1f2;
-  border-color: #fca5a5;
-  color: #dc2626;
-  font-weight: 600;
-}
-.il-filterbar__reset--active:hover {
-  background: #fee2e2;
-  border-color: #f87171;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BOUTON FAVORIS + PANEL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.il-filterbar__actions {
-  display: flex;
-  align-items: center;
-  gap: .35rem;
-  margin-left: auto;
-  flex-shrink: 0;
-}
 
 .il-fav { position: relative; }
 
@@ -307,15 +175,6 @@
 }
 .il-fav__cancel:hover { color: #dc2626; border-color: #fca5a5; }
 
-/* Responsive — empilement en dessous de lg */
-@media (max-width: 991px) {
-  .il-filterbar { gap: .4rem; padding: .5rem .65rem; }
-  .il-filterbar__search { max-width: 100%; flex: 1 1 100%; }
-  .il-filterbar__sep { display: none; }
-  .il-filterbar__select { flex: 1 1 130px; }
-  .il-filterbar__input  { flex: 1 1 80px; }
-  .il-filterbar__actions { margin-left: 0; }
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CONTENEUR TABLEAU

@@ -87,8 +87,11 @@ export class UsagerProfilComponent implements OnInit {
     'statut_bibliotheque', 'bibliotheque_note_interne',
   ];
 
-  filtreType   = '';
-  filtreStatut = '';
+  filtreRecherche  = '';
+  filtreType       = '';
+  filtreStatut     = '';
+  filtreDateDebut  = '';
+  filtreDateFin    = '';
 
   get prenom():   string { return sessionStorage.getItem('prenomAdmin')   ?? ''; }
   get nom():      string { return sessionStorage.getItem('nomAdmin')       ?? ''; }
@@ -109,9 +112,13 @@ export class UsagerProfilComponent implements OnInit {
 
   get demandesFiltrees(): DemandeUsager[] {
     return this.demandes.filter(d => {
-      const typeOk   = !this.filtreType   || d.type_formulaire    === this.filtreType;
-      const statutOk = !this.filtreStatut || d.statut_bibliotheque === this.filtreStatut;
-      return typeOk && statutOk;
+      const rechercheOk  = !this.filtreRecherche  ||
+        (d.titre_document ?? '').toLowerCase().includes(this.filtreRecherche.toLowerCase());
+      const typeOk       = !this.filtreType       || d.type_formulaire    === this.filtreType;
+      const statutOk     = !this.filtreStatut     || d.statut_bibliotheque === this.filtreStatut;
+      const dateDebutOk  = !this.filtreDateDebut  || (d.dateA ?? '') >= this.filtreDateDebut;
+      const dateFinOk    = !this.filtreDateFin    || (d.dateA ?? '').substring(0, 10) <= this.filtreDateFin;
+      return rechercheOk && typeOk && statutOk && dateDebutOk && dateFinOk;
     });
   }
 

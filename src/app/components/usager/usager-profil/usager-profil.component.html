@@ -67,21 +67,36 @@
     <ng-container *ngIf="!loading && demandes.length > 0">
 
       <!-- Filtres -->
-      <div class="up-filters">
-        <select class="up-filter-select" [(ngModel)]="filtreType">
+      <div class="filterbar">
+        <div class="filterbar__search">
+          <i class="bi bi-search filterbar__search-icon"></i>
+          <input type="text" class="filterbar__search-input"
+                 [(ngModel)]="filtreRecherche"
+                 placeholder="Rechercher un titre…">
+        </div>
+        <span class="filterbar__sep"></span>
+        <select class="filterbar__select" [(ngModel)]="filtreType">
           <option value="">Tous les types</option>
           <option *ngFor="let t of typesDisponibles" [value]="t">{{ t }}</option>
         </select>
-        <select class="up-filter-select" [(ngModel)]="filtreStatut">
+        <select class="filterbar__select" [(ngModel)]="filtreStatut">
           <option value="">Tous les statuts</option>
           <option *ngFor="let s of statutsDisponibles" [value]="s">{{ s }}</option>
         </select>
-        <button *ngIf="filtreType || filtreStatut"
-                class="up-filter-reset"
-                (click)="filtreType = ''; filtreStatut = ''">
-          <i class="bi bi-x"></i> Réinitialiser
-        </button>
-        <span class="up-filter-count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
+        <span class="filterbar__sep"></span>
+        <div class="filterbar__dategroup">
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut">
+          <span class="filterbar__date-sep">→</span>
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin">
+        </div>
+        <div class="filterbar__actions">
+          <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreStatut || filtreDateDebut || filtreDateFin"
+                  class="filterbar__reset"
+                  (click)="filtreRecherche = ''; filtreType = ''; filtreStatut = ''; filtreDateDebut = ''; filtreDateFin = ''">
+            <i class="bi bi-x"></i> Réinitialiser
+          </button>
+          <span class="filterbar__count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
+        </div>
       </div>
 
       <!-- Liste compacte -->
