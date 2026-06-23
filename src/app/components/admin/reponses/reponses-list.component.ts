@@ -35,6 +35,8 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
   searchText       = '';
   selectedSuiviAcq = '';
 
+  readonly STATUT_BIB_FILTER = 'Soumettre aux ACQ';
+
   sortColumn = '';
   sortDirection: SortDirection = '';
 
@@ -135,6 +137,7 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
   ) {}
 
   getStatutBibliotheque(reponse: Reponse): string | null {
+    if (reponse.statut_bibliotheque) return reponse.statut_bibliotheque;
     const r = reponse.reponses;
     if (!r || typeof r !== 'object') return null;
     return r?.baseData?.statut_bibliotheque || r?.statut_bibliotheque || null;
@@ -173,7 +176,8 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
       undefined,
       this.currentPage,
       this.pageSize,
-      this.selectedSuiviAcq || undefined
+      this.selectedSuiviAcq || undefined,
+      this.STATUT_BIB_FILTER
     ).subscribe({
       next: (response: PaginatedResponse) => {
         this.reponses = response.data;
@@ -216,6 +220,10 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  canDecisionAcq(reponse: Reponse): boolean {
+    return this.getStatutBibliotheque(reponse) === this.STATUT_BIB_FILTER;
   }
 
   applyClientFiltering(): void {

@@ -93,7 +93,7 @@ export class UsagerProfilComponent implements OnInit {
   filtreDateFin    = '';
 
   currentPage          = 1;
-  readonly itemsPerPage = 8;
+  readonly itemsPerPage = 6;
 
   get prenom():   string { return sessionStorage.getItem('prenomAdmin')   ?? ''; }
   get nom():      string { return sessionStorage.getItem('nomAdmin')       ?? ''; }

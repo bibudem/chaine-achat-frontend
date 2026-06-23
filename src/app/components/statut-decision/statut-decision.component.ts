@@ -380,6 +380,11 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
             this.notifyN8nDecision(suivi_acq, note_acq);
             this.emailSent = true;
           }
+          // Synchroniser tbl_reponses pour que les notifications header disparaissent
+          if (this.reponseId) {
+            this.reponsesService.updateReponseStatut(this.reponseId, { suivi_acq, statut_acq })
+              .subscribe({ error: err => console.warn('[statut-decision] sync reponse statut:', err) });
+          }
           this.reponsesService.triggerPendingRefresh();
           setTimeout(() => this.router.navigate(['/items']), 2000);
         } else {

@@ -34,6 +34,8 @@ export interface Reponse {
   item_id_cree?: number | null;
   statut_approbation?: string | null;
   suivi_acq?: string | null;
+  statut_acq?: string | null;
+  statut_bibliotheque?: string | null;
 }
 
 export interface DemandeUsager {
@@ -240,15 +242,41 @@ export class ReponsesService {
     statut?: string,
     page: number = 1,
     limit: number = 20,
-    suivi_acq?: string
+    suivi_acq?: string,
+    statut_bibliotheque?: string
   ): Observable<PaginatedResponse> {
     const params: any = { page, limit };
-    if (type)      params['type']      = type;
-    if (statut)    params['statut']    = statut;
-    if (suivi_acq) params['suivi_acq'] = suivi_acq;
+    if (type)               params['type']               = type;
+    if (statut)             params['statut']             = statut;
+    if (suivi_acq)          params['suivi_acq']          = suivi_acq;
+    if (statut_bibliotheque) params['statut_bibliotheque'] = statut_bibliotheque;
     return this.http
       .get<PaginatedResponse>(this.baseUrl, { params })
       .pipe(catchError(this.handleError('getAll')));
+  }
+
+  /** Réponses en attente filtrées par statut_bibliotheque (pour le header et la liste ACQ).
+   *  Seules les demandes où statut_acq ET suivi_acq sont vides/null sont incluses. */
+  getPendingBib(limit = 5): Observable<{
+    count: number;
+    reponses: (Pick<Reponse, 'id' | 'type_formulaire' | 'usager_nom' | 'dateA'> & {
+      source: 'reponse' | 'import' | 'reponse-created';
+      item_id: number | null;
+      statut_acq?: string | null;
+      suivi_acq?:  string | null;
+    })[];
+  }> {
+    return this.http
+      .get<{ count: number; reponses: any[] }>(`${this.baseUrl}/pending`, {
+        params: {
+          limit,
+          statut_field:    'statut_bibliotheque',
+          statut_value:    'Soumettre aux ACQ',
+          null_statut_acq: 'true',
+          null_suivi_acq:  'true',
+        }
+      })
+      .pipe(catchError(this.handleError('getPendingBib')));
   }
 
   getById(id: number): Observable<Reponse> {
@@ -311,6 +339,13 @@ export class ReponsesService {
     return this.http
       .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, { reponses })
       .pipe(catchError(this.handleError('updateReponse')));
+  }
+
+  /** Synchronise suivi_acq / statut_acq sur tbl_reponses après une décision ACQ. */
+  updateReponseStatut(id: number, fields: { suivi_acq?: string | null; statut_acq?: string | null }): Observable<{ success: boolean }> {
+    return this.http
+      .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, fields)
+      .pipe(catchError(this.handleError('updateReponseStatut')));
   }
 
   supprimer(id: number): Observable<void> {
