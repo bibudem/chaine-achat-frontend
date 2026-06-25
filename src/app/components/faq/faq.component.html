@@ -22,15 +22,15 @@
     </button>
   </div>
 
-  <!-- Section info contact (toujours visible) -->
-  <div class="faq-contact">
+  <!-- Section intro ADMIN -->
+  <div class="faq-contact" *ngIf="auth.isAdmin">
+    <p>Bienvenue dans l'espace administrateur. Vous pouvez traiter les demandes soumises par les bibliothécaires, consulter les réponses enregistrées et importer des données en lot.</p>
+  </div>
+
+  <!-- Section intro USAGER -->
+  <div class="faq-contact" *ngIf="!auth.isAdmin">
     <p>Si des incertitudes surviennent au moment de compléter un formulaire (prix, format, etc.), consignez-les dans le champ <strong>Bibliothèque&nbsp;: Note, commentaire ou question</strong>. Un membre de l'équipe des Acquisitions vous contactera lors du traitement.</p>
-    <p >Pour toute autre question&nbsp;:</p>
-    <ul class="faq-contact__list">
-      <li><a href="mailto:acqmono@bib.umontreal.ca">acqmono@bib.umontreal.ca</a><span>— monographies</span></li>
-      <li><a href="mailto:acqperi@bib.umontreal.ca">acqperi@bib.umontreal.ca</a><span>— périodiques</span></li>
-      <li><a href="mailto:resselect@bib.umontreal.ca">resselect@bib.umontreal.ca</a><span>— ressources électroniques</span></li>
-    </ul>
+    <p>Pour toute autre question&nbsp;: <a href="mailto:acquisitions@bib.umontreal.ca">acquisitions@bib.umontreal.ca</a></p>
   </div>
 
   <!-- Séparateur -->
