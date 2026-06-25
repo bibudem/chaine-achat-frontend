@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+import * as XLSX from 'xlsx';
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
@@ -296,20 +297,18 @@ export class ImportService {
     );
   }
 
-  downloadTemplate(type: FormType): Observable<void> {
+  downloadTemplate(type: FormType): void {
+    const info = FORM_TYPES.find(f => f.type === type);
+    if (!info) return;
+
     const filename = `modele_import_${type.replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
-    return this.http.get(
-      `${this.baseUrl}/template/${encodeURIComponent(type)}`,
-      { responseType: 'blob' }
-    ).pipe(
-      map(blob => {
-        const url = URL.createObjectURL(blob);
-        const a   = document.createElement('a');
-        a.href     = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-      })
-    );
+    const headers  = info.columns.map(c => c.name);
+    const required = info.columns.map(c => c.required ? 'REQUIS' : 'Optionnel');
+    const examples = info.columns.map(c => c.example);
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, required, examples]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Import');
+    XLSX.writeFile(wb, filename);
   }
 }

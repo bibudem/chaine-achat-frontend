@@ -304,7 +304,7 @@ export class ImportComponent implements OnDestroy {
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   downloadTemplate(): void {
     if (!this.selectedType) { return; }
-    this.importService.downloadTemplate(this.selectedType.type).subscribe();
+    this.importService.downloadTemplate(this.selectedType.type);
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
