@@ -1,0 +1,111 @@
+.piece-jointe-gestion .pj-box {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.65rem 0.75rem;
+  min-height: 100px;
+  background: #fff;
+}
+
+.piece-jointe-gestion .pj-loading,
+.piece-jointe-gestion .pj-empty {
+  font-size: 0.85rem;
+  color: #868e96;
+  padding: 0.2rem 0;
+}
+
+.piece-jointe-gestion .pj-list {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+
+.piece-jointe-gestion .pj-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.piece-jointe-gestion .pj-list li:last-child {
+  border-bottom: none;
+}
+
+.piece-jointe-gestion .pj-list__icon {
+  flex-shrink: 0;
+  color: #868e96;
+}
+
+.piece-jointe-gestion .pj-list__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #0d6efd;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.piece-jointe-gestion .pj-list__name:hover {
+  text-decoration: underline;
+}
+
+.piece-jointe-gestion .pj-list--pending .pj-list__name {
+  color: #495057;
+}
+
+.piece-jointe-gestion .pj-list__taille {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: #adb5bd;
+}
+
+.piece-jointe-gestion .pj-list__badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: #997404;
+  background: #fff3cd;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.piece-jointe-gestion .pj-list__remove {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  color: #adb5bd;
+  padding: 0 0.15rem;
+  line-height: 1;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.piece-jointe-gestion .pj-list__remove:hover {
+  color: #dc3545;
+}
+
+.piece-jointe-gestion .pj-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.piece-jointe-gestion .pj-hint {
+  color: #868e96;
+  font-size: 0.72rem;
+}
+
+.piece-jointe-gestion .pj-erreur {
+  color: #dc3545;
+  font-size: 0.78rem;
+  margin-top: 0.5rem;
+}
+
+.piece-jointe-gestion .btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}

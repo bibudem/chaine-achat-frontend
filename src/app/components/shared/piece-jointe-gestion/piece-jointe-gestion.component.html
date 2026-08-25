@@ -1,0 +1,64 @@
+<div class="piece-jointe-gestion">
+  <label class="form-label mb-1">
+    <i class="bi bi-paperclip me-1"></i>Pièces jointes
+  </label>
+
+  <div class="pj-box">
+
+    <div *ngIf="chargement" class="pj-loading">
+      <span class="spinner-border spinner-border-sm text-secondary" role="status" aria-hidden="true"></span>
+      <span class="text-muted small ms-2">Chargement…</span>
+    </div>
+
+    <div *ngIf="!chargement && !pieces.length && !fichiersEnAttente.length" class="pj-empty">
+      Aucune pièce jointe.
+    </div>
+
+    <ul class="pj-list" *ngIf="pieces.length">
+      <li *ngFor="let p of pieces">
+        <i class="bi bi-file-earmark-text pj-list__icon"></i>
+        <a [href]="telechargerUrl(p.piece_id)" target="_blank" rel="noopener"
+           class="pj-list__name" [title]="p.nom_fichier">{{ p.nom_fichier }}</a>
+        <span class="pj-list__taille">{{ formatTaille(p.taille_octets) }}</span>
+        <button *ngIf="!readonlyMode" type="button" class="pj-list__remove"
+                (click)="supprimer(p)" aria-label="Supprimer la pièce jointe" title="Supprimer">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </li>
+    </ul>
+
+    <ul class="pj-list pj-list--pending" *ngIf="fichiersEnAttente.length">
+      <li *ngFor="let f of fichiersEnAttente; let i = index">
+        <i class="bi bi-hourglass-split pj-list__icon"></i>
+        <span class="pj-list__name" [title]="f.name">{{ f.name }}</span>
+        <span class="pj-list__taille">{{ formatTaille(f.size) }}</span>
+        <span class="pj-list__badge">en attente</span>
+        <button *ngIf="!readonlyMode" type="button" class="pj-list__remove"
+                (click)="retirerEnAttente(i)" aria-label="Retirer le fichier" title="Retirer">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </li>
+    </ul>
+
+    <div *ngIf="!readonlyMode" class="pj-actions">
+      <label class="btn btn-outline-secondary btn-sm mb-0"
+             [class.disabled]="envoiEnCours || (pieces.length + fichiersEnAttente.length) >= nombreMaxFichiers">
+        <span *ngIf="envoiEnCours" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        <i *ngIf="!envoiEnCours" class="bi bi-upload me-1"></i>Ajouter un fichier
+        <input type="file" class="d-none" multiple
+               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml"
+               [disabled]="envoiEnCours || (pieces.length + fichiersEnAttente.length) >= nombreMaxFichiers"
+               (change)="onFichiersSelectionnes($event)">
+      </label>
+      <small class="pj-hint">
+        PDF, Word (.doc, .docx), Excel (.xlsx, .xls) ou courriel (.msg, .eml) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
+        <span *ngIf="!reponseId && !itemId">Envoyé après l'enregistrement.</span>
+      </small>
+    </div>
+
+    <div *ngIf="erreur" class="pj-erreur">
+      <i class="bi bi-exclamation-triangle me-1"></i>{{ erreur }}
+    </div>
+
+  </div>
+</div>

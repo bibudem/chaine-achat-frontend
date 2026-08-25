@@ -68,6 +68,8 @@ import { ReponsesDetailComponent } from './components/admin/reponses/reponses-de
 import { FaqComponent } from './components/faq/faq.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
+import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
+import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +103,8 @@ import { UsagerProfilComponent } from './components/usager/usager-profil/usager-
     FaqComponent,
     PebTipasaNumeriqueComponent,
     UsagerProfilComponent,
+    PieceJointeGestionComponent,
+    PieceJointeUploaderComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,

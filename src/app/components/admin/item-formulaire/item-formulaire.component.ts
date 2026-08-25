@@ -16,6 +16,9 @@ import { ConfigService } from '../../../services/config.service';
 export class ItemFormulaireComponent implements OnInit {
   itemForm: FormGroup;
   itemId: number | null = null;
+  /** id de la réponse usager d'origine en mode création (history.state.fromReponse) — permet
+   *  d'afficher/gérer ses pièces jointes avant que l'item n'existe. */
+  reponseIdOrigine: number | null = null;
   isEditMode = false;
   loading = false;
   submitting = false;
@@ -140,6 +143,7 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   private prefillFromReponse(reponse: any): void {
+    this.reponseIdOrigine = reponse.id ?? null;
     const r = reponse.reponses || {};
     const baseData = r.baseData || {};
     const specificData = r.specificData || {};
@@ -459,7 +463,10 @@ export class ItemFormulaireComponent implements OnInit {
     const itemData = {
       ...baseData,
       specificData: specificData,
-      formulaire_type: formData.formulaire_type || this.selectedFormulaireType
+      formulaire_type: formData.formulaire_type || this.selectedFormulaireType,
+      // Relie l'item à sa réponse usager d'origine (lien tbl_reponses.item_id_cree
+      // + rattachement des pièces jointes déjà envoyées — voir controllers/items.js)
+      ...(this.reponseIdOrigine ? { reponse_id: this.reponseIdOrigine } : {})
     };
 
     if (this.isEditMode && this.itemId) {
@@ -487,6 +494,9 @@ export class ItemFormulaireComponent implements OnInit {
         next: (response: ApiResponse<Item>) => {
           this.submitting = false;
           if (response.success) {
+            // Renseigner l'id créé déclenche l'envoi des pièces jointes choisies
+            // avant l'enregistrement (voir PieceJointeGestionComponent.ngOnChanges).
+            if (response.data?.item_id) this.itemId = response.data.item_id;
             this.reponsesService.triggerPendingRefresh();
             this.dialogService.showSuccess('Item créé avec succès!');
             setTimeout(() => this.router.navigate(['/items']), 1500);

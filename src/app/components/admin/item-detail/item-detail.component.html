@@ -733,6 +733,16 @@
           </div>
         </div>
 
+        <!-- ── Section : Documents ───────────────────────────── -->
+        <div class="itd-card" *ngIf="itemId">
+          <div class="itd-card__header">
+            <i class="bi bi-paperclip me-2"></i>Documents
+          </div>
+          <div class="itd-card__body">
+            <app-piece-jointe-gestion [itemId]="itemId" [readonlyMode]="true"></app-piece-jointe-gestion>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>

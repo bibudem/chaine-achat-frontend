@@ -79,6 +79,14 @@
           </button>
         </div>
 
+        <!-- ── Documents ── -->
+        <div class="p-3 border-bottom" *ngIf="reponseId || itemId">
+          <app-piece-jointe-gestion
+            [itemId]="itemId"
+            [reponseId]="!itemId ? reponseId : null">
+          </app-piece-jointe-gestion>
+        </div>
+
         <!-- ── Formulaire ── -->
         <form [formGroup]="form" *ngIf="!successMessage" novalidate>
           <div class="p-4">

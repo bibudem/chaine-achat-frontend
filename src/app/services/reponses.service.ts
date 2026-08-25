@@ -224,6 +224,55 @@ export class ReponsesService {
   }
 
   // ──────────────────────────────────────────────────────────
+  // PIÈCES JOINTES (section Bibliothèque des formulaires)
+  // Fichiers acceptés : PDF, Excel (.xlsx/.xls), courriel (.msg/.eml) — 3 max, 10 Mo chacun.
+  // Route : POST /reponses/:id/pieces-jointes (multipart/form-data, champ "fichiers")
+  // ──────────────────────────────────────────────────────────
+  uploaderPiecesJointes(reponseId: number, fichiers: File[]): Observable<any> {
+    const fd = new FormData();
+    fichiers.forEach(f => fd.append('fichiers', f));
+    // Ne pas passer httpOptions : HttpClient fixe automatiquement le
+    // Content-Type multipart/form-data (avec boundary) pour un FormData.
+    return this.http
+      .post(`${this.baseUrl}/${reponseId}/pieces-jointes`, fd)
+      .pipe(catchError(this.handleError('uploaderPiecesJointes')));
+  }
+
+  getPiecesJointes(reponseId: number): Observable<{ data: any[] }> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/${reponseId}/pieces-jointes`)
+      .pipe(catchError(this.handleError('getPiecesJointes')));
+  }
+
+  // ── Côté admin : pièces jointes rattachées directement à un item ──────────
+  // (celles de la réponse d'origine une fois liées, + celles ajoutées par un admin)
+  // Route : POST/GET /items/:id/pieces-jointes
+  uploaderPiecesJointesItem(itemId: number, fichiers: File[]): Observable<any> {
+    const fd = new FormData();
+    fichiers.forEach(f => fd.append('fichiers', f));
+    return this.http
+      .post(`${environment.apiUrl}/items/${itemId}/pieces-jointes`, fd)
+      .pipe(catchError(this.handleError('uploaderPiecesJointesItem')));
+  }
+
+  getPiecesJointesParItem(itemId: number): Observable<{ data: any[] }> {
+    return this.http
+      .get<{ data: any[] }>(`${environment.apiUrl}/items/${itemId}/pieces-jointes`)
+      .pipe(catchError(this.handleError('getPiecesJointesParItem')));
+  }
+
+  supprimerPieceJointe(pieceId: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/pieces-jointes/${pieceId}`)
+      .pipe(catchError(this.handleError('supprimerPieceJointe')));
+  }
+
+  /** URL de téléchargement direct (à utiliser dans un lien <a>, pas via HttpClient). */
+  telechargerPieceJointeUrl(pieceId: number): string {
+    return `${this.baseUrl}/pieces-jointes/${pieceId}/telecharger`;
+  }
+
+  // ──────────────────────────────────────────────────────────
   // LECTURE (commun)
   // ──────────────────────────────────────────────────────────
   lister(type?: string, page = 1, limit = 20): Observable<any> {

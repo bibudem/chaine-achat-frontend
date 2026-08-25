@@ -216,6 +216,17 @@
                   </div>
                 </div>
 
+                <!-- Documents -->
+                <div class="info-grid">
+                  <div class="info-item" style="grid-column: 1 / -1;">
+                    <label><i class="bi bi-paperclip me-1"></i>Documents</label>
+                    <app-piece-jointe-gestion
+                      [reponseId]="!expandedReponse.item_id_cree ? expandedReponse.id : null"
+                      [itemId]="expandedReponse.item_id_cree ?? null">
+                    </app-piece-jointe-gestion>
+                  </div>
+                </div>
+
                 <!-- Alerte item supprimé -->
                 <div *ngIf="expandedReponse.statut_approbation === 'item_supprime'"
                      class="alert alert-danger d-flex align-items-center gap-2 mx-3 mb-2 py-2"

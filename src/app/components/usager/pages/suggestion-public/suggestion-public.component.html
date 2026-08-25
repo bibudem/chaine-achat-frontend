@@ -337,6 +337,11 @@
             </small>
           </div>
           <div class="col-md-6">
+            <app-piece-jointe-uploader (filesChange)="onFichiersJointsChange($event)"></app-piece-jointe-uploader>
+          </div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-md-12">
             <label class="form-label">
               <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>Note interne
             </label>

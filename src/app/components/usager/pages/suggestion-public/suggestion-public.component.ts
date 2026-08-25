@@ -21,6 +21,19 @@ export class SuggestionPublicComponent implements OnInit {
   derniereTitre    = '';
   derniereCourriel = '';
 
+  fichiersJoints: File[] = [];
+  onFichiersJointsChange(fichiers: File[]): void {
+    this.fichiersJoints = fichiers;
+  }
+
+  /** Envoie les pièces jointes accumulées vers la réponse une fois son id connu. Non bloquant. */
+  private uploaderPiecesJointes(reponseId: number): void {
+    if (!this.fichiersJoints.length) return;
+    this.reponsesService.uploaderPiecesJointes(reponseId, this.fichiersJoints).subscribe({
+      error: (err) => console.error('[SuggestionPublic] uploaderPiecesJointes:', err)
+    });
+  }
+
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Droit', 'Du Parc',
     'Hubert-Reeves', 'Kinésiologie', 'L.S.H.', 'Livres rares',
@@ -217,8 +230,10 @@ export class SuggestionPublicComponent implements OnInit {
       : this.reponsesService.envoyerSuggestion(payload);
 
     obs.subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isLoading = false;
+        const reponseId = this.editId ?? res?.id;
+        if (reponseId) this.uploaderPiecesJointes(reponseId);
         this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
       },
       error: () => { this.isLoading = false; this.error = true; }
@@ -270,6 +285,7 @@ export class SuggestionPublicComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         if (!this.editId && res?.id) this.editId = res.id;
+        if (this.editId) this.uploaderPiecesJointes(this.editId);
         this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
       },
       error: () => { this.isLoading = false; this.error = true; }

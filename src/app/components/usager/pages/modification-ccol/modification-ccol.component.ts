@@ -64,6 +64,19 @@ export class ModificationCcolComponent implements OnInit {
   derniereTitre        = '';
   derniereBibliotheque = '';
 
+  fichiersJoints: File[] = [];
+  onFichiersJointsChange(fichiers: File[]): void {
+    this.fichiersJoints = fichiers;
+  }
+
+  /** Envoie les pièces jointes accumulées vers la réponse une fois son id connu. Non bloquant. */
+  private uploaderPiecesJointes(reponseId: number): void {
+    if (!this.fichiersJoints.length) return;
+    this.reponsesService.uploaderPiecesJointes(reponseId, this.fichiersJoints).subscribe({
+      error: (err) => console.error('[ModificationCcol] uploaderPiecesJointes:', err)
+    });
+  }
+
   constructor(
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
@@ -293,8 +306,10 @@ export class ModificationCcolComponent implements OnInit {
       : this.reponsesService.envoyerModificationCcol(payload);
 
     obs.subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isLoading = false;
+        const reponseId = this.editId ?? res?.id;
+        if (reponseId) this.uploaderPiecesJointes(reponseId);
         this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
       },
       error: () => { this.isLoading = false; this.error = true; }
@@ -352,6 +367,7 @@ export class ModificationCcolComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         if (!this.editId && res?.id) this.editId = res.id;
+        if (this.editId) this.uploaderPiecesJointes(this.editId);
         this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
       },
       error: () => { this.isLoading = false; this.error = true; }

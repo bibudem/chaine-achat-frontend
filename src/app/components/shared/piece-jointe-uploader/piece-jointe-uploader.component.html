@@ -1,0 +1,44 @@
+<div class="piece-jointe-uploader">
+  <label class="form-label mb-1">
+    <i class="bi bi-paperclip me-1"></i>Pièce jointe (facultatif)
+  </label>
+
+  <div class="pju-box">
+
+    <div *ngIf="!fichiers.length" class="pju-empty">
+      Aucun fichier sélectionné.
+    </div>
+
+    <ul class="pju-list" *ngIf="fichiers.length">
+      <li *ngFor="let f of fichiers; let i = index">
+        <i class="bi bi-file-earmark-text pju-list__icon"></i>
+        <span class="pju-list__name" [title]="f.name">{{ f.name }}</span>
+        <span class="pju-list__taille">{{ formatTaille(f.size) }}</span>
+        <button type="button" class="pju-list__remove"
+                [disabled]="disabled"
+                (click)="retirer(i)" aria-label="Retirer le fichier" title="Retirer">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </li>
+    </ul>
+
+    <div class="pju-actions">
+      <label class="btn btn-outline-secondary btn-sm mb-0"
+             [class.disabled]="disabled || fichiers.length >= nombreMaxFichiers">
+        <i class="bi bi-upload me-1"></i>Choisir un fichier
+        <input type="file" class="d-none" multiple
+               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml"
+               [disabled]="disabled || fichiers.length >= nombreMaxFichiers"
+               (change)="onFichiersSelectionnes($event)">
+      </label>
+      <small class="pju-hint">
+        PDF, Word (.doc, .docx), Excel (.xlsx, .xls) ou courriel (.msg, .eml) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
+      </small>
+    </div>
+
+    <div *ngIf="erreur" class="pju-erreur">
+      <i class="bi bi-exclamation-triangle me-1"></i>{{ erreur }}
+    </div>
+
+  </div>
+</div>

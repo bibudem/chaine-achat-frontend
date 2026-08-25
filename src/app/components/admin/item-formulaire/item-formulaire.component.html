@@ -389,13 +389,13 @@
 
         <!-- Notes bibliothèque et TDM -->
         <div class="row mb-3">
-          <div class="col-md">
+          <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.note-bib' | translate }}</label>
               <textarea class="form-control" formControlName="note_commentaire" rows="4"></textarea>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">
                 <i class="bi bi-lock-fill me-1" style="font-size:.85rem"></i>{{ 'item-formulaire.note-interne' | translate }}
@@ -404,14 +404,23 @@
                         [placeholder]="'item-formulaire.note-interne-placeholder' | translate"></textarea>
             </div>
           </div>
-          <div class="col-md">
+        </div>
+        <div class="row mb-3">
+          
+          <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
-              <textarea class="form-control" formControlName="note_dtdm" rows="4"></textarea>
+              <textarea class="form-control" formControlName="note_dtdm" rows="7"></textarea>
             </div>
           </div>
+          <div class="col-md-6">
+            <!-- Documents -->
+            <app-piece-jointe-gestion
+              [itemId]="itemId || null"
+              [reponseId]="!itemId ? reponseIdOrigine : null">
+            </app-piece-jointe-gestion>
+          </div>
         </div>
-
         <!-- Métadonnées (lecture seule si édition) -->
         <div *ngIf="isEditMode" class="row mb-3 mt-5">
           <div class="col-md-6">

@@ -1,0 +1,89 @@
+.piece-jointe-uploader .pju-box {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+
+.piece-jointe-uploader .pju-empty {
+  font-size: 0.85rem;
+  color: #868e96;
+  padding: 0.2rem 0;
+}
+
+.piece-jointe-uploader .pju-list {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+
+.piece-jointe-uploader .pju-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.piece-jointe-uploader .pju-list li:last-child {
+  border-bottom: none;
+}
+
+.piece-jointe-uploader .pju-list__icon {
+  flex-shrink: 0;
+  color: #868e96;
+}
+
+.piece-jointe-uploader .pju-list__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: #212529;
+}
+
+.piece-jointe-uploader .pju-list__taille {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: #adb5bd;
+}
+
+.piece-jointe-uploader .pju-list__remove {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  color: #adb5bd;
+  padding: 0 0.15rem;
+  line-height: 1;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.piece-jointe-uploader .pju-list__remove:hover {
+  color: #dc3545;
+}
+
+.piece-jointe-uploader .pju-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.piece-jointe-uploader .pju-hint {
+  color: #868e96;
+  font-size: 0.72rem;
+}
+
+.piece-jointe-uploader .pju-erreur {
+  color: #dc3545;
+  font-size: 0.78rem;
+  margin-top: 0.5rem;
+}
+
+.piece-jointe-uploader .btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
