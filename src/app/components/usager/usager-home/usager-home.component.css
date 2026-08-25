@@ -82,7 +82,6 @@
   .uh-form-row       { padding: .8rem 1rem; gap: .75rem; }
   .uh-form-row__icon { width: 2rem; height: 2rem; font-size: .9rem; }
   .uh-form-row__desc { display: none; }
-  .uh-forms__title   { font-size: .92rem; }
   .uh-forms__sub     { font-size: .75rem; }
   .uh-demandes-section        { flex-wrap: wrap; padding: 1.1rem 1.25rem; }
   .uh-demandes-section__desc  { display: none; }
@@ -118,7 +117,7 @@
   border: 1.5px solid #e0e7ef;
   border-left: 4px solid #00407F;
   border-radius: 12px;
-  padding: 1.15rem 1.5rem;
+  padding: .95rem 1.5rem;
   margin-bottom: 1.5rem;
   text-decoration: none;
   box-shadow: 0 1px 4px rgba(0,0,0,.04);
@@ -174,10 +173,15 @@
   gap: .15rem;
 }
 
-.uh-demandes-section__title {
-  font-size: 1rem;
+.uh-demandes-section__title,
+.uh-info-card__title,
+.uh-forms__title {
+  font-size: .72rem;
   font-weight: 600;
-  color: #0B113A;
+  color: #607386;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0;
 }
 
 .uh-demandes-section__desc {
@@ -238,13 +242,6 @@
   flex-shrink: 0;
 }
 
-.uh-info-card__title {
-  font-size: .92rem;
-  font-weight: 600;
-  color: #0B113A;
-  margin: 0;
-}
-
 .uh-info-card__body {
   font-size: .78rem;
   color: #607386;
@@ -259,36 +256,44 @@
   line-height: 1.55;
 }
 
-/* ── Encart "Des questions ?" ── */
+/* ── "Des questions ?" ── */
 .uh-callout {
-  display: flex;
-  gap: .55rem;
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-  border-left: 3px solid #94a3b8;
-  border-radius: 8px;
-  padding: .6rem .75rem;
   margin: 0 0 .75rem;
 }
 
+.uh-callout__header {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0 0 .4rem;
+}
+
 .uh-callout__icon {
-  color: #64748b;
-  font-size: .8rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .78rem;
   flex-shrink: 0;
-  margin-top: .1rem;
 }
 
 .uh-callout__title {
-  font-size: .78rem;
-  font-weight: 700;
-  color: #334155;
-  margin: 0 0 .2rem;
+  font-size: .72rem;
+  font-weight: 600;
+  color: #607386;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0;
 }
 
 .uh-callout__text {
   font-size: .75rem;
   color: #607386;
-  line-height: 1.45;
+  line-height: 1.7;
   margin: 0;
 }
 
@@ -357,7 +362,7 @@
   background: #fff;
   border: 1.5px solid #e0e7ef;
   border-radius: 12px;
-  padding: .95rem 1.1rem 0;
+  padding: .75rem 1.1rem 0;
   box-shadow: 0 1px 4px rgba(0,0,0,.04);
   overflow: hidden;
 }
@@ -366,7 +371,7 @@
   display: flex;
   align-items: center;
   gap: .55rem;
-  margin-bottom: .9rem;
+  margin-bottom: .6rem;
 }
 
 .uh-forms__icon {
@@ -382,13 +387,6 @@
   flex-shrink: 0;
 }
 
-.uh-forms__title {
-  font-size: .92rem;
-  font-weight: 600;
-  color: #0B113A;
-  margin: 0;
-}
-
 .uh-forms__sub {
   font-size: .78rem;
   color: #94a3b8;
@@ -400,11 +398,24 @@
   border-top: 1px solid #f0f4f8;
 }
 
+.uh-forms__group-label {
+  font-size: .82rem;
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: .04em;
+  padding: .6rem 1.1rem .3rem;
+}
+.uh-forms__group-label--first { padding-top: .4rem; }
+.uh-forms__group-label:not(.uh-forms__group-label--first) {
+  border-top: 1px solid #f0f4f8;
+  margin-top: .1rem;
+}
+
 .uh-form-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: .95rem 1.1rem;
+  gap: .8rem;
+  padding: .65rem 1.1rem;
   border-bottom: 1px solid #f0f4f8;
   text-decoration: none;
   transition: background .15s, transform .15s;
@@ -414,14 +425,14 @@
 .uh-form-row:hover { background: #f7f9fc; text-decoration: none; transform: translateX(3px); }
 
 .uh-form-row__icon {
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 8px;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 7px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: .9rem;
   transition: transform .15s;
 }
 .uh-form-row:hover .uh-form-row__icon { transform: scale(1.08); }
@@ -431,21 +442,19 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: .15rem;
+  gap: .1rem;
 }
 
 .uh-form-row__title {
-  font-size: .88rem;
+  font-size: .85rem;
   font-weight: 600;
   color: #1e293b;
 }
 
 .uh-form-row__desc {
-  font-size: .76rem;
+  font-size: .73rem;
   color: #94a3b8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
 }
 
 .uh-form-row__arrow {

@@ -9,6 +9,7 @@ export interface FormulaireCard {
   accentColor: string;
   bgColor:     string;
   textColor:   string;
+  groupe:      string;
 }
 
 @Component({
@@ -41,60 +42,79 @@ export class UsagerHomeComponent implements OnInit {
     });
   }
 
+  readonly GROUPE_COLLECTIONS = 'Développement des collections';
+  readonly GROUPE_USAGERS     = 'Acquisitions pour les usagers';
+
   readonly formulaires: FormulaireCard[] = [
-    {
-      titre:       "Suggestion d'achat",
-      description: "Proposez l'ajout d'un document à nos collections. Votre suggestion sera étudiée par un bibliothécaire disciplinaire.",
-      icon:        'bi-lightbulb',
-      route:       '/usager/suggestion-public',
-      accentColor: '#C8872A',
-      bgColor:     '#FDF3E3',
-      textColor:   '#7B4A15',
-    },
+    /* ── Développement des collections ── */
     {
       titre:       'Nouvel achat unique',
-      description: "Soumettez une demande d'acquisition d'un document imprimé ou électronique pour les collections des bibliothèques.",
+      description: "Demander l'achat de documents (sans frais annuels récurrents).",
       icon:        'bi-cart-plus',
       route:       '/usager/nouvel-achat',
       accentColor: '#2A9086',
       bgColor:     '#D9F0EE',
       textColor:   '#1B5E6E',
-    },
-    {
-      titre:       'Modification et CCOL',
-      description: "Demandez la modification d'une notice existante ou l'ajout d'un exemplaire au catalogue collectif (CCOL).",
-      icon:        'bi-pencil-square',
-      route:       '/usager/modification-ccol',
-      accentColor: '#3730A3',
-      bgColor:     '#EDE9FE',
-      textColor:   '#312E81',
+      groupe:      this.GROUPE_COLLECTIONS,
     },
     {
       titre:       'Nouvel abonnement',
-      description: "Soumettez une demande de souscription à une ressource périodique ou sérielle imprimée ou électronique.",
+      description: 'Demander un nouvel abonnement (frais annuels récurrents).',
       icon:        'bi-newspaper',
       route:       '/usager/nouvel-abonnement',
       accentColor: '#16A34A',
       bgColor:     '#DCFCE7',
       textColor:   '#14532D',
+      groupe:      this.GROUPE_COLLECTIONS,
     },
     {
-      titre:       'PEB Tipasa numérique',
-      description: "Demandez l'achat d'un livre numérique en remplacement d'un prêt entre bibliothèques via la plateforme Tipasa.",
-      icon:        'bi-share',
-      route:       '/usager/peb-tipasa-numerique',
-      accentColor: '#0369A1',
-      bgColor:     '#E0F2FE',
-      textColor:   '#0C4A6E',
+      titre:       'Modification et CCOL',
+      description: "Demander une modification à un abonnement actif ou l'achat d'un complément de collection (CCOL).",
+      icon:        'bi-pencil-square',
+      route:       '/usager/modification-ccol',
+      accentColor: '#3730A3',
+      bgColor:     '#EDE9FE',
+      textColor:   '#312E81',
+      groupe:      this.GROUPE_COLLECTIONS,
     },
+
+    /* ── Acquisitions pour les usagers ── */
     {
-      titre:       'Requête ACQ Accessibilité',
-      description: "Adressez une requête spécifique directement au service des acquisitions pour un besoin en accessibilité.",
+      titre:       'Accessibilité',
+      description: 'Demander un document pour une personne en situation de handicap. Exclusif au Service Accessibilité.',
       icon:        'bi-universal-access',
       route:       '/usager/requete-accessibilite',
       accentColor: '#37424D',
       bgColor:     '#F4F5F7',
       textColor:   '#2D3748',
+      groupe:      this.GROUPE_USAGERS,
+    },
+    {
+      titre:       "Suggestion d'achat - Usager",
+      description: "Demander l'achat de documents ayant fait l'objet d'une suggestion d'achat sur le site des bibliothèques. Exclusif à l'équipe Suggestions d'achat.",
+      icon:        'bi-lightbulb',
+      route:       '/usager/suggestion-public',
+      accentColor: '#C8872A',
+      bgColor:     '#FDF3E3',
+      textColor:   '#7B4A15',
+      groupe:      this.GROUPE_USAGERS,
+    },
+    {
+      titre:       'PEB numérique',
+      description: "Demander l'achat de documents découlant de demandes de prêt entre bibliothèques. Exclusif à l'équipe du PEB.",
+      icon:        'bi-share',
+      route:       '/usager/peb-tipasa-numerique',
+      accentColor: '#0369A1',
+      bgColor:     '#E0F2FE',
+      textColor:   '#0C4A6E',
+      groupe:      this.GROUPE_USAGERS,
     },
   ];
+
+  get formulaireGroupes(): { label: string; items: FormulaireCard[] }[] {
+    return [
+      { label: this.GROUPE_COLLECTIONS, items: this.formulaires.filter(f => f.groupe === this.GROUPE_COLLECTIONS) },
+      { label: this.GROUPE_USAGERS,     items: this.formulaires.filter(f => f.groupe === this.GROUPE_USAGERS) },
+    ];
+  }
 }

@@ -54,16 +54,16 @@
         </p>
 
         <div class="uh-callout">
-          <i class="bi bi-lightbulb-fill uh-callout__icon"></i>
-          <div class="uh-callout__body">
+          <div class="uh-callout__header">
+            <span class="uh-callout__icon"><i class="bi bi-lightbulb-fill"></i></span>
             <p class="uh-callout__title">Des questions?</p>
-            <p class="uh-callout__text">
-              Si des incertitudes surviennent au moment de remplir un formulaire (prix, format, etc.),
-              saisissez-les dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong>.
-              Un membre de l'équipe des Acquisitions contactera le demandeur en bibliothèque au
-              moment de traiter la demande.
-            </p>
           </div>
+          <p class="uh-callout__text">
+            Si des incertitudes surviennent au moment de remplir un formulaire (prix, format, etc.),
+            saisissez-les dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong>.
+            Un membre de l'équipe des Acquisitions contactera le demandeur en bibliothèque au
+            moment de traiter la demande.
+          </p>
         </div>
 
         <p class="uh-info-card__contact-lead">Pour toute autre question, écrivez-nous :</p>
@@ -108,18 +108,23 @@
         </div>
 
         <div class="uh-forms__list">
-          <a *ngFor="let f of formulaires" [routerLink]="f.route" class="uh-form-row">
-            <span class="uh-form-row__icon"
-                  [style.background]="f.bgColor"
-                  [style.color]="f.accentColor">
-              <i class="bi {{ f.icon }}"></i>
-            </span>
-            <div class="uh-form-row__text">
-              <span class="uh-form-row__title">{{ f.titre }}</span>
-              <span class="uh-form-row__desc">{{ f.description }}</span>
+          <ng-container *ngFor="let groupe of formulaireGroupes; let gi = index">
+            <div class="uh-forms__group-label" [class.uh-forms__group-label--first]="gi === 0">
+              {{ groupe.label }}
             </div>
-            <i class="bi bi-chevron-right uh-form-row__arrow"></i>
-          </a>
+            <a *ngFor="let f of groupe.items" [routerLink]="f.route" class="uh-form-row">
+              <span class="uh-form-row__icon"
+                    [style.background]="f.bgColor"
+                    [style.color]="f.accentColor">
+                <i class="bi {{ f.icon }}"></i>
+              </span>
+              <div class="uh-form-row__text">
+                <span class="uh-form-row__title">{{ f.titre }}</span>
+                <span class="uh-form-row__desc">{{ f.description }}</span>
+              </div>
+              <i class="bi bi-chevron-right uh-form-row__arrow"></i>
+            </a>
+          </ng-container>
         </div>
 
       </div>
