@@ -82,7 +82,7 @@
       <div class="row g-3 mb-3">
 
         <!-- Type Formulaire -->
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label class="form-label">{{ 'rapport.type-formulaire' | translate }}</label>
           <div class="ms-dropdown" [class.ms-open]="dropdowns['formulaire_type']" (click)="$event.stopPropagation()">
             <button type="button" class="ms-trigger" [disabled]="isLoading" (click)="toggleDropdown('formulaire_type')">
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Bibliothèque -->
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label class="form-label">{{ 'rapport.bibliotheque' | translate }}</label>
           <div class="ms-dropdown" [class.ms-open]="dropdowns['bibliotheque']" (click)="$event.stopPropagation()">
             <button type="button" class="ms-trigger" [disabled]="isLoading" (click)="toggleDropdown('bibliotheque')">
@@ -173,6 +173,19 @@
             </div>
           </div>
         </div>
+
+        <!-- Fonds budgétaire -->
+        <div class="col-md-2">
+          <label for="fondsBudgetaire" class="form-label">{{ 'rapport.fonds-budgetaire' | translate }}</label>
+          <input type="text" id="fondsBudgetaire" class="form-control" list="fondsBudgetaireList"
+                 [(ngModel)]="filtres.fonds" name="fondsBudgetaire"
+                 placeholder="Rechercher un fonds..."
+                 [disabled]="isLoading">
+          <datalist id="fondsBudgetaireList">
+            <option *ngFor="let f of fondsBudgetaires" [value]="f"></option>
+          </datalist>
+        </div>
+
         <!-- Bouton générer -->
         <div class="col-md-2 d-flex align-items-end">
           <button type="button" class="btn btn-primary w-100"

@@ -49,6 +49,7 @@ export interface FiltresRapport {
   bibliotheque?: string;
   priorite?: string;
   demandeur?: string;
+  fonds?: string;
   statutBibliotheque?: string;
   statutAcq?: string;
   limit?: number;

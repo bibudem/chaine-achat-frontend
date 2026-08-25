@@ -106,7 +106,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   offset = 0;
 
   // Filtres
-  filtres: FiltresRapport = { dateDebut: '', dateFin: '', demandeur: '', limit: 500, offset: 0 };
+  filtres: FiltresRapport = { dateDebut: '', dateFin: '', demandeur: '', fonds: '', limit: 500, offset: 0 };
 
   // Filtre titre (recherche texte libre)
   rechercheTitre = '';
@@ -124,6 +124,8 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     'PEB Tipasa numérique', 'Requête ACQ Accessibilité', "Suggestion d'achat - Usager"
   ];
   priorites: string[] = ['Urgent', 'Régulier', 'Basse'];
+  // Suggestions pour l'autocomplétion du champ Fonds budgétaire (voir <datalist> dans le template)
+  fondsBudgetaires: string[] = [];
   bibliotheques: string[] = [
     'Bibliothèque des lettres et sciences humaines', 'Bibliothèque des sciences',
     'Bibliothèque de droit', "Bibliothèque d'aménagement",
@@ -161,7 +163,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initTitreChamps();
     this.colonnesSelectionnees = [
       'item_id', 'formulaire_type', 'titre_document', 'demandeur',
-      'bibliotheque', 'statut_bibliotheque', 'statut_acq', 'date_creation'
+      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'date_creation'
     ];
     this.clickListener = () => this.closeAllDropdowns();
     document.addEventListener('click', this.clickListener);
@@ -424,6 +426,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
       dateDebut: this.filtres.dateDebut || undefined,
       dateFin:   this.filtres.dateFin   || undefined,
       demandeur: this.filtres.demandeur || undefined,
+      fonds:     this.filtres.fonds     || undefined,
       limit:     5000,
       offset:    0
     };
@@ -458,6 +461,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.typesFormulaires    = merge(this.typesFormulaires,    'formulaire_type');
     this.bibliotheques       = merge(this.bibliotheques,       'bibliotheque');
     this.priorites           = merge(this.priorites,           'priorite_demande');
+    this.fondsBudgetaires    = merge(this.fondsBudgetaires,    'fonds_budgetaire');
     this.statutsBibliotheque = merge(this.statutsBibliotheque, 'statut_bibliotheque');
     this.statutsAcq          = merge(this.statutsAcq,          'statut_acq');
   }
@@ -610,7 +614,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   reinitialiserFiltres(): void {
     const { dateDebut, dateFin } = this.rapportsService.getCurrentMonthDates();
-    this.filtres              = { dateDebut, dateFin, demandeur: '', limit: 500, offset: 0 };
+    this.filtres              = { dateDebut, dateFin, demandeur: '', fonds: '', limit: 500, offset: 0 };
     this.selectedMap          = {};
     this.dropdowns            = {};
     this.rechercheTitre       = '';
@@ -620,7 +624,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.colonneSearch        = '';
     this.colonnesSelectionnees = [
       'item_id', 'formulaire_type', 'titre_document', 'demandeur',
-      'bibliotheque', 'statut_bibliotheque', 'statut_acq', 'date_creation'
+      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'date_creation'
     ];
     this.filterValuesCache.clear();
     this.lastFilterCacheUpdate.clear();
