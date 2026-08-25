@@ -362,16 +362,6 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label">{{ 'form-accessibilite.fonds-sn' | translate }}</label>
-            <input type="text" formControlName="fonds_sn_projet" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_sn_projet')"
-                   placeholder="Ex : SN-001">
-            <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-accessibilite.fonds-sn-required' | translate }}
-            </div>
-          </div>
-
-          <div class="col-md-6">
             <label class="form-label">{{ 'form-accessibilite.source-info-url' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"

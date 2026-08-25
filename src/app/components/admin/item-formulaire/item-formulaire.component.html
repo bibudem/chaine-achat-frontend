@@ -347,7 +347,9 @@
           <div class="col-md-4" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.fonds-sn' | translate }}</label>
-              <input type="text" class="form-control" formControlName="fonds_sn_projet">
+              <input type="text" class="form-control" formControlName="fonds_sn_projet"
+                     [placeholder]="'item-formulaire.fonds-sn-placeholder' | translate">
+              <small class="form-text">{{ 'item-formulaire.fonds-sn-hint' | translate }}</small>
             </div>
           </div>
           <div class="col-md-4" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">

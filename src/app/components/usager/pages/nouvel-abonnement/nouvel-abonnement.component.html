@@ -159,7 +159,7 @@
           <i class="fas fa-calendar-alt"></i>{{ 'form-abonnement.section-abonnement' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'form-abonnement.date-debut' | translate }}</label>
             <input type="date" formControlName="date_debut_abonnement" class="form-control"
                    [class.is-invalid]="isInvalid('date_debut_abonnement')">
@@ -168,7 +168,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">{{ 'form-abonnement.periode-couverte' | translate }}</label>
             <input type="text" formControlName="periode_couverte" class="form-control"
                    placeholder="Ex: 2024 ou 2020-2025">
@@ -276,7 +276,7 @@
           <i class="fas fa-coins"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
@@ -288,7 +288,7 @@
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.prix-devise' | translate }}</label>
             <input type="number" step="0.01" min="0"
                    formControlName="prix_devise_originale" class="form-control"
@@ -299,7 +299,7 @@
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.prix-cad' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
@@ -313,7 +313,7 @@
             </small>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
             <input type="text" formControlName="fonds_budgetaire" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_budgetaire')"
@@ -322,6 +322,17 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-requis' | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
+            <input type="text" formControlName="fonds_sn_projet" class="form-control"
+                   [class.is-invalid]="isInvalid('fonds_sn_projet')"
+                   [placeholder]="'forms-usager.fonds-sn-placeholder' | translate">
+            <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-sn-required' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.fonds-sn-hint' | translate }}</small>
           </div>
         </div>
       </div>
@@ -332,7 +343,7 @@
           <i class="fas fa-link"></i>{{ 'form-abonnement.section-source' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"

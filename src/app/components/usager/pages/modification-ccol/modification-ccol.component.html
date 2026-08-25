@@ -365,13 +365,14 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">{{ 'form-modification-ccol.fonds-sn' | translate }}</label>
+            <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
             <input type="text" formControlName="fonds_sn_projet" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_sn_projet')"
-                   placeholder="Ex : SN-001">
+                   [placeholder]="'forms-usager.fonds-sn-placeholder' | translate">
             <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-modification-ccol.fonds-sn-required' | translate }}
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-sn-required' | translate }}
             </div>
+            <small class="form-text">{{ 'forms-usager.fonds-sn-hint' | translate }}</small>
           </div>
         </div>
       </div>
