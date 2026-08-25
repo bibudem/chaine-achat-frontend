@@ -88,7 +88,7 @@ export class FaqComponent {
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#37424D;margin-right:6px;vertical-align:middle"></span><strong style="color:#37424D">Gris foncé</strong> — <strong>Requête ACQ Accessibilité</strong> : ressources en format accessible (service accessibilité)</li>
           <li><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#C8872A;margin-right:6px;vertical-align:middle"></span><strong style="color:#C8872A">Ambre</strong> — <strong>Suggestion d'achat – Usager</strong> : suggestions soumises par les usagers via un bibliothécaire</li>
         </ul>
-        Si vous hésitez, consignez votre question dans le champ <strong>Bibliothèque : Note, commentaire ou question</strong> et l'équipe des Acquisitions vous guidera.`,
+        Si vous hésitez, consignez votre question dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong> et l'équipe des Acquisitions vous guidera.`,
       answer: '', open: false, usagerOnly: true
     },
     {
@@ -116,7 +116,7 @@ export class FaqComponent {
           <li><strong>Devise originale</strong> — la devise de la source (ex. USD, EUR, CAD)</li>
           <li><strong>Prix en devise originale</strong> — le prix tel qu'affiché sur la source</li>
         </ul>
-        Si la devise est <strong>CAD</strong>, le prix CAD se remplit automatiquement avec la même valeur. En cas d'incertitude sur le prix ou la conversion, laissez une note dans le champ <strong>Bibliothèque : Note, commentaire ou question</strong>.`,
+        Si la devise est <strong>CAD</strong>, le prix CAD se remplit automatiquement avec la même valeur. En cas d'incertitude sur le prix ou la conversion, laissez une note dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong>.`,
       answer: '', open: false, usagerOnly: true
     },
     {

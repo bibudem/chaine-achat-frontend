@@ -13,50 +13,83 @@
     </div>
   </div>
 
-  <!-- ── Corps ──────────────────────────────────────────── -->
+  <!-- ── Mes demandes : section complète pleine largeur ──────────── -->
+  <a routerLink="/usager/profil" class="uh-demandes-section">
+    <span class="uh-demandes-section__icon-wrap">
+      <span class="uh-demandes-section__icon"><i class="bi bi-clock-history"></i></span>
+      <span class="uh-demandes-section__badge" *ngIf="!loadingDemandes && totalDemandes">
+        {{ totalDemandes }}
+      </span>
+    </span>
+    <span class="uh-demandes-section__text">
+      <span class="uh-demandes-section__title">Mes demandes</span>
+      <span class="uh-demandes-section__desc">
+        Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
+      </span>
+    </span>
+    <span class="uh-demandes-section__cta">
+      Accéder à mes demandes <i class="bi bi-arrow-right"></i>
+    </span>
+  </a>
+
+  <!-- ── Corps : deux colonnes alignées ──────────────────────────── -->
   <div class="uh-body">
 
     <!-- Colonne gauche -->
     <aside class="uh-sidebar">
 
-      <!-- Accès rapide -->
-      <div class="uh-action-card">
-
-        <div class="uh-action-card__icon-wrap">
-          <div class="uh-action-card__icon">
-            <i class="bi bi-clock-history"></i>
-          </div>
-          <span class="uh-action-card__badge" *ngIf="!loadingDemandes && totalDemandes">
-            {{ totalDemandes }}
-          </span>
-        </div>
-        <h3 class="uh-action-card__title">Mes demandes</h3>
-        <p class="uh-action-card__desc">
-          Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
-        </p>
-
-        <a routerLink="/usager/profil" class="uh-action-card__btn">
-          <span class="uh-action-card__btn-text">Accéder à mes demandes</span>
-          <i class="bi bi-arrow-right uh-action-card__btn-arrow"></i>
-        </a>
-      </div>
-
       <!-- À propos -->
       <div class="uh-info-card">
-        <p class="uh-info-card__label">
-          <i class="bi bi-info-circle-fill"></i> À propos
+
+        <div class="uh-info-card__header">
+          <span class="uh-info-card__icon"><i class="bi bi-info-circle-fill"></i></span>
+          <h3 class="uh-info-card__title">À propos</h3>
+        </div>
+
+        <p class="uh-info-card__body uh-info-card__body--intro">
+          Ce portail vous permet de soumettre des demandes au Service des acquisitions.
+          Pour plus d'informations, consultez la page
+          <a href="https://helios.bib.umontreal.ca/books/acquisitions-zYF/page/formulaires-dacquisition"
+             target="_blank" rel="noopener noreferrer">Formulaire d'acquisitions sur Hélios</a>.
         </p>
-        <p class="uh-info-card__body">
-          Ce portail vous permet de soumettre des demandes d'acquisition auprès
-          des bibliothèques de l'Université de Montréal.
-        </p>
-        <p class="uh-info-card__body">
-          Vos demandes sont traitées par les bibliothécaires disciplinaires avant
-          d'être acheminées au service des acquisitions.
-        </p>
-        <div class="uh-info-card__contact">
-          <i class="bi bi-envelope-fill"></i>
-          <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>
+
+        <div class="uh-callout">
+          <i class="bi bi-lightbulb-fill uh-callout__icon"></i>
+          <div class="uh-callout__body">
+            <p class="uh-callout__title">Des questions?</p>
+            <p class="uh-callout__text">
+              Si des incertitudes surviennent au moment de remplir un formulaire (prix, format, etc.),
+              saisissez-les dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong>.
+              Un membre de l'équipe des Acquisitions contactera le demandeur en bibliothèque au
+              moment de traiter la demande.
+            </p>
+          </div>
+        </div>
+
+        <p class="uh-info-card__contact-lead">Pour toute autre question, écrivez-nous :</p>
+
+        <div class="uh-contact-list">
+          <a href="mailto:acqmono@bib.umontreal.ca" class="uh-contact">
+            <span class="uh-contact__icon"><i class="bi bi-envelope-fill"></i></span>
+            <span class="uh-contact__text">
+              <span class="uh-contact__email">acqmono&#64;bib.umontreal.ca</span>
+              <span class="uh-contact__note">Monographies</span>
+            </span>
+          </a>
+          <a href="mailto:acqperi@bib.umontreal.ca" class="uh-contact">
+            <span class="uh-contact__icon"><i class="bi bi-envelope-fill"></i></span>
+            <span class="uh-contact__text">
+              <span class="uh-contact__email">acqperi&#64;bib.umontreal.ca</span>
+              <span class="uh-contact__note">Périodiques</span>
+            </span>
+          </a>
+          <a href="mailto:resselect@bib.umontreal.ca" class="uh-contact">
+            <span class="uh-contact__icon"><i class="bi bi-envelope-fill"></i></span>
+            <span class="uh-contact__text">
+              <span class="uh-contact__email">resselect&#64;bib.umontreal.ca</span>
+              <span class="uh-contact__note">Problèmes d'accès aux ressources électroniques</span>
+            </span>
+          </a>
         </div>
       </div>
 
@@ -64,27 +97,32 @@
 
     <!-- Colonne droite : formulaires -->
     <section class="uh-forms">
+      <div class="uh-forms__card">
 
-      <div class="uh-forms__header">
-        <h2 class="uh-forms__title">Soumettre une demande</h2>
-        <p class="uh-forms__sub">Choisissez le formulaire correspondant à votre besoin</p>
-      </div>
-
-      <div class="uh-forms__list">
-        <a *ngFor="let f of formulaires" [routerLink]="f.route" class="uh-form-row">
-          <span class="uh-form-row__icon"
-                [style.background]="f.bgColor"
-                [style.color]="f.accentColor">
-            <i class="bi {{ f.icon }}"></i>
-          </span>
-          <div class="uh-form-row__text">
-            <span class="uh-form-row__title">{{ f.titre }}</span>
-            <span class="uh-form-row__desc">{{ f.description }}</span>
+        <div class="uh-forms__header">
+          <span class="uh-forms__icon"><i class="bi bi-file-earmark-plus-fill"></i></span>
+          <div>
+            <h2 class="uh-forms__title">Soumettre une demande</h2>
+            <p class="uh-forms__sub">Choisissez le formulaire correspondant à votre besoin</p>
           </div>
-          <i class="bi bi-chevron-right uh-form-row__arrow"></i>
-        </a>
-      </div>
+        </div>
 
+        <div class="uh-forms__list">
+          <a *ngFor="let f of formulaires" [routerLink]="f.route" class="uh-form-row">
+            <span class="uh-form-row__icon"
+                  [style.background]="f.bgColor"
+                  [style.color]="f.accentColor">
+              <i class="bi {{ f.icon }}"></i>
+            </span>
+            <div class="uh-form-row__text">
+              <span class="uh-form-row__title">{{ f.titre }}</span>
+              <span class="uh-form-row__desc">{{ f.description }}</span>
+            </div>
+            <i class="bi bi-chevron-right uh-form-row__arrow"></i>
+          </a>
+        </div>
+
+      </div>
     </section>
 
   </div>
