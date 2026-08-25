@@ -937,7 +937,7 @@
     "creation-notice": "Création de notice TDM (Acquisitions)",
     "creation-notice-hint": "Activé par défaut pour les formats imprimés",
     "localisation": "Localisation / Emplacement",
-    "localisation-placeholder": "Ex : Salle de lecture, Magasin",
+    "localisation-placeholder": "Ex: Collection générale, Étage 5, Référence",
     "format-pret": "Format PrêtNumérique",
     "ne-sapplique-pas": "Ne s'applique pas",
     "section-finances": "Informations financières",
