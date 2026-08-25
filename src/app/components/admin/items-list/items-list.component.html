@@ -191,7 +191,11 @@
               <tbody>
                 <tr *ngFor="let item of pagedItems; trackBy: trackByItemId" class="align-top">
                   <td class="col-id">
-                    <span class="fw-semibold text-muted">#{{ item.item_id }}</span>
+                    <span class="fw-semibold text-muted id-badge" [class.id-badge--pending]="isPending(item)"
+                          [title]="isPending(item) ? 'En attente de décision ACQ' : ''">
+                      <i class="bi bi-bell-fill id-badge__pulse" *ngIf="isPending(item)"></i>
+                      #{{ item.item_id }}
+                    </span>
                   </td>
                   <td class="col-titre">
                     <div class="fw-semibold">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
@@ -260,7 +264,11 @@
           <div class="d-block d-md-none">
             <div *ngFor="let item of pagedItems; trackBy: trackByItemId" class="item-card">
               <div class="item-card__header">
-                <span class="item-card__id">#{{ item.item_id }}</span>
+                <span class="item-card__id id-badge" [class.id-badge--pending]="isPending(item)"
+                      [title]="isPending(item) ? 'En attente de décision ACQ' : ''">
+                  <i class="bi bi-bell-fill id-badge__pulse" *ngIf="isPending(item)"></i>
+                  #{{ item.item_id }}
+                </span>
                 <span class="badge ms-2" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
                   {{ item.formulaire_type }}
                 </span>

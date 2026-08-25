@@ -105,6 +105,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   decisionMessage: { type: 'success' | 'danger' | 'warning'; texte: string } | null = null;
   options = new ListeChoixOptions();
 
+  // Items présents dans la cloche de notifications (statut biblio "Soumettre aux ACQ" +
+  // décision ACQ encore en attente) — sert à mettre en évidence leur ID dans la liste.
+  pendingItemIds = new Set<number>();
+
   private searchSubject = new Subject<string>();
   private subs = new Subscription();
 
@@ -132,6 +136,28 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     );
     this.loadItems();
     this.loadFavoris();
+
+    this.chargerPendingIds();
+    this.subs.add(
+      this.reponsesService.pendingRefresh$.subscribe(() => this.chargerPendingIds())
+    );
+  }
+
+  private chargerPendingIds(): void {
+    this.reponsesService.getPendingBib(20).subscribe({
+      next: (res) => {
+        this.pendingItemIds = new Set(
+          (res.reponses || [])
+            .map(r => r.item_id)
+            .filter((id): id is number => id != null)
+        );
+      },
+      error: (err) => console.error('Erreur chargement notifications en attente', err)
+    });
+  }
+
+  isPending(item: Item): boolean {
+    return !!item.item_id && this.pendingItemIds.has(item.item_id);
   }
 
   ngOnDestroy(): void {

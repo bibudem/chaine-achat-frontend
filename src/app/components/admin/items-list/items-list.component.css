@@ -243,6 +243,26 @@
   font-size: .75rem;
 }
 
+/* Alerte visuelle — item présent dans la notification (décision ACQ en attente) */
+.id-badge {
+  display:     inline-flex;
+  align-items: center;
+  gap:         .3rem;
+}
+.id-badge--pending {
+  color:       #b45309 !important;
+  font-weight: 700 !important;
+}
+.id-badge__pulse {
+  font-size: .68rem;
+  color:     #f59e0b;
+  animation: id-pulse 1.6s ease-in-out infinite;
+}
+@keyframes id-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%      { opacity: .45; transform: scale(1.15); }
+}
+
 /* Badges cohérents avec le design */
 .items-table .badge {
   font-size:    .73rem;
