@@ -220,10 +220,24 @@ export class UsagerProfilComponent implements OnInit {
   }
 
   imprimerDemande(d: DemandeUsager): void {
+    // La fenêtre doit s'ouvrir de façon SYNCHRONE dans le geste de clic, sinon
+    // les navigateurs (Safari en particulier) la bloquent silencieusement si elle
+    // n'ouvre qu'après le retour d'un appel réseau asynchrone.
+    const fenetre = window.open('', '_blank', 'width=800,height=900');
+    if (!fenetre) {
+      this.errorMessage = "Impossible d'ouvrir la fenêtre d'impression : vérifiez que les fenêtres popup sont autorisées pour ce site.";
+      return;
+    }
+    fenetre.document.write(
+      '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Préparation…</title></head>' +
+      '<body style="font-family:\'Segoe UI\',Arial,sans-serif;padding:2.5rem;color:#64748b">Préparation du document à imprimer…</body></html>'
+    );
+    fenetre.document.close();
+
     // Réutilise les détails déjà chargés si la carte est actuellement dépliée pour
     // cette demande, sinon on les récupère avant d'imprimer.
     if (this.expandedId === d.id && this.expandedData.length) {
-      this.ouvrirImpression(d, this.expandedData);
+      this.ecrireImpression(fenetre, d, this.expandedData);
       return;
     }
     this.reponsesService.getReponseById(d.id).subscribe({
@@ -238,13 +252,13 @@ export class UsagerProfilComponent implements OnInit {
             label: this.FIELD_LABELS[k],
             value: typeof flat[k] === 'boolean' ? 'Oui' : String(flat[k]),
           }));
-        this.ouvrirImpression(d, data);
+        this.ecrireImpression(fenetre, d, data);
       },
-      error: () => this.ouvrirImpression(d, [])
+      error: () => this.ecrireImpression(fenetre, d, [])
     });
   }
 
-  private ouvrirImpression(d: DemandeUsager, data: { label: string; value: string }[]): void {
+  private ecrireImpression(fenetre: Window, d: DemandeUsager, data: { label: string; value: string }[]): void {
     const esc = (v: string) => {
       const div = document.createElement('div');
       div.textContent = v;
@@ -258,32 +272,80 @@ export class UsagerProfilComponent implements OnInit {
       ...data,
     ].map(r => `<tr><th>${esc(r.label)}</th><td>${esc(r.value)}</td></tr>`).join('');
 
+    const nomConnecte     = `${this.prenom} ${this.nom}`.trim() || 'Utilisateur inconnu';
+    const dateImpression  = new Date().toLocaleString('fr-CA', {
+      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+    });
+    const rappelTraitement = d.date_traitement
+      ? ` · Traitée le ${this.formatDate(d.date_traitement)}`
+      : '';
+
     const html = `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
 <title>Demande #${d.id} — ${esc(d.type_formulaire)}</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; padding: 2.5rem; }
-  h1   { font-size: 1.15rem; margin: 0 0 .2rem; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; margin: 0; padding: 2rem 2.5rem 2.5rem; }
+  .doc-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    border-bottom: 2px solid #0B113A; padding-bottom: .6rem; margin-bottom: 1.4rem;
+  }
+  .doc-header__brand { font-size: .85rem; font-weight: 700; color: #0B113A; }
+  .doc-header__brand small { display: block; font-weight: 400; color: #64748b; font-size: .72rem; margin-top: .1rem; }
+  .doc-header__user { font-size: .8rem; color: #334155; text-align: right; }
+  .doc-header__user strong { display: block; color: #0B113A; font-size: .85rem; }
+  h1   { font-size: 1.15rem; margin: 0 0 .2rem; color: #0B113A; }
   .sub { color: #64748b; font-size: .85rem; margin: 0 0 1.5rem; }
   table { width: 100%; border-collapse: collapse; }
   th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #e2e8f0; font-size: .85rem; vertical-align: top; }
-  th   { width: 40%; color: #475569; font-weight: 600; }
-  .footer { margin-top: 2rem; font-size: .75rem; color: #94a3b8; }
+  th   { width: 40%; color: #475569; font-weight: 600; background: #f8fafc; }
+  .footer {
+    margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;
+    font-size: .72rem; color: #94a3b8; line-height: 1.6;
+  }
   @media print { body { padding: 1.2rem; } }
 </style></head>
 <body>
+
+  <div class="doc-header">
+    <div class="doc-header__brand">
+      Portail acquisitions
+      <small>Bibliothèques UdeM</small>
+    </div>
+    <div class="doc-header__user">
+      <strong>${esc(nomConnecte)}</strong>
+      Imprimé le ${dateImpression}
+    </div>
+  </div>
+
   <h1>${esc(d.type_formulaire)} — Demande #${d.id}</h1>
   <p class="sub">Titre : ${esc(d.titre_document || '—')} &nbsp;·&nbsp; Soumise le ${this.formatDate(d.dateA)}</p>
   <table>${rangees}</table>
-  <p class="footer">Imprimé le ${new Date().toLocaleDateString('fr-CA')} — Portail acquisitions, Bibliothèques UdeM</p>
+
+  <p class="footer">
+    Demande soumise le ${this.formatDate(d.dateA)}${rappelTraitement}<br>
+    Ce document est une impression informative — les données à jour se trouvent dans le portail des acquisitions.
+  </p>
+
 </body></html>`;
 
-    const fenetre = window.open('', '_blank', 'width=800,height=900');
-    if (!fenetre) return;
+    // Réécrit le document de la fenêtre déjà ouverte (placeholder → contenu final).
+    fenetre.document.open();
     fenetre.document.write(html);
     fenetre.document.close();
     fenetre.focus();
-    setTimeout(() => fenetre.print(), 300);
+
+    // Déclenche l'impression une fois le document chargé, avec un filet de sécurité
+    // au cas où l'événement onload ne se déclenche pas de façon fiable après une
+    // réécriture via document.write (comportement variable selon les navigateurs).
+    let imprime = false;
+    const declencherImpression = () => {
+      if (imprime) return;
+      imprime = true;
+      fenetre.print();
+    };
+    fenetre.onload = declencherImpression;
+    setTimeout(declencherImpression, 500);
   }
 
   supprimerDemande(id: number): void {
