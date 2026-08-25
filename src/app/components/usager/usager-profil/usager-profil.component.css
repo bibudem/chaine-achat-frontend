@@ -262,6 +262,17 @@
 .up-btn-detail-icon:hover { background: #f3f4f6; color: #374151; border-color: #9ca3af; }
 .up-btn-detail-icon.active { background: #f0f9ff; color: #0284c7; border-color: #7dd3fc; }
 
+/* Bouton imprimer (icône discret) */
+.up-btn-print-icon {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 6px;
+  background: none; border: 1px solid #d1d5db;
+  color: #6b7280; cursor: pointer; font-size: .8rem;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.up-btn-print-icon:hover { background: #eef2ff; color: #4f46e5; border-color: #a5b4fc; }
+
 /* Bouton supprimer (icône discret) */
 .up-btn-delete-icon {
   flex-shrink: 0;

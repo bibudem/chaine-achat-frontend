@@ -164,49 +164,44 @@
 .uh-action-card__btn {
   display: flex;
   align-items: center;
-  gap: .55rem;
-  background: #fff;
-  color: #00407F;
-  border: 1.5px solid #b8d4ef;
-  border-radius: 9px;
-  padding: .6rem .85rem;
-  font-size: .82rem;
-  font-weight: 600;
+  gap: .6rem;
+  background: linear-gradient(135deg, #0064c2 0%, #00407F 55%, #0b113a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  font-size: .85rem;
+  font-weight: 400;
+  letter-spacing: .01em;
   text-decoration: none;
-  transition: background .16s, border-color .16s, color .16s;
+  box-shadow: 0 3px 10px rgba(0, 64, 127, .3);
+  transition: box-shadow .2s ease, background .2s ease;
 }
 .uh-action-card__btn:hover {
-  background: #EBF3FB;
-  border-color: #00407F;
-  color: #003568;
+  color: #fff;
   text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0, 64, 127, .4);
+  background: linear-gradient(135deg, #0072db 0%, #00478f 55%, #0d1650 100%);
 }
-
-.uh-action-card__btn-icon {
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 6px;
-  background: #EBF3FB;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .8rem;
-  flex-shrink: 0;
-  transition: background .16s;
+.uh-action-card__btn:active {
+  box-shadow: 0 3px 10px rgba(0, 64, 127, .32);
 }
-.uh-action-card__btn:hover .uh-action-card__btn-icon { background: #d0e6f7; }
+.uh-action-card__btn:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
 
 .uh-action-card__btn-text { flex: 1; }
 
 .uh-action-card__btn-arrow {
-  font-size: .75rem;
-  color: #94a3b8;
+  font-size: .8rem;
+  color: rgba(255, 255, 255, .8);
   flex-shrink: 0;
-  transition: transform .18s, color .16s;
+  transition: transform .2s ease, color .16s;
 }
 .uh-action-card__btn:hover .uh-action-card__btn-arrow {
-  transform: translateX(4px);
-  color: #00407F;
+  transform: translateX(5px);
+  color: #fff;
 }
 
 /* ── Carte "À propos" ── */

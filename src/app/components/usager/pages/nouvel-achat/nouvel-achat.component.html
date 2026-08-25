@@ -312,8 +312,8 @@
               <span class="input-group-text">$</span>
               <input type="number" step="0.01" min="0" formControlName="prix_cad"
                      class="form-control" [class.is-invalid]="isInvalid('prix_cad')"
-                     placeholder="0.00"
-                     [readonly]="form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD'">
+                     [readonly]="form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD'"
+                     [placeholder]="(form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD') ? ('forms-usager.converti-auto' | translate) : '0.00'">
             </div>
             <small class="form-text" *ngIf="form.get('devise_originale')?.value">
               {{ (form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD') ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}

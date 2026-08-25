@@ -134,6 +134,11 @@
                             [title]="expandedId === d.id ? 'Masquer les détails' : 'Voir les détails'">
                       <i class="bi" [ngClass]="expandedId === d.id ? 'bi-chevron-up' : 'bi-list-ul'"></i>
                     </button>
+                    <button class="up-btn-print-icon"
+                            (click)="imprimerDemande(d)"
+                            title="Imprimer cette demande">
+                      <i class="bi bi-printer"></i>
+                    </button>
                     <button *ngIf="peutSupprimer(d) && confirmingDeleteId !== d.id"
                             class="up-btn-delete-icon"
                             (click)="confirmingDeleteId = d.id; deleteError = false"

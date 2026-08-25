@@ -219,6 +219,73 @@ export class UsagerProfilComponent implements OnInit {
     });
   }
 
+  imprimerDemande(d: DemandeUsager): void {
+    // Réutilise les détails déjà chargés si la carte est actuellement dépliée pour
+    // cette demande, sinon on les récupère avant d'imprimer.
+    if (this.expandedId === d.id && this.expandedData.length) {
+      this.ouvrirImpression(d, this.expandedData);
+      return;
+    }
+    this.reponsesService.getReponseById(d.id).subscribe({
+      next: (row) => {
+        const raw = row.reponses ?? {};
+        const flat: Record<string, any> = raw.baseData
+          ? { ...raw.baseData, ...(raw.specificData ?? {}) }
+          : { ...raw };
+        const data = this.FIELD_ORDER
+          .filter(k => this.FIELD_LABELS[k] && flat[k] !== null && flat[k] !== undefined && flat[k] !== '' && flat[k] !== false)
+          .map(k => ({
+            label: this.FIELD_LABELS[k],
+            value: typeof flat[k] === 'boolean' ? 'Oui' : String(flat[k]),
+          }));
+        this.ouvrirImpression(d, data);
+      },
+      error: () => this.ouvrirImpression(d, [])
+    });
+  }
+
+  private ouvrirImpression(d: DemandeUsager, data: { label: string; value: string }[]): void {
+    const esc = (v: string) => {
+      const div = document.createElement('div');
+      div.textContent = v;
+      return div.innerHTML;
+    };
+
+    const rangees = [
+      { label: 'Statut de la demande', value: d.statut_bibliotheque || "En cours d'évaluation" },
+      ...(d.suivi_acq  ? [{ label: 'ACQ — Suivi de la demande',  value: d.suivi_acq  }] : []),
+      ...(d.statut_acq ? [{ label: 'ACQ — Statut de la demande', value: d.statut_acq }] : []),
+      ...data,
+    ].map(r => `<tr><th>${esc(r.label)}</th><td>${esc(r.value)}</td></tr>`).join('');
+
+    const html = `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<title>Demande #${d.id} — ${esc(d.type_formulaire)}</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; padding: 2.5rem; }
+  h1   { font-size: 1.15rem; margin: 0 0 .2rem; }
+  .sub { color: #64748b; font-size: .85rem; margin: 0 0 1.5rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #e2e8f0; font-size: .85rem; vertical-align: top; }
+  th   { width: 40%; color: #475569; font-weight: 600; }
+  .footer { margin-top: 2rem; font-size: .75rem; color: #94a3b8; }
+  @media print { body { padding: 1.2rem; } }
+</style></head>
+<body>
+  <h1>${esc(d.type_formulaire)} — Demande #${d.id}</h1>
+  <p class="sub">Titre : ${esc(d.titre_document || '—')} &nbsp;·&nbsp; Soumise le ${this.formatDate(d.dateA)}</p>
+  <table>${rangees}</table>
+  <p class="footer">Imprimé le ${new Date().toLocaleDateString('fr-CA')} — Portail acquisitions, Bibliothèques UdeM</p>
+</body></html>`;
+
+    const fenetre = window.open('', '_blank', 'width=800,height=900');
+    if (!fenetre) return;
+    fenetre.document.write(html);
+    fenetre.document.close();
+    fenetre.focus();
+    setTimeout(() => fenetre.print(), 300);
+  }
+
   supprimerDemande(id: number): void {
     this.deleting = true;
     this.deleteError = false;
