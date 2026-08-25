@@ -85,6 +85,20 @@ export class ItemFormulaireComponent implements OnInit {
       statutCtrl.valueChanges.subscribe(v => {
         this.updateSuiviAcqValidator(v);
         this.updateFinanceValidators(v);
+        // Dès que la bibliothèque soumet la demande aux ACQ, on initialise les deux champs
+        // ACQ (s'ils ne sont pas déjà renseignés) à leur valeur "en attente" respective,
+        // pour que la demande soit visible dans Recherche/Rapport sans attendre qu'un
+        // membre de l'équipe ACQ l'ouvre.
+        if (v === 'Soumettre aux ACQ') {
+          const statutAcqCtrl = this.itemForm.get('statut_acq');
+          if (statutAcqCtrl && !statutAcqCtrl.value) {
+            statutAcqCtrl.setValue('En attente'); // options.dircolAcqStatutOptions
+          }
+          const suiviAcqCtrl = this.itemForm.get('suivi_acq');
+          if (suiviAcqCtrl && !suiviAcqCtrl.value) {
+            suiviAcqCtrl.setValue('En attente de traitement'); // options.dircolAcqSuiviOptions
+          }
+        }
         if (this.activeTab === 'acq-decision' && !this.showDecisionAcqTab) {
           this.setActiveTab('base');
         }

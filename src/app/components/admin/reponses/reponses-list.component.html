@@ -284,6 +284,12 @@
                       <button class="pf-btn pf-btn--secondary" (click)="downloadJson()">
                         <i class="bi bi-download me-1"></i>Télécharger JSON
                       </button>
+                      <button class="pf-btn pf-btn--danger"
+                              (click)="supprimerReponse(expandedReponse)"
+                              [disabled]="!canSupprimer(expandedReponse)"
+                              [title]="canSupprimer(expandedReponse) ? 'Supprimer cette demande' : 'Demande déjà traitée ou soumise aux ACQ — suppression impossible'">
+                        <i class="bi bi-trash3 me-1"></i>Supprimer
+                      </button>
                     </div>
                   </div>
 

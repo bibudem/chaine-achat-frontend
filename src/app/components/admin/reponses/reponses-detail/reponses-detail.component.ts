@@ -32,9 +32,16 @@ export class ReponsesDetailComponent implements OnInit {
 
   creerItem(): void {
     this.activeModal.close();
-    this.router.navigate(['/items/nouveau'], {
-      state: { fromReponse: this.reponse }
-    });
+    // L'item est désormais créé automatiquement dès la soumission de la demande (voir
+    // backend _materialiserItem) — s'il existe déjà, on ouvre son édition plutôt que
+    // d'en créer un doublon.
+    if (this.reponse?.item_id_cree) {
+      this.router.navigate(['/items', this.reponse.item_id_cree]);
+    } else {
+      this.router.navigate(['/items/nouveau'], {
+        state: { fromReponse: this.reponse }
+      });
+    }
   }
 
   ouvrirDecisionAcq(): void {

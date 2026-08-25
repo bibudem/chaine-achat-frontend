@@ -479,6 +479,23 @@
   color: var(--secondary-blue, #00407F);
 }
 
+.pf-btn--danger {
+  background: #fff;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+.pf-btn--danger:hover:not(:disabled) {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+.pf-btn--danger:disabled {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed !important;
+}
+
 .pf-feedback {
   color: #1a7a4a;
   font-weight: 600;

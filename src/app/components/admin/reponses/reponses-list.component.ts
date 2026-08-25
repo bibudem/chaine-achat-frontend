@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReponsesService, Reponse, PaginatedResponse } from '../../../services/reponses.service';
+import { DialogService } from '../../../services/dialog.service';
 import { PageEvent } from '@angular/material/paginator';
 
 export type SortDirection = 'asc' | 'desc' | '';
@@ -132,6 +133,7 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
 
   constructor(
     private reponsesService: ReponsesService,
+    private dialogService: DialogService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -224,6 +226,43 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
 
   canDecisionAcq(reponse: Reponse): boolean {
     return this.getStatutBibliotheque(reponse) === this.STATUT_BIB_FILTER;
+  }
+
+  // Miroir de la garde côté backend (ReponsesModel.deleteById) : une demande déjà
+  // approuvée/refusée, ou déjà soumise aux ACQ, ne peut plus être supprimée.
+  canSupprimer(reponse: Reponse): boolean {
+    if (reponse.statut_approbation === 'approuve' || reponse.statut_approbation === 'refuse') {
+      return false;
+    }
+    return !this.canDecisionAcq(reponse);
+  }
+
+  async supprimerReponse(reponse: Reponse): Promise<void> {
+    if (!this.canSupprimer(reponse)) return;
+
+    const confirmed = await this.dialogService.confirm(
+      `Êtes-vous sûr de vouloir supprimer la demande #${reponse.id}` +
+      (reponse.usager_nom ? ` de ${reponse.usager_nom}` : '') +
+      ` ? Cette action est irréversible.`,
+      'Supprimer la demande'
+    );
+    if (!confirmed) return;
+
+    this.reponsesService.supprimer(reponse.id).subscribe({
+      next: () => {
+        this.dialogService.showSuccess('Demande supprimée avec succès.');
+        if (this.expandedId === reponse.id) {
+          this.expandedId = null;
+          this.expandedReponse = null;
+        }
+        this.loadReponses();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression de la réponse:', err);
+        const msg = err?.error?.error || 'Erreur lors de la suppression de la demande.';
+        this.dialogService.showError(msg);
+      }
+    });
   }
 
   applyClientFiltering(): void {

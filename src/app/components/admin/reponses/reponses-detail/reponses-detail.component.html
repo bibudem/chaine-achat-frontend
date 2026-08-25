@@ -110,8 +110,9 @@
     type="button"
     class="btn btn-warning btn-sm"
     (click)="creerItem()"
-    title="Ouvrir le formulaire item pré-rempli avec cette réponse">
-    <i class="bi bi-file-earmark-plus me-1"></i>Créer un item
+    [title]="reponse?.item_id_cree ? 'Ouvrir l\'item déjà créé pour cette réponse' : 'Ouvrir le formulaire item pré-rempli avec cette réponse'">
+    <i class="bi" [ngClass]="reponse?.item_id_cree ? 'bi-pencil-square' : 'bi-file-earmark-plus'"></i>
+    {{ reponse?.item_id_cree ? 'Modifier l\'item' : 'Créer un item' }}
   </button>
   <button
     *ngIf="reponse?.statut_approbation !== 'item_supprime'"
