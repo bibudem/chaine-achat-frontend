@@ -965,7 +965,8 @@
     "fonds-sn-placeholder": "Ex.: RH000841, SBIBBI04",
     "fonds-sn-hint": "Si votre achat doit être imputé à un fonds de souscription (SN), indiquez le numéro de projet (8 caractères) correspondant au donateur.",
     "fonds-sn-required": "Max 50 caractères.",
-    "section-note": "Note / Commentaire",
+    "section-note": "Note / Commentaire / Question",
+    "note-commentaire-placeholder": "Informations complémentaires ou questions",
     "note-max": "Maximum 1000 caractères.",
     "btn-annuler": "Annuler",
     "btn-recommencer": "Recommencer",
@@ -1039,8 +1040,7 @@
     "numero-oclc-hint": "Abonnement en cours",
     "date-debut-abonnement": "Date de début d'abonnement",
     "periode-couverte": "Période couverte",
-    "periode-hint": "Spécifique CCOL et Modification",
-    "note-placeholder": "Informations complémentaires sur la modification demandée…"
+    "periode-hint": "Spécifique CCOL et Modification"
   },
   "form-peb-tipasa": {
     "titre": "PEB Tipasa numérique",
@@ -1054,7 +1054,6 @@
     "reference-tipasa-placeholder": "Numéro de référence",
     "reference-tipasa-hint": "Numéro de votre demande dans Tipasa",
     "source-hint": "Lien GOBI ou Leslibraires.ca vers le titre",
-    "note-placeholder": "Informations complémentaires…",
     "fonds-sn": "Fonds SN – No de projet",
     "fonds-sn-required": "Max 50 caractères.",
     "source-info-url": "Source d'information (URL)"
@@ -1081,7 +1080,6 @@
     "section-source": "Source et notes",
     "source-info-url": "Source d'information (URL)",
     "source-invalid": "URL invalide.",
-    "note-placeholder": "Informations complémentaires sur la requête d'accessibilité…",
     "format-pret-hint": "Spécifique au formulaire Accessibilité",
     "courriel-aviser": "Courriel de l'usager à aviser lors de l'activation",
     "courriel-aviser-hint": "Courriel de l'usager à notifier (optionnel)"

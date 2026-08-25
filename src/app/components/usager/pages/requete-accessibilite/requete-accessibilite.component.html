@@ -396,11 +396,11 @@
         </div>
         <div class="row g-3 align-items-start mt-1">
           <div class="col-md-6">
-            <label class="form-label">Note / Commentaire</label>
+            <label class="form-label">{{ 'forms-usager.section-note' | translate }}</label>
             <textarea formControlName="note_commentaire" class="form-control"
                       [class.is-invalid]="isInvalid('note_commentaire')"
                       rows="4"
-                      [placeholder]="'form-accessibilite.note-placeholder' | translate"></textarea>
+                      [placeholder]="'forms-usager.note-commentaire-placeholder' | translate"></textarea>
             <div *ngIf="isInvalid('note_commentaire')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.note-max' | translate }}
             </div>

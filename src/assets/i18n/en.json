@@ -964,7 +964,8 @@
     "fonds-sn-placeholder": "e.g. RH000841, SBIBBI04",
     "fonds-sn-hint": "If your purchase must be charged to a donor fund (SN), enter the 8-character project number for the donor.",
     "fonds-sn-required": "Max 50 characters.",
-    "section-note": "Note / Comment",
+    "section-note": "Note / Comment / Question",
+    "note-commentaire-placeholder": "Additional information or questions",
     "note-max": "Maximum 1000 characters.",
     "btn-annuler": "Cancel",
     "btn-recommencer": "Start over",
@@ -1038,8 +1039,7 @@
     "numero-oclc-hint": "Current subscription",
     "date-debut-abonnement": "Subscription start date",
     "periode-couverte": "Covered period",
-    "periode-hint": "Specific to CCOL and Modification",
-    "note-placeholder": "Additional information about the requested modification…"
+    "periode-hint": "Specific to CCOL and Modification"
   },
   "form-peb-tipasa": {
     "titre": "PEB Tipasa digital",
@@ -1053,7 +1053,6 @@
     "reference-tipasa-placeholder": "Reference number",
     "reference-tipasa-hint": "Your request number in Tipasa",
     "source-hint": "GOBI or Leslibraires.ca link to the title",
-    "note-placeholder": "Additional information…",
     "fonds-sn": "SN Fund – Project No.",
     "fonds-sn-required": "Max 50 characters.",
     "source-info-url": "Information source (URL)"
@@ -1080,7 +1079,6 @@
     "section-source": "Source and notes",
     "source-info-url": "Information source (URL)",
     "source-invalid": "Invalid URL.",
-    "note-placeholder": "Additional information about the accessibility request…",
     "format-pret-hint": "Specific to the Accessibility form",
     "courriel-aviser": "User email to notify upon activation",
     "courriel-aviser-hint": "User email to notify (optional)"
