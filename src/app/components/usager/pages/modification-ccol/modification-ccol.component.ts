@@ -95,9 +95,9 @@ export class ModificationCcolComponent implements OnInit {
     const statut   = sessionStorage.getItem('groupeAdmin')   ?? '';
 
     this.form = this.fb.group({
-      nom:                  [nom,      Validators.required],
+      nom:                  [{ value: nom, disabled: true },      Validators.required],
       statut:               [statut],
-      courriel:             [courriel, [Validators.required, Validators.email]],
+      courriel:             [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:         ['',       Validators.required],
       fonds_budgetaire:     ['',       [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
       priorite_demande:     ['Urgent', Validators.required],
@@ -172,7 +172,6 @@ export class ModificationCcolComponent implements OnInit {
         const sd = row.reponses?.specificData ?? {};
         if (bd.format_support) this.form.get('format_support')!.setValue(bd.format_support);
         this.form.patchValue({
-          nom:                      bd.demandeur,
           bibliotheque:             bd.bibliotheque,
           fonds_budgetaire:         bd.fonds_budgetaire,
           priorite_demande:         bd.priorite_demande,
@@ -247,6 +246,10 @@ export class ModificationCcolComponent implements OnInit {
     this.showElectronique = false;
     this.showImprime      = true;
     this.form.reset({
+      // form.reset() efface aussi les champs désactivés (nom/courriel) s'ils ne sont pas
+      // explicitement fournis ici — on les réinjecte depuis l'authentification.
+      nom:                   `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+      courriel:              sessionStorage.getItem('courrielAdmin') ?? '',
       priorite_demande:     'Urgent',
       format_support:       'Imprimé/support physique',
       nombre_utilisateurs:  'Accès illimité',

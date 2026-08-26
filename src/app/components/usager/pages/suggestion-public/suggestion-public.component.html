@@ -68,6 +68,7 @@
             <div *ngIf="submitted && f['nom'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
+            <small class="form-text">{{ 'forms-usager.nom-hint' | translate }}</small>
           </div>
 
           <div class="col-md-6">
@@ -78,6 +79,7 @@
             <div *ngIf="submitted && f['courriel'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-invalide' | translate }}
             </div>
+            <small class="form-text">{{ 'forms-usager.courriel-hint' | translate }}</small>
           </div>
           <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.categorie-usager' | translate }}</label>

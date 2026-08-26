@@ -79,7 +79,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ouvrirFormulaire(chemin: string): void {
-    window.open(chemin, '_blank', 'noopener,noreferrer');
+    // Sans noopener/noreferrer : ce sont des liens internes (même origine) — les flags
+    // noopener/noreferrer empêchent le nouvel onglet d'hériter du sessionStorage de la
+    // session courante (authentification simulée), ce qui forçait à se reconnecter dans
+    // l'onglet du formulaire même si on était déjà connecté côté admin.
+    window.open(chemin, '_blank');
     this.formsOpen = false;
   }
 

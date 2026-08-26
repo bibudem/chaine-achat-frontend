@@ -72,11 +72,18 @@
               <div class="sd-requester__value">{{ item.bibliotheque }}</div>
             </div>
           </div>
-          <button type="button" class="sd-requester__detail-btn ms-auto"
-                  (click)="showDetailModal = true"
-                  [title]="'acq-decision.voir-tout' | translate">
-            <i class="bi bi-card-list"></i>
-          </button>
+          <div class="d-flex gap-2 ms-auto">
+            <button type="button" class="sd-requester__detail-btn"
+                    (click)="imprimerBordereau()"
+                    title="Imprimer le bordereau de cette demande">
+              <i class="bi bi-printer"></i>
+            </button>
+            <button type="button" class="sd-requester__detail-btn"
+                    (click)="showDetailModal = true"
+                    [title]="'acq-decision.voir-tout' | translate">
+              <i class="bi bi-card-list"></i>
+            </button>
+          </div>
         </div>
 
         <!-- ── Documents ── -->

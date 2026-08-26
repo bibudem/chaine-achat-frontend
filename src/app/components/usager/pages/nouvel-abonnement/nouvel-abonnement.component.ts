@@ -92,9 +92,9 @@ export class NouvelAbonnementComponent implements OnInit {
     const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
 
     this.form = this.fb.group({
-      nom:              [nom,      Validators.required],
+      nom:              [{ value: nom, disabled: true },      Validators.required],
       statut:           [statut],
-      courriel:         [courriel, [Validators.required, Validators.email]],
+      courriel:         [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:     ['',       Validators.required],
       priorite_demande: ['Régulier', Validators.required],
       titre_document:   ['', [Validators.required, Validators.maxLength(500)]],
@@ -182,7 +182,6 @@ export class NouvelAbonnementComponent implements OnInit {
         if (bd.format_support)     this.form.get('format_support')!.setValue(bd.format_support);
         if (bd.categorie_document) this.form.get('categorie_document')!.setValue(bd.categorie_document);
         this.form.patchValue({
-          nom:                        bd.demandeur,
           bibliotheque:               bd.bibliotheque,
           priorite_demande:           bd.priorite_demande,
           titre_document:             bd.titre_document,
@@ -254,6 +253,10 @@ export class NouvelAbonnementComponent implements OnInit {
     this.showMixte        = false;
     this.showMonographie  = false;
     this.form.reset({
+      // form.reset() efface aussi les champs désactivés (nom/courriel) s'ils ne sont pas
+      // explicitement fournis ici — on les réinjecte depuis l'authentification.
+      nom:                  `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+      courriel:             sessionStorage.getItem('courrielAdmin') ?? '',
       priorite_demande:    'Régulier',
       format_support:      'Électronique',
       nombre_utilisateurs: 'Accès illimité',

@@ -69,10 +69,10 @@ export class SuggestionPublicComponent implements OnInit {
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
 
     this.form = this.fb.group({
-      nom:                          [nom,      Validators.required],
+      nom:                          [{ value: nom, disabled: true },      Validators.required],
       statut:                       [statut,   Validators.required],
       usager_faculte:               ['',       Validators.required],
-      courriel:                     [courriel, [Validators.required, Validators.email]],
+      courriel:                     [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       copieCourriel:                [true],
       bibliotheque:                 ['',       Validators.required],
       priorite_demande:             ['Régulier', Validators.required],
@@ -121,7 +121,6 @@ export class SuggestionPublicComponent implements OnInit {
         const d = row.reponses ?? {};
         if (d.reserve_cours) this.form.get('reserve_cours')!.setValue(d.reserve_cours);
         this.form.patchValue({
-          nom:                          d.usager_nom,
           statut:                       d.usager_statut,
           usager_faculte:               d.usager_faculte,
           bibliotheque:                 d.bibliotheque,
@@ -176,6 +175,10 @@ export class SuggestionPublicComponent implements OnInit {
     this.error          = false;
     this.showSigleCours = false;
     this.form.reset({
+      // form.reset() efface aussi les champs désactivés (nom/courriel) s'ils ne sont pas
+      // explicitement fournis ici — on les réinjecte depuis l'authentification.
+      nom:                  `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+      courriel:             sessionStorage.getItem('courrielAdmin') ?? '',
       priorite_demande:    'Régulier',
       copieCourriel:       true,
       aviser_reservation:  false,

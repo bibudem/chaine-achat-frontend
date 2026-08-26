@@ -329,20 +329,21 @@ export class UsagerProfilComponent implements OnInit {
 
 </body></html>`;
 
-    // Réécrit le document de la fenêtre déjà ouverte (placeholder → contenu final).
-    fenetre.document.open();
-    fenetre.document.write(html);
-    fenetre.document.close();
+    // Navigue vers une URL blob (au lieu de réécrire le document via document.write, qui
+    // laisse la fenêtre sur "about:blank") afin que l'en-tête/pied de page d'impression du
+    // navigateur n'affiche pas "about:blank" comme URL de la page.
+    const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    fenetre.location.href = blobUrl;
     fenetre.focus();
 
     // Déclenche l'impression une fois le document chargé, avec un filet de sécurité
-    // au cas où l'événement onload ne se déclenche pas de façon fiable après une
-    // réécriture via document.write (comportement variable selon les navigateurs).
+    // au cas où l'événement onload ne se déclenche pas de façon fiable après la navigation.
     let imprime = false;
     const declencherImpression = () => {
       if (imprime) return;
       imprime = true;
       fenetre.print();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
     };
     fenetre.onload = declencherImpression;
     setTimeout(declencherImpression, 500);
