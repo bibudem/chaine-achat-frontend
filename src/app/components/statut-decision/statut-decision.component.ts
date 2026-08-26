@@ -160,12 +160,25 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   }
 
   private patchFormFromItem(data: any): void {
+    const acq = this.applyAcqDefaults(data.statut_bibliotheque, data.suivi_acq, data.statut_acq);
     this.form.patchValue({
-      suivi_acq:  data.suivi_acq  || '',
-      statut_acq: data.statut_acq || '',
-      note_acq:   data.note_acq   || '',
+      suivi_acq:  acq.suivi_acq,
+      statut_acq: acq.statut_acq,
+      note_acq:   data.note_acq || '',
     }, { emitEvent: false });
     this.buildNotifTargets();
+  }
+
+  // Une demande soumise (ou déjà matérialisée) avec statut_bibliotheque = "Soumettre aux ACQ"
+  // doit afficher ses deux champs de décision ACQ pré-remplis à leur valeur "en attente"
+  // respective, s'ils ne sont pas déjà renseignés (mêmes valeurs que ItemFormulaireComponent
+  // et creerItemDepuisReponse côté backend).
+  private applyAcqDefaults(statutBibliotheque: string | undefined, suiviActuel: string | undefined, statutActuel: string | undefined): { suivi_acq: string; statut_acq: string } {
+    const soumiseAuxAcq = statutBibliotheque === 'Soumettre aux ACQ';
+    return {
+      suivi_acq:  suiviActuel  || (soumiseAuxAcq ? 'En attente de traitement' : ''), // dircolAcqSuiviOptions
+      statut_acq: statutActuel || (soumiseAuxAcq ? 'En attente'                : ''), // dircolAcqStatutOptions
+    };
   }
 
   private mapReponseToItem(r: any): void {
@@ -177,8 +190,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const sd   = parsed?.specificData || {};
     const flat = (parsed && !parsed.baseData) ? parsed : {};
     const f = (b: any, s: any) => b || flat[s] || sd[s];
+    const statutBibliotheque = bd.statut_bibliotheque || flat.statut_bibliotheque || sd.statut_bibliotheque;
     this.item = {
       formulaire_type:                r.type_formulaire,
+      statut_bibliotheque:            statutBibliotheque,
       demandeur:                      r.usager_nom,
       usager_courriel:                r.usager_courriel,
       usager_statut:                  r.usager_statut,
@@ -238,6 +253,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       verification_sqla:              sd.verification_sqla,
       verification_emma:              sd.verification_emma,
     } as Item;
+    const acq = this.applyAcqDefaults(statutBibliotheque, undefined, undefined);
+    this.form.patchValue({ suivi_acq: acq.suivi_acq, statut_acq: acq.statut_acq }, { emitEvent: false });
     this.buildNotifTargets();
   }
 
