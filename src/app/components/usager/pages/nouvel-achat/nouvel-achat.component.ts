@@ -66,11 +66,15 @@ export class NouvelAchatComponent implements OnInit {
     this.fichiersJoints = fichiers;
   }
 
-  /** Envoie les pièces jointes accumulées vers la réponse une fois son id connu. Non bloquant. */
-  private uploaderPiecesJointes(reponseId: number): void {
-    if (!this.fichiersJoints.length) return;
+  /** Envoie les pièces jointes accumulées vers la réponse une fois son id connu.
+   *  `onDone` est appelé une fois l'envoi terminé (succès ou échec) — la navigation
+   *  attend ce résultat pour pouvoir avertir l'usager en cas d'échec, plutôt que de
+   *  naviguer immédiatement vers une page où l'erreur ne serait plus jamais visible. */
+  private uploaderPiecesJointes(reponseId: number, onDone: (echec: boolean) => void): void {
+    if (!this.fichiersJoints.length) { onDone(false); return; }
     this.reponsesService.uploaderPiecesJointes(reponseId, this.fichiersJoints).subscribe({
-      error: (err) => console.error('[NouvelAchat] uploaderPiecesJointes:', err)
+      next: () => onDone(false),
+      error: (err) => { console.error('[NouvelAchat] uploaderPiecesJointes:', err); onDone(true); }
     });
   }
 
@@ -346,11 +350,21 @@ export class NouvelAchatComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         const reponseId = this.editId ?? res?.id;
-        if (reponseId) this.uploaderPiecesJointes(reponseId);
-        this.router.navigate(['/usager/profil'], { state: { message: 'Votre demande a été soumise avec succès.' } });
+        if (reponseId) {
+          this.uploaderPiecesJointes(reponseId, (echec) => this.naviguerApresSoumission(echec));
+        } else {
+          this.naviguerApresSoumission(false);
+        }
       },
       error: () => { this.isLoading = false; this.error = true; }
     });
+  }
+
+  private naviguerApresSoumission(echecPieceJointe: boolean): void {
+    const message = echecPieceJointe
+      ? "Votre demande a été soumise avec succès, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
+      : 'Votre demande a été soumise avec succès.';
+    this.router.navigate(['/usager/profil'], { state: { message } });
   }
 
   onSave(): void {
@@ -405,10 +419,20 @@ export class NouvelAchatComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         if (!this.editId && res?.id) this.editId = res.id;
-        if (this.editId) this.uploaderPiecesJointes(this.editId);
-        this.router.navigate(['/usager/profil'], { state: { message: 'Vos informations ont été enregistrées.' } });
+        if (this.editId) {
+          this.uploaderPiecesJointes(this.editId, (echec) => this.naviguerApresEnregistrement(echec));
+        } else {
+          this.naviguerApresEnregistrement(false);
+        }
       },
       error: () => { this.isLoading = false; this.error = true; }
     });
+  }
+
+  private naviguerApresEnregistrement(echecPieceJointe: boolean): void {
+    const message = echecPieceJointe
+      ? "Vos informations ont été enregistrées, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
+      : 'Vos informations ont été enregistrées.';
+    this.router.navigate(['/usager/profil'], { state: { message } });
   }
 }
