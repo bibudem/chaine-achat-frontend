@@ -123,9 +123,13 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">{{ 'forms-usager.editeur' | translate }}</label>
+            <label class="form-label required">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
+                   [class.is-invalid]="isInvalid('editeur')"
                    [placeholder]="'form-modification-ccol.editeur-placeholder' | translate">
+            <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-modification-ccol.editeur-required' | translate }}
+            </div>
           </div>
 
           <div class="col-md-4">

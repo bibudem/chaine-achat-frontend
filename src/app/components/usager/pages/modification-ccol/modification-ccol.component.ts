@@ -42,11 +42,10 @@ export class ModificationCcolComponent implements OnInit {
     "Achat en vue d'un NABO",
     "Annulation d'abonnement",
     'Cesse de paraître',
-    "Changement de support — vers l'électronique",
+    'Changement de support',
     'Changement de titre',
     'Création de notice pour abonnement courant',
-    "Modification du nombre d'utilisateurs",
-    'Complément de collection'
+    "Modification du nombre d'utilisateurs"
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
@@ -100,10 +99,10 @@ export class ModificationCcolComponent implements OnInit {
       courriel:             [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:         ['',       Validators.required],
       fonds_budgetaire:     ['',       [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
-      priorite_demande:     ['Urgent', Validators.required],
+      priorite_demande:     ['Régulier', Validators.required],
       titre_document:       ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:           ['', Validators.maxLength(500)],
-      editeur:              ['', Validators.maxLength(300)],
+      editeur:              ['', [Validators.required, Validators.maxLength(300)]],
       isbn_issn:            ['', [Validators.required, this.isbnValidator]],
       date_publication:     [''],
       categorie_document:   ['', Validators.required],
@@ -250,7 +249,7 @@ export class ModificationCcolComponent implements OnInit {
       // explicitement fournis ici — on les réinjecte depuis l'authentification.
       nom:                   `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
       courriel:              sessionStorage.getItem('courrielAdmin') ?? '',
-      priorite_demande:     'Urgent',
+      priorite_demande:     'Régulier',
       format_support:       'Imprimé/support physique',
       nombre_utilisateurs:  'Accès illimité',
       creation_notice_dtdm: true,

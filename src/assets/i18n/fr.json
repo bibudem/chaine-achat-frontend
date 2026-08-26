@@ -1030,6 +1030,7 @@
     "confirmation-message": "Votre demande de modification a bien été transmise à l'équipe des Acquisitions.",
     "section-document": "Document / Abonnement",
     "editeur-placeholder": "Maison d'édition",
+    "editeur-required": "L'éditeur est requis.",
     "section-precision": "Précision de la demande",
     "type-demande": "Type de demande",
     "sel-type-demande": "— Sélectionnez le type de modification —",

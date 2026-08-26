@@ -1028,6 +1028,7 @@
     "confirmation-message": "Your modification request has been forwarded to the Acquisitions team.",
     "section-document": "Document / Subscription",
     "editeur-placeholder": "Publishing house",
+    "editeur-required": "Publisher is required.",
     "section-precision": "Request details",
     "type-demande": "Request type",
     "sel-type-demande": "— Select the modification type —",

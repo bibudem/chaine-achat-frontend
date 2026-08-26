@@ -45,11 +45,10 @@ export class ItemFormulaireComponent implements OnInit {
     "Achat en vue d'un NABO",
     "Annulation d'abonnement",
     'Cesse de paraître',
-    "Changement de support — vers l'électronique",
+    'Changement de support',
     'Changement de titre',
     'Création de notice pour abonnement courant',
-    "Modification du nombre d'utilisateurs",
-    'Complément de collection'
+    "Modification du nombre d'utilisateurs"
   ];
 
   constructor(
