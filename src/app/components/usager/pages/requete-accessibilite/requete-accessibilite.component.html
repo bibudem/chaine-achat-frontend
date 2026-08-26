@@ -391,7 +391,11 @@
             </small>
           </div>
           <div class="col-md-6">
-            <app-piece-jointe-uploader (filesChange)="onFichiersJointsChange($event)"></app-piece-jointe-uploader>
+            <label class="form-label mb-1"><i class="bi bi-paperclip me-1"></i>Pièce jointe (facultatif)</label>
+            <div class="pj-groupe">
+              <app-piece-jointe-gestion *ngIf="editId" [reponseId]="editId" [readonlyMode]="true"></app-piece-jointe-gestion>
+              <app-piece-jointe-uploader (filesChange)="onFichiersJointsChange($event)"></app-piece-jointe-uploader>
+            </div>
           </div>
         </div>
         <div class="row g-3 align-items-start mt-1">

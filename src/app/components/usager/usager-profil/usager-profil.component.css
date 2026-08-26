@@ -391,6 +391,12 @@
   color: #9ca3af; font-size: .79rem; font-style: italic; margin: 0;
 }
 
+.up-details__pieces-jointes {
+  margin-top: .75rem;
+  padding-top: .75rem;
+  border-top: 1px solid #eef1f5;
+}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    PAGINATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

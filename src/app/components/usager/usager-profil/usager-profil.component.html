@@ -202,6 +202,10 @@
                 <p *ngIf="expandedData.length === 0" class="up-details__empty">
                   Aucun détail disponible pour cette demande.
                 </p>
+
+                <div class="up-details__pieces-jointes">
+                  <app-piece-jointe-gestion [reponseId]="d.id" [readonlyMode]="true"></app-piece-jointe-gestion>
+                </div>
               </ng-container>
             </div>
 

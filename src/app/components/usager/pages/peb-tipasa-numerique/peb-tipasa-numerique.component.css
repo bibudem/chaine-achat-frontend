@@ -78,3 +78,29 @@
   background: linear-gradient(135deg, var(--peb-mid), var(--peb-dark));
   box-shadow: 0 4px 16px rgba(8, 145, 178, 0.28);
 }
+
+/* ── Pièce jointe : fusionne la liste des fichiers déjà envoyés (app-piece-jointe-gestion)
+   et le sélecteur de nouveau fichier (app-piece-jointe-uploader) dans un seul encadré,
+   au lieu de deux boîtes empilées — on masque le label et la bordure propres à chaque
+   composant partagé pour n'en garder qu'un seul au niveau du groupe. ── */
+.pj-groupe {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+.pj-groupe ::ng-deep .piece-jointe-gestion .form-label,
+.pj-groupe ::ng-deep .piece-jointe-uploader .form-label {
+  display: none;
+}
+.pj-groupe ::ng-deep .piece-jointe-gestion .pj-box,
+.pj-groupe ::ng-deep .piece-jointe-uploader .pju-box {
+  border: none;
+  padding: 0;
+  min-height: 0;
+}
+.pj-groupe ::ng-deep .piece-jointe-gestion .pj-box {
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid #e9ecef;
+}
