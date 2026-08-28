@@ -176,11 +176,11 @@
                   <th class="col-fonds sortable-col" (click)="sortBy('fonds_budgetaire')">
                     {{ 'items.col-fonds' | translate }} <i class="bi {{ getSortIcon('fonds_budgetaire') }} ms-1"></i>
                   </th>
-                  <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
-                    {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
-                  </th>
                   <th class="col-suivi sortable-col" (click)="sortBy('suivi_acq')">
                     {{ 'items.col-suivi' | translate }} <i class="bi {{ getSortIcon('suivi_acq') }} ms-1"></i>
+                  </th>
+                  <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
+                    {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
                   </th>
                   <th class="col-date sortable-col" (click)="sortBy('date_creation')">
                     {{ 'items.col-date' | translate }} <i class="bi {{ getSortIcon('date_creation') }} ms-1"></i>
@@ -222,16 +222,16 @@
                   <td class="col-fonds">
                     {{ item.fonds_budgetaire || '—' }}
                   </td>
-                  <td class="col-statut-acq">
-                    <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
-                      {{ item.statut_acq }}
-                    </span>
-                  </td>
                   <td class="col-suivi">
                     <span *ngIf="item.suivi_acq; else noSuivi" class="badge badge-statut-acq align-self-start">
                       {{ item.suivi_acq }}
                     </span>
                     <ng-template #noSuivi><span class="text-muted">—</span></ng-template>
+                  </td>
+                  <td class="col-statut-acq">
+                    <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
+                      {{ item.statut_acq }}
+                    </span>
                   </td>
                   <td class="col-date">
                     <div>{{ formatDate(item.date_creation) }}</div>
@@ -302,13 +302,13 @@
                   <span class="item-card__label">{{ 'items.col-fonds' | translate }}</span>
                   <span>{{ item.fonds_budgetaire }}</span>
                 </div>
-                <div class="item-card__row" *ngIf="item.statut_acq">
-                  <span class="item-card__label">{{ 'items.col-statut-acq' | translate }}</span>
-                  <span class="badge badge-statut-acq">{{ item.statut_acq }}</span>
-                </div>
                 <div class="item-card__row" *ngIf="item.suivi_acq">
                   <span class="item-card__label">{{ 'items.col-suivi' | translate }}</span>
                   <span class="badge badge-statut-acq">{{ item.suivi_acq }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.statut_acq">
+                  <span class="item-card__label">{{ 'items.col-statut-acq' | translate }}</span>
+                  <span class="badge badge-statut-acq">{{ item.statut_acq }}</span>
                 </div>
                 <div class="item-card__row">
                   <span class="item-card__label">{{ 'items.col-date' | translate }}</span>
