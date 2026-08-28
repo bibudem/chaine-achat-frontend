@@ -214,17 +214,6 @@
           </div>
 
           <div class="col-md"
-               *ngIf="itemForm.get('format_support')?.value && itemForm.get('format_support')?.value !== 'Électronique'">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.creation-notice' | translate }}</label>
-              <select class="form-select form-control" formControlName="creation_notice_dtdm">
-                <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
-                <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-md"
                *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.nb-titres' | translate }}</label>
@@ -322,12 +311,6 @@
               <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.catalogage' | translate }}</label>
-              <input type="text" class="form-control" formControlName="catalogue">
-            </div>
-          </div>
         </div>
 
         <!-- Rangée 5 : Fonds budgétaires -->
@@ -408,14 +391,7 @@
           </div>
         </div>
         <div class="row mb-3">
-          
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
-              <textarea class="form-control" formControlName="note_dtdm" rows="7"></textarea>
-            </div>
-          </div>
-          <div class="col-md-6">
+          <div class="col-12">
             <!-- Documents -->
             <app-piece-jointe-gestion
               [itemId]="itemId || null"
@@ -1075,8 +1051,11 @@
           </div>
         </div>
 
+        <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique) — cohérent avec l'interface statut-decision -->
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md"
+               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique())"
+               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
             <div class="mb-3">
               <label class="form-label">
                 <span *ngIf="suiviAcqRequired" class="text-danger">*</span>
@@ -1092,7 +1071,9 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md"
+               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique())"
+               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.statut-acq' | translate }}</label>
               <select class="form-select form-control" formControlName="statut_acq">
@@ -1101,7 +1082,37 @@
               </select>
             </div>
           </div>
+          <div class="col-md-4"
+               *ngIf="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.creation-notice' | translate }}</label>
+              <select class="form-select form-control" formControlName="creation_notice_dtdm">
+                <option [ngValue]="null">—</option>
+                <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
+                <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
+              </select>
+            </div>
+          </div>
         </div>
+
+        <!-- TDM : Suivi de la demande — visible uniquement si Création de notice TDM = Oui -->
+        <ng-container *ngIf="itemForm.get('creation_notice_dtdm')?.value === true">
+          <h6 class="text-uppercase text-muted mb-3">{{ 'tdm-decision.section-decision' | translate }}</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.catalogage' | translate }}</label>
+                <input type="text" class="form-control" formControlName="catalogue" maxlength="200">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.note-dtdm' | translate }}</label>
+                <textarea class="form-control" formControlName="note_dtdm" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+        </ng-container>
 
         <div class="row">
           <div class="col-md-12">

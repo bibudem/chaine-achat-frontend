@@ -842,6 +842,9 @@
     "col-note-commentaire": "Note / Comment",
     "col-note-usager": "User note"
   },
+  "tdm-decision": {
+    "section-decision": "TDM: Request follow-up"
+  },
   "login-page": {
     "app-name": "Acquisitions management",
     "org-name": "University of Montreal Libraries",

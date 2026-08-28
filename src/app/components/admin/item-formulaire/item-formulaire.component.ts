@@ -97,12 +97,21 @@ export class ItemFormulaireComponent implements OnInit {
           if (suiviAcqCtrl && !suiviAcqCtrl.value) {
             suiviAcqCtrl.setValue('En attente de traitement'); // options.dircolAcqSuiviOptions
           }
+          this.applyCreationNoticeDefault();
         }
         if (this.activeTab === 'acq-decision' && !this.showDecisionAcqTab) {
           this.setActiveTab('base');
         }
       });
     }
+
+    // creation_notice_dtdm : même règle de valeur par défaut que statut-decision (ACQ) —
+    // Oui si le format n'est pas Électronique, vide si Électronique — sans jamais écraser
+    // une valeur déjà renseignée. Réévalué au changement de format au cas où celui-ci est
+    // choisi après que la demande soit déjà « Soumettre aux ACQ ».
+    this.itemForm.get('format_support')?.valueChanges.subscribe(() => {
+      this.applyCreationNoticeDefault();
+    });
 
     const state = history.state as any;
     if (!this.isEditMode && state?.fromReponse) {
@@ -119,6 +128,19 @@ export class ItemFormulaireComponent implements OnInit {
       if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
     });
     this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
+  }
+
+  // Même règle que StatutDecisionComponent.applyAcqDefaults() : Oui si le format n'est pas
+  // Électronique (Imprimé/support physique ou Imprimé et électronique), vide si Électronique —
+  // sans jamais écraser une valeur déjà renseignée (décision ACQ existante ou chargée en édition).
+  private applyCreationNoticeDefault(): void {
+    const ctrl = this.itemForm.get('creation_notice_dtdm');
+    if (!ctrl || ctrl.value != null) { return; }
+    if (this.itemForm.get('statut_bibliotheque')?.value !== 'Soumettre aux ACQ') { return; }
+    const format = this.itemForm.get('format_support')?.value;
+    if (format && format !== 'Électronique') {
+      ctrl.setValue(true, { emitEvent: false });
+    }
   }
 
   private updateFinanceValidators(statut: string): void {
@@ -185,7 +207,7 @@ export class ItemFormulaireComponent implements OnInit {
       isbn_issn: ['', [Validators.required, Validators.maxLength(50)]],
       editeur: ['', [Validators.required, Validators.maxLength(300)]],
       date_publication: ['', Validators.maxLength(50)],
-      creation_notice_dtdm: [true],
+      creation_notice_dtdm: [null],
       note_dtdm: [''],
       prix_cad: [null, Validators.required],
       devise_originale: ['', Validators.required],

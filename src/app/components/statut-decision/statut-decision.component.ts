@@ -83,9 +83,13 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     private reponsesService: ReponsesService
   ) {
     this.form = this.fb.group({
-      suivi_acq:  ['', Validators.required],
-      statut_acq: [''],
-      note_acq:   [''],
+      suivi_acq:            ['', Validators.required],
+      statut_acq:           [''],
+      note_acq:             [''],
+      creation_notice_dtdm: [null],
+      // TDM : Suivi de la demande — même formulaire que la décision ACQ, pas d'étape séparée.
+      note_dtdm:            [''],
+      catalogue:            ['', Validators.maxLength(200)],
     });
   }
 
@@ -105,7 +109,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.errorMessage        = null;
       this.successMessage      = null;
       this.itemExisteDansItems = false;
-      this.form.reset({ suivi_acq: '', statut_acq: '', note_acq: '' });
+      this.form.reset({ suivi_acq: '', statut_acq: '', note_acq: '', creation_notice_dtdm: null, note_dtdm: '', catalogue: '' });
 
       if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
         this.errorMessage = 'Paramètre manquant : reponse_id, id ou item_id';
@@ -192,11 +196,17 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   }
 
   private patchFormFromItem(data: any): void {
-    const acq = this.applyAcqDefaults(data.statut_bibliotheque, data.suivi_acq, data.statut_acq);
+    const acq = this.applyAcqDefaults(
+      data.statut_bibliotheque, data.suivi_acq, data.statut_acq,
+      data.creation_notice_dtdm, data.format_support
+    );
     this.form.patchValue({
-      suivi_acq:  acq.suivi_acq,
-      statut_acq: acq.statut_acq,
-      note_acq:   data.note_acq || '',
+      suivi_acq:            acq.suivi_acq,
+      statut_acq:           acq.statut_acq,
+      note_acq:             data.note_acq || '',
+      creation_notice_dtdm: acq.creation_notice_dtdm,
+      note_dtdm:            data.note_dtdm || '',
+      catalogue:            data.catalogue || '',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -205,11 +215,23 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   // doit afficher ses deux champs de décision ACQ pré-remplis à leur valeur "en attente"
   // respective, s'ils ne sont pas déjà renseignés (mêmes valeurs que ItemFormulaireComponent
   // et creerItemDepuisReponse côté backend).
-  private applyAcqDefaults(statutBibliotheque: string | undefined, suiviActuel: string | undefined, statutActuel: string | undefined): { suivi_acq: string; statut_acq: string } {
+  // creation_notice_dtdm suit la même logique de pré-remplissage : Oui si le format n'est pas
+  // Électronique (Imprimé/support physique ou Imprimé et électronique), vide si Électronique —
+  // sans jamais écraser une valeur déjà renseignée (par l'usager ou une décision précédente).
+  private applyAcqDefaults(
+    statutBibliotheque: string | undefined,
+    suiviActuel: string | undefined,
+    statutActuel: string | undefined,
+    creationNoticeActuelle: boolean | null | undefined,
+    formatSupport: string | undefined
+  ): { suivi_acq: string; statut_acq: string; creation_notice_dtdm: boolean | null } {
     const soumiseAuxAcq = statutBibliotheque === 'Soumettre aux ACQ';
     return {
       suivi_acq:  suiviActuel  || (soumiseAuxAcq ? 'En attente de traitement' : ''), // dircolAcqSuiviOptions
       statut_acq: statutActuel || (soumiseAuxAcq ? 'En attente'                : ''), // dircolAcqStatutOptions
+      creation_notice_dtdm: creationNoticeActuelle != null
+        ? creationNoticeActuelle
+        : (soumiseAuxAcq ? (formatSupport === 'Électronique' ? null : true) : null),
     };
   }
 
@@ -238,6 +260,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       format_support:                 f(bd.format_support,  'format_support'),
       categorie_document:             f(bd.categorie_document,'categorie_document'),
       bibliotheque:                   f(bd.bibliotheque,    'bibliotheque'),
+      creation_notice_dtdm:           bd.creation_notice_dtdm ?? flat.creation_notice_dtdm ?? sd.creation_notice_dtdm,
+      note_dtdm:                      f(bd.note_dtdm,       'note_dtdm'),
+      catalogue:                      f(bd.catalogue,       'catalogue'),
       fonds_budgetaire:               f(bd.fonds_budgetaire,'fonds_budgetaire'),
       fonds_sn_projet:                f(bd.fonds_sn_projet, 'fonds_sn_projet'),
       periode_couverte:               f(bd.periode_couverte,'periode_couverte'),
@@ -286,8 +311,17 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       verification_sqla:              sd.verification_sqla,
       verification_emma:              sd.verification_emma,
     } as Item;
-    const acq = this.applyAcqDefaults(statutBibliotheque, undefined, undefined);
-    this.form.patchValue({ suivi_acq: acq.suivi_acq, statut_acq: acq.statut_acq }, { emitEvent: false });
+    const acq = this.applyAcqDefaults(
+      statutBibliotheque, undefined, undefined,
+      this.item.creation_notice_dtdm, this.item.format_support
+    );
+    this.form.patchValue({
+      suivi_acq:            acq.suivi_acq,
+      statut_acq:           acq.statut_acq,
+      creation_notice_dtdm: acq.creation_notice_dtdm,
+      note_dtdm:            this.item.note_dtdm || '',
+      catalogue:            this.item.catalogue || '',
+    }, { emitEvent: false });
     this.buildNotifTargets();
   }
 
@@ -406,18 +440,21 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const suivi_acq  = this.form.get('suivi_acq')?.value;
     const statut_acq = this.form.get('statut_acq')?.value || null;
     const note_acq   = this.form.get('note_acq')?.value   || null;
+    const creation_notice_dtdm = this.form.get('creation_notice_dtdm')?.value ?? null;
+    const note_dtdm  = this.form.get('note_dtdm')?.value   || null;
+    const catalogue  = this.form.get('catalogue')?.value   || null;
 
     const specificData = this.buildSpecificData();
 
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, ...(specificData ? { specificData } : {}) },
+          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm, note_dtdm, catalogue, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), statut_acq, reponse_id: this.reponseId },
+          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId },
           this.httpOptions
         );
 
@@ -551,14 +588,22 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     };
 
     const i = this.item as any;
-    const suiviForm  = this.form.get('suivi_acq')?.value;
-    const statutForm = this.form.get('statut_acq')?.value;
+    const suiviForm          = this.form.get('suivi_acq')?.value;
+    const statutForm         = this.form.get('statut_acq')?.value;
+    const creationNoticeForm = this.form.get('creation_notice_dtdm')?.value;
+    const catalogueForm      = this.form.get('catalogue')?.value;
+    const noteDtdmForm       = this.form.get('note_dtdm')?.value;
     const identifiant = this.itemId ?? this.reponseId;
 
     const rangees = [
       { label: 'Statut de la demande', value: i.statut_bibliotheque || "En cours d'évaluation" },
       ...(suiviForm  ? [{ label: 'ACQ — Suivi de la demande',  value: suiviForm  }] : []),
       ...(statutForm ? [{ label: 'ACQ — Statut de la demande', value: statutForm }] : []),
+      ...(creationNoticeForm != null
+        ? [{ label: 'ACQ — Création de notice TDM', value: creationNoticeForm ? 'Oui' : 'Non' }]
+        : []),
+      ...(catalogueForm ? [{ label: 'TDM — Catalogage', value: catalogueForm }] : []),
+      ...(noteDtdmForm  ? [{ label: 'TDM — Note / OCN', value: noteDtdmForm }] : []),
       ...this.PRINT_FIELD_ORDER
         .filter(k => i[k] !== null && i[k] !== undefined && i[k] !== '' && i[k] !== false)
         .map(k => ({
