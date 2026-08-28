@@ -221,13 +221,6 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-4" *ngIf="item.catalogue">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
-                  <span class="itd-field__value">{{ item.catalogue }}</span>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
@@ -702,14 +695,30 @@
         </div>
 
         <!-- ── Section : Notes ───────────────────────────────── -->
-        <div class="itd-card"
-             *ngIf="item.note_dtdm || item.note_commentaire || item.creation_notice_dtdm !== undefined">
+        <div class="itd-card" *ngIf="item.note_commentaire">
           <div class="itd-card__header">
             <i class="bi bi-sticky me-2"></i>{{ 'item-detail.section-notes' | translate }}
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
-              <div class="col-md-3" *ngIf="item.creation_notice_dtdm !== undefined">
+              <div class="col-md-12">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.note-commentaire' | translate }}</span>
+                  <span class="itd-note">{{ item.note_commentaire }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section : TDM — Suivi de la demande ─────────────── -->
+        <div class="itd-card" *ngIf="item.creation_notice_dtdm != null">
+          <div class="itd-card__header">
+            <i class="bi bi-journal-bookmark me-2"></i>{{ 'tdm-decision.section-decision' | translate }}
+          </div>
+          <div class="itd-card__body">
+            <div class="row g-3">
+              <div class="col-md-3">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.notice-dtdm' | translate }}</span>
                   <span class="badge" [ngClass]="item.creation_notice_dtdm ? 'bg-success' : 'bg-light text-dark border'">
@@ -717,18 +726,20 @@
                   </span>
                 </div>
               </div>
-              <div class="col-md-6" *ngIf="item.note_dtdm">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
-                  <span class="itd-note">{{ item.note_dtdm }}</span>
+              <ng-container *ngIf="item.creation_notice_dtdm">
+                <div class="col-md-3" *ngIf="item.catalogue">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
+                    <span class="itd-field__value">{{ item.catalogue }}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-6" *ngIf="item.note_commentaire">
-                <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.note-commentaire' | translate }}</span>
-                  <span class="itd-note">{{ item.note_commentaire }}</span>
+                <div class="col-md-6" *ngIf="item.note_dtdm">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
+                    <span class="itd-note">{{ item.note_dtdm }}</span>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
             </div>
           </div>
         </div>
