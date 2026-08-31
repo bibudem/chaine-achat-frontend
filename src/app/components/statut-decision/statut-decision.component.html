@@ -103,8 +103,8 @@
             <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique) -->
             <div class="row g-3 mb-4">
               <div class="col-md"
-                   [class.col-md-6]="!(isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa)"
-                   [class.col-md-4]="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa">
+                   [class.col-md-6]="!(isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion)"
+                   [class.col-md-4]="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion">
                 <label for="suivi_acq" class="form-label fw-semibold">
                   {{ 'item-formulaire.suivi-acq' | translate }}
                   <span class="text-danger ms-1">*</span>
@@ -120,8 +120,8 @@
                 </small>
               </div>
               <div class="col-md"
-                   [class.col-md-6]="!(isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa)"
-                   [class.col-md-4]="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa">
+                   [class.col-md-6]="!(isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion)"
+                   [class.col-md-4]="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion">
                 <label for="statut_acq" class="form-label fw-semibold">
                   {{ 'item-formulaire.statut-acq' | translate }}
                 </label>
@@ -132,7 +132,7 @@
                 </select>
               </div>
               <div class="col-md-4"
-                   *ngIf="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa">
+                   *ngIf="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion">
                 <label for="creation_notice_dtdm" class="form-label fw-semibold">
                   {{ 'item-formulaire.creation-notice' | translate }}
                 </label>
@@ -141,6 +141,33 @@
                   <option [ngValue]="null">—</option>
                   <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
                   <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ── Type de document + Format/Support — Suggestion d'achat uniquement (retirés du
+                 formulaire usager pour ce type, à compléter par les ACQ) ── -->
+            <div class="row g-3 mb-4" *ngIf="isSuggestion">
+              <div class="col-md-6">
+                <label for="categorie_document" class="form-label fw-semibold">
+                  {{ 'item-formulaire.categorie-document' | translate }}
+                </label>
+                <select id="categorie_document" formControlName="categorie_document"
+                        class="form-select form-select-lg">
+                  <option value="">{{ 'acq-decision.selectionner-suivi' | translate }}</option>
+                  <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="format_support" class="form-label fw-semibold">
+                  {{ 'item-formulaire.type-traitement' | translate }}
+                </label>
+                <select id="format_support" formControlName="format_support"
+                        class="form-select form-select-lg">
+                  <option value="">{{ 'acq-decision.selectionner-suivi' | translate }}</option>
+                  <option value="Imprimé/support physique">Imprimé/support physique</option>
+                  <option value="Électronique">Électronique</option>
+                  <option value="Imprimé et électronique">Imprimé et électronique</option>
                 </select>
               </div>
             </div>

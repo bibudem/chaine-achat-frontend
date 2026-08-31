@@ -87,6 +87,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       statut_acq:           [''],
       note_acq:             [''],
       creation_notice_dtdm: [null],
+      // Suggestion d'achat uniquement : le formulaire usager ne collecte plus ces deux champs
+      // (retirés — « à compléter par les ACQ »), ils sont donc saisis ici.
+      categorie_document:   [''],
+      format_support:       [''],
       // TDM : Suivi de la demande — même formulaire que la décision ACQ, pas d'étape séparée.
       note_dtdm:            [''],
       catalogue:            ['', Validators.maxLength(200)],
@@ -109,7 +113,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.errorMessage        = null;
       this.successMessage      = null;
       this.itemExisteDansItems = false;
-      this.form.reset({ suivi_acq: '', statut_acq: '', note_acq: '', creation_notice_dtdm: null, note_dtdm: '', catalogue: '' });
+      this.form.reset({
+        suivi_acq: '', statut_acq: '', note_acq: '', creation_notice_dtdm: null,
+        categorie_document: '', format_support: '', note_dtdm: '', catalogue: '',
+      });
 
       if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
         this.errorMessage = 'Paramètre manquant : reponse_id, id ou item_id';
@@ -205,6 +212,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       statut_acq:           acq.statut_acq,
       note_acq:             data.note_acq || '',
       creation_notice_dtdm: acq.creation_notice_dtdm,
+      categorie_document:   data.categorie_document || '',
+      format_support:       data.format_support || '',
       note_dtdm:            data.note_dtdm || '',
       catalogue:            data.catalogue || '',
     }, { emitEvent: false });
@@ -229,9 +238,11 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return {
       suivi_acq:  suiviActuel  || (soumiseAuxAcq ? 'En attente de traitement' : ''), // dircolAcqSuiviOptions
       statut_acq: statutActuel || (soumiseAuxAcq ? 'En attente'                : ''), // dircolAcqStatutOptions
+      // formatSupport peut être encore vide pour une Suggestion d'achat (champ désormais
+      // saisi par les ACQ, pas par l'usager) — dans ce cas on ne présume pas "Oui".
       creation_notice_dtdm: creationNoticeActuelle != null
         ? creationNoticeActuelle
-        : (soumiseAuxAcq ? (formatSupport === 'Électronique' ? null : true) : null),
+        : (soumiseAuxAcq && formatSupport ? (formatSupport === 'Électronique' ? null : true) : null),
     };
   }
 
@@ -319,6 +330,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       suivi_acq:            acq.suivi_acq,
       statut_acq:           acq.statut_acq,
       creation_notice_dtdm: acq.creation_notice_dtdm,
+      categorie_document:   this.item.categorie_document || '',
+      format_support:       this.item.format_support || '',
       note_dtdm:            this.item.note_dtdm || '',
       catalogue:            this.item.catalogue || '',
     }, { emitEvent: false });
@@ -441,6 +454,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const statut_acq = this.form.get('statut_acq')?.value || null;
     const note_acq   = this.form.get('note_acq')?.value   || null;
     const creation_notice_dtdm = this.form.get('creation_notice_dtdm')?.value ?? null;
+    const categorie_document = this.form.get('categorie_document')?.value || null;
+    const format_support     = this.form.get('format_support')?.value     || null;
     const note_dtdm  = this.form.get('note_dtdm')?.value   || null;
     const catalogue  = this.form.get('catalogue')?.value   || null;
 
@@ -449,12 +464,12 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm, note_dtdm, catalogue, ...(specificData ? { specificData } : {}) },
+          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId },
+          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId },
           this.httpOptions
         );
 

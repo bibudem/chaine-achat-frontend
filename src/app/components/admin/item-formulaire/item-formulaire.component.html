@@ -1054,8 +1054,8 @@
         <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique) — cohérent avec l'interface statut-decision -->
         <div class="row">
           <div class="col-md"
-               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique())"
-               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
+               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat())"
+               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat()">
             <div class="mb-3">
               <label class="form-label">
                 <span *ngIf="suiviAcqRequired" class="text-danger">*</span>
@@ -1072,8 +1072,8 @@
             </div>
           </div>
           <div class="col-md"
-               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique())"
-               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
+               [class.col-md-6]="!(isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat())"
+               [class.col-md-4]="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.statut-acq' | translate }}</label>
               <select class="form-select form-control" formControlName="statut_acq">
@@ -1083,13 +1083,38 @@
             </div>
           </div>
           <div class="col-md-4"
-               *ngIf="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique()">
+               *ngIf="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.creation-notice' | translate }}</label>
               <select class="form-select form-control" formControlName="creation_notice_dtdm">
                 <option [ngValue]="null">—</option>
                 <option [ngValue]="true">{{ 'item-formulaire.oui' | translate }}</option>
                 <option [ngValue]="false">{{ 'item-formulaire.non' | translate }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Type de document + Format/Support — Suggestion d'achat uniquement (retirés du
+             formulaire usager pour ce type, à compléter par les ACQ) -->
+        <div class="row" *ngIf="isSuggestionAchat()">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.categorie-document' | translate }}</label>
+              <select class="form-select form-control" formControlName="categorie_document">
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.type-traitement' | translate }}</label>
+              <select class="form-select form-control" formControlName="format_support">
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                <option value="Imprimé/support physique">Imprimé/support physique</option>
+                <option value="Électronique">Électronique</option>
+                <option value="Imprimé et électronique">Imprimé et électronique</option>
               </select>
             </div>
           </div>
