@@ -182,6 +182,12 @@ export class ItemFormulaireComponent implements OnInit {
     const r = reponse.reponses || {};
     const baseData = r.baseData || {};
     const specificData = r.specificData || {};
+    // Format plat (Suggestion d'achat - Usager, ancien formulaire) : les champs sont
+    // directement sur r, pas sous r.baseData/r.specificData — on les inclut pour ne pas
+    // perdre par ex. r.usager_nom (la personne concernée par la suggestion), distinct
+    // de reponse.usager_nom (le·la TechDoc qui a soumis le formulaire, ci-dessous).
+    // Même logique de branchement que creerItemDepuisReponse côté backend.
+    const flat = (!r.baseData && !r.specificData) ? r : {};
 
     // Déclenche onFormulaireTypeChange → applique les validateurs du bon type
     this.itemForm.patchValue({ formulaire_type: reponse.type_formulaire });
@@ -192,6 +198,7 @@ export class ItemFormulaireComponent implements OnInit {
       usager_nom: reponse.usager_nom,
       usager_courriel: reponse.usager_courriel,
       usager_statut: reponse.usager_statut,
+      ...flat,
       ...baseData,
       ...specificData
     }, { emitEvent: false });

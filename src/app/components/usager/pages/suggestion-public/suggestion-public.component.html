@@ -54,13 +54,13 @@
     <!-- ══ FORMULAIRE ═══════════════════════════════════════ -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
-      <!-- SECTION 1 — IDENTIFICATION -->
+      <!-- SECTION 1 — IDENTIFICATION (TechDoc en bibliothèque) -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-user"></i>{{ 'forms-usager.section-identification' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label class="form-label required">{{ 'forms-usager.nom' | translate }}</label>
             <input type="text" formControlName="nom" class="form-control"
                    [class.is-invalid]="submitted && f['nom'].invalid"
@@ -71,7 +71,7 @@
             <small class="form-text">{{ 'forms-usager.nom-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label class="form-label required">{{ 'forms-usager.courriel' | translate }}</label>
             <input type="email" formControlName="courriel" class="form-control"
                    [class.is-invalid]="submitted && f['courriel'].invalid"
@@ -81,7 +81,41 @@
             </div>
             <small class="form-text">{{ 'forms-usager.courriel-hint' | translate }}</small>
           </div>
-          <div class="col-md-4">
+
+          <div class="col-md-2">
+            <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
+            <select formControlName="priorite_demande" class="form-select priorite-select"
+                    [ngClass]="{
+                      'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
+                      'priorite--prioritaire': form.get('priorite_demande')?.value === 'Prioritaire',
+                      'priorite--urgent':      form.get('priorite_demande')?.value === 'Urgent'
+                    }"
+                    [class.is-invalid]="submitted && f['priorite_demande'].invalid">
+              <option value="Régulier">Régulier</option>
+              <option value="Prioritaire">Prioritaire</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 — IDENTIFICATION DE L'USAGER (étudiant, prof, chercheur) -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="fas fa-user-graduate"></i>{{ 'form-suggestion.section-identification-usager' | translate }}
+        </h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label required">{{ 'form-suggestion.nom-usager' | translate }}</label>
+            <input type="text" formControlName="usager_nom" class="form-control"
+                   [class.is-invalid]="submitted && f['usager_nom'].invalid"
+                   [placeholder]="'form-suggestion.nom-usager-placeholder' | translate">
+            <div *ngIf="submitted && f['usager_nom'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
             <label class="form-label required">{{ 'form-suggestion.categorie-usager' | translate }}</label>
             <select formControlName="statut" class="form-select"
                     [class.is-invalid]="submitted && f['statut'].invalid">
@@ -111,21 +145,6 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
-            <select formControlName="priorite_demande" class="form-select priorite-select"
-                    [ngClass]="{
-                      'priorite--regulier':    form.get('priorite_demande')?.value === 'Régulier',
-                      'priorite--prioritaire': form.get('priorite_demande')?.value === 'Prioritaire',
-                      'priorite--urgent':      form.get('priorite_demande')?.value === 'Urgent'
-                    }"
-                    [class.is-invalid]="submitted && f['priorite_demande'].invalid">
-              <option value="Régulier">Régulier</option>
-              <option value="Prioritaire">Prioritaire</option>
-              <option value="Urgent">Urgent</option>
-            </select>
-          </div>
-
-          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="submitted && f['bibliotheque'].invalid">
@@ -138,7 +157,7 @@
             <small class="form-text">{{ 'forms-usager.bibliotheque-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.bibliothecaire-disc' | translate }}</label>
             <input type="email" formControlName="bibliothecaire_disciplinaire" class="form-control"
                    [class.is-invalid]="submitted && f['bibliothecaire_disciplinaire'].invalid"
@@ -151,26 +170,13 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DESCRIPTION -->
+      <!-- SECTION 3 — DESCRIPTION DE LA SUGGESTION -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-book-open"></i>{{ 'form-suggestion.section-description' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label">{{ 'form-suggestion.type-document' | translate }}</label>
-            <select formControlName="categorie_document" class="form-select">
-              <option value="">{{ 'form-suggestion.faites-choix' | translate }}</option>
-              <option value="Monographie">{{ 'form-suggestion.livre' | translate }}</option>
-              <option value="Périodique">{{ 'form-suggestion.periodique' | translate }}</option>
-              <option value="Base de données">{{ 'form-suggestion.base-donnees' | translate }}</option>
-              <option value="Archives de périodiques">{{ 'form-suggestion.archives-periodiques' | translate }}</option>
-              <option value="Archives de monographies">{{ 'form-suggestion.archives-monographies' | translate }}</option>
-            </select>
-            <small class="form-text">{{ 'form-suggestion.type-doc-hint' | translate }}</small>
-          </div>
-
-          <div class="col-8">
+          <div class="col-12">
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="submitted && f['titre_document'].invalid"
@@ -197,6 +203,12 @@
           </div>
 
           <div class="col-md-4">
+            <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
+            <input type="date" formControlName="date_publication" class="form-control">
+            <small class="form-text">{{ 'form-suggestion.date-publication-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-6">
             <label class="form-label">{{ 'form-suggestion.source-internet' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="submitted && f['source_information'].invalid"
@@ -207,13 +219,7 @@
             <small class="form-text">{{ 'form-suggestion.source-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
-            <input type="date" formControlName="date_publication" class="form-control">
-            <small class="form-text">{{ 'form-suggestion.date-publication-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="submitted && f['isbn_issn'].invalid"
@@ -225,16 +231,6 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label">{{ 'form-suggestion.format-support' | translate }}</label>
-            <select formControlName="format_support" class="form-select">
-              <option value="">{{ 'form-suggestion.faites-choix' | translate }}</option>
-              <option value="Imprimé/support physique">{{ 'forms-usager.imprime-physique' | translate }}</option>
-              <option value="Électronique">{{ 'forms-usager.electronique' | translate }}</option>
-              <option value="Imprimé et électronique">{{ 'forms-usager.imprime-et-electronique' | translate }}</option>
-            </select>
-          </div>
-
           <div class="col-12">
             <label class="form-label">{{ 'form-suggestion.notes-commentaires' | translate }}</label>
             <textarea formControlName="note_usager" class="form-control" rows="4"
@@ -243,7 +239,7 @@
         </div>
       </div>
 
-      <!-- SECTION 3 — RÉSERVATION -->
+      <!-- SECTION 4 — RÉSERVATION -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-bookmark"></i>{{ 'form-suggestion.section-reservation' | translate }}
@@ -275,7 +271,7 @@
         </div>
       </div>
 
-      <!-- SECTION 4 — ENSEIGNANT -->
+      <!-- SECTION 5 — ENSEIGNANT -->
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-chalkboard-teacher"></i>{{ 'form-suggestion.section-enseignant' | translate }}
