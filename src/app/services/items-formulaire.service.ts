@@ -319,7 +319,9 @@ export class ItemFormulaireService {
     const formattedItem = { ...item };
     
     // FIX: tous les booléens explicitement castés
-    if (formattedItem.creation_notice_dtdm !== undefined) {
+    // creation_notice_dtdm est tri-état (Oui / Non / vide) — `null` signifie "pas encore
+    // décidé" et doit rester tel quel, pas être casté à `false` (Non).
+    if (formattedItem.creation_notice_dtdm != null) {
       formattedItem.creation_notice_dtdm = Boolean(formattedItem.creation_notice_dtdm);
     }
     if (formattedItem.aviser_reception !== undefined) {

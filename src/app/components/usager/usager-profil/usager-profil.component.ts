@@ -21,7 +21,9 @@ export class UsagerProfilComponent implements OnInit {
   expandedData: { label: string; value: string }[] = [];
 
   private readonly FIELD_LABELS: Record<string, string> = {
-    usager_nom: 'Nom', demandeur: 'Nom',
+    // usager_nom ≠ demandeur pour Suggestion d'achat : demandeur est la personne qui a
+    // soumis le formulaire (TechDoc), usager_nom la personne concernée par la suggestion.
+    usager_nom: "Nom de l'usager", demandeur: 'Nom',
     usager_statut: 'Statut', statut: 'Statut',
     usager_faculte: 'Faculté / Département',
     usager_courriel: 'Courriel', courriel: 'Courriel',

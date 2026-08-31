@@ -346,7 +346,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       'formulaire_type', 'titre_document', 'sous_titre', 'demandeur',
       'editeur', 'isbn_issn', 'date_publication', 'categorie_document',
       'format_support', 'priorite_demande', 'bibliotheque',
-      'localisation_emplacement', 'creation_notice_dtdm', 'catalogue',
+      'localisation_emplacement', 'creation_notice_dtdm', 'catalogue', 'note_dtdm',
       'fonds_budgetaire', 'fonds_sn_projet', 'periode_couverte',
       'source_information', 'prix_cad', 'devise_originale', 'prix_devise_originale',
       'nombre_titres_inclus', 'nombre_utilisateurs', 'lien_plateforme',

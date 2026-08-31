@@ -843,7 +843,8 @@
     "col-note-usager": "User note"
   },
   "tdm-decision": {
-    "section-decision": "TDM: Request follow-up"
+    "section-decision": "TDM: Request follow-up",
+    "catalogue-max": "Maximum 200 characters."
   },
   "login-page": {
     "app-name": "Acquisitions management",
@@ -1112,13 +1113,6 @@
     "bibliothecaire-disc": "Subject librarian",
     "bibliothecaire-hint": "Email of the librarian responsible for your discipline",
     "section-description": "Suggestion description",
-    "type-document": "Document type",
-    "type-doc-hint": "Nature of the suggested document",
-    "livre": "Book",
-    "periodique": "Periodical",
-    "base-donnees": "Database",
-    "archives-periodiques": "Periodical archives",
-    "archives-monographies": "Monograph archives",
     "auteur-autrice": "Author",
     "auteur-placeholder": "Author name",
     "auteur-required": "This field is required.",
@@ -1128,7 +1122,6 @@
     "source-hint": "Link to the document record (publisher, bookstore, etc.)",
     "source-invalid": "Invalid URL.",
     "date-publication-hint": "Online or print publication date",
-    "format-support": "Format / Medium",
     "notes-commentaires": "Notes and comments",
     "notes-placeholder": "Justification for your request, additional information…",
     "section-reservation": "Reservation",

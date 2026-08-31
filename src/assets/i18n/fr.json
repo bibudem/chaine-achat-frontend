@@ -845,7 +845,8 @@
     "col-note-usager": "Note usager"
   },
   "tdm-decision": {
-    "section-decision": "TDM : Suivi de la demande"
+    "section-decision": "TDM : Suivi de la demande",
+    "catalogue-max": "Maximum 200 caractères."
   },
   "login-page": {
     "app-name": "Gestion des acquisitions",
@@ -1133,13 +1134,6 @@
     "bibliothecaire-disc": "Bibliothécaire disciplinaire",
     "bibliothecaire-hint": "Courriel du ou de la bibliothécaire responsable de votre discipline",
     "section-description": "Description de la suggestion",
-    "type-document": "Type de document",
-    "type-doc-hint": "Nature du document suggéré",
-    "livre": "Livre",
-    "periodique": "Périodique",
-    "base-donnees": "Base de données",
-    "archives-periodiques": "Archives de périodiques",
-    "archives-monographies": "Archives de monographies",
     "auteur-autrice": "Auteur ou autrice",
     "auteur-placeholder": "Nom de l'auteur ou de l'autrice",
     "auteur-required": "Ce champ est obligatoire.",
@@ -1149,7 +1143,6 @@
     "source-hint": "Lien vers la fiche du document (éditeur, librairie, etc.)",
     "source-invalid": "URL invalide.",
     "date-publication-hint": "Date de publication en ligne ou imprimée",
-    "format-support": "Format / Support",
     "notes-commentaires": "Notes et commentaires",
     "notes-placeholder": "Justification de votre demande, informations complémentaires…",
     "section-reservation": "Réservation",

@@ -184,7 +184,7 @@
                          class="form-control form-control-lg" maxlength="200">
                   <small class="text-danger"
                     *ngIf="form.get('catalogue')?.invalid && form.get('catalogue')?.touched">
-                    Maximum 200 caractères.
+                    {{ 'tdm-decision.catalogue-max' | translate }}
                   </small>
                 </div>
                 <div class="col-md-6">
