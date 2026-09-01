@@ -1,7 +1,7 @@
 <!-- ── Shell USAGER : header/menu/footer absents ── -->
 <ng-container *ngIf="isUsagerRoute">
   <router-outlet></router-outlet>
-  <app-faq></app-faq>
+  <app-faq *ngIf="!isLoginRoute"></app-faq>
 </ng-container>
 
 <!-- ── Shell ADMIN : structure complète ── -->

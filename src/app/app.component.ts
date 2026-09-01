@@ -12,6 +12,7 @@ import { AuthService } from './services/auth.service';
 export class AppComponent implements OnInit {
   title = 'projet-monographies';
   isUsagerRoute = false;
+  isLoginRoute = false;
 
   constructor(
     private translate: TranslateService,
@@ -25,10 +26,11 @@ export class AppComponent implements OnInit {
     // Initialisation immédiate avant le premier rendu
     const path = window.location.pathname;
     this.isUsagerRoute = path.startsWith('/usager') || path.startsWith('/login');
+    this.isLoginRoute  = path.startsWith('/login');
     if (!this.isUsagerRoute){
       document.documentElement.classList.remove('usager-route');
     }
-  
+
   }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class AppComponent implements OnInit {
       filter(event => event instanceof NavigationStart)
     ).subscribe((event: any) => {
       this.isUsagerRoute = event.url.startsWith('/usager') || event.url.startsWith('/login');
+      this.isLoginRoute  = event.url.startsWith('/login');
     });
   }
 

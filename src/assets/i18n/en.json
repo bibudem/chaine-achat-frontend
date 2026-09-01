@@ -143,9 +143,9 @@
     "nouvel-achat": "New one-time purchase",
     "nouvel-abonnement": "New subscription",
     "modification-ccol": "Modification and CCOL",
-    "peb-tipasa": "PEB Tipasa digital",
-    "accessibilite": "Accessibility request",
-    "suggestion": "Purchase suggestion",
+    "peb-tipasa": "PEB digital",
+    "accessibilite": "Accessibility",
+    "suggestion": "Purchase suggestion - User",
     "notif-titre": "Pending requests",
     "notif-vide": "All caught up",
     "mes-demandes": "My requests"
