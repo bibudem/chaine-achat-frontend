@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
 import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
@@ -248,6 +250,103 @@ export class UsagerProfilComponent implements OnInit {
       },
       error: () => this.ecrireImpression(fenetre, d, [])
     });
+  }
+
+  exportingExcel = false;
+
+  exporterExcel(): void {
+    if (!this.demandesFiltrees.length || this.exportingExcel) return;
+    const liste = this.demandesFiltrees;
+    this.exportingExcel = true;
+
+    // Un item peut avoir des dizaines de champs propres à son type (auteur, ISBN, notes
+    // d'accessibilité, réserve de cours, etc.) qui ne sont pas dans la liste sommaire déjà
+    // en mémoire — on va donc chercher le détail complet de chaque demande, comme le fait
+    // déjà toggleDetails()/imprimerDemande() pour une seule demande à la fois.
+    forkJoin(
+      liste.map(d => this.reponsesService.getReponseById(d.id).pipe(
+        catchError(() => of(null))
+      ))
+    ).subscribe(reponses => {
+      const details = reponses.map(row => {
+        const raw = row?.reponses ?? {};
+        return raw.baseData ? { ...raw.baseData, ...(raw.specificData ?? {}) } : { ...raw };
+      });
+      const exportData = liste.map((d, i) => this.construireLigneExport(d, details[i]));
+      this.exportingExcel = false;
+
+      import('xlsx').then(XLSX => {
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        ws['!cols'] = Object.keys(exportData[0]).map(k => ({ wch: Math.max(15, k.length + 2) }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Mes demandes');
+        XLSX.writeFile(wb, `mes_demandes_${new Date().toISOString().split('T')[0]}.xlsx`);
+      }).catch(() => this.exporterCSV(exportData));
+    });
+  }
+
+  /** Champs de type date parmi FIELD_ORDER — formatés en AAAA-MM-JJ à l'export, comme les
+   *  autres colonnes de date (voir formatDateExport). */
+  private readonly DATE_FIELDS = new Set(['date_publication', 'date_requise_cours']);
+
+  /** Formate une date en AAAA-MM-JJ pour l'export Excel/CSV (indépendant de formatDate(),
+   *  utilisé lui pour l'affichage à l'écran en français). Lit directement les 10 premiers
+   *  caractères d'une chaîne ISO plutôt que de repasser par un objet Date, pour éviter tout
+   *  décalage d'un jour causé par le fuseau horaire local. */
+  private formatDateExport(d: string | null | undefined): string {
+    if (!d) return '';
+    const iso = /^(\d{4}-\d{2}-\d{2})/.exec(d);
+    if (iso) return iso[1];
+    const date = new Date(d);
+    return isNaN(date.getTime()) ? '' : date.toISOString().substring(0, 10);
+  }
+
+  /** Construit une ligne d'export avec TOUJOURS les mêmes colonnes, dans le même ordre,
+   *  peu importe le type de demande — les champs qui ne s'appliquent pas à un type donné
+   *  restent simplement vides, ce qui garantit un fichier Excel à colonnes stables. */
+  private construireLigneExport(d: DemandeUsager, flat: Record<string, any>): Record<string, string> {
+    const row: Record<string, string> = {
+      'Type':                 d.type_formulaire,
+      'Statut de la demande': d.statut_bibliotheque || "En cours d'évaluation",
+      'Date de soumission':   this.formatDateExport(d.dateA),
+    };
+    // Toutes les colonnes détaillées de l'item, initialisées vides pour garder un ordre fixe.
+    this.FIELD_ORDER.forEach(k => {
+      const label = this.FIELD_LABELS[k];
+      if (label && !(label in row)) row[label] = '';
+    });
+    row['Suivi ACQ']          = d.suivi_acq || '';
+    row['Statut ACQ']         = d.statut_acq || '';
+    // Cellule vide (plutôt que le "—" affiché à l'écran) tant qu'aucune décision ACQ n'a
+    // été prise pour cette demande — un tiret dans un fichier Excel ressemble à une donnée.
+    row['Date de traitement'] = this.formatDateExport(d.date_traitement);
+
+    // Remplit avec les valeurs réelles du détail de l'item.
+    this.FIELD_ORDER.forEach(k => {
+      const label = this.FIELD_LABELS[k];
+      const val = flat?.[k];
+      if (!label || val === null || val === undefined || val === '' || val === false) return;
+      row[label] = typeof val === 'boolean' ? 'Oui'
+        : this.DATE_FIELDS.has(k) ? this.formatDateExport(String(val))
+        : String(val);
+    });
+    return row;
+  }
+
+  private exporterCSV(exportData: Record<string, string>[]): void {
+    if (!exportData.length) return;
+    const headers = Object.keys(exportData[0]);
+    const rows = exportData.map(row =>
+      headers.map(h => `"${String(row[h] ?? '').replace(/"/g, '""')}"`).join(',')
+    );
+    const blob = new Blob(['﻿' + [headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', `mes_demandes_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   private ecrireImpression(fenetre: Window, d: DemandeUsager, data: RangeeImpression[]): void {

@@ -189,6 +189,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .filterbar__reset--active { background: #fff1f2; border-color: #fca5a5; color: #dc2626; font-weight: 600; }
 .filterbar__reset--active:hover { background: #fee2e2; border-color: #f87171; }
 
+/* Bouton d'export Excel */
+.filterbar__export {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  height: 30px;
+  padding: 0 .7rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s;
+}
+.filterbar__export:hover { background: #dcfce7; border-color: #86efac; }
+.filterbar__export:disabled { color: #a0aec0; background: #f8fafc; border-color: #e2e8f0; cursor: not-allowed; }
+
 /* Compteur de résultats */
 .filterbar__count { font-size: .74rem; color: #a0aec0; white-space: nowrap; }
 

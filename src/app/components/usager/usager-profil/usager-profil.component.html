@@ -93,6 +93,14 @@
             <i class="bi bi-x"></i> Réinitialiser
           </button>
           <span class="filterbar__count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
+          <span class="filterbar__sep"></span>
+          <button class="filterbar__export"
+                  [disabled]="!demandesFiltrees.length || exportingExcel"
+                  (click)="exporterExcel()"
+                  title="Exporter la liste filtrée en Excel (avec tous les détails de chaque demande)">
+            <span *ngIf="!exportingExcel"><i class="bi bi-file-earmark-excel"></i> Exporter</span>
+            <span *ngIf="exportingExcel"><span class="spinner-border spinner-border-sm" role="status"></span> Préparation…</span>
+          </button>
         </div>
       </div>
 
