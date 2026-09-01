@@ -51,7 +51,7 @@
         <div class="itd-sidebar__block">
           <div class="itd-sidebar__label">{{ 'item-detail.type-formulaire' | translate }}</div>
           <span [class]="getTypeBadgeClass(item.formulaire_type)">
-            {{ item.formulaire_type }}
+            {{ formulaireTypeLabel(item.formulaire_type) }}
           </span>
         </div>
 
@@ -341,7 +341,7 @@
         <!-- ── Section : Champs spécifiques au formulaire ────── -->
         <div class="itd-card" *ngIf="hasSpecificData()">
           <div class="itd-card__header">
-            <i class="bi bi-list-check me-2"></i>{{ item.formulaire_type }}
+            <i class="bi bi-list-check me-2"></i>{{ formulaireTypeLabel(item.formulaire_type) }}
             <span class="itd-card__header-sub ms-2">{{ 'item-detail.champs-specifiques' | translate }}</span>
           </div>
           <div class="itd-card__body">

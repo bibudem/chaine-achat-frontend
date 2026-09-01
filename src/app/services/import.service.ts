@@ -152,7 +152,7 @@ export const FORM_TYPES: FormTypeInfo[] = [
     // tbl_items + tbl_peb_tipasa_numerique
     type:        'PEB Tipasa numérique',
     label:       'PEB Tipasa numérique',
-    icon:        'bi bi-link-45deg',
+    icon:        'bi bi-share',
     description: 'Prêt entre bibliothèques via Tipasa.',
     columns: [
       { name: 'titre_document',              required: true,  example: 'Article sur les réseaux' },

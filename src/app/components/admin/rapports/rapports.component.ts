@@ -5,6 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { Router } from "@angular/router";
 import { RapportsService, FiltresRapport, ApiResponse } from '../../../services/rapports.service';
+import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 
 // Champs présents dans tbl_items — visibles quel que soit le type de formulaire filtré
 const CHAMPS_COMMUNS = new Set<string>([
@@ -66,6 +67,9 @@ interface TypeRapport {
   styleUrls: ['./rapports.component.css']
 })
 export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   // Table
   dataSource = new MatTableDataSource<any>([]);
@@ -536,6 +540,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   formatCell(column: string, value: any): string {
     if (value === null || value === undefined || value === '') return '-';
+    if (column === 'formulaire_type') return this.formulaireTypeLabel(value);
     if (column.includes('date')) {
       const d = new Date(value);
       if (!isNaN(d.getTime())) return d.toLocaleString('fr-CA', {

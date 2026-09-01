@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ImportLogsService, ImportLog } from '../../../services/import-logs.service';
+import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 
 const FORM_TYPES = [
   'Nouvel achat unique',
@@ -16,6 +17,9 @@ const FORM_TYPES = [
   styleUrls:   ['./import-logs.component.css']
 })
 export class ImportLogsComponent implements OnInit {
+
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   logs:        ImportLog[] = [];
   total        = 0;

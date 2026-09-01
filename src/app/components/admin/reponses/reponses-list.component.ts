@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReponsesService, Reponse, PaginatedResponse } from '../../../services/reponses.service';
 import { DialogService } from '../../../services/dialog.service';
 import { PageEvent } from '@angular/material/paginator';
+import { FORMULAIRE_TYPE_LABELS, formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 
 export type SortDirection = 'asc' | 'desc' | '';
 
@@ -46,10 +47,13 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     { value: "Suggestion d'achat - Usager",   label: "Suggestion d'achat — Usager" },
     { value: 'Nouvel achat unique',            label: 'Nouvel achat unique' },
     { value: 'Nouvel abonnement',              label: 'Nouvel abonnement' },
-    { value: 'Requête ACQ Accessibilité',      label: 'Requête ACQ Accessibilité' },
+    { value: 'Requête ACQ Accessibilité',      label: FORMULAIRE_TYPE_LABELS['Requête ACQ Accessibilité'] },
     { value: 'Modification et CCOL',           label: 'Modification et CCOL' },
-    { value: 'PEB Tipasa numérique',           label: 'PEB Tipasa numérique' },
+    { value: 'PEB Tipasa numérique',           label: FORMULAIRE_TYPE_LABELS['PEB Tipasa numérique'] },
   ];
+
+  /** Libellé court d'affichage pour un type de formulaire (badges, en-têtes…). */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   private readonly fieldLabels: Record<string, string> = {
     titre_document:           'Titre du document',

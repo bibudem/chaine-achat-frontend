@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
-import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { ListeChoixOptions, formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { AuthService } from '../../../services/auth.service';
 import { ReponsesService } from '../../../services/reponses.service';
@@ -104,6 +104,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
 
   decisionMessage: { type: 'success' | 'danger' | 'warning'; texte: string } | null = null;
   options = new ListeChoixOptions();
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   // Items présents dans la cloche de notifications (statut biblio "Soumettre aux ACQ" +
   // décision ACQ encore en attente) — sert à mettre en évidence leur ID dans la liste.

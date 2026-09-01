@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
+import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
 
 @Component({
   selector:    'app-usager-profil',
@@ -174,14 +175,7 @@ export class UsagerProfilComponent implements OnInit {
   }
 
   typeIcon(type: string): string {
-    const map: Record<string, string> = {
-      'Nouvel achat unique':        'bi-cart-plus',
-      'Modification et CCOL':       'bi-pencil-square',
-      'Nouvel abonnement':          'bi-newspaper',
-      'PEB Tipasa numérique':       'bi-share',
-      'Requête ACQ Accessibilité':  'bi-universal-access',
-    };
-    return map[type] ?? 'bi-lightbulb';
+    return formulaireTypeIcon(type);
   }
 
   formatDate(d: string | null): string {

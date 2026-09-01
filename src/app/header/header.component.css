@@ -148,6 +148,21 @@
 }
 
 
+/* En-tête de groupe dans le panel formulaires (mêmes 2 groupes que la page d'accueil usager) */
+.forms-group-label {
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-gray, #607386);
+  padding: 10px 14px 4px;
+}
+.forms-group-label--first { padding-top: 8px; }
+.forms-group-label:not(.forms-group-label--first) {
+  border-top: 1px solid var(--light-gray, #E7EBEE);
+  margin-top: 2px;
+}
+
 /* ══════════════════════════════════════════════════════
    Panel items — base partagée : lignes des trois listes
    ══════════════════════════════════════════════════════ */

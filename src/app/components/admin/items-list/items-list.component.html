@@ -205,7 +205,7 @@
                   </td>
                   <td class="col-type">
                     <span class="badge" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
-                      {{ item.formulaire_type }}
+                      {{ formulaireTypeLabel(item.formulaire_type) }}
                     </span>
                   </td>
                   <td class="col-isbn">
@@ -270,7 +270,7 @@
                   #{{ item.item_id }}
                 </span>
                 <span class="badge ms-2" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
-                  {{ item.formulaire_type }}
+                  {{ formulaireTypeLabel(item.formulaire_type) }}
                 </span>
                 <div class="ms-auto btn-group btn-group-sm">
                   <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">

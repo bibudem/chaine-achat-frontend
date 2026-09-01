@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Reponse } from '../../../../services/reponses.service';
+import { formulaireTypeLabel } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-reponses-detail',
@@ -9,6 +10,9 @@ import { Reponse } from '../../../../services/reponses.service';
   styleUrls: ['./reponses-detail.component.css']
 })
 export class ReponsesDetailComponent implements OnInit {
+
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   @Input() reponse: Reponse | null = null;
 

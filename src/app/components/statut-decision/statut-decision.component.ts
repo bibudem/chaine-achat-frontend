@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ListeChoixOptions } from '../../lib/ListeChoixOptions';
+import { ListeChoixOptions, formulaireTypeLabel, formulaireTypeIcon } from '../../lib/ListeChoixOptions';
 import { Item, ItemFormulaireService } from '../../services/items-formulaire.service';
 import { ReponsesService } from '../../services/reponses.service';
 import { environment } from 'src/environments/environment';
@@ -26,6 +26,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   emailSent = false;
   options = new ListeChoixOptions();
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
   itemExisteDansItems = false;
 
   // Étiquettes (français fixe, indépendant de la langue active) pour le bordereau imprimé —
@@ -429,14 +431,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   }
 
   get typeIcon(): string {
-    const icons: Record<string, string> = {
-      'Nouvel achat unique':        'bi-cart-plus',
-      'Modification et CCOL':       'bi-pencil-square',
-      'Nouvel abonnement':          'bi-calendar-check',
-      'PEB Tipasa numérique':       'bi-share',
-      'Requête ACQ Accessibilité':  'bi-universal-access',
-    };
-    return icons[this.formulaireType] || 'bi-lightbulb';
+    return formulaireTypeIcon(this.formulaireType);
   }
 
   submitForm(sendEmail = false): void {

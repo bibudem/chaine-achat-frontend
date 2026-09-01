@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { formulaireTypeLabel, formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-accueil',
@@ -15,6 +16,9 @@ import { AuthService } from '../../../services/auth.service';
 
 
 export class AccueilComponent implements OnInit, OnDestroy {
+
+  /** Libellé court d'affichage pour un type de formulaire (légende, badges…). */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
 
   /* ─── Données ─── */
   dashboardStats: DashboardStats = this.defaultStats();
@@ -60,18 +64,40 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ─── Utilitaires template ─── */
   readonly Math = Math;
 
-  /* ─── Catalogue types (toutes périodes) ─── */
+  /* ─── Catalogue types (toutes périodes) ───
+     Mêmes 2 groupes et le même regroupement que UsagerHomeComponent (accueil usager),
+     pour que le catalogue admin corresponde à ce que l'usager voit. */
+  readonly GROUPE_COLLECTIONS = 'Développement des collections';
+  readonly GROUPE_USAGERS     = 'Acquisitions pour les usagers';
+
   readonly allTypes: string[] = [
-    'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-    'PEB Tipasa numérique', 'Requête ACQ Accessibilité', "Suggestion d'achat - Usager"
+    'Nouvel achat unique', 'Nouvel abonnement', 'Modification et CCOL',
+    'Requête ACQ Accessibilité', "Suggestion d'achat - Usager", 'PEB Tipasa numérique'
   ];
+
+  private readonly typeGroupeMap: Record<string, string> = {
+    'Nouvel achat unique':         this.GROUPE_COLLECTIONS,
+    'Nouvel abonnement':           this.GROUPE_COLLECTIONS,
+    'Modification et CCOL':        this.GROUPE_COLLECTIONS,
+    'Requête ACQ Accessibilité':   this.GROUPE_USAGERS,
+    "Suggestion d'achat - Usager": this.GROUPE_USAGERS,
+    'PEB Tipasa numérique':        this.GROUPE_USAGERS,
+  };
+
+  get typeGroupes(): { label: string; types: string[] }[] {
+    return [
+      { label: this.GROUPE_COLLECTIONS, types: this.allTypes.filter(t => this.typeGroupeMap[t] === this.GROUPE_COLLECTIONS) },
+      { label: this.GROUPE_USAGERS,     types: this.allTypes.filter(t => this.typeGroupeMap[t] === this.GROUPE_USAGERS) },
+    ];
+  }
+
   typeAllTimeCounts: Record<string, number> = {};
   isLoadingTypeCounts = true;
 
   readonly typeDescriptions: Record<string, string> = {
     'Nouvel achat unique':   'Acquisition d\'un document imprimé ou électronique',
     'Nouvel abonnement':     'Abonnement à un périodique ou une ressource continue',
-    'Modification CCOL':     'Modification d\'une notice dans le catalogue collectif',
+    'Modification et CCOL':  'Modification d\'une notice dans le catalogue collectif',
     'PEB Tipasa numérique':  'Prêt entre bibliothèques via la plateforme Tipasa',
     'Requête ACQ Accessibilité': 'Demande adressée directement aux acquisitions',
 "Suggestion d'achat - Usager": 'Suggestion soumise par un usager de la bibliothèque',
@@ -277,15 +303,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   }
 
   getTypeIcon(type: string): string {
-    switch (type) {
-      case 'Nouvel achat unique':  return 'bi bi-basket3';
-      case 'Nouvel abonnement':    return 'bi bi-newspaper';
-      case 'Modification CCOL':    return 'bi bi-pencil-square';
-      case 'PEB Tipasa numérique': return 'bi bi-link-45deg';
-      case 'Requête ACQ Accessibilité': return 'bi bi-question-circle';
-case "Suggestion d'achat - Usager": return 'bi bi-lightbulb';
-      default:                     return 'bi bi-file-earmark-text';
-    }
+    return 'bi ' + formulaireTypeIcon(type);
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

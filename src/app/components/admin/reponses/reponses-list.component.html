@@ -120,7 +120,7 @@
             <td>
               <div class="rl-badges">
                 <span class="badge-type" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
-                  {{ reponse.type_formulaire }}
+                  {{ formulaireTypeLabel(reponse.type_formulaire) }}
                 </span>
                 <div *ngIf="reponse.suivi_acq" class="rl-suivi-text" [title]="reponse.suivi_acq">
                   <i class="bi" [ngClass]="getSuiviIcon(reponse.suivi_acq)"></i>
@@ -150,7 +150,7 @@
                 <div class="panel-header d-flex justify-content-between align-items-center">
                   <div>
                     <span class="text-muted small me-2">#{{ expandedReponse.id }}</span>
-                    <strong>{{ expandedReponse.type_formulaire }}</strong>
+                    <strong>{{ formulaireTypeLabel(expandedReponse.type_formulaire) }}</strong>
                   </div>
                   <span class="badge bg-light text-dark border small">
                     {{ expandedReponse.usager_statut || '—' }}

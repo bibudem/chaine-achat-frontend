@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { ReponsesService } from '../services/reponses.service';
+import { formulaireTypeIcon, formulaireTypeLabel } from '../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-header',
@@ -127,14 +128,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   typeIcon(type: string): string {
-    const map: Record<string, string> = {
-      'Nouvel achat unique':        'bi-cart-plus',
-      'Modification et CCOL':       'bi-pencil-square',
-      'Nouvel abonnement':          'bi-calendar-check',
-      'PEB Tipasa numérique':       'bi-share',
-      'Requête ACQ Accessibilité':  'bi-universal-access',
-    };
-    return map[type] ?? 'bi-lightbulb';
+    return formulaireTypeIcon(type);
+  }
+
+  typeLabel(type: string): string {
+    return formulaireTypeLabel(type);
   }
 
   formatDate(d: string): string {

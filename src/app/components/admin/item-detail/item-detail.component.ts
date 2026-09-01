@@ -4,6 +4,7 @@ import { Item, ItemFormulaireService, ApiResponse } from '../../../services/item
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
+import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-item-detail',
@@ -11,6 +12,9 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./item-detail.component.css']
 })
 export class ItemDetailComponent implements OnInit {
+  /** Libellé court d'affichage pour un type de formulaire. */
+  readonly formulaireTypeLabel = formulaireTypeLabel;
+
   item: Item | null = null;
   itemId: number | null = null;
   loading = false;

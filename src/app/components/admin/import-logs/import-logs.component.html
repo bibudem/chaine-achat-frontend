@@ -19,7 +19,7 @@
 
     <select class="ilog-filters__select" [(ngModel)]="filterType" (change)="applyFilters()">
       <option value="">Type de formulaire</option>
-      <option *ngFor="let t of formTypes" [value]="t">{{ t }}</option>
+      <option *ngFor="let t of formTypes" [value]="t">{{ formulaireTypeLabel(t) }}</option>
     </select>
 
     <select class="ilog-filters__select" [(ngModel)]="filterStatut" (change)="applyFilters()">
@@ -106,7 +106,7 @@
                   [style.background]="typeColor(log.formulaire_type) + '18'"
                   [style.color]="typeColor(log.formulaire_type)"
                   [style.border-color]="typeColor(log.formulaire_type) + '40'">
-              {{ log.formulaire_type }}
+              {{ formulaireTypeLabel(log.formulaire_type) }}
             </span>
           </td>
 

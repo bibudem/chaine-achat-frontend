@@ -1,4 +1,36 @@
 // liste-choix-options.ts
+
+// Libellés d'affichage courts pour le type de formulaire — la valeur stockée en BD
+// (formulaire_type, utilisée pour toutes les comparaisons/filtres) ne change pas, seul ce
+// qui est montré à l'écran est raccourci, pour rester cohérent avec les titres de
+// UsagerHomeComponent.formulaires (accueil usager).
+export const FORMULAIRE_TYPE_LABELS: Record<string, string> = {
+  'PEB Tipasa numérique':      'PEB numérique',
+  'Requête ACQ Accessibilité': 'Accessibilité',
+};
+
+export function formulaireTypeLabel(value: string | undefined | null): string {
+  if (!value) return '';
+  return FORMULAIRE_TYPE_LABELS[value] || value;
+}
+
+// Icônes (Bootstrap Icons, sans le préfixe "bi ") par type de formulaire — mêmes icônes que
+// UsagerHomeComponent.formulaires (accueil usager), source de vérité. Uniformise l'icône de
+// chaque type sur toutes les interfaces admin (avant : 3 mappages divergents).
+export const FORMULAIRE_TYPE_ICONS: Record<string, string> = {
+  'Nouvel achat unique':        'bi-cart-plus',
+  'Nouvel abonnement':          'bi-newspaper',
+  'Modification et CCOL':       'bi-pencil-square',
+  'PEB Tipasa numérique':       'bi-share',
+  'Requête ACQ Accessibilité':  'bi-universal-access',
+  "Suggestion d'achat - Usager": 'bi-lightbulb',
+};
+
+export function formulaireTypeIcon(value: string | undefined | null): string {
+  if (!value) return 'bi-lightbulb';
+  return FORMULAIRE_TYPE_ICONS[value] || 'bi-lightbulb';
+}
+
 export class ListeChoixOptions {
 
   // Options pour la devise originale
@@ -144,9 +176,9 @@ statusOptions = [
     { value: 'Nouvel achat unique',         label: 'Nouvel achat unique' },
     { value: 'Modification et CCOL',        label: 'Modification et CCOL' },
     { value: 'Nouvel abonnement',           label: 'Nouvel abonnement' },
-    { value: 'PEB Tipasa numérique',        label: 'PEB Tipasa numérique' },
+    { value: 'PEB Tipasa numérique',        label: FORMULAIRE_TYPE_LABELS['PEB Tipasa numérique'] },
     { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
-    { value: 'Requête ACQ Accessibilité',   label: 'Requête Accessibilité' },
+    { value: 'Requête ACQ Accessibilité',   label: FORMULAIRE_TYPE_LABELS['Requête ACQ Accessibilité'] },
   ];
 
   listProgramme = [

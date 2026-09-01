@@ -194,21 +194,26 @@
             <div class="spinner-border spinner-border-sm text-primary"></div>
           </div>
           <ng-container *ngIf="!isLoadingTypeCounts">
-            <div *ngFor="let type of allTypes; let i = index"
-                 class="catalog-row"
-                 (click)="navigateToType(type)"
-                 [title]="'Filtrer · ' + type">
-              <div class="catalog-row__icon" [ngClass]="'tc-' + i + '-bg'">
-                <i [class]="getTypeIcon(type)"></i>
+            <ng-container *ngFor="let groupe of typeGroupes; let gi = index">
+              <div class="catalog-group-label" [class.catalog-group-label--first]="gi === 0">
+                {{ groupe.label }}
               </div>
-              <div class="catalog-row__body">
-                <span class="catalog-row__name">{{ type }}</span>
-                <span class="catalog-row__desc">{{ typeDescriptions[type] }}</span>
+              <div *ngFor="let type of groupe.types"
+                   class="catalog-row"
+                   (click)="navigateToType(type)"
+                   [title]="'Filtrer · ' + formulaireTypeLabel(type)">
+                <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorIndex(type) + '-bg'">
+                  <i [class]="getTypeIcon(type)"></i>
+                </div>
+                <div class="catalog-row__body">
+                  <span class="catalog-row__name">{{ formulaireTypeLabel(type) }}</span>
+                  <span class="catalog-row__desc">{{ typeDescriptions[type] }}</span>
+                </div>
+                <div class="catalog-row__meta">
+                  <i class="bi bi-arrow-right-short catalog-row__arrow"></i>
+                </div>
               </div>
-              <div class="catalog-row__meta">
-                <i class="bi bi-arrow-right-short catalog-row__arrow"></i>
-              </div>
-            </div>
+            </ng-container>
           </ng-container>
         </div>
       </div>
@@ -234,16 +239,16 @@
                    class="type-seg-bar__slice"
                    [class]="'tc-' + getTypeColorIndex(t.formulaire_type)"
                    [style.width.%]="t.percentage"
-                   [title]="t.formulaire_type + ' — ' + t.percentage + '%'">
+                   [title]="formulaireTypeLabel(t.formulaire_type) + ' — ' + t.percentage + '%'">
               </div>
             </div>
             <div class="type-legend">
               <div *ngFor="let t of byType"
                    class="type-legend__row type-legend__row--link"
                    (click)="navigateToType(t.formulaire_type)"
-                   [title]="'Voir les demandes · ' + t.formulaire_type">
+                   [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
                 <span class="type-legend__dot" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'"></span>
-                <span class="type-legend__name">{{ t.formulaire_type }}</span>
+                <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
                 <div class="type-legend__track">
                   <div class="type-legend__fill" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
                 </div>

@@ -95,7 +95,7 @@
             <div class="ms-menu" *ngIf="dropdowns['formulaire_type']">
               <label class="ms-option" *ngFor="let type of typesFormulaires" (click)="$event.stopPropagation()">
                 <input type="checkbox" [checked]="isSelected('formulaire_type', type)"
-                       (change)="onCheckChange('formulaire_type', type, $event)"> {{ type }}
+                       (change)="onCheckChange('formulaire_type', type, $event)"> {{ formulaireTypeLabel(type) }}
               </label>
             </div>
           </div>
