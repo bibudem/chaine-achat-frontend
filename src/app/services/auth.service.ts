@@ -6,7 +6,7 @@ import { tap, delay } from 'rxjs/operators';
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export type UserRole = 'Admin' | 'Bibliothécaire' | 'Usager';
+export type UserRole = 'Admin' | 'TDM' | 'Usager';
 
 export interface SimulatedProfile {
   role:     UserRole;
@@ -16,6 +16,8 @@ export interface SimulatedProfile {
   groupe:   string;
   /** Affiché sur la carte de sélection */
   label:    string;
+  /** Sous-titre optionnel entre le label et la description (ex. nom complet d'un acronyme). */
+  subtitle?: string;
   description: string;
   icon:     string;
 }
@@ -31,19 +33,20 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     prenom:      'Système',
     courriel:    'admin@bib.umontreal.ca',
     groupe:      'Gestionnaire',
-    label:       'Administrateur',
-    description: 'Accès complet — création, modification et suppression',
+    label:       'Services des acquisitions',
+    description: 'Tableau de bord, rapports, recherche et gestion des demandes',
     icon:        'bi-shield-lock-fill',
   },
   {
-    role:        'Bibliothécaire',
-    nom:         'ACQ',
-    prenom:      'Lecteur',
-    courriel:    'bib@bib.umontreal.ca',
-    groupe:      'Lecteur ACQ',
-    label:       'Lecteur ACQ',
-    description: 'Consultation uniquement — lecture sans modification',
-    icon:        'bi-book-half',
+    role:        'TDM',
+    nom:         'TDM',
+    prenom:      'Agent',
+    courriel:    'tdm@bib.umontreal.ca',
+    groupe:      'TDM',
+    label:       'TDM',
+    subtitle:    'Traitement documentaire et métadonnées',
+    description: 'Tableau de bord, catalogage et note TDM (Suivi ACQ), rapports et recherche',
+    icon:        'bi-journal-bookmark-fill',
   },
   {
     role:        'Usager',
@@ -78,11 +81,15 @@ export class AuthService {
   }
 
   get isAdmin(): boolean        { return this.role === 'Admin'; }
-  get isBibliothécaire(): boolean { return this.role === 'Bibliothécaire'; }
+  get isTdm(): boolean          { return this.role === 'TDM'; }
   get isUsager(): boolean       { return this.role === 'Usager'; }
 
   /** Seul l'Administrateur peut créer / modifier / supprimer des items. */
   get canEdit(): boolean        { return this.isAdmin; }
+
+  /** Accès à la page de décision ACQ/TDM (/statut-decision) : l'Administrateur (décision
+   *  ACQ complète) et le TDM (catalogage/note TDM — champs ACQ affichés en lecture seule). */
+  get canAccessDecision(): boolean { return this.isAdmin || this.isTdm; }
 
   /* ── Connexion simulée (installation locale) ─────
      Remplacer par le flux Azure AD OAuth2 en production :

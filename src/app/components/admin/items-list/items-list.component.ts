@@ -181,6 +181,9 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       suivi_acq:           this.selectedSuiviAcq       || undefined,
       formulaire_type:     this.selectedFormulaireType || undefined,
       fonds_budgetaire:    this.selectedFonds           || undefined,
+      // Profil TDM : restreint systématiquement aux items routés vers le TDM (Création de
+      // notice TDM = Oui) — imposé par le rôle, pas un filtre que l'utilisateur peut lever.
+      creation_notice_dtdm: this.authService.isTdm ? true : undefined,
       sort:  this.sortColumn,
       order: this.sortDirection
     }).subscribe({

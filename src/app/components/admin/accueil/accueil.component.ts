@@ -202,11 +202,15 @@ export class AccueilComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
+  /** Le profil TDM consulte le tableau de bord en lecture seule : les liens de navigation
+   *  vers la liste des items (catalogue, légende, « Voir tout ») sont désactivés. */
   navigateTo(path: string): void {
+    if (this.authService.isTdm) return;
     this.router.navigate([path]);
   }
 
   navigateToType(formulaire_type: string): void {
+    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], { queryParams: { formulaire_type } });
   }
 

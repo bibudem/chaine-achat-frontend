@@ -779,6 +779,7 @@
     "section-demande": "Demande",
     "voir-tout": "Voir tout",
     "section-decision": "ACQ : Suivi de la demande",
+    "lecture-seule-tdm": "Les champs ACQ sont affichés en lecture seule. Seuls le catalogage et la note TDM sont modifiables.",
     "nouvelle-demande": "Nouvelle demande",
     "nouvelle-demande-desc": "— L'item sera créé dans la gestion des acquisitions lors de l'enregistrement.",
     "suivi-acq": "ACQ : Suivi de la demande",

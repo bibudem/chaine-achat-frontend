@@ -8,7 +8,7 @@ export class StaffGuard implements CanActivate {
 
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
-    if (role === 'Admin' || role === 'Bibliothécaire') { return true; }
+    if (role === 'Admin' || role === 'TDM') { return true; }
     this.router.navigate(['/usager']);
     return false;
   }

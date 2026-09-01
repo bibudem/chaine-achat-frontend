@@ -200,8 +200,9 @@
               </div>
               <div *ngFor="let type of groupe.types"
                    class="catalog-row"
+                   [class.db-link-disabled]="authService.isTdm"
                    (click)="navigateToType(type)"
-                   [title]="'Filtrer · ' + formulaireTypeLabel(type)">
+                   [title]="authService.isTdm ? '' : ('Filtrer · ' + formulaireTypeLabel(type))">
                 <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorIndex(type) + '-bg'">
                   <i [class]="getTypeIcon(type)"></i>
                 </div>
@@ -225,7 +226,7 @@
       <div class="panel panel--types mb-3 flex-grow-1">
         <div class="panel__head">
           <span class="panel__title">{{ 'accueil.repartition-par-type' | translate }}</span>
-          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
+          <button class="btn btn-link btn-sm p-0" [disabled]="authService.isTdm" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
         </div>
         <div class="panel__body">
 
@@ -245,8 +246,9 @@
             <div class="type-legend">
               <div *ngFor="let t of byType"
                    class="type-legend__row type-legend__row--link"
+                   [class.db-link-disabled]="authService.isTdm"
                    (click)="navigateToType(t.formulaire_type)"
-                   [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
+                   [title]="authService.isTdm ? '' : ('Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type))">
                 <span class="type-legend__dot" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'"></span>
                 <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
                 <div class="type-legend__track">

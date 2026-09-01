@@ -243,7 +243,7 @@
                       <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
+                      <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success"
                               [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
@@ -276,7 +276,7 @@
                   <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button *ngIf="authService.isAdmin" class="btn btn-outline-success"
+                  <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success"
                           [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>

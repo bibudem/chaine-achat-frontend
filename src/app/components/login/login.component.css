@@ -156,6 +156,13 @@
   color: #0B113A;
 }
 
+.login-card__subtitle {
+  font-size: .78rem;
+  font-weight: 500;
+  color: #00407F;
+  margin-top: .05rem;
+}
+
 .login-card__desc {
   font-size: .8rem;
   color: #607386;

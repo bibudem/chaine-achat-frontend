@@ -173,6 +173,8 @@ export class ItemFormulaireService {
     suivi_acq?: string;
     formulaire_type?: string;
     fonds_budgetaire?: string;
+    /** Profil TDM : ne renvoyer que les items routés vers le TDM (Création de notice = Oui). */
+    creation_notice_dtdm?: boolean;
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -188,6 +190,7 @@ export class ItemFormulaireService {
     if (opts.suivi_acq)            p = p.set('suivi_acq',            opts.suivi_acq);
     if (opts.formulaire_type)      p = p.set('formulaire_type',      opts.formulaire_type);
     if (opts.fonds_budgetaire)     p = p.set('fonds_budgetaire',     opts.fonds_budgetaire);
+    if (opts.creation_notice_dtdm != null) p = p.set('creation_notice_dtdm', String(opts.creation_notice_dtdm));
     if (opts.sort)                 p = p.set('sort',                 opts.sort);
     if (opts.order)                p = p.set('order',                opts.order);
 

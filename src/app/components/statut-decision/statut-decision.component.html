@@ -91,6 +91,10 @@
           <div class="p-4">
 
             <!-- Alertes -->
+            <div *ngIf="readOnlyAcq" class="alert alert-info mb-4">
+              <i class="bi bi-lock me-2"></i>
+              {{ 'acq-decision.lecture-seule-tdm' | translate }}
+            </div>
             <div *ngIf="item && !itemExisteDansItems" class="alert alert-warning mb-4">
               <i class="bi bi-info-circle me-2"></i>
               <strong>{{ 'acq-decision.nouvelle-demande' | translate }}</strong>
@@ -217,8 +221,9 @@
               </div>
             </ng-container>
 
-            <!-- Aperçu + Notifications côte à côte -->
-            <div class="row g-3 align-items-stretch">
+            <!-- Aperçu + Notifications côte à côte — la décision/notification ACQ ne concerne
+                 pas le TDM, qui n'a accès qu'en lecture à ces champs. -->
+            <div class="row g-3 align-items-stretch" *ngIf="!readOnlyAcq">
               <div class="col-md-6"
                    *ngIf="notifTargets.length > 0 && form.get('suivi_acq')?.value">
                 <div class="sd-email-preview h-100">
@@ -291,7 +296,7 @@
                 {{ 'acq-decision.enregistrement' | translate }}
               </span>
             </button>
-            <button type="button" class="btn acq-btn-primary"
+            <button type="button" class="btn acq-btn-primary" *ngIf="!readOnlyAcq"
                     [disabled]="submitting || form.invalid || !hasNotifEmail"
                     [title]="!hasNotifEmail ? 'Aucun courriel usager enregistré pour cette demande' : ''"
                     (click)="submitForm(true)">

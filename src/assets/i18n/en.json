@@ -779,6 +779,7 @@
     "section-demande": "Request",
     "voir-tout": "See all",
     "section-decision": "ACQ: Request follow-up",
+    "lecture-seule-tdm": "ACQ fields are shown read-only. Only cataloguing and the TDM note can be edited.",
     "nouvelle-demande": "New request",
     "nouvelle-demande-desc": "— The item will be created in acquisition management upon saving.",
     "suivi-acq": "ACQ: Request follow-up",

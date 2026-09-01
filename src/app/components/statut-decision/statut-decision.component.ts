@@ -8,7 +8,15 @@ import { ListeChoixOptions, formulaireTypeLabel, formulaireTypeIcon } from '../.
 import { ouvrirFenetreImpression, ecrireImpressionBordereau } from '../../lib/PrintBordereau';
 import { Item, ItemFormulaireService } from '../../services/items-formulaire.service';
 import { ReponsesService } from '../../services/reponses.service';
+import { AuthService } from '../../services/auth.service';
 import { environment } from 'src/environments/environment';
+
+/** Champs ACQ affichés en lecture seule pour le profil TDM — seuls catalogue/note_dtdm
+ *  (le catalogage, sous sa responsabilité) restent modifiables. */
+const CHAMPS_ACQ_LECTURE_SEULE_TDM = [
+  'suivi_acq', 'statut_acq', 'note_acq', 'creation_notice_dtdm',
+  'bordereau_imprime', 'categorie_document', 'format_support',
+];
 
 @Component({
   selector: 'app-statut-decision',
@@ -44,6 +52,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
+  /** Le profil TDM consulte cette page en lecture seule pour les champs ACQ — seuls
+   *  catalogue/note_dtdm restent modifiables (voir CHAMPS_ACQ_LECTURE_SEULE_TDM). */
+  get readOnlyAcq(): boolean { return this.authService.isTdm; }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -51,7 +63,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     private location: Location,
     private http: HttpClient,
     private itemService: ItemFormulaireService,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private authService: AuthService
   ) {
     this.form = this.fb.group({
       suivi_acq:            ['', Validators.required],
@@ -68,6 +81,14 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       note_dtdm:            [''],
       catalogue:            ['', Validators.maxLength(200)],
     });
+
+    if (this.readOnlyAcq) {
+      // Désactiver (plutôt que masquer) : la valeur reste visible et lisible, seule la saisie
+      // est bloquée. form.get(k)?.value continue de lire la valeur d'un contrôle désactivé, et
+      // les contrôles désactivés sont ignorés par la validation — submitForm() n'est donc pas
+      // affecté (il lit toujours chaque champ individuellement).
+      CHAMPS_ACQ_LECTURE_SEULE_TDM.forEach(k => this.form.get(k)?.disable());
+    }
   }
 
   goBack(): void {

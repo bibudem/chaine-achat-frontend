@@ -30,6 +30,7 @@
           </div>
           <div class="login-card__text">
             <div class="login-card__label">{{ p.label }}</div>
+            <div class="login-card__subtitle" *ngIf="p.subtitle">{{ p.subtitle }}</div>
             <div class="login-card__desc">{{ p.description }}</div>
           </div>
           <i class="bi bi-chevron-right login-card__arrow"></i>

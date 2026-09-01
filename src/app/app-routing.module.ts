@@ -26,6 +26,7 @@ import { UsagerProfilComponent } from './components/usager/usager-profil/usager-
 import { StatutDecisionComponent } from './components/statut-decision/statut-decision.component';
 import { EditGuard } from './services/edit-guard.service';
 import { StaffGuard } from './services/staff-guard.service';
+import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 
 const routes: Routes = [
@@ -35,7 +36,7 @@ const routes: Routes = [
   { path: 'items/details/:id', component: ItemDetailComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'items/:id', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
   { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, StaffGuard] },
-  { path: 'statut-decision', component: StatutDecisionComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'statut-decision', component: StatutDecisionComponent, canActivate: [AuthGuard, DecisionGuard] },
   { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },

@@ -29,7 +29,7 @@
         <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
           <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
-        <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
+        <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>

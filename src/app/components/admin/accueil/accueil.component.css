@@ -469,6 +469,12 @@
 }
 .catalog-row:hover .catalog-row__arrow { opacity: 1; transform: translateX(3px); }
 
+/* Profil TDM (tableau de bord en lecture seule) : neutralise les liens de navigation
+   vers la liste des items — catalogue, légende de répartition. */
+.db-link-disabled { cursor: default; pointer-events: none; }
+.db-link-disabled:hover { background: none; }
+.db-link-disabled .catalog-row__arrow { opacity: 0 !important; }
+
 /* ══════════════════════════════════════════════════════════
    STATUTS — 4 mini-cartes 2×2
 ══════════════════════════════════════════════════════════ */
