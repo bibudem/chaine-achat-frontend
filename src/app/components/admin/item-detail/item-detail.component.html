@@ -36,6 +36,10 @@
         <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
           <i class="bi bi-pencil me-1"></i>{{ 'item-detail.modifier' | translate }}
         </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="imprimerFiche()"
+                [title]="'item-detail.imprimer' | translate">
+          <i class="bi bi-printer me-1"></i>{{ 'item-detail.imprimer' | translate }}
+        </button>
       </div>
     </div>
 

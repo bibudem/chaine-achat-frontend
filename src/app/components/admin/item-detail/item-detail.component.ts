@@ -5,6 +5,7 @@ import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
+import { ouvrirFenetreImpression, ecrireImpressionBordereau, RangeeImpression } from '../../../lib/PrintBordereau';
 
 @Component({
   selector: 'app-item-detail',
@@ -71,7 +72,7 @@ export class ItemDetailComponent implements OnInit {
   getTypeBadgeClass(type: string | undefined): string {
     const base = 'badge itd-badge-lg w-100 text-start';
     switch (type) {
-      case 'Modification CCOL':    return `${base} badge-type--ccol`;
+      case 'Modification et CCOL': return `${base} badge-type--ccol`;
       case 'Nouvel abonnement':    return `${base} badge-type--abo`;
       case 'Nouvel achat unique':  return `${base} badge-type--achat`;
       case 'PEB Tipasa numérique': return `${base} badge-type--peb`;
@@ -106,9 +107,42 @@ case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
   /** Vrai si le formulaire_type a des champs spécifiques à afficher */
   hasSpecificData(): boolean {
     const types = [
-      'Modification CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
+      'Modification et CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
       'PEB Tipasa numérique', 'Requête ACQ Accessibilité', "Suggestion d'achat - Usager"
     ];
     return types.includes(this.item?.formulaire_type ?? '');
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // IMPRESSION DE LA FICHE — mécanisme partagé avec StatutDecisionComponent,
+  // voir lib/PrintBordereau.ts. Fiche en lecture seule : tout vient directement
+  // de this.item (pas de formulaire live à refléter).
+  // ═══════════════════════════════════════════════════════════
+  imprimerFiche(): void {
+    if (!this.item) return;
+
+    const fenetre = ouvrirFenetreImpression();
+    if (!fenetre) {
+      this.dialogService.showError("Impossible d'ouvrir la fenêtre d'impression : vérifiez que les fenêtres popup sont autorisées pour ce site.");
+      return;
+    }
+
+    const i = this.item as any;
+    const bordereauConcerne = i.formulaire_type === 'Nouvel achat unique'
+      || (i.formulaire_type ?? '').includes('Suggestion');
+
+    const rangeesSupplementaires: RangeeImpression[] = [
+      ...(i.suivi_acq ? [{ label: 'ACQ — Suivi de la demande',  value: i.suivi_acq }] : []),
+      ...(i.statut_acq ? [{ label: 'ACQ — Statut de la demande', value: i.statut_acq }] : []),
+      ...(i.note_acq ? [{ label: 'ACQ — Note / Commentaire', value: i.note_acq }] : []),
+      ...(i.creation_notice_dtdm != null
+        ? [{ label: 'ACQ — Création de notice TDM', value: i.creation_notice_dtdm ? 'Oui' : 'Non' }]
+        : []),
+      ...(bordereauConcerne && i.bordereau_imprime ? [{ label: 'ACQ — Bordereau imprimé', value: i.bordereau_imprime }] : []),
+      ...(i.catalogue ? [{ label: 'TDM — Catalogage', value: i.catalogue }] : []),
+      ...(i.note_dtdm ? [{ label: 'TDM — Note / OCN', value: i.note_dtdm }] : []),
+    ];
+
+    ecrireImpressionBordereau(fenetre, this.item, rangeesSupplementaires, this.itemId);
   }
 }

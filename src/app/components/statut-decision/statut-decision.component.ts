@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ListeChoixOptions, formulaireTypeLabel, formulaireTypeIcon } from '../../lib/ListeChoixOptions';
+import { ouvrirFenetreImpression, ecrireImpressionBordereau } from '../../lib/PrintBordereau';
 import { Item, ItemFormulaireService } from '../../services/items-formulaire.service';
 import { ReponsesService } from '../../services/reponses.service';
 import { environment } from 'src/environments/environment';
@@ -29,38 +30,6 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
   itemExisteDansItems = false;
-
-  // Étiquettes (français fixe, indépendant de la langue active) pour le bordereau imprimé —
-  // même principe que UsagerProfilComponent.FIELD_LABELS côté usager.
-  private readonly PRINT_FIELD_LABELS: Record<string, string> = {
-    titre_document: 'Titre', sous_titre: 'Sous-titre', demandeur: 'Demandeur',
-    bibliotheque: 'Bibliothèque', categorie_document: 'Catégorie', format_support: 'Type de traitement',
-    priorite_demande: 'Priorité',
-    auteur: 'Auteur(rice)', usager_statut: 'Statut usager', usager_faculte: 'Faculté / Département',
-    usager_courriel: 'Courriel usager', date_requise_cours: 'Requis pour cours',
-    editeur: 'Éditeur', isbn_issn: 'ISBN / ISSN', date_publication: 'Date de publication',
-    fonds_budgetaire: 'Fonds budgétaire', fonds_sn_projet: 'Fonds SN — No projet',
-    periode_couverte: 'Période couverte', source_information: "Source d'information",
-    prix_cad: 'Prix (CAD)', devise_originale: 'Devise originale', prix_devise_originale: 'Prix (devise orig.)',
-    localisation_emplacement: 'Localisation', nombre_titres_inclus: 'Titres inclus',
-    nombre_utilisateurs: 'Nb utilisateurs', format_pret_numerique: 'Format prêt numérique',
-    lien_plateforme: 'Lien plateforme', personne_a_aviser_nom: 'Personne à aviser',
-    personne_a_aviser_courriel: 'Courriel (à aviser)', usager_aviser_reservation: 'Aviser — Réservation',
-    usager_aviser_activation: 'Aviser — Activation',
-    quantite: 'Quantité', projets_speciaux: 'Projet spécial', type_monographie: 'Type monographie',
-    reserve_cours_sigle: 'Sigle du cours', reserve_cours_session: 'Session', reserve_cours_enseignant: 'Enseignant',
-    precision_demande: 'Précision de la demande', numero_oclc: 'Numéro OCLC',
-    date_debut_abonnement: 'Date début abonnement',
-    gobi_vu_format_numerique: 'Vu sur GOBI numérique', gobi_version_moins_365_usd: 'Version < 365 USD',
-    reference_tipasa: 'Référence Tipasa',
-    reference_usager: 'Référence usager', besoin_specifique_format: 'Besoin spécifique (format)',
-    permalien_sofia: 'Permalien SOFIA', exemplaire_detenu: 'Exemplaire détenu',
-    fournisseur_contacte_sans_succes: 'Fournisseur contacté',
-    verification_caeb: 'Vérification CAEB', verification_sqla: 'Vérification SQLA', verification_emma: 'Vérification EMMA',
-    note_commentaire: 'Note / Commentaire', note_usager: 'Note usager',
-  };
-
-  private readonly PRINT_FIELD_ORDER = Object.keys(this.PRINT_FIELD_LABELS);
 
   notifTargets: Array<{
     key: string;
@@ -89,6 +58,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       statut_acq:           [''],
       note_acq:             [''],
       creation_notice_dtdm: [null],
+      // Nouvel achat unique et Suggestion d'achat uniquement.
+      bordereau_imprime:    ['Non'],
       // Suggestion d'achat uniquement : le formulaire usager ne collecte plus ces deux champs
       // (retirés — « à compléter par les ACQ »), ils sont donc saisis ici.
       categorie_document:   [''],
@@ -118,6 +89,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.form.reset({
         suivi_acq: '', statut_acq: '', note_acq: '', creation_notice_dtdm: null,
         categorie_document: '', format_support: '', note_dtdm: '', catalogue: '',
+        bordereau_imprime: 'Non',
       });
 
       if (!reponseIdParam && !legacyIdParam && !itemIdParam) {
@@ -218,6 +190,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       format_support:       data.format_support || '',
       note_dtdm:            data.note_dtdm || '',
       catalogue:            data.catalogue || '',
+      bordereau_imprime:    data.bordereau_imprime || 'Non',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -309,6 +282,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       reserve_cours_sigle:            sd.reserve_cours_sigle,
       reserve_cours_session:          sd.reserve_cours_session,
       reserve_cours_enseignant:       sd.reserve_cours_enseignant,
+      bordereau_imprime:              sd.bordereau_imprime,
       precision_demande:              sd.precision_demande,
       numero_oclc:                    sd.numero_oclc,
       date_debut_abonnement:          sd.date_debut_abonnement,
@@ -336,6 +310,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       format_support:       this.item.format_support || '',
       note_dtdm:            this.item.note_dtdm || '',
       catalogue:            this.item.catalogue || '',
+      bordereau_imprime:    (this.item as any).bordereau_imprime || 'Non',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -374,7 +349,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       keys = [
         'quantite', 'projets_speciaux', 'type_monographie', 'format_electronique',
         'reserve_cours', 'reserve_cours_sigle', 'reserve_cours_session', 'reserve_cours_enseignant',
-        'usager_aviser_reservation', 'usager_aviser_activation'
+        'usager_aviser_reservation', 'usager_aviser_activation', 'bordereau_imprime'
       ];
     } else if (this.isModificationCcol) {
       keys = ['precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation'];
@@ -390,9 +365,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       ];
     } else if (this.isSuggestion) {
       keys = [
-        'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel',
+        'auteur', 'usager_nom', 'usager_statut', 'usager_faculte', 'usager_courriel',
         'date_requise_cours', 'note_usager', 'bibliothecaire_disciplinaire',
-        'aviser_reservation', 'aviser_reception', 'acq_isbn'
+        'aviser_reservation', 'aviser_reception', 'acq_isbn', 'bordereau_imprime'
       ];
     }
 
@@ -453,18 +428,34 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const format_support     = this.form.get('format_support')?.value     || null;
     const note_dtdm  = this.form.get('note_dtdm')?.value   || null;
     const catalogue  = this.form.get('catalogue')?.value   || null;
+    // bordereau_imprime appartient à tbl_nouvel_achat_unique / tbl_suggestion_achat (specificData),
+    // pas à tbl_items — on l'ajoute à specificData après coup pour que la valeur du formulaire
+    // (pas l'ancienne valeur de this.item) soit bien celle envoyée.
+    const bordereau_imprime = (this.isNouvelAchat || this.isSuggestion)
+      ? (this.form.get('bordereau_imprime')?.value || null)
+      : null;
 
-    const specificData = this.buildSpecificData();
+    const specificDataBase = this.buildSpecificData();
+    const specificData = bordereau_imprime != null
+      ? { ...(specificDataBase || {}), bordereau_imprime }
+      : specificDataBase;
 
     const request$ = this.itemExisteDansItems
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
-          { item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, ...(specificData ? { specificData } : {}) },
+          {
+            item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm,
+            categorie_document, format_support, note_dtdm, catalogue,
+            // Requis par le backend pour router specificData (ex. bordereau_imprime) vers
+            // la bonne table spécifique (tbl_nouvel_achat_unique / tbl_suggestion_achat, etc.).
+            formulaire_type: this.item?.formulaire_type,
+            ...(specificData ? { specificData } : {})
+          },
           this.httpOptions
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId },
+          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         );
 
@@ -567,135 +558,40 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // IMPRESSION DU BORDEREAU — même mécanisme que UsagerProfilComponent.imprimerDemande :
-  // fenêtre ouverte de façon SYNCHRONE dans le geste de clic (sinon bloquée par le
-  // navigateur), placeholder affiché immédiatement, puis contenu final réécrit une fois
-  // prêt et impression déclenchée via onload avec un filet de sécurité (setTimeout).
+  // IMPRESSION DU BORDEREAU — mécanisme partagé, voir lib/PrintBordereau.ts.
   // ═══════════════════════════════════════════════════════════
   imprimerBordereau(): void {
     if (!this.item) return;
 
-    const fenetre = window.open('', '_blank', 'width=800,height=900');
+    const fenetre = ouvrirFenetreImpression();
     if (!fenetre) {
       this.errorMessage = "Impossible d'ouvrir la fenêtre d'impression : vérifiez que les fenêtres popup sont autorisées pour ce site.";
       return;
     }
-    fenetre.document.write(
-      '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Préparation…</title></head>' +
-      '<body style="font-family:\'Segoe UI\',Arial,sans-serif;padding:2.5rem;color:#64748b">Préparation du document à imprimer…</body></html>'
-    );
-    fenetre.document.close();
 
-    // Les données de l'item sont déjà en mémoire (this.item) — pas d'appel réseau requis.
-    this.ecrireImpressionBordereau(fenetre);
-  }
-
-  private ecrireImpressionBordereau(fenetre: Window): void {
-    const esc = (v: string) => {
-      const div = document.createElement('div');
-      div.textContent = v;
-      return div.innerHTML;
-    };
-
-    const i = this.item as any;
     const suiviForm          = this.form.get('suivi_acq')?.value;
     const statutForm         = this.form.get('statut_acq')?.value;
+    const noteAcqForm        = this.form.get('note_acq')?.value;
     const creationNoticeForm = this.form.get('creation_notice_dtdm')?.value;
+    const bordereauForm      = (this.isNouvelAchat || this.isSuggestion)
+      ? this.form.get('bordereau_imprime')?.value
+      : null;
     const catalogueForm      = this.form.get('catalogue')?.value;
     const noteDtdmForm       = this.form.get('note_dtdm')?.value;
-    const identifiant = this.itemId ?? this.reponseId;
 
-    const rangees = [
-      { label: 'Statut de la demande', value: i.statut_bibliotheque || "En cours d'évaluation" },
+    const rangeesSupplementaires = [
       ...(suiviForm  ? [{ label: 'ACQ — Suivi de la demande',  value: suiviForm  }] : []),
       ...(statutForm ? [{ label: 'ACQ — Statut de la demande', value: statutForm }] : []),
+      ...(noteAcqForm ? [{ label: 'ACQ — Note / Commentaire', value: noteAcqForm }] : []),
       ...(creationNoticeForm != null
         ? [{ label: 'ACQ — Création de notice TDM', value: creationNoticeForm ? 'Oui' : 'Non' }]
         : []),
+      ...(bordereauForm ? [{ label: 'ACQ — Bordereau imprimé', value: bordereauForm }] : []),
       ...(catalogueForm ? [{ label: 'TDM — Catalogage', value: catalogueForm }] : []),
       ...(noteDtdmForm  ? [{ label: 'TDM — Note / OCN', value: noteDtdmForm }] : []),
-      ...this.PRINT_FIELD_ORDER
-        .filter(k => i[k] !== null && i[k] !== undefined && i[k] !== '' && i[k] !== false)
-        .map(k => ({
-          label: this.PRINT_FIELD_LABELS[k],
-          value: typeof i[k] === 'boolean' ? 'Oui' : String(i[k]),
-        })),
-    ].map(r => `<tr><th>${esc(r.label)}</th><td>${esc(r.value)}</td></tr>`).join('');
+    ];
 
-    // En haut du bordereau, on identifie la personne qui a complété la demande
-    // (le demandeur) — pas la personne qui imprime le document.
-    const nomDemandeur = i.demandeur || 'Demandeur inconnu';
-    const dateImpression = new Date().toLocaleString('fr-CA', {
-      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
-    });
-    const dateSoumission = i.date_creation
-      ? new Date(i.date_creation).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
-      : '—';
-
-    const html = `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8">
-<title>${esc(i.formulaire_type || 'Demande')}${identifiant ? ' — #' + identifiant : ''}</title>
-<style>
-  * { box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; margin: 0; padding: 2rem 2.5rem 2.5rem; }
-  .doc-header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    border-bottom: 2px solid #0B113A; padding-bottom: .6rem; margin-bottom: 1.4rem;
-  }
-  .doc-header__brand { font-size: .85rem; font-weight: 700; color: #0B113A; }
-  .doc-header__brand small { display: block; font-weight: 400; color: #64748b; font-size: .72rem; margin-top: .1rem; }
-  .doc-header__user { font-size: .8rem; color: #334155; text-align: right; }
-  .doc-header__user strong { display: block; color: #0B113A; font-size: .85rem; }
-  h1   { font-size: 1.15rem; margin: 0 0 .2rem; color: #0B113A; }
-  .sub { color: #64748b; font-size: .85rem; margin: 0 0 1.5rem; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #e2e8f0; font-size: .85rem; vertical-align: top; }
-  th   { width: 40%; color: #475569; font-weight: 600; background: #f8fafc; }
-  .footer {
-    margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;
-    font-size: .72rem; color: #94a3b8; line-height: 1.6;
-  }
-  @media print { body { padding: 1.2rem; } }
-</style></head>
-<body>
-
-  <div class="doc-header">
-    <div class="doc-header__brand">
-      Portail acquisitions
-      <small>Bibliothèques UdeM</small>
-    </div>
-    <div class="doc-header__user">
-      <strong>${esc(nomDemandeur)}</strong>
-      Demandeur${i.usager_courriel ? ' · ' + esc(i.usager_courriel) : ''}
-    </div>
-  </div>
-
-  <h1>${esc(i.formulaire_type || 'Demande')}${identifiant ? ' — #' + identifiant : ''}</h1>
-  <p class="sub">Titre : ${esc(i.titre_document || '—')} &nbsp;·&nbsp; Soumise le ${dateSoumission}</p>
-  <table>${rangees}</table>
-
-  <p class="footer">
-    Imprimé le ${dateImpression}<br>
-    Ce document est une impression informative — les données à jour se trouvent dans le portail des acquisitions.
-  </p>
-
-</body></html>`;
-
-    // Navigue vers une URL blob (au lieu de réécrire le document via document.write, qui
-    // laisse la fenêtre sur "about:blank") afin que l'en-tête/pied de page d'impression du
-    // navigateur n'affiche pas "about:blank" comme URL de la page.
-    const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-    fenetre.location.href = blobUrl;
-    fenetre.focus();
-
-    let imprime = false;
-    const declencherImpression = () => {
-      if (imprime) return;
-      imprime = true;
-      fenetre.print();
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-    };
-    fenetre.onload = declencherImpression;
-    setTimeout(declencherImpression, 500);
+    // Les données de l'item sont déjà en mémoire (this.item) — pas d'appel réseau requis.
+    ecrireImpressionBordereau(fenetre, this.item, rangeesSupplementaires, this.itemId ?? this.reponseId);
   }
 }
