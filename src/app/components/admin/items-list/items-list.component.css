@@ -1,6 +1,10 @@
 /* items-list.component.css */
 /* Style de la barre de filtres (.filterbar, .filterbar__*) → voir styles.css */
 
+/* Réduit l'espace au-dessus de la barre de filtres, propre à cette page (ne touche pas
+   la règle .filterbar partagée dans styles.css). */
+.filterbar { margin-top: -20px; }
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    BOUTON FAVORIS + PANEL  (admin uniquement)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

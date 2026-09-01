@@ -15,8 +15,8 @@ const CHAMPS_COMMUNS = new Set<string>([
   'prix_cad', 'devise_originale', 'prix_devise_originale', 'periode_couverte', 'nombre_titres_inclus',
   'nombre_utilisateurs', 'format_pret_numerique', 'lien_plateforme',
   'demandeur', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
-  'statut_bibliotheque', 'statut_acq', 'priorite_demande',
-  'note_dtdm', 'note_commentaire', 'suivi_acq', 'note_acq', 'bibliotheque_note_interne',
+  'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'priorite_demande',
+  'note_dtdm', 'note_commentaire', 'note_acq', 'bibliotheque_note_interne',
   'utilisateur_modification', 'date_creation', 'date_modification'
 ]);
 
@@ -163,7 +163,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initTitreChamps();
     this.colonnesSelectionnees = [
       'item_id', 'formulaire_type', 'titre_document', 'demandeur',
-      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'date_creation'
+      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'date_creation'
     ];
     this.clickListener = () => this.closeAllDropdowns();
     document.addEventListener('click', this.clickListener);
@@ -624,7 +624,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.colonneSearch        = '';
     this.colonnesSelectionnees = [
       'item_id', 'formulaire_type', 'titre_document', 'demandeur',
-      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'date_creation'
+      'bibliotheque', 'fonds_budgetaire', 'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'date_creation'
     ];
     this.filterValuesCache.clear();
     this.lastFilterCacheUpdate.clear();

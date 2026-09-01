@@ -119,6 +119,8 @@
     "categorie_document": "Document Category",
     "bibliotheque": "Library",
     "statut_bibliotheque": "Library Status",
+    "statut_acq": "ACQ Status",
+    "suivi_acq": "ACQ: Request follow-up",
     "localisation_emplacement": "Location / Placement",
     "demandeur": "Requester",
     "date_modification": "Modification Date"
