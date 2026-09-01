@@ -23,16 +23,19 @@ Le backend (API Node.js / Express) et l'orchestrateur de notifications (n8n) se 
 ### Espace administrateur (bibliothèques)
 - **Gestion des items** : liste, filtres avancés, tri, pagination
 - **Statut Bibliothèque** : mise à jour du statut de traitement par demande
+- **Décision ACQ / TDM** : suivi et statut ACQ, création de notice TDM, catalogage — sur la fiche item et la page de décision
 - **Formulaire d'item** : création et modification avec 3 onglets (Informations de base · Champs spécifiques · Décision ACQ)
 - **Réponses formulaires** : consultation et traitement des soumissions usager
+- **Pièces jointes** : ajout, consultation et téléchargement de documents liés à une demande ou un item
 - **Rapports** : génération et export Excel de données filtrées
-- **Import en lot** : insertion de demandes depuis un fichier Excel
+- **Import en lot** : insertion de demandes depuis un fichier Excel, avec historique des imports
 - **Tableau de bord** : statistiques, répartition par type/bibliothèque/priorité
 - Notifications automatiques par courriel via **n8n** à la soumission et à la mise à jour du statut
 
 ### Général
 - Interface **bilingue** FR / EN (sélecteur masqué en production)
-- Authentification par profil (admin, staff, usager)
+- Authentification par profil (Admin, Bibliothécaire, Usager) — actuellement simulée côté frontend
+- FAQ intégrée
 - Design responsive (desktop, tablette, mobile)
 
 ---
@@ -81,8 +84,8 @@ export const environment = {
 ```ts
 export const environment = {
   production: true,
-  apiUrl: 'https://api.acq.bib.umontreal.ca',
-  n8nWebhookUrl: 'https://n8n.acq.bib.umontreal.ca/webhook'
+  apiUrl: 'https://votre-api-production',
+  n8nWebhookUrl: 'https://votre-n8n-production/webhook'
 };
 ```
 
@@ -121,15 +124,24 @@ chaine-achat-frontend/
 │   │   │   │   ├── item-formulaire/# Création / modification d'un item
 │   │   │   │   ├── rapports/       # Rapports et exports
 │   │   │   │   ├── reponses/       # Gestion des réponses formulaires
-│   │   │   │   └── import/         # Import en lot (Excel)
+│   │   │   │   ├── import/         # Import en lot (Excel)
+│   │   │   │   └── import-logs/    # Historique des imports
 │   │   │   ├── usager/             # Composants portail usager
 │   │   │   │   ├── pages/          # Les 6 formulaires de soumission
 │   │   │   │   └── usager-profil/  # Suivi des demandes de l'usager
-│   │   │   ├── statut-decision/    # Formulaire de statut bibliothèque (admin)
+│   │   │   ├── shared/             # Composants réutilisés (pièces jointes, etc.)
+│   │   │   ├── statut-decision/    # Décision ACQ / TDM (admin)
+│   │   │   ├── configuration/      # Écrans de configuration
+│   │   │   ├── login/              # Authentification
+│   │   │   ├── faq/                # FAQ
 │   │   │   └── accueil/            # Tableau de bord
 │   │   ├── services/               # HttpClient, auth, items, réponses…
 │   │   ├── lib/                    # Listes d'options partagées
+│   │   ├── models/                 # Interfaces / modèles TypeScript
+│   │   ├── directives/             # Directives partagées
 │   │   ├── header/                 # Navigation principale
+│   │   ├── footer/                 # Pied de page
+│   │   ├── menu/                   # Menu latéral
 │   │   └── app-routing.module.ts   # Routes de l'application
 │   ├── assets/
 │   │   ├── i18n/                   # Traductions FR / EN (fr.json, en.json)
@@ -146,9 +158,9 @@ chaine-achat-frontend/
 
 | Rôle | Description | Accès |
 |---|---|---|
-| `admin` | Administrateur bibliothèque | Toutes les pages |
-| `staff` | Personnel bibliothèque | Items, rapports, réponses |
-| `usager` | Communauté UdeM | Portail usager uniquement |
+| `Admin` | Administrateur bibliothèque | Toutes les pages |
+| `Bibliothécaire` | Personnel bibliothèque | Items, rapports, réponses |
+| `Usager` | Communauté UdeM | Portail usager uniquement |
 
 ---
 
