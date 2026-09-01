@@ -843,7 +843,22 @@
     "col-sqla": "Vérification SQLA",
     "col-emma": "Vérification EMMA",
     "col-note-commentaire": "Note / Commentaire",
-    "col-note-usager": "Note usager"
+    "col-note-usager": "Note usager",
+    "col-statut-bib": "Statut de la demande",
+    "col-date-soumission": "Date de soumission",
+    "col-id-ressource": "ID ressource",
+    "col-projet-special-bib": "Projet spécial (bibliothèque)",
+    "col-format-electronique": "Format électronique",
+    "col-nom-usager": "Nom de l'usager",
+    "col-bibliothecaire-disc": "Bibliothécaire disciplinaire",
+    "col-reserver-arrivee": "Réserver à l'arrivée",
+    "col-aviser-reception-bool": "Aviser à la réception",
+    "col-isbn-acq": "ISBN (ACQ)",
+    "col-raison-annulation": "Raison d'annulation (ACQ)",
+    "col-responsable-acq": "Responsable ACQ (courriel)",
+    "col-numerisation-recommandee": "Numérisation recommandée (ACQ)",
+    "col-date-demande-editeur": "Date demande éditeur (ACQ)",
+    "col-date-livraison-estimee": "Date livraison estimée (ACQ)"
   },
   "tdm-decision": {
     "section-decision": "TDM : Suivi de la demande",

@@ -843,7 +843,22 @@
     "col-sqla": "SQLA verification",
     "col-emma": "EMMA verification",
     "col-note-commentaire": "Note / Comment",
-    "col-note-usager": "User note"
+    "col-note-usager": "User note",
+    "col-statut-bib": "Request status",
+    "col-date-soumission": "Submission date",
+    "col-id-ressource": "Resource ID",
+    "col-projet-special-bib": "Special project (library)",
+    "col-format-electronique": "Electronic format",
+    "col-nom-usager": "User's name",
+    "col-bibliothecaire-disc": "Subject librarian",
+    "col-reserver-arrivee": "Reserve on arrival",
+    "col-aviser-reception-bool": "Notify on receipt",
+    "col-isbn-acq": "ISBN (ACQ)",
+    "col-raison-annulation": "Cancellation reason (ACQ)",
+    "col-responsable-acq": "ACQ contact (email)",
+    "col-numerisation-recommandee": "Digitization recommended (ACQ)",
+    "col-date-demande-editeur": "Publisher request date (ACQ)",
+    "col-date-livraison-estimee": "Estimated delivery date (ACQ)"
   },
   "tdm-decision": {
     "section-decision": "TDM: Request follow-up",
