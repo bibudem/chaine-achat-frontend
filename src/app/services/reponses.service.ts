@@ -59,6 +59,20 @@ export interface DemandeUsager {
   note_commentaire: string | null;
 }
 
+/** Demande affichée dans la liste « Toutes les demandes » (profil Usager, lecture seule,
+ *  transparence système) — volontairement plus restreinte que DemandeUsager : aucune
+ *  information personnelle, financière ou note interne, voir ReponsesModel.findAllPublic. */
+export interface DemandePublique {
+  id: number;
+  type_formulaire: string;
+  dateA: string;
+  titre_document: string | null;
+  bibliotheque: string | null;
+  statut_bibliotheque: string | null;
+  suivi_acq: string | null;
+  statut_acq: string | null;
+}
+
 export interface PaginatedResponse {
   data: Reponse[];
   total: number;
@@ -376,6 +390,29 @@ export class ReponsesService {
     return this.http
       .get<{ data: DemandeUsager[] }>(`${this.baseUrl}/profil`, { params: { email } })
       .pipe(catchError(this.handleError('getByEmail')));
+  }
+
+  getAllPublic(opts: {
+    limit?: number; offset?: number; search?: string;
+    type_formulaire?: string; bibliotheque?: string;
+    dateDebut?: string; dateFin?: string;
+    /** Même catégorisation que demandeBadgeStatut() — voir lib/DemandeStatut.ts. */
+    statut?: 'attente' | 'soumise' | 'traitee';
+  } = {}): Observable<{ data: DemandePublique[]; total: number }> {
+    const params: Record<string, string> = {
+      limit:  String(opts.limit  ?? 25),
+      offset: String(opts.offset ?? 0),
+    };
+    if (opts.search)          params['search']          = opts.search;
+    if (opts.type_formulaire) params['type_formulaire']  = opts.type_formulaire;
+    if (opts.bibliotheque)    params['bibliotheque']     = opts.bibliotheque;
+    if (opts.dateDebut)       params['dateDebut']        = opts.dateDebut;
+    if (opts.dateFin)         params['dateFin']          = opts.dateFin;
+    if (opts.statut)          params['statut']           = opts.statut;
+
+    return this.http
+      .get<{ data: DemandePublique[]; total: number }>(`${this.baseUrl}/public`, { params })
+      .pipe(catchError(this.handleError('getAllPublic')));
   }
 
   getReponseById(id: number): Observable<any> {

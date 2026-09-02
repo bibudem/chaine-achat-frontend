@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin, of, Subject } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ReponsesService, DemandeUsager, DemandePublique } from '../../../services/reponses.service';
 import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
+import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
 
 @Component({
@@ -71,6 +73,7 @@ export class UsagerProfilComponent implements OnInit {
     aviser_reception: 'Aviser à la réception',
     note_usager: 'Note usager',
     note_commentaire: 'Note / Commentaire',
+    note_acq: 'Note de la bibliothèque',
     statut_bibliotheque: 'Statut de la demande',
     bibliotheque_note_interne: 'Note interne bibliothèque',
   };
@@ -89,17 +92,30 @@ export class UsagerProfilComponent implements OnInit {
     'creation_notice_dtdm',
     'reserve_cours', 'reserve_cours_sigle', 'reserve_cours_session', 'reserve_cours_enseignant',
     'date_requise_cours', 'aviser_reservation', 'aviser_reception',
-    'note_usager', 'note_commentaire',
+    'note_usager', 'note_commentaire', 'note_acq',
     'statut_bibliotheque', 'bibliotheque_note_interne',
   ];
 
-  filtreRecherche  = '';
-  filtreType       = '';
-  filtreDateDebut  = '';
-  filtreDateFin    = '';
+  filtreRecherche    = '';
+  filtreType         = '';
+  filtreBibliotheque = '';
+  filtreStatut       = '';
+  filtreDateDebut    = '';
+  filtreDateFin      = '';
+
+  // Décoché : affiche TOUTES les demandes du système (lecture seule, transparence — voir
+  // ReponsesModel.findAllPublic) au lieu de seulement celles de l'usager connecté. Même
+  // barre de filtres, même pagination — seules la source des données et les actions
+  // disponibles par ligne changent, pour une expérience cohérente.
+  mesDemandesSeulement = true;
+  demandesPubliques: DemandePublique[] = [];
+  totalPublic     = 0;
+  loadingPublic   = false;
 
   currentPage          = 1;
-  readonly itemsPerPage = 6;
+  readonly itemsPerPage = 10;
+
+  private rechercheSubject = new Subject<string>();
 
   get prenom():   string { return sessionStorage.getItem('prenomAdmin')   ?? ''; }
   get nom():      string { return sessionStorage.getItem('nomAdmin')       ?? ''; }
@@ -112,19 +128,27 @@ export class UsagerProfilComponent implements OnInit {
     return [...new Set(this.demandes.map(d => d.type_formulaire))].sort();
   }
 
+  get bibliothequesDisponibles(): string[] {
+    return [...new Set(this.demandes.map(d => d.bibliotheque).filter((b): b is string => !!b))].sort();
+  }
+
   get demandesFiltrees(): DemandeUsager[] {
     return this.demandes.filter(d => {
-      const rechercheOk = !this.filtreRecherche ||
+      const rechercheOk    = !this.filtreRecherche ||
         (d.titre_document ?? '').toLowerCase().includes(this.filtreRecherche.toLowerCase());
-      const typeOk      = !this.filtreType      || d.type_formulaire === this.filtreType;
-      const dateDebutOk = !this.filtreDateDebut || (d.dateA ?? '') >= this.filtreDateDebut;
-      const dateFinOk   = !this.filtreDateFin   || (d.dateA ?? '').substring(0, 10) <= this.filtreDateFin;
-      return rechercheOk && typeOk && dateDebutOk && dateFinOk;
+      const typeOk         = !this.filtreType         || d.type_formulaire === this.filtreType;
+      const bibliothequeOk = !this.filtreBibliotheque || d.bibliotheque === this.filtreBibliotheque;
+      const statutOk       = !this.filtreStatut       || demandeBadgeStatut(d) === this.filtreStatut;
+      const dateDebutOk    = !this.filtreDateDebut    || (d.dateA ?? '') >= this.filtreDateDebut;
+      const dateFinOk      = !this.filtreDateFin      || (d.dateA ?? '').substring(0, 10) <= this.filtreDateFin;
+      return rechercheOk && typeOk && bibliothequeOk && statutOk && dateDebutOk && dateFinOk;
     });
   }
 
   get totalPages(): number {
-    return Math.ceil(this.demandesFiltrees.length / this.itemsPerPage);
+    return this.mesDemandesSeulement
+      ? Math.ceil(this.demandesFiltrees.length / this.itemsPerPage)
+      : Math.ceil(this.totalPublic / this.itemsPerPage);
   }
 
   get demandesPage(): DemandeUsager[] {
@@ -139,9 +163,10 @@ export class UsagerProfilComponent implements OnInit {
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
+    if (!this.mesDemandesSeulement) this.chargerPublique();
   }
 
-  constructor(private reponsesService: ReponsesService) {}
+  constructor(private reponsesService: ReponsesService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     const state = history.state;
@@ -155,6 +180,80 @@ export class UsagerProfilComponent implements OnInit {
       next: (res) => { this.demandes = res.data; this.loading = false; },
       error: ()   => { this.errorMessage = 'Impossible de charger vos demandes.'; this.loading = false; }
     });
+
+    this.rechercheSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
+      this.currentPage = 1;
+      if (!this.mesDemandesSeulement) this.chargerPublique();
+    });
+
+    // Arrivée depuis une carte du tableau de bord d'accueil : ?toutes=1 décoche la case
+    // d'entrée (toutes les demandes du système), ?statut=attente|soumise|traitee présélectionne
+    // le filtre de statut correspondant — dans l'un ou l'autre mode.
+    const statutParam = this.route.snapshot.queryParamMap.get('statut');
+    if (statutParam === 'attente' || statutParam === 'soumise' || statutParam === 'traitee') {
+      this.filtreStatut = statutParam;
+    }
+    if (this.route.snapshot.queryParamMap.get('toutes') === '1') {
+      this.mesDemandesSeulement = false;
+      this.chargerPublique();
+    }
+  }
+
+  // ── Bascule « Mes demandes » / « Toutes les demandes » ──────────────
+  onToggleMesDemandes(): void {
+    this.currentPage = 1;
+    this.errorMessage = '';
+    if (!this.mesDemandesSeulement) this.chargerPublique();
+  }
+
+  chargerPublique(): void {
+    this.loadingPublic = true;
+    this.errorMessage = '';
+    const offset = (this.currentPage - 1) * this.itemsPerPage;
+    this.reponsesService.getAllPublic({
+      limit: this.itemsPerPage, offset,
+      search:           this.filtreRecherche    || undefined,
+      type_formulaire:  this.filtreType         || undefined,
+      bibliotheque:     this.filtreBibliotheque || undefined,
+      statut:           (this.filtreStatut || undefined) as 'attente' | 'soumise' | 'traitee' | undefined,
+      dateDebut:        this.filtreDateDebut    || undefined,
+      dateFin:          this.filtreDateFin      || undefined,
+    }).subscribe({
+      next: (res) => { this.demandesPubliques = res.data; this.totalPublic = res.total; this.loadingPublic = false; },
+      error: ()   => { this.errorMessage = 'Impossible de charger les demandes.'; this.loadingPublic = false; }
+    });
+  }
+
+  // Champs texte/dates/selects : réinitialise la page et, en mode « toutes », recharge
+  // depuis le serveur — en mode « mes demandes », le filtrage est déjà réactif (getter).
+  onSearchChange(): void {
+    this.rechercheSubject.next(this.filtreRecherche);
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
+    if (!this.mesDemandesSeulement) this.chargerPublique();
+  }
+
+  resetFilters(): void {
+    this.filtreRecherche    = '';
+    this.filtreType         = '';
+    this.filtreBibliotheque = '';
+    this.filtreStatut       = '';
+    this.filtreDateDebut    = '';
+    this.filtreDateFin      = '';
+    this.onFilterChange();
+  }
+
+  statutKeyPublique(d: DemandePublique): string {
+    return demandeBadgeStatut(d);
+  }
+
+  statutLabelPublique(d: DemandePublique): string {
+    const labels: Record<string, string> = {
+      traitee: 'ACQ traité', soumise: 'En attente ACQ', attente: 'Non envoyé aux ACQ',
+    };
+    return labels[this.statutKeyPublique(d)];
   }
 
   statutKey(d: DemandeUsager): string {
@@ -255,7 +354,10 @@ export class UsagerProfilComponent implements OnInit {
   exportingExcel = false;
 
   exporterExcel(): void {
-    if (!this.demandesFiltrees.length || this.exportingExcel) return;
+    // Réservé au mode « Mes demandes » — l'export « Toutes les demandes » récupérerait le
+    // détail complet de demandes qui ne sont pas les siennes (voir getReponseById), ce que
+    // l'endpoint public évite volontairement.
+    if (!this.mesDemandesSeulement || !this.demandesFiltrees.length || this.exportingExcel) return;
     const liste = this.demandesFiltrees;
     this.exportingExcel = true;
 

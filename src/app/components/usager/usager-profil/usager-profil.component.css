@@ -122,6 +122,69 @@
 .up-empty__cta:hover { background: #00306a; color: #fff; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION FILTRES — bascule + barre de filtres regroupées dans un même bloc
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.up-filter-section {
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  padding: .6rem .6rem .5rem;
+  margin-bottom: .85rem;
+}
+
+/* La barre de filtres perd son propre encadré une fois nichée ici. */
+.up-filter-section .filterbar {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ligne du bas : bascule à gauche, Réinitialiser/compteur/Exporter à droite (même ligne) */
+.up-filter-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-top: .6rem;
+  margin-top: .5rem;
+  border-top: 1px solid #f0f4f8;
+}
+
+.up-toggle-mine {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  user-select: none;
+}
+.up-toggle-mine input { position: absolute; opacity: 0; width: 0; height: 0; }
+.up-toggle-mine__box {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .7rem;
+  flex-shrink: 0;
+  transition: background .15s, border-color .15s;
+}
+.up-toggle-mine__box i { opacity: 0; transition: opacity .1s; }
+.up-toggle-mine input:checked + .up-toggle-mine__box {
+  background: #00407F;
+  border-color: #00407F;
+}
+.up-toggle-mine input:checked + .up-toggle-mine__box i { opacity: 1; }
+.up-toggle-mine input:focus-visible + .up-toggle-mine__box { outline: 2px solid #93c5fd; outline-offset: 1px; }
+.up-toggle-mine__label { font-size: .84rem; font-weight: 600; color: #0B113A; }
+
+/* Cartes en lecture seule (mode « Toutes les demandes ») — pas de bordure hover d'action,
+   curseur normal (aucune ligne n'est cliquable). */
+.up-card--readonly { cursor: default; }
+.up-card--readonly:hover { box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FILTRES
    Style de la barre de filtres (.filterbar, .filterbar__*) → voir styles.css
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -143,11 +206,11 @@
 }
 .up-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,.08); }
 
-.up-card--attente { border-left-color: #f59e0b; }
-.up-card--soumise { border-left-color: #3b82f6; }
-.up-card--cours   { border-left-color: #3b82f6; }
-.up-card--traitee { border-left-color: #16a34a; }
-.up-card--refuse  { border-left-color: #dc2626; }
+.up-card--attente,
+.up-card--soumise,
+.up-card--cours,
+.up-card--traitee,
+.up-card--refuse { border-left-color: #cbd5e1; }
 
 /* Ligne principale */
 .up-card__row {
@@ -163,10 +226,11 @@
   display: flex; align-items: center; justify-content: center;
   font-size: .88rem; flex-shrink: 0; margin-top: .1rem;
 }
-.up-type-icon--attente { background: #fef3c7; color: #b45309; }
-.up-type-icon--cours   { background: #dbeafe; color: #1d4ed8; }
-.up-type-icon--traitee { background: #dcfce7; color: #15803d; }
-.up-type-icon--refuse  { background: #fee2e2; color: #b91c1c; }
+.up-type-icon--attente,
+.up-type-icon--cours,
+.up-type-icon--soumise,
+.up-type-icon--traitee,
+.up-type-icon--refuse { background: #f1f5f9; color: #64748b; }
 
 /* Contenu principal */
 .up-card__main { flex: 1; min-width: 0; }

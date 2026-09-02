@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ReponsesService } from '../../../services/reponses.service';
+import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
+import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
 
 export interface FormulaireCard {
   titre:       string;
@@ -19,8 +20,13 @@ export interface FormulaireCard {
 })
 export class UsagerHomeComponent implements OnInit {
 
+  demandes: DemandeUsager[] = [];
   totalDemandes: number | null = null;
   loadingDemandes = true;
+
+  // Total du système (toutes les demandes, tous usagers confondus — lecture seule, voir
+  // ToutesLesDemandesComponent) : simple compteur, un seul appel léger (limit: 1).
+  totalSysteme: number | null = null;
 
   constructor(private reponsesService: ReponsesService) {}
 
@@ -37,10 +43,25 @@ export class UsagerHomeComponent implements OnInit {
     if (!email) { this.loadingDemandes = false; return; }
 
     this.reponsesService.getByEmail(email).subscribe({
-      next:  res  => { this.totalDemandes = res.data?.length ?? 0; this.loadingDemandes = false; },
-      error: ()   => { this.totalDemandes = null;                  this.loadingDemandes = false; }
+      next: res => {
+        this.demandes      = res.data ?? [];
+        this.totalDemandes = this.demandes.length;
+        this.loadingDemandes = false;
+      },
+      error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
+    });
+
+    this.reponsesService.getAllPublic({ limit: 1, offset: 0 }).subscribe({
+      next:  res => { this.totalSysteme = res.total; },
+      error: ()  => { this.totalSysteme = null; }
     });
   }
+
+  // ── Tableau de bord : répartition des demandes par statut (même catégorisation que les
+  //    badges de "Mes demandes" — voir lib/DemandeStatut.ts) ──
+  get nbNonEnvoyees(): number { return this.demandes.filter(d => demandeBadgeStatut(d) === 'attente').length; }
+  get nbEnAttenteAcq(): number { return this.demandes.filter(d => demandeBadgeStatut(d) === 'soumise').length; }
+  get nbTraitees(): number     { return this.demandes.filter(d => demandeBadgeStatut(d) === 'traitee').length; }
 
   readonly GROUPE_COLLECTIONS = 'Développement des collections';
   readonly GROUPE_USAGERS     = 'Acquisitions pour les usagers';

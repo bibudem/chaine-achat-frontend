@@ -4,7 +4,7 @@
 .uh-wrap {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2.25rem 0 4rem;
+  padding: 1.75rem 0 3rem;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -14,9 +14,9 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .uh-header__avatar {
@@ -56,7 +56,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 360px 1fr;
-  gap: 1.5rem;
+  gap: 1.15rem;
   align-items: start;
 }
 
@@ -95,7 +95,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .85rem;
   position: sticky;
   top: 74px;
 }
@@ -106,36 +106,35 @@
   min-width: 0;
 }
 
-/* ── Section "Mes demandes" — pleine largeur, au-dessus des 2 colonnes ── */
-.uh-demandes-section {
+/* ── Mes demandes : tableau de bord unifié ──────────────────────
+   Un seul panneau : en-tête cliquable (accès direct à la liste) + rangée de statistiques
+   cliquables (chacune pré-filtre la liste sur le statut correspondant). ── */
+.uh-dashboard {
+  box-sizing: border-box;
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid #e0e7ef;
+  border-radius: 14px;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  transition: box-shadow .2s;
+}
+.uh-dashboard:hover { box-shadow: 0 4px 16px rgba(0,64,127,.08); }
+
+.uh-dashboard__header {
   box-sizing: border-box;
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  background: #fff;
-  border: 1.5px solid #e0e7ef;
-  border-left: 4px solid #00407F;
-  border-radius: 12px;
-  padding: .95rem 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1.1rem;
+  padding: .85rem 1.25rem;
   text-decoration: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.04);
-  transition: border-color .15s, box-shadow .15s;
+  transition: background .15s;
 }
-.uh-demandes-section:hover {
-  text-decoration: none;
-  border-color: #b8d4ef;
-  box-shadow: 0 4px 12px rgba(0,64,127,.1);
-}
+.uh-dashboard__header:hover { text-decoration: none; background: #f7f9fc; }
 
-.uh-demandes-section__icon-wrap {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
-}
-
-.uh-demandes-section__icon {
+.uh-dashboard__icon {
   width: 2.7rem;
   height: 2.7rem;
   border-radius: 9px;
@@ -145,27 +144,10 @@
   align-items: center;
   justify-content: center;
   font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
-.uh-demandes-section__badge {
-  position: absolute;
-  top:   -6px;
-  right: -6px;
-  min-width: 1.2rem;
-  height:    1.2rem;
-  border-radius: 20px;
-  background: #00407F;
-  color: #fff;
-  font-size: .62rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 .3rem;
-  border: 2px solid #fff;
-}
-
-.uh-demandes-section__text {
+.uh-dashboard__text {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -173,7 +155,7 @@
   gap: .15rem;
 }
 
-.uh-demandes-section__title,
+.uh-dashboard__title,
 .uh-info-card__title,
 .uh-forms__title {
   font-size: .72rem;
@@ -184,7 +166,7 @@
   margin: 0;
 }
 
-.uh-demandes-section__desc {
+.uh-dashboard__desc {
   font-size: .8rem;
   color: #94a3b8;
   white-space: nowrap;
@@ -192,7 +174,7 @@
   text-overflow: ellipsis;
 }
 
-.uh-demandes-section__cta {
+.uh-dashboard__cta {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -206,19 +188,91 @@
   box-shadow: 0 2px 8px rgba(0, 64, 127, .25);
   transition: box-shadow .2s ease, background .2s ease;
 }
-.uh-demandes-section__cta i { transition: transform .15s ease; }
-.uh-demandes-section:hover .uh-demandes-section__cta {
+.uh-dashboard__cta i { transition: transform .15s ease; }
+.uh-dashboard__header:hover .uh-dashboard__cta {
   box-shadow: 0 5px 14px rgba(0, 64, 127, .35);
   background: linear-gradient(135deg, #0072db 0%, #00478f 55%, #0d1650 100%);
 }
-.uh-demandes-section:hover .uh-demandes-section__cta i { transform: translateX(3px); }
+.uh-dashboard__header:hover .uh-dashboard__cta i { transform: translateX(3px); }
+
+/* Rangée de statistiques — chips séparées par des filets, pas des cartes empilées */
+.uh-dashboard__stats {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid #eef2f7;
+  background: #fbfcfe;
+}
+
+.uh-dstat {
+  flex: 1 1 150px;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .65rem 1rem;
+  text-decoration: none;
+  border-right: 1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
+  transition: background .15s;
+}
+.uh-dstat:last-child { border-right: none; }
+
+.uh-dstat__arrow {
+  margin-left: auto;
+  padding-left: .4rem;
+  font-size: .8rem;
+  color: #94a3b8;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity .15s, transform .15s;
+}
+.uh-dstat:hover .uh-dstat__arrow { opacity: 1; transform: translateX(0); }
+.uh-dstat:hover { text-decoration: none; background: #eef4fa; }
+
+.uh-dstat__icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .92rem;
+  flex-shrink: 0;
+}
+.uh-dstat__icon--total   { background: #EBF3FB; color: #00407F; }
+.uh-dstat__icon--attente { background: #fef3c7; color: #92400e; }
+.uh-dstat__icon--soumise { background: #dbeafe; color: #1e40af; }
+.uh-dstat__icon--traitee { background: #dcfce7; color: #166534; }
+.uh-dstat__icon--systeme { background: #ede9fe; color: #6d28d9; }
+
+.uh-dstat__body { display: flex; flex-direction: column; min-width: 0; }
+.uh-dstat__value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0B113A;
+  line-height: 1;
+}
+.uh-dstat__label {
+  font-size: .68rem;
+  color: #607386;
+  margin-top: .15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uh-dstat--systeme { background: repeating-linear-gradient(135deg, #fbfcfe 0 10px, #f4f0fd 10px 20px); }
+
+@media (max-width: 700px) {
+  .uh-dstat { flex-basis: 50%; border-right: none; }
+  .uh-dstat:nth-child(odd) { border-right: 1px solid #eef2f7; }
+}
 
 /* ── Carte "À propos" ── */
 .uh-info-card {
   background: #fff;
   border: 1.5px solid #e0e7ef;
   border-radius: 12px;
-  padding: .95rem 1.1rem;
+  padding: .8rem .95rem;
   box-shadow: 0 1px 4px rgba(0,0,0,.04);
 }
 
@@ -362,7 +416,7 @@
   background: #fff;
   border: 1.5px solid #e0e7ef;
   border-radius: 12px;
-  padding: .75rem 1.1rem 0;
+  padding: .65rem .95rem 0;
   box-shadow: 0 1px 4px rgba(0,0,0,.04);
   overflow: hidden;
 }
@@ -394,7 +448,7 @@
 }
 
 .uh-forms__list {
-  margin: 0 -1.1rem;
+  margin: 0 -.95rem;
   border-top: 1px solid #f0f4f8;
 }
 
@@ -403,7 +457,7 @@
   font-weight: 500;
   color: #475569;
   letter-spacing: .04em;
-  padding: .6rem 1.1rem .3rem;
+  padding: .5rem .95rem .25rem;
 }
 .uh-forms__group-label--first { padding-top: .4rem; }
 .uh-forms__group-label:not(.uh-forms__group-label--first) {
@@ -415,7 +469,7 @@
   display: flex;
   align-items: center;
   gap: .8rem;
-  padding: .65rem 1.1rem;
+  padding: .55rem .95rem;
   border-bottom: 1px solid #f0f4f8;
   text-decoration: none;
   transition: background .15s, transform .15s;

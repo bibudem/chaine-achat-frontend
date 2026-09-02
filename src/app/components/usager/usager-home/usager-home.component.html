@@ -13,24 +13,64 @@
     </div>
   </div>
 
-  <!-- ── Mes demandes : section complète pleine largeur ──────────── -->
-  <a routerLink="/usager/profil" class="uh-demandes-section">
-    <span class="uh-demandes-section__icon-wrap">
-      <span class="uh-demandes-section__icon"><i class="bi bi-clock-history"></i></span>
-      <span class="uh-demandes-section__badge" *ngIf="!loadingDemandes && totalDemandes">
-        {{ totalDemandes }}
+  <!-- ── Mes demandes : tableau de bord unifié (accès + répartition par statut) ──────────── -->
+  <div class="uh-dashboard">
+    <a routerLink="/usager/profil" class="uh-dashboard__header">
+      <span class="uh-dashboard__icon"><i class="bi bi-clock-history"></i></span>
+      <span class="uh-dashboard__text">
+        <span class="uh-dashboard__title">Mes demandes</span>
+        <span class="uh-dashboard__desc">
+          Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
+        </span>
       </span>
-    </span>
-    <span class="uh-demandes-section__text">
-      <span class="uh-demandes-section__title">Mes demandes</span>
-      <span class="uh-demandes-section__desc">
-        Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
+      <span class="uh-dashboard__cta">
+        Accéder à mes demandes <i class="bi bi-arrow-right"></i>
       </span>
-    </span>
-    <span class="uh-demandes-section__cta">
-      Accéder à mes demandes <i class="bi bi-arrow-right"></i>
-    </span>
-  </a>
+    </a>
+
+    <div class="uh-dashboard__stats" *ngIf="!loadingDemandes && totalDemandes">
+      <a routerLink="/usager/profil" class="uh-dstat" title="Voir toutes mes demandes">
+        <span class="uh-dstat__icon uh-dstat__icon--total"><i class="bi bi-inbox-fill"></i></span>
+        <span class="uh-dstat__body">
+          <span class="uh-dstat__value">{{ totalDemandes }}</span>
+          <span class="uh-dstat__label">Total mes demandes</span>
+        </span>
+        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      </a>
+      <a routerLink="/usager/profil" [queryParams]="{ statut: 'attente' }" class="uh-dstat" title="Filtrer : non envoyées aux ACQ">
+        <span class="uh-dstat__icon uh-dstat__icon--attente"><i class="bi bi-pencil-square"></i></span>
+        <span class="uh-dstat__body">
+          <span class="uh-dstat__value">{{ nbNonEnvoyees }}</span>
+          <span class="uh-dstat__label">Non envoyées</span>
+        </span>
+        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      </a>
+      <a routerLink="/usager/profil" [queryParams]="{ statut: 'soumise' }" class="uh-dstat" title="Filtrer : en attente ACQ">
+        <span class="uh-dstat__icon uh-dstat__icon--soumise"><i class="bi bi-hourglass-split"></i></span>
+        <span class="uh-dstat__body">
+          <span class="uh-dstat__value">{{ nbEnAttenteAcq }}</span>
+          <span class="uh-dstat__label">En attente ACQ</span>
+        </span>
+        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      </a>
+      <a routerLink="/usager/profil" [queryParams]="{ statut: 'traitee' }" class="uh-dstat" title="Filtrer : traitées">
+        <span class="uh-dstat__icon uh-dstat__icon--traitee"><i class="bi bi-check-circle-fill"></i></span>
+        <span class="uh-dstat__body">
+          <span class="uh-dstat__value">{{ nbTraitees }}</span>
+          <span class="uh-dstat__label">Traitées</span>
+        </span>
+        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      </a>
+      <a routerLink="/usager/profil" [queryParams]="{ toutes: '1' }" class="uh-dstat uh-dstat--systeme" *ngIf="totalSysteme !== null" title="Voir toutes les demandes du système (lecture seule)">
+        <span class="uh-dstat__icon uh-dstat__icon--systeme"><i class="bi bi-eye-fill"></i></span>
+        <span class="uh-dstat__body">
+          <span class="uh-dstat__value">{{ totalSysteme }}</span>
+          <span class="uh-dstat__label">Total système</span>
+        </span>
+        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      </a>
+    </div>
+  </div>
 
   <!-- ── Corps : deux colonnes alignées ──────────────────────────── -->
   <div class="uh-body">

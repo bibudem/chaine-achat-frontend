@@ -9,7 +9,7 @@
       <span class="up-nav__breadcrumb">
         <a routerLink="/usager" class="up-nav__crumb-link">Portail acquisitions</a>
         <i class="bi bi-chevron-right up-nav__sep"></i>
-        <span>Mes demandes</span>
+        <span>{{ mesDemandesSeulement ? 'Mes demandes' : 'Toutes les demandes' }}</span>
       </span>
     </div>
   </nav>
@@ -53,59 +53,92 @@
       <span>{{ errorMessage }}</span>
     </div>
 
-    <!-- Aucune demande -->
-    <div *ngIf="!loading && !errorMessage && demandes.length === 0" class="up-empty">
-      <div class="up-empty__icon"><i class="bi bi-inbox"></i></div>
-      <p class="up-empty__title">Aucune demande enregistrée</p>
-      <p class="up-empty__sub">Vos demandes d'acquisition apparaîtront ici une fois soumises.</p>
-      <a routerLink="/usager" class="up-empty__cta">
-        <i class="bi bi-plus-circle me-1"></i> Soumettre une demande
-      </a>
-    </div>
-
     <!-- Barre de filtres + liste -->
-    <ng-container *ngIf="!loading && demandes.length > 0">
+    <ng-container *ngIf="!loading">
 
       <!-- Filtres -->
-      <div class="filterbar">
+      <div class="up-filter-section">
+        <div class="filterbar">
         <div class="filterbar__search">
           <i class="bi bi-search filterbar__search-icon"></i>
           <input type="text" class="filterbar__search-input"
                  [(ngModel)]="filtreRecherche"
-                 (ngModelChange)="currentPage = 1"
+                 (ngModelChange)="onSearchChange()"
                  placeholder="Rechercher un titre…">
         </div>
         <span class="filterbar__sep"></span>
-        <select class="filterbar__select" [(ngModel)]="filtreType" (ngModelChange)="currentPage = 1">
+        <select class="filterbar__select" [(ngModel)]="filtreType" (ngModelChange)="onFilterChange()">
           <option value="">Tous les types</option>
           <option *ngFor="let t of typesDisponibles" [value]="t">{{ t }}</option>
         </select>
         <span class="filterbar__sep"></span>
+        <select class="filterbar__select" [(ngModel)]="filtreBibliotheque" (ngModelChange)="onFilterChange()">
+          <option value="">Toutes les bibliothèques</option>
+          <option *ngFor="let b of bibliothequesDisponibles" [value]="b">{{ b }}</option>
+        </select>
+        <span class="filterbar__sep"></span>
+        <select class="filterbar__select" [(ngModel)]="filtreStatut" (ngModelChange)="onFilterChange()">
+          <option value="">Tous les statuts</option>
+          <option value="attente">Non envoyée aux ACQ</option>
+          <option value="soumise">En attente ACQ</option>
+          <option value="traitee">Traitée</option>
+        </select>
+        <span class="filterbar__sep"></span>
         <div class="filterbar__dategroup">
-          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut" (ngModelChange)="currentPage = 1">
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut" (ngModelChange)="onFilterChange()">
           <span class="filterbar__date-sep">→</span>
-          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin" (ngModelChange)="currentPage = 1">
+          <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin" (ngModelChange)="onFilterChange()">
         </div>
-        <div class="filterbar__actions">
-          <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreDateDebut || filtreDateFin"
-                  class="filterbar__reset"
-                  (click)="filtreRecherche = ''; filtreType = ''; filtreDateDebut = ''; filtreDateFin = ''; currentPage = 1">
-            <i class="bi bi-x"></i> Réinitialiser
-          </button>
-          <span class="filterbar__count">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
-          <span class="filterbar__sep"></span>
-          <button class="filterbar__export"
-                  [disabled]="!demandesFiltrees.length || exportingExcel"
-                  (click)="exporterExcel()"
-                  title="Exporter la liste filtrée en Excel (avec tous les détails de chaque demande)">
-            <span *ngIf="!exportingExcel"><i class="bi bi-file-earmark-excel"></i> Exporter</span>
-            <span *ngIf="exportingExcel"><span class="spinner-border spinner-border-sm" role="status"></span> Préparation…</span>
-          </button>
+        </div>
+
+        <!-- Bascule (gauche) + Réinitialiser / compteur / Exporter (droite) — même ligne -->
+        <div class="up-filter-footer">
+          <label class="up-toggle-mine">
+            <input type="checkbox" [(ngModel)]="mesDemandesSeulement" (ngModelChange)="onToggleMesDemandes()">
+            <span class="up-toggle-mine__box"><i class="bi bi-check"></i></span>
+            <span class="up-toggle-mine__label">Mes demandes seulement</span>
+          </label>
+
+          <div class="filterbar__actions">
+            <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreBibliotheque || filtreStatut || filtreDateDebut || filtreDateFin"
+                    class="filterbar__reset"
+                    (click)="resetFilters()">
+              <i class="bi bi-x"></i> Réinitialiser
+            </button>
+            <span class="filterbar__count" *ngIf="mesDemandesSeulement">{{ demandesFiltrees.length }} / {{ demandes.length }} demande(s)</span>
+            <span class="filterbar__count" *ngIf="!mesDemandesSeulement">{{ totalPublic }} demande(s)</span>
+            <ng-container *ngIf="mesDemandesSeulement">
+              <span class="filterbar__sep"></span>
+              <button class="filterbar__export"
+                      [disabled]="!demandesFiltrees.length || exportingExcel"
+                      (click)="exporterExcel()"
+                      title="Exporter la liste filtrée en Excel (avec tous les détails de chaque demande)">
+                <span *ngIf="!exportingExcel"><i class="bi bi-file-earmark-excel"></i> Exporter</span>
+                <span *ngIf="exportingExcel"><span class="spinner-border spinner-border-sm" role="status"></span> Préparation…</span>
+              </button>
+            </ng-container>
+          </div>
         </div>
       </div>
 
-      <!-- Liste compacte -->
-      <div class="up-list">
+      <!-- Chargement (mode « toutes ») -->
+      <div *ngIf="!mesDemandesSeulement && loadingPublic" class="up-state">
+        <div class="spinner-border text-secondary" style="width:1.5rem;height:1.5rem;"></div>
+        <span>Chargement des demandes…</span>
+      </div>
+
+      <!-- Aucune demande personnelle -->
+      <div *ngIf="mesDemandesSeulement && !errorMessage && demandes.length === 0" class="up-empty">
+        <div class="up-empty__icon"><i class="bi bi-inbox"></i></div>
+        <p class="up-empty__title">Aucune demande enregistrée</p>
+        <p class="up-empty__sub">Vos demandes d'acquisition apparaîtront ici une fois soumises.</p>
+        <a routerLink="/usager" class="up-empty__cta">
+          <i class="bi bi-plus-circle me-1"></i> Soumettre une demande
+        </a>
+      </div>
+
+      <!-- Liste compacte — Mes demandes -->
+      <div class="up-list" *ngIf="mesDemandesSeulement && demandes.length > 0">
         <ng-container *ngIf="demandesFiltrees.length > 0; else aucunResultat">
 
           <div class="up-card" *ngFor="let d of demandesPage" [ngClass]="'up-card--' + statutKey(d)">
@@ -185,12 +218,6 @@
                   </div>
                 </div>
 
-                <!-- Note -->
-                <div *ngIf="d.commentaire_admin || d.note_acq || d.note_commentaire" class="up-card__note">
-                  <i class="bi bi-chat-left-quote"></i>
-                  <span>{{ d.commentaire_admin || d.note_acq || d.note_commentaire }}</span>
-                </div>
-
               </div>
             </div>
 
@@ -256,6 +283,39 @@
         </ng-template>
       </div>
 
+      <!-- Liste compacte — Toutes les demandes (lecture seule) -->
+      <div class="up-list" *ngIf="!mesDemandesSeulement && !loadingPublic">
+        <ng-container *ngIf="demandesPubliques.length > 0; else aucunResultatPublic">
+
+          <div class="up-card up-card--readonly" *ngFor="let d of demandesPubliques" [ngClass]="'up-card--' + statutKeyPublique(d)">
+            <div class="up-card__row">
+              <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKeyPublique(d)">
+                <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
+              </span>
+              <div class="up-card__main">
+                <div class="up-card__top">
+                  <span class="up-type-label">{{ d.type_formulaire }}</span>
+                  <span class="up-badge" [ngClass]="'up-badge--' + statutKeyPublique(d)">{{ statutLabelPublique(d) }}</span>
+                </div>
+                <div class="up-card__titre">{{ d.titre_document || '—' }}</div>
+                <div class="up-card__meta">
+                  <span class="up-meta__date"><i class="bi bi-calendar3"></i> {{ formatDate(d.dateA) }}</span>
+                  <span *ngIf="d.bibliotheque" class="up-meta__chip"><i class="bi bi-building"></i> {{ d.bibliotheque }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+
+        <ng-template #aucunResultatPublic>
+          <div class="up-state" style="padding:2rem 1rem;">
+            <i class="bi bi-funnel text-muted"></i>
+            <span>Aucune demande ne correspond aux filtres sélectionnés.</span>
+          </div>
+        </ng-template>
+      </div>
+
       <!-- Pagination -->
       <div class="up-pagination" *ngIf="totalPages > 1">
         <button class="up-pagination__btn"
@@ -276,8 +336,11 @@
           <i class="bi bi-chevron-right"></i>
         </button>
 
-        <span class="up-pagination__info">
+        <span class="up-pagination__info" *ngIf="mesDemandesSeulement">
           {{ (currentPage - 1) * itemsPerPage + 1 }}–{{ currentPage * itemsPerPage > demandesFiltrees.length ? demandesFiltrees.length : currentPage * itemsPerPage }} sur {{ demandesFiltrees.length }}
+        </span>
+        <span class="up-pagination__info" *ngIf="!mesDemandesSeulement">
+          {{ (currentPage - 1) * itemsPerPage + 1 }}–{{ currentPage * itemsPerPage > totalPublic ? totalPublic : currentPage * itemsPerPage }} sur {{ totalPublic }}
         </span>
       </div>
 
