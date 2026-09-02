@@ -72,6 +72,102 @@
   user-select: none;
 }
 
+/* ── Formulaires ── */
+.ul-forms { position: relative; }
+
+.ul-forms__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ul-forms__btn:hover,
+.ul-forms--open .ul-forms__btn { background: rgba(255,255,255,0.16); }
+
+.ul-forms__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 300px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  overflow: hidden;
+  z-index: 200;
+}
+
+.ul-forms__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.ul-forms__body { padding: 0.35rem 0; max-height: 70vh; overflow-y: auto; }
+
+.ul-forms__group-label {
+  padding: 0.6rem 1rem 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-top: 1px solid #f0f4f8;
+  margin-top: 0.2rem;
+}
+.ul-forms__group-label--first { border-top: none; margin-top: 0; padding-top: 0.3rem; }
+
+.ul-forms__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: none;
+  border: none;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+.ul-forms__item:hover { background: #f1f5f9; }
+
+.ul-forms__item-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.ul-forms__item-icon--achat         { background: var(--achat-dark); }
+.ul-forms__item-icon--abonnement    { background: var(--type-vert); }
+.ul-forms__item-icon--ccol          { background: var(--acq-dark); }
+.ul-forms__item-icon--peb           { background: var(--type-cyan); }
+.ul-forms__item-icon--accessibilite { background: var(--text-gray); }
+.ul-forms__item-icon--suggest       { background: var(--suggest-mid); }
+
+.ul-forms__item-label { flex: 1; min-width: 0; }
+.ul-forms__item-arrow { font-size: 0.7rem; color: #cbd5e1; flex-shrink: 0; }
+
 /* ── Menu utilisateur ── */
 .ul-user { position: relative; }
 

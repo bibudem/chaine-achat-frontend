@@ -148,7 +148,8 @@
     "suggestion": "Purchase suggestion - User",
     "notif-titre": "Pending requests",
     "notif-vide": "All caught up",
-    "mes-demandes": "My requests"
+    "mes-demandes": "My requests",
+    "espace-depot": "Submission portal"
   },
   "login": {
     "messageConnexion": "You are connected.",

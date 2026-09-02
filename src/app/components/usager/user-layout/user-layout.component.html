@@ -11,6 +11,55 @@
     <!-- Droite -->
     <div class="ul-right">
 
+      <!-- Formulaires -->
+      <div class="ul-forms" [class.ul-forms--open]="formsOpen">
+        <button class="ul-forms__btn" (click)="toggleForms($event)" [title]="'header.formulaires' | translate">
+          <i class="bi bi-grid-3x3-gap-fill"></i>
+        </button>
+
+        <div class="ul-forms__panel" *ngIf="formsOpen" (click)="$event.stopPropagation()">
+          <div class="ul-forms__head">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+            <span>{{ 'header.formulaires' | translate }}</span>
+          </div>
+          <div class="ul-forms__body">
+            <div class="ul-forms__group-label ul-forms__group-label--first">Développement des collections</div>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/nouvel-achat')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--achat"><i class="bi bi-cart-plus"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.nouvel-achat' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/nouvel-abonnement')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--abonnement"><i class="bi bi-newspaper"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.nouvel-abonnement' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/modification-ccol')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--ccol"><i class="bi bi-pencil-square"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.modification-ccol' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+
+            <div class="ul-forms__group-label">Acquisitions pour les usagers</div>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/requete-accessibilite')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--accessibilite"><i class="bi bi-universal-access"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.accessibilite' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/suggestion-public')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--suggest"><i class="bi bi-lightbulb"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.suggestion' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+            <button class="ul-forms__item" (click)="ouvrirFormulaire('/usager/peb-tipasa-numerique')">
+              <span class="ul-forms__item-icon ul-forms__item-icon--peb"><i class="bi bi-share"></i></span>
+              <span class="ul-forms__item-label">{{ 'header.peb-tipasa' | translate }}</span>
+              <i class="bi bi-chevron-right ul-forms__item-arrow"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Menu utilisateur -->
       <div class="ul-user" [class.ul-user--open]="userOpen">
         <button class="ul-user__btn" (click)="toggleUser($event)">

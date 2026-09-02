@@ -131,7 +131,8 @@
     "suggestion": "Suggestion d'achat - Usager",
     "notif-titre": "Demandes en attente",
     "notif-vide": "Tout est traité",
-    "mes-demandes": "Mes demandes"
+    "mes-demandes": "Mes demandes",
+    "espace-depot": "Espace de dépôt"
   },
   "login": {
     "messageConnexion": "Vous êtes bien connecté",

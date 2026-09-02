@@ -161,6 +161,11 @@
               <span class="user-item__label">{{ 'header.mes-demandes' | translate }}</span>
               <i class="bi bi-chevron-right user-item__arrow"></i>
             </button>
+            <button *ngIf="authService.isAdmin || authService.isTdm" class="user-item" (click)="accederEspaceUsager()">
+              <i class="bi bi-door-open-fill user-item__icon"></i>
+              <span class="user-item__label">{{ 'header.espace-depot' | translate }}</span>
+              <i class="bi bi-chevron-right user-item__arrow"></i>
+            </button>
             <button class="user-item" (click)="logout()">
               <i class="bi bi-box-arrow-right user-item__icon"></i>
               <span class="user-item__label">{{ 'login.logout-text' | translate }}</span>

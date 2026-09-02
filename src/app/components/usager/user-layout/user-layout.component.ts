@@ -12,6 +12,7 @@ export class UserLayoutComponent implements OnInit {
   userName  = '';
   initiales = '';
   userOpen  = false;
+  formsOpen = false;
 
   currentLang: string = localStorage.getItem('lang') ?? 'fr';
 
@@ -31,11 +32,28 @@ export class UserLayoutComponent implements OnInit {
 
   toggleUser(event: Event): void {
     event.stopPropagation();
-    this.userOpen = !this.userOpen;
+    this.userOpen  = !this.userOpen;
+    this.formsOpen = false;
+  }
+
+  toggleForms(event: Event): void {
+    event.stopPropagation();
+    this.formsOpen = !this.formsOpen;
+    this.userOpen  = false;
+  }
+
+  /** Navigation directe (pas de nouvel onglet) — on est déjà dans l'espace usager, pas de
+   *  travail en cours à préserver dans un autre onglet contrairement au header admin. */
+  ouvrirFormulaire(chemin: string): void {
+    this.formsOpen = false;
+    this.router.navigate([chemin]);
   }
 
   @HostListener('document:click')
-  onDocumentClick(): void { this.userOpen = false; }
+  onDocumentClick(): void {
+    this.userOpen  = false;
+    this.formsOpen = false;
+  }
 
   mesDemandes(): void {
     this.userOpen = false;

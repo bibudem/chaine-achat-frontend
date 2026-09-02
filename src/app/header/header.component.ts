@@ -159,6 +159,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/usager/profil']);
   }
 
+  /** Admin/TDM → bascule vers l'espace de dépôt des demandes (portail usager) sans perdre la
+   *  session : UserGuard autorise déjà Admin/TDM sur /usager/**, il s'agit d'une simple
+   *  navigation, pas d'une reconnexion. */
+  accederEspaceUsager(): void {
+    this.userOpen = false;
+    this.router.navigate(['/usager']);
+  }
+
   logout(): void {
     this.authService.logout();
   }
