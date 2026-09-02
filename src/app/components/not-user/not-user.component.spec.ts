@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NotUserComponent } from './page-not-found.component';
+import { NotUserComponent } from './not-user.component';
 
 describe('NotUserComponent', () => {
   let component: NotUserComponent;

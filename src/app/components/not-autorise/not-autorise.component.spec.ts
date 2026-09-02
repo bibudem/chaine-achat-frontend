@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NotAutoriseComponent } from './page-not-found.component';
+import { NotAutoriseComponent } from './not-autorise.component';
 
 describe('NotAutoriseComponent', () => {
   let component: NotAutoriseComponent;

@@ -78,8 +78,8 @@ export class ListFondsComponent implements OnInit {
 
 
         });
-    } catch(err) {
-      console.error(`Error : ${err.Message}`);
+    } catch (err) {
+      console.error(`Error : ${err instanceof Error ? err.message : err}`);
       //
     }
   }
