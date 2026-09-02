@@ -56,7 +56,7 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     groupe:      'Usager',
     label:       'Bibliothèques',
     subtitle:    'Bibliothèques et Communauté UdeM',
-    description: 'Accès aux formulaires de demande uniquement',
+    description: 'Formulaires de demande, suivi de mes demandes et consultation de toutes les demandes',
     icon:        'bi-person-fill',
   },
 ];
