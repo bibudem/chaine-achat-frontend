@@ -36,6 +36,11 @@ export interface Reponse {
   suivi_acq?: string | null;
   statut_acq?: string | null;
   statut_bibliotheque?: string | null;
+  /** Existence réelle de l'item lié (item_id_cree) dans tbl_items — peut être false si
+   *  l'item a été supprimé alors que la réponse existe toujours. Voir
+   *  ReponsesModel.findAll/findById (backend) et canSupprimer (reponses-list.component.ts). */
+  item_existe?: boolean;
+  item_statut_bibliotheque?: string | null;
 }
 
 export interface DemandeUsager {

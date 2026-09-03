@@ -232,13 +232,17 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     return this.getStatutBibliotheque(reponse) === this.STATUT_BIB_FILTER;
   }
 
-  // Miroir de la garde côté backend (ReponsesModel.deleteById) : une demande déjà
-  // approuvée/refusée, ou déjà soumise aux ACQ, ne peut plus être supprimée.
+  // Miroir exact de la garde côté backend (ReponsesModel.deleteById) : une demande déjà
+  // approuvée/refusée ne peut plus être supprimée, et un item RÉELLEMENT existant et encore
+  // "Soumettre aux ACQ" protège la réponse. On se base sur item_existe/item_statut_bibliotheque
+  // (l'état réel de l'item lié, joint depuis tbl_items) plutôt que sur reponse.statut_bibliotheque
+  // (figé sur la réponse elle-même) : si l'item a été supprimé, il n'y a plus rien à protéger et
+  // la demande redevient supprimable, même si la réponse porte toujours "Soumettre aux ACQ".
   canSupprimer(reponse: Reponse): boolean {
     if (reponse.statut_approbation === 'approuve' || reponse.statut_approbation === 'refuse') {
       return false;
     }
-    return !this.canDecisionAcq(reponse);
+    return !(reponse.item_existe && reponse.item_statut_bibliotheque === 'Soumettre aux ACQ');
   }
 
   async supprimerReponse(reponse: Reponse): Promise<void> {
