@@ -959,7 +959,7 @@
     "aviser-activation": "Usager à aviser lors de l'activation",
     "aviser-activation-hint": "Courriel de l'usager à notifier lors de l'activation de la ressource (optionnel)",
     "nb-titres": "Nombre de titres inclus",
-    "nb-titres-hint": "Titres ou volumes inclus dans cet abonnement",
+    "nb-titres-hint": "Nombre de titres compris lors d'achats ou d'abonnements",
     "creation-notice": "Création de notice TDM (Acquisitions)",
     "creation-notice-hint": "Activé par défaut pour les formats imprimés",
     "localisation": "Localisation / Emplacement",

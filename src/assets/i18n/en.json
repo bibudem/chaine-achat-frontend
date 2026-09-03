@@ -959,7 +959,7 @@
     "aviser-activation": "User to notify upon activation",
     "aviser-activation-hint": "User email to notify upon resource activation (optional)",
     "nb-titres": "Number of titles included",
-    "nb-titres-hint": "Titles or volumes included in this subscription",
+    "nb-titres-hint": "Number of titles included in this purchase or subscription",
     "creation-notice": "TDM notice creation (Acquisitions)",
     "creation-notice-hint": "Enabled by default for print formats",
     "localisation": "Location / Placement",

@@ -248,14 +248,7 @@
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">
-                <div class="col-md-4">
-                  <label class="form-label">{{ 'forms-usager.nb-titres' | translate }}</label>
-                  <input type="number" min="1" formControlName="nombre_titres_inclus"
-                         class="form-control" placeholder="Ex : 1">
-                  <small class="form-text">Entier ≥ 1</small>
-                </div>
-
-                <div class="col-md-8">
+                <div class="col-md-12">
                   <label class="form-label">{{ 'forms-usager.personne-aviser-courriel' | translate }}</label>
                   <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
                          [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
