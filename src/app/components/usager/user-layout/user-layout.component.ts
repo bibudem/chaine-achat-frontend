@@ -15,6 +15,7 @@ export class UserLayoutComponent implements OnInit {
   formsOpen = false;
 
   currentLang: string = localStorage.getItem('lang') ?? 'fr';
+  currentYear: number = new Date().getFullYear();
 
   constructor(
     public  authService: AuthService,

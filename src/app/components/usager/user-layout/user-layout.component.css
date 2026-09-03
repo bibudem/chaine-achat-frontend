@@ -261,3 +261,29 @@
 .ul-user__item:hover { background: #f1f5f9; }
 .ul-user__item-icon  { font-size: 1rem; color: #64748b; }
 .ul-user__item-arrow { font-size: 0.7rem; color: #cbd5e1; margin-left: auto; }
+
+/* ── Footer ── */
+.ul-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eef1f6;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  text-align: center;
+}
+.ul-footer__title {
+  font-weight: 600;
+  color: #64748b;
+}
+.ul-footer__link {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.ul-footer__link:hover { color: #64748b; text-decoration: underline; }
+.ul-footer__sep { color: #cbd5e1; }

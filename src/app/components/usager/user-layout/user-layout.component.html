@@ -97,4 +97,14 @@
   <main class="container mt-4">
     <router-outlet></router-outlet>
   </main>
+
+  <footer class="ul-footer">
+    <span class="ul-footer__title">{{ 'app-title' | translate }}</span>
+    <span class="ul-footer__sep">·</span>
+    <a href="https://bib.umontreal.ca/" target="_blank" class="ul-footer__link">
+      {{ 'app-footer-link' | translate }}
+    </a>
+    <span class="ul-footer__sep">·</span>
+    <span>{{ currentYear }}</span>
+  </footer>
 </div>
