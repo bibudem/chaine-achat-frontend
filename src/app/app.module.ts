@@ -70,6 +70,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
+import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-u
     UsagerProfilComponent,
     PieceJointeGestionComponent,
     PieceJointeUploaderComponent,
+    SuggestionEmbedComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,

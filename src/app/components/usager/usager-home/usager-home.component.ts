@@ -114,7 +114,7 @@ export class UsagerHomeComponent implements OnInit {
       titre:       "Suggestion d'achat - Usager",
       description: "Demander l'achat de documents ayant fait l'objet d'une suggestion d'achat sur le site des bibliothèques. Exclusif à l'équipe Suggestions d'achat.",
       icon:        'bi-lightbulb',
-      route:       '/usager/suggestion-public',
+      route:       '/usager/suggestion-bib',
       accentColor: '#C8872A',
       bgColor:     '#FDF3E3',
       textColor:   '#7B4A15',

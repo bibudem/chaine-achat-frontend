@@ -117,6 +117,29 @@ export class ReponsesService {
   }
 
   // ──────────────────────────────────────────────────────────
+  // SUGGESTION D'ACHAT — formulaire public embarqué (iframe, sans authentification)
+  // Composant : public/suggestion-embed/suggestion-embed.component.ts
+  // Route     : POST /reponses/suggestion (même endpoint que ci-dessus)
+  // Contrairement à envoyerSuggestion(), l'identité ne vient pas de sessionStorage (il n'y a
+  // pas de session ici) mais directement des champs remplis dans le formulaire.
+  // ──────────────────────────────────────────────────────────
+  envoyerSuggestionPublique(
+    identite: { nom: string; courriel: string; statut: string },
+    reponses: Record<string, any>
+  ): Observable<any> {
+    const body: SuggestionPayload = {
+      type_formulaire: "Suggestion d'achat - Usager",
+      usager_nom:      identite.nom,
+      usager_courriel: identite.courriel,
+      usager_statut:   identite.statut,
+      reponses
+    };
+    return this.http
+      .post(`${this.baseUrl}/suggestion`, body, this.httpOptions)
+      .pipe(catchError(this.handleError('envoyerSuggestionPublique')));
+  }
+
+  // ──────────────────────────────────────────────────────────
   // NOUVEL ACHAT UNIQUE
   // Composant : nouvel-achat.component.ts
   // Route     : POST /reponses/nouvel-achat

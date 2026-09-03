@@ -22,9 +22,10 @@
   <!-- Bootstrap Icons : intégré dans le bundle Angular via angular.json (node_modules/bootstrap-icons)
        L'ancienne référence CDN créait un double chargement bloquant — supprimée -->
 
-  <!-- Masque le shell admin avant l'initialisation d'Angular sur les routes /usager -->
+  <!-- Masque le shell admin avant l'initialisation d'Angular sur les routes /usager et sur
+       le formulaire public embarqué en <iframe> (/suggestion-public) -->
   <script>
-    if (window.location.pathname.startsWith('/usager')) {
+    if (window.location.pathname.startsWith('/usager') || window.location.pathname.startsWith('/suggestion-public')) {
       document.documentElement.classList.add('usager-route');
     }
   </script>

@@ -13,6 +13,9 @@ export class AppComponent implements OnInit {
   title = 'projet-monographies';
   isUsagerRoute = false;
   isLoginRoute = false;
+  /** Formulaire public embarqué en <iframe> — même shell « nu » que /usager, sans le
+   *  widget FAQ (n'a pas sa place flottant par-dessus une page d'un site externe). */
+  isEmbedRoute = false;
 
   constructor(
     private translate: TranslateService,
@@ -25,7 +28,8 @@ export class AppComponent implements OnInit {
 
     // Initialisation immédiate avant le premier rendu
     const path = window.location.pathname;
-    this.isUsagerRoute = path.startsWith('/usager') || path.startsWith('/login');
+    this.isEmbedRoute  = path.startsWith('/suggestion-public');
+    this.isUsagerRoute = path.startsWith('/usager') || path.startsWith('/login') || this.isEmbedRoute;
     this.isLoginRoute  = path.startsWith('/login');
     if (!this.isUsagerRoute){
       document.documentElement.classList.remove('usager-route');
@@ -38,7 +42,8 @@ export class AppComponent implements OnInit {
       // NavigationStart au lieu de NavigationEnd pour réagir avant le rendu
       filter(event => event instanceof NavigationStart)
     ).subscribe((event: any) => {
-      this.isUsagerRoute = event.url.startsWith('/usager') || event.url.startsWith('/login');
+      this.isEmbedRoute  = event.url.startsWith('/suggestion-public');
+      this.isUsagerRoute = event.url.startsWith('/usager') || event.url.startsWith('/login') || this.isEmbedRoute;
       this.isLoginRoute  = event.url.startsWith('/login');
     });
   }

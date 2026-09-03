@@ -28,6 +28,7 @@ import { EditGuard } from './services/edit-guard.service';
 import { StaffGuard } from './services/staff-guard.service';
 import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
+import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
@@ -49,7 +50,7 @@ const routes: Routes = [
     children: [
       { path: '',          component: UsagerHomeComponent },
       { path: 'demande', component: UsagerFormulaireComponent },
-      { path: 'suggestion-public', component: SuggestionPublicComponent },
+      { path: 'suggestion-bib', component: SuggestionPublicComponent },
       { path: 'nouvel-achat', component: NouvelAchatComponent },
       { path: 'modification-ccol', component: ModificationCcolComponent },
       { path: 'requete-accessibilite', component: RequeteAccessibiliteComponent },
@@ -58,6 +59,10 @@ const routes: Routes = [
       { path: 'profil',              component: UsagerProfilComponent },
     ]
   },
+  // Formulaire public embarqué (iframe sur un site externe) : ni en-tête/pied de page (pas
+  // sous UserLayoutComponent), ni AuthGuard (pas d'authentification pour l'instant — voir
+  // suggestion-embed.component.ts).
+  { path: 'suggestion-public', component: SuggestionEmbedComponent },
   { path: 'page-not-found', component: PageNotFoundComponent  },
   { path: 'not-user', component: NotUserComponent },
   { path: 'not-acces', component: NotAutoriseComponent, canActivate: [AuthGuard] },

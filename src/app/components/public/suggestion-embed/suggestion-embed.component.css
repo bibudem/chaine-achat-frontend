@@ -1,0 +1,77 @@
+/* ============================================================
+   suggestion-embed.component.css
+   ACCENT : ambre doré (variables --suggest-*), identique à suggestion-public
+   Structure, responsive et composants partagés → css_udem.css
+   ============================================================ */
+
+/* ── Page embarquée (iframe) : pas de fond/marges pensés pour l'app avec en-tête ── */
+.form-page--embed {
+  min-height: 0;
+  background: transparent;
+  padding: 1rem 0;
+}
+
+/* ── En-tête clair ─────────────────────────────────────────── */
+.form-header {
+  border-top:    2px solid var(--suggest-border);
+  border-bottom: 2px solid var(--suggest-border);
+}
+.form-header__icon {
+  background: var(--suggest-mid);
+}
+
+/* ── Titre de section ──────────────────────────────────────── */
+.form-section__title {
+  border-bottom: 2px solid var(--suggest-light);
+}
+.form-section__title i { color: var(--suggest-mid); }
+
+/* ── Focus ring ambre sur les champs ───────────────────────── */
+.form-control,
+.form-select {
+  min-height: 42px !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--suggest-mid) !important;
+  box-shadow:   0 0 0 3px rgba(200, 135, 42, 0.15) !important;
+  outline:      none !important;
+}
+
+/* ── Zones conditionnelles ─────────────────────────────────── */
+.reserve-cours-fields {
+  background:    var(--suggest-light);
+  border:        1px solid rgba(200, 135, 42, 0.2);
+  border-radius: 8px;
+  padding:       16px 18px 8px;
+  margin-top:    4px;
+}
+
+/* ── Barre d'actions — un seul bouton, centré ──────────────── */
+.form-actions--single {
+  border-top: 2px solid var(--suggest-light);
+  justify-content: center;
+}
+
+/* ── Pièce jointe ───────────────────────────────────────────── */
+.pj-groupe {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+.pj-groupe ::ng-deep .piece-jointe-uploader .form-label {
+  display: none;
+}
+.pj-groupe ::ng-deep .piece-jointe-uploader .pju-box {
+  border: none;
+  padding: 0;
+  min-height: 0;
+}
+
+/* ── Écran de confirmation — surcharges couleur suggestion ─── */
+/* Structure et responsive définis dans css_udem.css */
+.confirmation-icon--suggestion {
+  background: linear-gradient(135deg, var(--suggest-mid), var(--suggest-dark));
+  box-shadow: 0 4px 16px rgba(200, 135, 42, 0.28);
+}

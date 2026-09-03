@@ -271,7 +271,7 @@ export class UsagerProfilComponent implements OnInit {
       'Nouvel abonnement':            'nouvel-abonnement',
       'PEB Tipasa numérique':         'peb-tipasa-numerique',
       'Requête ACQ Accessibilité':    'requete-accessibilite',
-      "Suggestion d'achat - Usager": 'suggestion-public',
+      "Suggestion d'achat - Usager": 'suggestion-bib',
     };
     return '/usager/' + (map[d.type_formulaire] ?? 'demande');
   }
