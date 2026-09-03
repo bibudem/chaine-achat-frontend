@@ -157,10 +157,7 @@
                 <!-- Type + badge + supprimer -->
                 <div class="up-card__top">
                   <span class="up-type-label">{{ d.type_formulaire }}</span>
-                  <span class="up-badge"
-                        [ngClass]="d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq ? 'up-badge--traitee' : 'up-badge--soumise') : 'up-badge--attente'">
-                    {{ d.statut_bibliotheque === 'Soumettre aux ACQ' ? (d.suivi_acq ? 'ACQ traité' : 'En attente ACQ') : 'Non envoyé aux ACQ' }}
-                  </span>
+                  <span class="up-badge" [ngClass]="badgeClass(d)">{{ badgeLabel(d) }}</span>
                   <div class="up-card__actions">
                     <a *ngIf="peutSupprimer(d)"
                        [routerLink]="routeFormulaire(d)"
@@ -295,7 +292,7 @@
               <div class="up-card__main">
                 <div class="up-card__top">
                   <span class="up-type-label">{{ d.type_formulaire }}</span>
-                  <span class="up-badge" [ngClass]="'up-badge--' + statutKeyPublique(d)">{{ statutLabelPublique(d) }}</span>
+                  <span class="up-badge" [ngClass]="badgeClassPublique(d)">{{ statutLabelPublique(d) }}</span>
                 </div>
                 <div class="up-card__titre">{{ d.titre_document || '—' }}</div>
                 <div class="up-card__meta">

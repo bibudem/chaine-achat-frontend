@@ -4,7 +4,7 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReponsesService, DemandeUsager, DemandePublique } from '../../../services/reponses.service';
 import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
-import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
+import { demandeBadgeStatut, estAcqEnAttenteDefaut } from '../../../lib/DemandeStatut';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
 
 @Component({
@@ -250,10 +250,21 @@ export class UsagerProfilComponent implements OnInit {
   }
 
   statutLabelPublique(d: DemandePublique): string {
+    if (estAcqEnAttenteDefaut(d) || this.statutKeyPublique(d) === 'soumise') return 'ACQ en attente';
     const labels: Record<string, string> = {
-      traitee: 'ACQ traité', soumise: 'En attente ACQ', attente: 'Non envoyé aux ACQ',
+      traitee: 'ACQ traité', attente: 'Non envoyé aux ACQ',
     };
     return labels[this.statutKeyPublique(d)];
+  }
+
+  /** Classe du badge top de carte (liste « Toutes les demandes ») — un seul badge « ACQ en
+   *  attente » tant que les ACQ n'ont pas réellement statué : ni suivi_acq renseigné du
+   *  tout (« soumise »), ni encore sur les valeurs par défaut du formulaire de décision
+   *  (voir estAcqEnAttenteDefaut) ne comptent comme traité. */
+  badgeClassPublique(d: DemandePublique): string {
+    const key = this.statutKeyPublique(d);
+    if (key === 'soumise' || estAcqEnAttenteDefaut(d)) return 'up-badge--acqAttente';
+    return 'up-badge--' + key;
   }
 
   statutKey(d: DemandeUsager): string {
@@ -262,6 +273,22 @@ export class UsagerProfilComponent implements OnInit {
     if (d.statut_bibliotheque === 'Soumettre aux ACQ') return 'soumise';
     if (d.statut_approbation === 'approuve') return 'cours';
     return 'attente';
+  }
+
+  /** Classe + libellé du badge top de carte (liste « Mes demandes ») — un seul badge « ACQ en
+   *  attente » tant que les ACQ n'ont pas réellement statué : ni suivi_acq vide, ni encore
+   *  sur les valeurs par défaut du formulaire de décision (estAcqEnAttenteDefaut) ne comptent
+   *  comme traité. */
+  badgeClass(d: DemandeUsager): string {
+    if (d.statut_bibliotheque !== 'Soumettre aux ACQ') return 'up-badge--attente';
+    if (!d.suivi_acq || estAcqEnAttenteDefaut(d)) return 'up-badge--acqAttente';
+    return 'up-badge--traitee';
+  }
+
+  badgeLabel(d: DemandeUsager): string {
+    if (d.statut_bibliotheque !== 'Soumettre aux ACQ') return 'Non envoyé aux ACQ';
+    if (!d.suivi_acq || estAcqEnAttenteDefaut(d)) return 'ACQ en attente';
+    return 'ACQ traité';
   }
 
   routeFormulaire(d: DemandeUsager): string {

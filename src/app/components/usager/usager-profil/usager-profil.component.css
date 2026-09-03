@@ -256,9 +256,14 @@
   white-space: nowrap; max-width: 200px;
   overflow: hidden; text-overflow: ellipsis;
 }
-.up-badge--attente { background: #fef3c7; color: #92400e; }
-.up-badge--soumise { background: #dbeafe; color: #1e40af; }
-.up-badge--traitee { background: #dcfce7; color: #166534; }
+/* Pas encore envoyée aux ACQ. */
+.up-badge--attente    { background: #fee2e2; color: #b91c1c; }
+/* Soumise aux ACQ, mais pas encore réellement traitée : ni suivi_acq renseigné, ni encore
+   sur les valeurs par défaut du formulaire de décision (voir estAcqEnAttenteDefaut dans
+   lib/DemandeStatut.ts) ne comptent comme traité — un seul badge pour les deux cas. */
+.up-badge--acqAttente { background: #f1f5f9; color: #475569; }
+/* Réellement traitée par les ACQ. */
+.up-badge--traitee    { background: #dbeafe; color: #1e40af; }
 
 /* Titre */
 .up-card__titre {
