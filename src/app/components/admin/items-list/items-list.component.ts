@@ -16,6 +16,8 @@ interface FavoriFilter {
   selectedFonds: string;
   selectedStatutAcq: string;
   selectedSuiviAcq: string;
+  selectedAnnee: string;
+  selectedPriorite: string;
 }
 
 @Component({
@@ -35,6 +37,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   selectedSuiviAcq       = '';
   selectedFormulaireType = '';
   selectedFonds          = '';
+  selectedPriorite       = '';
+  /** Année de date_creation ('' = toutes années). Pas de contrôle de filtre dédié dans la
+   *  barre (jugé pas nécessaire ici) — comme selectedStatutBib, activé uniquement via le
+   *  query param annee=YYYY (voir « Répartition par type », accueil.component.ts). */
+  selectedAnnee           = '';
 
   favoris:          FavoriFilter[] = [];
   showFavorisPanel  = false;
@@ -57,6 +64,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedSuiviAcq:       this.selectedSuiviAcq,
       selectedFormulaireType: this.selectedFormulaireType,
       selectedFonds:          this.selectedFonds,
+      selectedAnnee:          this.selectedAnnee,
+      selectedPriorite:       this.selectedPriorite,
       currentPage:            this.currentPage,
       sortColumn:             this.sortColumn,
       sortDirection:          this.sortDirection,
@@ -75,6 +84,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedSuiviAcq       = s.selectedSuiviAcq       ?? '';
       this.selectedFormulaireType = s.selectedFormulaireType ?? '';
       this.selectedFonds          = s.selectedFonds          ?? '';
+      this.selectedAnnee          = s.selectedAnnee          ?? '';
+      this.selectedPriorite       = s.selectedPriorite       ?? '';
       this.currentPage            = s.currentPage            ?? 1;
       this.sortColumn             = s.sortColumn             ?? 'date_creation';
       this.sortDirection          = s.sortDirection          ?? 'desc';
@@ -91,7 +102,9 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedBibliotheque,
       this.selectedStatutAcq,
       this.selectedSuiviAcq,
-      this.selectedFonds
+      this.selectedFonds,
+      this.selectedAnnee,
+      this.selectedPriorite
     ].filter(v => !!v).length;
   }
 
@@ -127,9 +140,29 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.lireDecisionParams();
     this.restoreFilterState();
 
-    const typeParam = this.route.snapshot.queryParamMap.get('formulaire_type');
-    if (typeParam && !sessionStorage.getItem(this.FILTER_STATE_KEY)) {
-      this.selectedFormulaireType = typeParam;
+    // Raccourcis depuis le tableau de bord admin (catalogue de types, Répartition par type,
+    // carte Demandes en attente) — vue déterministe : on repart des autres filtres à vide
+    // pour ne pas mélanger avec un filtrage oublié en session (l'état sauvegardé n'est pas
+    // perdu, seulement pas appliqué cette fois-ci), puis on applique réellement les filtres
+    // transmis pour qu'ils apparaissent dans la barre (pas de drapeau caché).
+    const typeParam         = this.route.snapshot.queryParamMap.get('formulaire_type');
+    const anneeParam        = this.route.snapshot.queryParamMap.get('annee');
+    const statutAcqParam    = this.route.snapshot.queryParamMap.get('statut_acq');
+    const suiviAcqParam     = this.route.snapshot.queryParamMap.get('suivi_acq');
+    const bibliothequeParam = this.route.snapshot.queryParamMap.get('bibliotheque');
+    const prioriteParam     = this.route.snapshot.queryParamMap.get('priorite_demande');
+    const searchParam       = this.route.snapshot.queryParamMap.get('search');
+    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam) {
+      this.searchTerm             = searchParam       ?? '';
+      this.selectedBibliotheque   = bibliothequeParam ?? '';
+      this.selectedStatutBib      = '';
+      this.selectedFormulaireType = typeParam         ?? '';
+      this.selectedFonds          = '';
+      this.selectedAnnee          = anneeParam        ?? '';
+      this.selectedStatutAcq      = statutAcqParam    ?? '';
+      this.selectedSuiviAcq       = suiviAcqParam     ?? '';
+      this.selectedPriorite       = prioriteParam     ?? '';
+      this.currentPage            = 1;
     }
 
     this.subs.add(
@@ -171,21 +204,23 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     const offset = (this.currentPage - 1) * this.itemsPerPage;
 
     this.itemService.getAll({
-      limit:          this.itemsPerPage,
+      limit:                 this.itemsPerPage,
       offset,
-      search:          this.searchTerm         || undefined,
-      bibliotheque:    this.selectedBibliotheque || undefined,
-      statut:              this.selectedStatutBib || this.selectedStatutAcq || undefined,
-      statut_bibliotheque: this.selectedStatutBib      || undefined,
-      statut_acq:          this.selectedStatutAcq      || undefined,
-      suivi_acq:           this.selectedSuiviAcq       || undefined,
-      formulaire_type:     this.selectedFormulaireType || undefined,
-      fonds_budgetaire:    this.selectedFonds           || undefined,
+      search:                this.searchTerm             || undefined,
+      bibliotheque:          this.selectedBibliotheque   || undefined,
+      statut:                this.selectedStatutBib || this.selectedStatutAcq || undefined,
+      statut_bibliotheque:   this.selectedStatutBib      || undefined,
+      statut_acq:            this.selectedStatutAcq      || undefined,
+      suivi_acq:             this.selectedSuiviAcq       || undefined,
+      formulaire_type:       this.selectedFormulaireType || undefined,
+      fonds_budgetaire:      this.selectedFonds          || undefined,
+      annee:                 this.selectedAnnee          || undefined,
+      priorite_demande:      this.selectedPriorite       || undefined,
       // Profil TDM : restreint systématiquement aux items routés vers le TDM (Création de
       // notice TDM = Oui) — imposé par le rôle, pas un filtre que l'utilisateur peut lever.
-      creation_notice_dtdm: this.authService.isTdm ? true : undefined,
-      sort:  this.sortColumn,
-      order: this.sortDirection
+      creation_notice_dtdm:  this.authService.isTdm ? true : undefined,
+      sort:                  this.sortColumn,
+      order:                 this.sortDirection
     }).subscribe({
       next: (res: ApiResponse<Item[]>) => {
         this.pagedItems = Array.isArray(res.data) ? res.data : [];
@@ -249,6 +284,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
     this.selectedFonds          = '';
+    this.selectedAnnee          = '';
+    this.selectedPriorite       = '';
     this.sortColumn             = 'date_creation';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
@@ -278,6 +315,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedFonds:          this.selectedFonds,
       selectedStatutAcq:      this.selectedStatutAcq,
       selectedSuiviAcq:       this.selectedSuiviAcq,
+      selectedAnnee:          this.selectedAnnee,
+      selectedPriorite:       this.selectedPriorite,
     });
     this.saveFavorisToStorage();
     this.nouveauFavoriNom = '';
@@ -291,6 +330,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedFonds          = f.selectedFonds;
     this.selectedStatutAcq      = f.selectedStatutAcq;
     this.selectedSuiviAcq       = f.selectedSuiviAcq;
+    this.selectedAnnee          = f.selectedAnnee ?? '';
+    this.selectedPriorite       = f.selectedPriorite ?? '';
     this.currentPage            = 1;
     this.loadItems();
     this.showFavorisPanel = false;
@@ -395,6 +436,14 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     if (!format) return '';
     return format === 'Imprimé/support physique' ? 'Imprimé'
          : format === 'Électronique' ? 'Électronique' : format;
+  }
+
+  getPrioriteBadgeClass(priorite: string | undefined | null): string {
+    const p = (priorite ?? '').toLowerCase();
+    if (p === 'urgent')      return 'badge-priorite--urgent';
+    if (p === 'prioritaire') return 'badge-priorite--prioritaire';
+    if (p === 'régulier' || p === 'regulier') return 'badge-priorite--regulier';
+    return 'badge-priorite--autre';
   }
 
   getTypeBadgeClass(type: string | undefined): string {

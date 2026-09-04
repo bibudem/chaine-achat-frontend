@@ -7,6 +7,10 @@ import { Router } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { formulaireTypeLabel, formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
+import { ReponsesService } from '../../../services/reponses.service';
+import { ItemFormulaireService } from '../../../services/items-formulaire.service';
+import { ACQ_STATUT_DEFAUT, ACQ_SUIVI_DEFAUT } from '../../../lib/DemandeStatut';
+import { anneesDisponibles } from '../../../lib/AnneesDisponibles';
 
 @Component({
   selector: 'app-accueil',
@@ -30,6 +34,18 @@ export class AccueilComponent implements OnInit, OnDestroy {
   hasError           = false;
   errorMessage       = '';
 
+  /** « Total des demandes en attente » — même compteur que la cloche de notifications
+   *  (reponsesService.getPendingBib), pas dashboardStats.totals.en_attente (qui est un
+   *  compte différent : statut_acq = 'En attente' sur la période sélectionnée seulement). */
+  totalEnAttente: number | null = null;
+  isLoadingEnAttente = true;
+
+  /** « Total demandes » — total RÉEL d'items dans le système, pas totals.total_items (qui
+   *  est scopé à la période sélectionnée — voir models/home.js, CTE `filtered`). Chargé via
+   *  la même liste que la page /items (limit=1, on ne veut que le count). */
+  totalItemsSysteme: number | null = null;
+  isLoadingTotalItems = true;
+
   /* ─── Panneau aide ─── */
   showHelpPanel = false;
 
@@ -47,8 +63,15 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /* ─── Subscriptions ─── */
   private subs = new Subscription();
 
-  /* ─── Période sélectionnée ─── */
-  private _selectedPeriod: Period = '7days';
+  /* ─── Année sélectionnée ─── (filtre les panels d'activité — répartition par type, top
+     demandeurs, par bibliothèque ; "all" = toutes années confondues. N'affecte pas les 4
+     cartes du haut ni Par statut/suivi ACQ, toujours à jour — voir models/home.js).
+     Défaut = année en cours plutôt que "all" : avec beaucoup de données, "all" force ces
+     panels à scanner tout l'historique à chaque chargement du tableau de bord au lieu de
+     l'année courante seule (index range scan sur date_creation). */
+  readonly availableYears: number[] = anneesDisponibles();
+
+  private _selectedPeriod: Period = String(this.availableYears[0] ?? 'all');
 
   get selectedPeriod(): Period { return this._selectedPeriod; }
 
@@ -58,8 +81,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
       this.loadAllData();
     }
   }
-
-  
 
   /* ─── Utilitaires template ─── */
   readonly Math = Math;
@@ -119,13 +140,17 @@ export class AccueilComponent implements OnInit, OnDestroy {
     private dialog: DialogService,
     private translate: TranslateService,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private reponsesService: ReponsesService,
+    private itemService: ItemFormulaireService
   ) {}
 
   ngOnInit(): void {
     this.loadAcqConfig();
     this.loadAllData();
     this.loadTypeCounts();
+    this.loadTotalEnAttente();
+    this.loadTotalItemsSysteme();
   }
 
   ngOnDestroy(): void {
@@ -206,12 +231,87 @@ export class AccueilComponent implements OnInit, OnDestroy {
    *  vers la liste des items (catalogue, légende, « Voir tout ») sont désactivés. */
   navigateTo(path: string): void {
     if (this.authService.isTdm) return;
-    this.router.navigate([path]);
+    this.router.navigate([path], { queryParams: { annee: this.anneeQueryParam } });
   }
 
+  /** « Répartition par type » (byType) reflète l'année sélectionnée sur le tableau de
+   *  bord — les liens vers la liste des items doivent porter le même filtre, sinon le
+   *  nombre affiché ici ne correspond plus à ce qu'on voit en arrivant sur /items. */
   navigateToType(formulaire_type: string): void {
     if (this.authService.isTdm) return;
-    this.router.navigate(['/items'], { queryParams: { formulaire_type } });
+    this.router.navigate(['/items'], { queryParams: { formulaire_type, annee: this.anneeQueryParam } });
+  }
+
+  /** Carte « Demandes urgentes » → liste des items, priorité Urgent ET encore en attente ACQ
+   *  (mêmes valeurs par défaut que « Demandes en attente » — voir total_urgentes_attente dans
+   *  models/home.js). Pas d'année transmise : toujours toutes années, comme la carte. */
+  navigateToUrgentesEnAttente(): void {
+    if (this.authService.isTdm) return;
+    this.router.navigate(['/items'], {
+      queryParams: { priorite_demande: 'Urgent', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    });
+  }
+
+  /** « Top 5 demandeurs » (activité, suit l'année sélectionnée comme Répartition par type) →
+   *  liste des items, avec le nom du demandeur dans la recherche libre (même champ que
+   *  demandeur/titre/isbn/éditeur/id sur /items). */
+  navigateToDemandeur(demandeur: string): void {
+    if (this.authService.isTdm) return;
+    this.router.navigate(['/items'], { queryParams: { search: demandeur, annee: this.anneeQueryParam } });
+  }
+
+  /** Catalogue « Types de formulaire » → formulaire de création, type pré-sélectionné (voir
+   *  item-formulaire.component.ts, query param ?type=...). Contrairement à navigateToType
+   *  (liste filtrée, lecture seule), ceci crée un item — réservé à canEdit. */
+  navigateToNouveau(formulaire_type: string): void {
+    if (!this.authService.canEdit) return;
+    this.router.navigate(['/items/nouveau'], { queryParams: { type: formulaire_type } });
+  }
+
+  /** undefined (pas de query param) quand "Toutes années" est sélectionné. */
+  private get anneeQueryParam(): string | undefined {
+    return this.selectedPeriod !== 'all' ? this.selectedPeriod : undefined;
+  }
+
+  /** « Par bibliothèque » (libraryStats) reflète aussi l'année sélectionnée — même raison
+   *  que navigateToType. */
+  navigateToBibliotheque(bibliotheque: string): void {
+    if (this.authService.isTdm) return;
+    this.router.navigate(['/items'], { queryParams: { bibliotheque, annee: this.anneeQueryParam } });
+  }
+
+  /** Carte « Demandes en attente » → liste des items, avec les filtres Statut ACQ/Suivi ACQ
+   *  réellement sélectionnés dans la barre (pas un drapeau caché) — mêmes valeurs par défaut
+   *  que la cloche de notifications (voir loadTotalEnAttente). */
+  navigateToEnAttente(): void {
+    if (this.authService.isTdm) return;
+    this.router.navigate(['/items'], {
+      queryParams: { statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    });
+  }
+
+  private loadTotalEnAttente(): void {
+    this.isLoadingEnAttente = true;
+    const sub = this.reponsesService.getPendingBib(1).subscribe({
+      next:  res => { this.totalEnAttente = res.count; this.isLoadingEnAttente = false; },
+      error: ()  => { this.totalEnAttente = null;       this.isLoadingEnAttente = false; }
+    });
+    this.subs.add(sub);
+  }
+
+  /** Carte « Total demandes » → liste des items, sans filtre. */
+  navigateToItemsListe(): void {
+    if (this.authService.isTdm) return;
+    this.router.navigate(['/items']);
+  }
+
+  private loadTotalItemsSysteme(): void {
+    this.isLoadingTotalItems = true;
+    const sub = this.itemService.getAll({ limit: 1 }).subscribe({
+      next:  res => { this.totalItemsSysteme = res.total ?? 0; this.isLoadingTotalItems = false; },
+      error: ()  => { this.totalItemsSysteme = null;           this.isLoadingTotalItems = false; }
+    });
+    this.subs.add(sub);
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -221,8 +321,23 @@ export class AccueilComponent implements OnInit, OnDestroy {
   get byType()        { return this.dashboardStats.byType        ?? []; }
   get byPriority()    { return this.dashboardStats.byPriority    ?? []; }
   get topDemandeurs() { return this.dashboardStats.topDemandeurs ?? []; }
+  get byStatutAcq()   { return this.dashboardStats.byStatutAcq   ?? []; }
+  get bySuiviAcq()    { return this.dashboardStats.bySuiviAcq    ?? []; }
   get byMonth()       { return this.dashboardStats.byMonth       ?? []; }
-  get libraryStats()  { return this.graphData?.libraryStats       ?? []; }
+  get libraryStats()  { return this.graphData?.libraryStats      ?? []; }
+
+  /** Panel « Par statut/suivi ACQ » : bascule entre les deux répartitions (même donut). */
+  acqBreakdownField: 'statut' | 'suivi' = 'statut';
+
+  setAcqBreakdownField(field: 'statut' | 'suivi'): void {
+    this.acqBreakdownField = field;
+  }
+
+  get acqBreakdownItems(): { label: string; count: number }[] {
+    return this.acqBreakdownField === 'statut'
+      ? this.byStatutAcq.map(s => ({ label: s.statut, count: s.count }))
+      : this.bySuiviAcq.map(s => ({ label: s.suivi, count: s.count }));
+  }
 
   /**
    * Retourne le count du top demandeur (pour l'axe des barres)
@@ -240,32 +355,16 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return this.calculatePercentage(this.totals.en_attente, this.totals.total_items);
   }
 
-  /* Dérivés de byPriority (déjà chargé pour le donut) */
-  get urgentCount(): number {
-    return this.byPriority.find(p =>
-      p.priorite?.toLowerCase().includes('urgent')
-    )?.count ?? 0;
-  }
-
+  /* Dérivés de byPriority — badge secondaire de la carte "Demandes urgentes" (toutes
+     priorités confondues, contrairement à totals.total_urgentes_attente ci-dessus). */
   get prioritaireCount(): number {
     return this.byPriority.find(p =>
       p.priorite?.toLowerCase().includes('prioritaire')
     )?.count ?? 0;
   }
 
-  get regulierCount(): number {
-    return this.byPriority.find(p =>
-      p.priorite?.toLowerCase().includes('régulier') ||
-      p.priorite?.toLowerCase().includes('regulier')
-    )?.count ?? 0;
-  }
-
   get periodLabel(): string {
-    switch (this._selectedPeriod) {
-      case '30days': return '30 derniers jours';
-      case '90days': return '90 derniers jours';
-      default:       return '7 derniers jours';
-    }
+    return this._selectedPeriod === 'all' ? 'Toutes années' : this._selectedPeriod;
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -280,24 +379,11 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return Math.round((part / total) * 100);
   }
 
-  getPriorityColor(priority: string): string {
-    if (!priority) return '#607386';
-    const p = priority.toLowerCase().trim();
-    switch (p) {
-      case 'urgent':         return '#F04E24';
-      case 'prioritaire':    return '#52B782';
-      case 'régulier':
-      case 'regulier':       return '#2178C4';
-      case 'non spécifiée':
-      case 'non specifiee':
-      case 'non spécifié':
-      case 'non specifie':   return '#FFE8AC';
-      default:               return '#7A8DA0';
-    }
-  }
-
   getBibColor(index: number): string {
-    const colors = ['#0b113a', '#00407F', '#2380D1', '#246405', '#52B782', '#F04E24', '#FFCA40'];
+    // #FFCA40 (doré/orangé) juste après #F04E24 (rouge-orangé) se confondait avec lui dans
+    // les légendes à plusieurs catégories — remplacé par un jaune plus doux et net. Assez
+    // saturé pour rester lisible utilisé comme couleur de texte (voir .bib-total).
+    const colors = ['#0b113a', '#00407F', '#2380D1', '#246405', '#52B782', '#F04E24', '#EAB308'];
     return colors[index % colors.length];
   }
 
@@ -411,32 +497,40 @@ export class AccueilComponent implements OnInit, OnDestroy {
   private defaultStats(): DashboardStats {
     return {
       totals: {
-        total_items:       0,
-        unique_demandeurs: 0,
-        items_last_7_days: 0,
-        en_traitement:     0,
-        termines:          0,
-        en_attente:        0
+        total_items:            0,
+        unique_demandeurs:      0,
+        items_last_7_days:      0,
+        total_traitees:         0,
+        total_urgentes_attente: 0,
+        en_traitement:          0,
+        termines:               0,
+        en_attente:             0
       },
       byType:        [],
       byMonth:       [],
       byPriority:    [],
+      byStatutAcq:   [],
+      bySuiviAcq:    [],
       topDemandeurs: []
     };
   }
 
-  generateDonutGradient(): string {
-    if (!this.byPriority?.length) return '#e7ebee';
-    const total = this.byPriority.reduce((sum, p) => sum + (p.count || 0), 0);
+  generateAcqDonutGradient(): string {
+    return this.buildDonutGradient(this.acqBreakdownItems, (item, index) => this.getBibColor(index));
+  }
+
+  private buildDonutGradient(items: { count: number }[], colorOf: (item: any, index: number) => string): string {
+    if (!items?.length) return '#e7ebee';
+    const total = items.reduce((sum, p) => sum + (p.count || 0), 0);
     if (!total) return '#e7ebee';
 
     let cumulative = 0;
-    const segments = this.byPriority.map((p, index) => {
+    const segments = items.map((p, index) => {
       const percentage = (p.count || 0) / total * 100;
       const start = cumulative;
       cumulative += percentage;
-      const end = index === this.byPriority.length - 1 ? 100 : cumulative;
-      return `${this.getPriorityColor(p.priorite)} ${start}% ${end}%`;
+      const end = index === items.length - 1 ? 100 : cumulative;
+      return `${colorOf(p, index)} ${start}% ${end}%`;
     });
 
     return `conic-gradient(${segments.join(',')})`;

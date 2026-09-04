@@ -8,16 +8,22 @@ import { environment } from 'src/environments/environment';
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export type Period = '7days' | '30days' | '90days';
+/** Année calendaire à filtrer (ex. "2026"), ou "all" pour toutes années confondues. */
+export type Period = string;
 
 export interface DashboardStats {
   totals: {
-    total_items:       number;
-    unique_demandeurs: number;
-    items_last_7_days: number;
-    en_traitement:     number;
-    termines:          number;
-    en_attente:        number;
+    total_items:            number;
+    unique_demandeurs:      number;
+    items_last_7_days:      number;
+    /** Toutes années — voir carte "Demandes traitées" (accueil.component.ts). */
+    total_traitees:         number;
+    /** Toutes années — priorité Urgent ET encore en attente ACQ, voir carte "Demandes
+     *  urgentes" (accueil.component.ts). */
+    total_urgentes_attente: number;
+    en_traitement:          number;
+    termines:               number;
+    en_attente:             number;
   };
   byType: Array<{
     formulaire_type: string;
@@ -33,32 +39,30 @@ export interface DashboardStats {
     count:          number;
     order_priority: number;
   }>;
+  byStatutAcq: Array<{
+    statut: string;
+    count:  number;
+  }>;
+  bySuiviAcq: Array<{
+    suivi: string;
+    count: number;
+  }>;
   topDemandeurs: Array<{
     demandeur: string;
     count:     number;
     rank:      number;
   }>;
-  period?:     string;
-  periodDays?: number;
+  /** Année filtrée ("2026") ou "all" — voir Period ci-dessus. */
+  period?: string;
 }
 
+/** dailyStats/statusEvolution retirés côté backend (calculés mais jamais consommés) — voir
+ *  models/home.js, getGraphiqueDonnees. */
 export interface GraphData {
-  dailyStats: Array<{
-    date:           string;
-    count:          number;
-    completed:      number;
-    achats_uniques: number;
-    abonnements:    number;
-  }>;
   libraryStats: Array<{
     bibliotheque: string;
     total:        number;
     percentage:   number;
-  }>;
-  statusEvolution: Array<{
-    date:                string;
-    statut_bibliotheque: string;
-    count:               number;
   }>;
 }
 
@@ -104,7 +108,7 @@ export class HomeService {
      GET /home/all?period=...
      Appel principal — dashboard + graphiques
   ───────────────────────────────────────────── */
-  getAllHomeData(period: Period = '7days'): Observable<ApiResponse<AllHomeData>> {
+  getAllHomeData(period: Period = 'all'): Observable<ApiResponse<AllHomeData>> {
     return this.http
       .get<ApiResponse<AllHomeData>>(`${this.baseUrl}/all`, this.params(period))
       .pipe(
@@ -120,7 +124,7 @@ export class HomeService {
   /* ─────────────────────────────────────────────
      GET /home/dashboard?period=...
   ───────────────────────────────────────────── */
-  getDashboardStats(period: Period = '7days'): Observable<ApiResponse<DashboardStats>> {
+  getDashboardStats(period: Period = 'all'): Observable<ApiResponse<DashboardStats>> {
     return this.http
       .get<ApiResponse<DashboardStats>>(`${this.baseUrl}/dashboard`, this.params(period))
       .pipe(
@@ -147,7 +151,7 @@ export class HomeService {
   /* ─────────────────────────────────────────────
      GET /home/graph?period=...
   ───────────────────────────────────────────── */
-  getGraphData(period: Period = '7days'): Observable<ApiResponse<GraphData>> {
+  getGraphData(period: Period = 'all'): Observable<ApiResponse<GraphData>> {
     return this.http
       .get<ApiResponse<GraphData>>(`${this.baseUrl}/graph`, this.params(period))
       .pipe(

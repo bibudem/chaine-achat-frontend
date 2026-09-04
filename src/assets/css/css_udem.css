@@ -72,14 +72,22 @@
   --sc-green-end:  #3a8a0e;
   --sc-orange-dk:  #7a2000;
   --sc-orange-mid: #c84200;
-  --sc-teal-dk:    #003366;
-  --sc-teal-mid:   #005fa3;
+  /* --sc-teal-* était en fait un dégradé bleu (confondu avec --sc-blue-*, carte "Total
+     demandes") — vrai teal ici, même famille que --achat-dark/--achat-mid ci-dessus. */
+  --sc-teal-dk:    #0f3d3e;
+  --sc-teal-mid:   #1b7d74;
+  --sc-teal-end:   #4fd1c5;
+  /* Ambre — "Demandes en attente" : le vert (succès/terminé) était trompeur pour un état
+     encore en attente ; distinct du rouge-orangé déjà utilisé pour "Demandes urgentes". */
+  --sc-amber-dk:   #78350f;
+  --sc-amber-mid:  #b45309;
+  --sc-amber-end:  #fbbf24;
 
   /* ── Arrière-plans de cartes thématiques ────────────────── */
   --blue-card-bg:   #EBF3FB;
   --green-card-bg:  #EAF3E8;
   --orange-card-bg: #FDF0EB;
-  --teal-card-bg:   #E8F3FA;
+  --teal-card-bg:   #E3F6F3;
   --gray-card-bg:   #EEF0F2;
 
   /* ── Types de demande (palette 7 types) ─────────────────── */
@@ -1398,6 +1406,15 @@ select.typeahead, select.tt-query, select.tt-hint {
 .badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }  /* Requête ACQ — Gris foncé */
 .badge-type--suggest  { background: #FDF3E3; color: #7B4A15; border: 1px solid rgba(200,135,42,.3); }  /* Suggestion — Ambre      */
 .badge-type--autre    { background: var(--light-gray);       color: var(--medium-gray); }               /* Autre — Neutre          */
+
+/* =============================================
+   PRIORITÉ DE LA DEMANDE — texte coloré, pas de badge (trop chargé dans la liste des items)
+   items-list, item-detail.
+   ============================================= */
+.badge-priorite--urgent      { color: #B72600; } /* Urgent — Rouge-orangé */
+.badge-priorite--prioritaire { color: #166534; } /* Prioritaire — Vert    */
+.badge-priorite--regulier    { }                 /* Régulier — couleur de texte par défaut */
+.badge-priorite--autre       { color: var(--medium-gray); } /* Non spécifiée — Neutre */
 
 /* =============================================
    SPINNER

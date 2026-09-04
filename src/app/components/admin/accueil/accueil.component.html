@@ -90,10 +90,9 @@
       <!-- ── Séparateur ── -->
       <div class="db-actions-sep"></div>
 
-      <select class="form-select form-select-sm" [(ngModel)]="selectedPeriod" style="width:160px">
-        <option value="7days">{{ 'accueil.7-jours' | translate }}</option>
-        <option value="30days">{{ 'accueil.30-jours' | translate }}</option>
-        <option value="90days">{{ 'accueil.90-jours' | translate }}</option>
+      <select class="form-select form-select-sm" [(ngModel)]="selectedPeriod" style="width:160px" [title]="'accueil.filtre-annee-hint' | translate">
+        <option value="all">{{ 'accueil.toutes-annees' | translate }}</option>
+        <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
       </select>
       <button class="btn btn-outline-primary btn-sm db-refresh"
               (click)="refreshData()"
@@ -115,9 +114,9 @@
   ══════════════════════════════════════════════ -->
   <div class="db-stats">
 
-    <div class="sc sc--blue">
+    <div class="sc sc--blue" [class.sc--clickable]="!authService.isTdm" (click)="navigateToItemsListe()">
       <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_items) }}</span>
+        <span class="sc__val">{{ isLoadingTotalItems ? '—' : formatNumber(totalItemsSysteme || 0) }}</span>
         <span class="sc__badge" *ngIf="!isLoadingDashboard">+{{ formatNumber(totals.items_last_7_days) }} / 7j</span>
       </div>
       <div class="sc__divider"></div>
@@ -129,23 +128,37 @@
       </div>
     </div>
 
-    <div class="sc sc--green">
+    <div class="sc sc--amber" [class.sc--clickable]="!authService.isTdm" (click)="navigateToEnAttente()">
       <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.unique_demandeurs) }}</span>
-        <span class="sc__badge">{{ 'accueil.actifs' | translate }}</span>
+        <span class="sc__val">{{ isLoadingEnAttente ? '—' : formatNumber(totalEnAttente || 0) }}</span>
+        <span class="sc__badge"><i class="bi bi-hourglass-split"></i></span>
       </div>
       <div class="sc__divider"></div>
       <div class="sc__bottom">
-        <span class="sc__lbl">{{ 'accueil.demandeurs-uniques' | translate }}</span>
+        <span class="sc__lbl">{{ 'accueil.demandes-en-attente' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,26 10,20 22,16 34,18 46,10 56,7 64,4" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
 
-    <div class="sc sc--orange">
+    <div class="sc sc--green">
       <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(urgentCount) }}</span>
+        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_traitees) }}</span>
+        <span class="sc__badge" *ngIf="!isLoadingDashboard && !isLoadingTotalItems">{{ calculatePercentage(totals.total_traitees, totalItemsSysteme || 0) }}{{ 'accueil.du-total' | translate }}</span>
+      </div>
+      <div class="sc__divider"></div>
+      <div class="sc__bottom">
+        <span class="sc__lbl">{{ 'accueil.demandes-traitees' | translate }}</span>
+        <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
+          <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="sc sc--orange" [class.sc--clickable]="!authService.isTdm" (click)="navigateToUrgentesEnAttente()">
+      <div class="sc__top">
+        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_urgentes_attente) }}</span>
         <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(prioritaireCount) }} {{ 'accueil.prioritaires' | translate }}</span>
       </div>
       <div class="sc__divider"></div>
@@ -153,20 +166,6 @@
         <span class="sc__lbl">{{ 'accueil.demandes-urgentes' | translate }}</span>
         <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
           <polyline points="0,10 10,16 22,12 34,18 46,14 56,20 64,16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="sc sc--teal">
-      <div class="sc__top">
-        <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(regulierCount) }}</span>
-        <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ calculatePercentage(regulierCount, totals.total_items) }}{{ 'accueil.du-total' | translate }}</span>
-      </div>
-      <div class="sc__divider"></div>
-      <div class="sc__bottom">
-        <span class="sc__lbl">{{ 'accueil.priorite-reguliere' | translate }}</span>
-        <svg class="sc__spark" viewBox="0 0 64 28" preserveAspectRatio="none">
-          <polyline points="0,26 10,22 22,17 34,13 46,8 56,6 64,3" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
@@ -200,9 +199,9 @@
               </div>
               <div *ngFor="let type of groupe.types"
                    class="catalog-row"
-                   [class.db-link-disabled]="authService.isTdm"
-                   (click)="navigateToType(type)"
-                   [title]="authService.isTdm ? '' : ('Filtrer · ' + formulaireTypeLabel(type))">
+                   [class.db-link-disabled]="!authService.canEdit"
+                   (click)="navigateToNouveau(type)"
+                   [title]="authService.canEdit ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
                 <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorIndex(type) + '-bg'">
                   <i [class]="getTypeIcon(type)"></i>
                 </div>
@@ -277,7 +276,10 @@
           </div>
 
           <ng-container *ngIf="!isLoadingGraphs && libraryStats.length > 0">
-            <div *ngFor="let lib of libraryStats; let i = index" class="bib-row">
+            <div *ngFor="let lib of libraryStats; let i = index" class="bib-row"
+                 [class.db-link-disabled]="authService.isTdm || lib.bibliotheque === 'Non spécifiée'"
+                 (click)="lib.bibliotheque !== 'Non spécifiée' && navigateToBibliotheque(lib.bibliotheque)"
+                 [title]="authService.isTdm || lib.bibliotheque === 'Non spécifiée' ? '' : ('Voir les demandes · ' + lib.bibliotheque)">
               <div class="bib-gauge"
                    [style.background]="'conic-gradient(' + getBibColor(i) + ' 0% ' + lib.percentage + '%, #E5F0F8 ' + lib.percentage + '% 100%)'">
                 <div class="bib-gauge__inner">
@@ -301,38 +303,44 @@
       <!-- ══ COL droite ══ -->
     <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-center">
 
-      <!-- Rangée 1 : Priorités donut -->
+      <!-- Rangée 1 : Statut ACQ / Suivi ACQ donut (bascule) — état actuel de tous les items,
+           pas limité à la période sélectionnée (voir models/home.js, by_statut_acq/by_suivi_acq). -->
       <div class="panel panel--priority mb-3 flex-grow-1">
         <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.par-priorite' | translate }}</span>
-          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ totals.total_items }} {{ 'accueil.demandes' | translate }}</span>
+          <span class="panel__title">{{ (acqBreakdownField === 'statut' ? 'accueil.par-statut-acq' : 'accueil.par-suivi-acq') | translate }}</span>
+          <div class="acq-toggle">
+            <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'statut'"
+                    (click)="setAcqBreakdownField('statut')">{{ 'accueil.statut-acq' | translate }}</button>
+            <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'suivi'"
+                    (click)="setAcqBreakdownField('suivi')">{{ 'accueil.suivi-acq' | translate }}</button>
+          </div>
         </div>
         <div class="panel__body panel__body--donut">
 
-          <div *ngIf="isLoadingDashboard" class="db-spinner">
+          <div *ngIf="isLoadingDashboard || isLoadingTotalItems" class="db-spinner">
             <div class="spinner-border spinner-border-sm text-primary"></div>
           </div>
 
-          <ng-container *ngIf="!isLoadingDashboard && byPriority.length > 0">
-            <div class="priority-donut" [style.background]="generateDonutGradient()">
+          <ng-container *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length > 0">
+            <div class="priority-donut" [style.background]="generateAcqDonutGradient()">
               <div class="priority-donut__inner">
-                <span class="priority-donut__total">{{ totals.total_items }}</span>
+                <span class="priority-donut__total">{{ totalItemsSysteme }}</span>
                 <span class="priority-donut__label">{{ 'accueil.total' | translate }}</span>
               </div>
             </div>
             <div class="priority-legend">
-              <div class="priority-legend__item" *ngFor="let p of byPriority">
-                <span class="priority-legend__color" [style.background]="getPriorityColor(p.priorite)"></span>
-                <span class="priority-legend__text">{{ p.priorite }}</span>
+              <div class="priority-legend__item" *ngFor="let s of acqBreakdownItems; let i = index">
+                <span class="priority-legend__color" [style.background]="getBibColor(i)"></span>
+                <span class="priority-legend__text">{{ s.label }}</span>
                 <span class="priority-legend__value">
-                  {{ formatNumber(p.count) }}
-                  <span class="priority-legend__pct">({{ calculatePercentage(p.count, totals.total_items) }}%)</span>
+                  {{ formatNumber(s.count) }}
+                  <span class="priority-legend__pct">({{ calculatePercentage(s.count, totalItemsSysteme || 0) }}%)</span>
                 </span>
               </div>
             </div>
           </ng-container>
 
-          <p *ngIf="!isLoadingDashboard && byPriority.length === 0" class="db-empty">{{ 'accueil.aucune-donnee-courte' | translate }}</p>
+          <p *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length === 0" class="db-empty">{{ 'accueil.aucune-donnee-courte' | translate }}</p>
         </div>
       </div>
       <div  class="panel panel--statuts flex-grow-1">
@@ -349,7 +357,10 @@
           <ng-container *ngIf="!isLoadingDashboard">
             <!-- Barres top 5 -->
             <ng-container *ngIf="topDemandeurs.length > 0">
-              <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row">
+              <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row"
+                   [class.db-link-disabled]="authService.isTdm"
+                   (click)="navigateToDemandeur(d.demandeur)"
+                   [title]="authService.isTdm ? '' : ('Voir les demandes · ' + d.demandeur)">
                 <span class="hbar-label">{{ d.demandeur }}</span>
                 <div class="hbar-track">
                   <div class="hbar-fill"

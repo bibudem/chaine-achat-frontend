@@ -47,20 +47,25 @@
       <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
     </select>
 
+    <select class="filterbar__select" [(ngModel)]="selectedPriorite" (change)="onFilterChange()">
+      <option value="">{{ 'items.priorite-placeholder' | translate }}</option>
+      <option *ngFor="let p of options.prioriteOptions" [value]="p.value">{{ p.label }}</option>
+    </select>
+
     <input type="text" class="filterbar__input"
            placeholder="Fonds…"
            [(ngModel)]="selectedFonds"
            (input)="onFilterChange()"
            (keyup.enter)="onFilterChange()">
 
-    <select class="filterbar__select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
-      <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
-      <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
-    </select>
-
     <select class="filterbar__select" [(ngModel)]="selectedSuiviAcq" (change)="onFilterChange()">
       <option value="">{{ 'items.suivi-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqSuiviOptions" [value]="s">{{ s }}</option>
+    </select>
+
+    <select class="filterbar__select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
+      <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
+      <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
     </select>
 
     <div class="filterbar__actions" (click)="$event.stopPropagation()">
@@ -164,6 +169,9 @@
                   <th class="col-type sortable-col" (click)="sortBy('formulaire_type')">
                     {{ 'items.col-type' | translate }} <i class="bi {{ getSortIcon('formulaire_type') }} ms-1"></i>
                   </th>
+                  <th class="col-priorite sortable-col" (click)="sortBy('priorite_demande')">
+                    {{ 'items.col-priorite' | translate }} <i class="bi {{ getSortIcon('priorite_demande') }} ms-1"></i>
+                  </th>
                   <th class="col-isbn sortable-col" (click)="sortBy('isbn_issn')">
                     {{ 'items.col-isbn' | translate }} <i class="bi {{ getSortIcon('isbn_issn') }} ms-1"></i>
                   </th>
@@ -207,6 +215,12 @@
                     <span class="badge" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
                       {{ formulaireTypeLabel(item.formulaire_type) }}
                     </span>
+                  </td>
+                  <td class="col-priorite">
+                    <span *ngIf="item.priorite_demande; else noPriorite" [ngClass]="getPrioriteBadgeClass(item.priorite_demande)">
+                      {{ item.priorite_demande }}
+                    </span>
+                    <ng-template #noPriorite><span class="text-muted">—</span></ng-template>
                   </td>
                   <td class="col-isbn">
                     <div>{{ item.isbn_issn || '—' }}</div>
@@ -271,6 +285,9 @@
                 </span>
                 <span class="badge ms-2" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
                   {{ formulaireTypeLabel(item.formulaire_type) }}
+                </span>
+                <span *ngIf="item.priorite_demande" class="ms-1" [ngClass]="getPrioriteBadgeClass(item.priorite_demande)">
+                  {{ item.priorite_demande }}
                 </span>
                 <div class="ms-auto btn-group btn-group-sm">
                   <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">

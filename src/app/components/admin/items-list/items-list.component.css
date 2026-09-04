@@ -194,18 +194,19 @@
 /* ── Tableau desktop ─────────────────────────────────────────────── */
 .items-table { table-layout: fixed; width: 100%; border-collapse: collapse; }
 
-/* 11 colonnes — total = 100% */
+/* 12 colonnes — total = 100% */
 .col-id          { width: 4%;  }
-.col-titre       { width: 15%; }
+.col-titre       { width: 13%; }
 .col-type        { width: 8%;  }
-.col-isbn        { width: 9%;  }
-.col-demandeur   { width: 9%;  }
-.col-bib         { width: 11%; }
-.col-fonds       { width: 6%;  }
+.col-priorite    { width: 7%;  }
+.col-isbn        { width: 8%;  }
+.col-demandeur   { width: 8%;  }
+.col-bib         { width: 10%; }
+.col-fonds       { width: 5%;  }
 .col-statut-acq  { width: 8%;  }
 .col-suivi       { width: 10%; }
 .col-date        { width: 7%;  }
-.col-actions     { width: 13%; }
+.col-actions     { width: 12%; }
 
 /* En-tête */
 .items-table thead th {
@@ -296,6 +297,7 @@
   .col-suivi      { display: none; }
   .col-titre      { width: auto;   }
   .col-type       { width: 100px;  }
+  .col-priorite   { width: 80px;   }
   .col-demandeur  { width: 90px;   }
   .col-bib        { width: 90px;   }
   .col-date       { width: 80px;   }

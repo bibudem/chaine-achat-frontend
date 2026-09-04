@@ -118,6 +118,16 @@ export class ItemFormulaireComponent implements OnInit {
       this.prefillFromReponse(state.fromReponse);
     }
 
+    // Pré-sélection du type depuis le catalogue « Types de formulaire » du tableau de bord
+    // admin (accueil.component.ts, navigateToNouveau) — query param ?type=..., uniquement en
+    // création (en édition, formulaire_type vient de l'item chargé et le champ est verrouillé).
+    if (!this.isEditMode) {
+      const typeParam = this.route.snapshot.queryParamMap.get('type');
+      if (typeParam && this.options.formulaireTypeOptions.some(o => o.value === typeParam)) {
+        this.itemForm.patchValue({ formulaire_type: typeParam });
+      }
+    }
+
     this.itemForm.get('prix_devise_originale')!.valueChanges.subscribe(() => {
       const d = this.itemForm.get('devise_originale')?.value;
       if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
