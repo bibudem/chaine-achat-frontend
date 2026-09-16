@@ -71,5 +71,28 @@
       </div>
     </li>
 
+    <!-- Configuration (sous-menu collapse) -->
+    <li *ngIf="authService.isAdmin" class="nav-item" [class.active]="isConfigurationRoute">
+      <a class="nav-link d-flex justify-content-between align-items-center"
+         data-toggle="collapse" href="#configuration"
+         aria-expanded="false" aria-controls="configuration">
+        <div>
+          <i class="bi bi-sliders2 menu-icon"></i>
+          <span class="menu-title">{{ 'menu.configuration' | translate }}</span>
+        </div>
+        <i class="bi bi-chevron-down toggle-icon ms-2"></i>
+      </a>
+
+      <div class="collapse" id="configuration" [class.show]="isConfigurationRoute">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/configuration/taux-change" (click)="closeSidebar()">
+              {{ 'menu.taux-change' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
   </ul>
 </nav>

@@ -62,7 +62,7 @@
             <small class="form-text">{{ 'forms-usager.courriel-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-8">
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -75,17 +75,6 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
-            <input type="text" formControlName="fonds_budgetaire" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
-            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
@@ -320,21 +309,31 @@
         </div>
       </div>
 
-      <!-- SECTION 5 — FINANCES -->
+      <!-- SECTION 5 — INFORMATIONS FINANCIÈRES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances-court' | translate }}
+          <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-3">
-            <label class="form-label required">{{ 'forms-usager.devise-court' | translate }}</label>
+            <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
-              <option value="">{{ 'forms-usager.sel-devise-court' | translate }}</option>
+              <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
               <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
             </select>
             <div *ngIf="isInvalid('devise_originale')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-required' | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-3" *ngIf="form.get('devise_originale')?.value === 'Autre'">
+            <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+            <input type="text" formControlName="devise_autre_precision" class="form-control"
+                   [class.is-invalid]="isInvalid('devise_autre_precision')"
+                   [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
+            <div *ngIf="isInvalid('devise_autre_precision')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-autre-required' | translate }}
             </div>
           </div>
 
@@ -345,7 +344,7 @@
               <input type="number" min="0.01" step="0.01"
                      formControlName="prix_devise_originale" class="form-control"
                      [class.is-invalid]="isInvalid('prix_devise_originale')"
-                     placeholder="0.00">
+                     placeholder="0,00">
             </div>
             <div *ngIf="isInvalid('prix_devise_originale')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.prix-requis-positif' | translate }}
@@ -358,18 +357,29 @@
               <span class="input-group-text">$</span>
               <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
                      [class.is-invalid]="isInvalid('prix_cad')"
-                     [readonly]="form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD'"
-                     [placeholder]="(form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD') ? ('forms-usager.converti-auto' | translate) : '0.00'">
+                     [readonly]="deviseConvertible"
+                     [placeholder]="deviseConvertible ? ('forms-usager.converti-auto' | translate) : '0,00'">
             </div>
             <div *ngIf="isInvalid('prix_cad')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.entrez-devise-prix' | translate }}
             </div>
             <small class="form-text" *ngIf="form.get('devise_originale')?.value">
-              {{ (form.get('devise_originale')?.value === 'USD' || form.get('devise_originale')?.value === 'CAD') ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+              {{ deviseConvertible ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
             </small>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-6">
+            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+            <input type="text" formControlName="fonds_budgetaire" class="form-control"
+                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
+                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
+            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
             <input type="text" formControlName="fonds_sn_projet" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_sn_projet')"
@@ -378,6 +388,15 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-sn-required' | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.fonds-sn-hint' | translate }}</small>
+          </div>
+
+          <div class="col-12">
+            <small class="form-text">
+              {{ 'forms-usager.taux-change-note' | translate }}
+              <a href="https://umontreal.share.worldcat.org/wms/cmnd/acq/exchangerates" target="_blank" rel="noopener">
+                {{ 'forms-usager.taux-change-lien-texte' | translate }} <i class="fas fa-external-link-alt"></i>
+              </a>
+            </small>
           </div>
         </div>
       </div>

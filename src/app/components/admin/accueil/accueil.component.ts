@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HomeService, DashboardStats, GraphData, Period, ApiResponse, AllHomeData } from '../../../services/home.service';
 import { ConfigService } from '../../../services/config.service';
+import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
 import { DialogService } from '../../../services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
-import { formulaireTypeLabel, formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeLabel, formulaireTypeIcon, ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { ReponsesService } from '../../../services/reponses.service';
 import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { ACQ_STATUT_DEFAUT, ACQ_SUIVI_DEFAUT } from '../../../lib/DemandeStatut';
@@ -50,15 +51,42 @@ export class AccueilComponent implements OnInit, OnDestroy {
   showHelpPanel = false;
 
   /* ─── Config ressources ACQ ─── */
+  /** Ordre canonique d'affichage des devises (même ordre que le menu déroulant des
+   *  formulaires) — utilisé pour trier les taux affichés dans le chip en lecture seule. */
+  private readonly devisesOptions = new ListeChoixOptions().devisesOptions;
+
+  deviseLabel(code: string): string {
+    return this.devisesOptions.find(d => d.code === code)?.label ?? code;
+  }
+
+  /** Codes de devise présents dans la période affichée, triés selon l'ordre canonique. */
+  devisesTriees(taux: Record<string, number> | undefined | null): string[] {
+    if (!taux) return [];
+    const ordre = this.devisesOptions.map(d => d.code);
+    return Object.keys(taux).sort((a, b) => ordre.indexOf(a) - ordre.indexOf(b));
+  }
+
   acqConfig = {
     majDate:        '2 septembre 2025',
-    repartitionUrl: '',
-    tauxRate:       '1,368',
-    tauxPeriode:    '2025–2026'
+    repartitionUrl: ''
   };
   editConfig  = { ...this.acqConfig };
-  editingCard: 'repartition' | 'taux' | null = null;
+  editingCard: 'repartition' | null = null;
   isSavingConfig = false;
+
+  /** Taux de change — lecture seule (voir Configuration > Taux de change pour la gestion). */
+  tauxActuels: TauxPeriode | null = null;
+  isLoadingTaux  = true;
+  showTauxDetail = false;
+
+  toggleTauxDetail(): void {
+    this.showTauxDetail = !this.showTauxDetail;
+  }
+
+  formatDateTaux(d: string | undefined | null): string {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
 
   /* ─── Subscriptions ─── */
   private subs = new Subscription();
@@ -137,6 +165,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
   constructor(
     private homeService: HomeService,
     private configService: ConfigService,
+    private tauxDevisesService: TauxDevisesService,
     private dialog: DialogService,
     private translate: TranslateService,
     private router: Router,
@@ -147,6 +176,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAcqConfig();
+    this.loadTauxActuels();
     this.loadAllData();
     this.loadTypeCounts();
     this.loadTotalEnAttente();
@@ -425,13 +455,27 @@ export class AccueilComponent implements OnInit, OnDestroy {
           const d = res.data;
           this.acqConfig.majDate        = d['acq_maj_date']        || this.acqConfig.majDate;
           this.acqConfig.repartitionUrl = d['acq_repartition_url'] || this.acqConfig.repartitionUrl;
-          this.acqConfig.tauxRate       = d['acq_taux_usd']        || this.acqConfig.tauxRate;
-          this.acqConfig.tauxPeriode    = d['acq_taux_periode']    || this.acqConfig.tauxPeriode;
         }
         this.editConfig = { ...this.acqConfig };
       },
       error: () => {
         this.editConfig = { ...this.acqConfig };
+      }
+    });
+  }
+
+  /** Taux de change en vigueur (lecture seule) — la période la plus récente de
+   *  tbl_taux_devises_historique. Gestion complète via Configuration > Taux de change. */
+  private loadTauxActuels(): void {
+    this.isLoadingTaux = true;
+    this.tauxDevisesService.getAll().subscribe({
+      next: (res) => {
+        this.tauxActuels   = res.data?.[0] ?? null;
+        this.isLoadingTaux = false;
+      },
+      error: () => {
+        this.tauxActuels   = null;
+        this.isLoadingTaux = false;
       }
     });
   }
@@ -443,7 +487,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
     }
   }
 
-  startEdit(card: 'repartition' | 'taux'): void {
+  startEdit(card: 'repartition'): void {
     this.editConfig  = { ...this.acqConfig };
     this.editingCard = card;
   }
@@ -455,16 +499,10 @@ export class AccueilComponent implements OnInit, OnDestroy {
     );
     if (!confirmed) return;
 
-    const updates =
-      this.editingCard === 'repartition'
-        ? [
-            { cle: 'acq_maj_date',        valeur: this.editConfig.majDate },
-            { cle: 'acq_repartition_url', valeur: this.editConfig.repartitionUrl }
-          ]
-        : [
-            { cle: 'acq_taux_usd',     valeur: this.editConfig.tauxRate },
-            { cle: 'acq_taux_periode', valeur: this.editConfig.tauxPeriode }
-          ];
+    const updates = [
+      { cle: 'acq_maj_date',        valeur: this.editConfig.majDate },
+      { cle: 'acq_repartition_url', valeur: this.editConfig.repartitionUrl }
+    ];
 
     this.isSavingConfig = true;
 

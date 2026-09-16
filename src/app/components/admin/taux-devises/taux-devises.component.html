@@ -1,0 +1,164 @@
+<div class="tdv-page container-fluid pb-5 mt-5">
+
+  <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
+  <div class="tdv-header">
+    <div class="tdv-header__left">
+      <i class="bi bi-currency-exchange tdv-header__icon"></i>
+      <div>
+        <h1 class="tdv-header__title">Taux de change</h1>
+        <p class="tdv-header__sub">Historique des taux de conversion en CAD, par période</p>
+      </div>
+    </div>
+    <button class="tdv-header__add-btn" (click)="openAddPeriode()">
+      <i class="bi bi-plus-circle"></i>
+      <span>Nouvelle période</span>
+    </button>
+  </div>
+
+  <!-- ── ERREUR ────────────────────────────────────────────────────── -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- ── VIDE ──────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && !errorMessage && periodes.length === 0" class="tdv-empty">
+    <i class="bi bi-inbox"></i>
+    <p>Aucune période enregistrée</p>
+    <button class="btn btn-primary btn-sm" (click)="openAddPeriode()">
+      <i class="bi bi-plus-lg me-1"></i>Créer la première période
+    </button>
+  </div>
+
+  <!-- ── TABLEAU : une ligne par période ──────────────────────────── -->
+  <div *ngIf="!loading && periodes.length > 0" class="tdv-table-wrap">
+    <table class="table tdv-table">
+      <thead>
+        <tr>
+          <th class="tdv-th--periode">Période</th>
+          <th *ngFor="let d of devises" class="text-center">{{ d }}</th>
+          <th class="tdv-th--actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let periode of periodes">
+
+          <!-- Colonne Période (libellé + date + note), éditable -->
+          <td class="tdv-td--periode">
+            <div *ngIf="editingMetaId !== periode.id">
+              <div class="tdv-periode__label">{{ periode.periode }}</div>
+              <div class="tdv-periode__date">depuis le {{ formatDate(periode.date_debut) }}</div>
+              <div class="tdv-periode__note" *ngIf="periode.note">
+                <i class="bi bi-sticky me-1"></i>{{ periode.note }}
+              </div>
+              <button class="tdv-periode__edit-btn" (click)="startEditMeta(periode)" title="Modifier la période">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+
+            <div *ngIf="editingMetaId === periode.id" class="tdv-periode__form">
+              <input type="text" class="form-control form-control-sm mb-1" [(ngModel)]="editMeta.periode" placeholder="Libellé (ex. 2026-2027)">
+              <input type="date" class="form-control form-control-sm mb-1" [(ngModel)]="editMeta.date_debut">
+              <input type="text" class="form-control form-control-sm mb-1" [(ngModel)]="editMeta.note" placeholder="Note (optionnel)">
+              <div class="d-flex gap-1">
+                <button class="btn btn-primary btn-sm py-0" [disabled]="isSavingMeta" (click)="saveEditMeta()">
+                  <i class="bi bi-check-lg"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm py-0" (click)="cancelEditMeta()">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+          </td>
+
+          <!-- Une cellule par devise -->
+          <td *ngFor="let devise of devises" class="tdv-td--taux text-center">
+
+            <!-- Cellule en édition -->
+            <div *ngIf="isEditingCell(periode, devise)" class="tdv-cell-edit">
+              <input type="text"
+                     class="form-control form-control-sm tdv-cell-edit__input"
+                     [(ngModel)]="editValue"
+                     placeholder="Ex : 1,48"
+                     (keyup.enter)="saveEditCell()"
+                     (keyup.escape)="cancelEditCell()"
+                     autofocus>
+              <button class="tdv-cell-edit__btn tdv-cell-edit__btn--ok" [disabled]="isSavingCell" (click)="saveEditCell()">
+                <i class="bi bi-check-lg"></i>
+              </button>
+              <button class="tdv-cell-edit__btn" (click)="cancelEditCell()">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <!-- Valeur existante -->
+            <div *ngIf="!isEditingCell(periode, devise) && tauxDe(periode, devise) as valeur" class="tdv-cell-val">
+              <span class="tdv-cell-val__nombre" (click)="startEditCell(periode, devise)">{{ valeur }}</span>
+              <button class="tdv-cell-val__delete" (click)="removeTauxDevise(periode, devise)" title="Retirer ce taux">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+
+            <!-- Aucune valeur : bouton d'ajout -->
+            <button *ngIf="!isEditingCell(periode, devise) && tauxDe(periode, devise) === null"
+                    class="tdv-cell-add"
+                    (click)="startEditCell(periode, devise)"
+                    title="Ajouter un taux pour {{ devise }}">
+              <i class="bi bi-plus"></i>
+            </button>
+          </td>
+
+          <!-- Suppression de la période -->
+          <td class="tdv-td--actions">
+            <button class="btn btn-sm btn-outline-danger py-0" (click)="deletePeriode(periode)" title="Supprimer la période">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── MODAL : nouvelle période ──────────────────────────────────────── -->
+<div class="tdv-overlay" *ngIf="showAddPeriode" (click)="cancelAddPeriode()">
+  <div class="tdv-modal" (click)="$event.stopPropagation()">
+    <div class="tdv-modal__head">
+      <span class="tdv-modal__title"><i class="bi bi-plus-circle me-2"></i>Nouvelle période</span>
+      <button class="tdv-modal__close" (click)="cancelAddPeriode()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="tdv-modal__body">
+      <div class="mb-3">
+        <label class="tdv-modal__label">Libellé de la période</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="newPeriode.periode" placeholder="Ex : 2026-2027">
+      </div>
+
+      <div class="mb-3">
+        <label class="tdv-modal__label">En vigueur depuis le</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="newPeriode.date_debut">
+      </div>
+
+      <div class="mb-1">
+        <label class="tdv-modal__label">Note (optionnel)</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="newPeriode.note" placeholder="Ex : mise à jour trimestrielle WMS" maxlength="255">
+      </div>
+
+      <small class="text-muted d-block mt-2">
+        Les taux de chaque devise s'ajoutent ensuite directement dans le tableau, une fois la période créée.
+      </small>
+    </div>
+
+    <div class="tdv-modal__foot">
+      <button class="btn btn-secondary btn-sm" (click)="cancelAddPeriode()">Annuler</button>
+      <button class="btn btn-primary btn-sm" [disabled]="isSavingPeriode" (click)="submitNewPeriode()">
+        <span *ngIf="isSavingPeriode" class="spinner-border spinner-border-sm me-1"></span>
+        Créer
+      </button>
+    </div>
+  </div>
+</div>

@@ -25,6 +25,9 @@ export class MenuComponent implements OnInit {
   /** "Outils" actif sur /reponses */
   isOutilsRoute  = false;
 
+  /** "Configuration" actif sur /configuration/... */
+  isConfigurationRoute = false;
+
   constructor(
     private router:    Router,
     public authService: AuthService
@@ -61,5 +64,8 @@ export class MenuComponent implements OnInit {
 
     // Outils : /reponses et /import-logs
     this.isOutilsRoute  = url.startsWith('/reponses') || url.startsWith('/import-logs');
+
+    // Configuration : /configuration/...
+    this.isConfigurationRoute = url.startsWith('/configuration');
   }
 }

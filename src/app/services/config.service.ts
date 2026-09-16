@@ -3,14 +3,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { TauxDevisesService } from './taux-devises.service';
 
 export interface AppConfig {
   acq_maj_date:        string;
   acq_repartition_url: string;
-  acq_taux_usd:        string;
-  acq_taux_periode:    string;
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
+
+/** Taux de change vers CAD par code devise (ex. { CAD: 1, USD: 1.368, EUR: 1.48 }). Une
+ *  devise absente de la table (ex. "Autre") n'a pas de conversion automatique. */
+export type TauxRates = Record<string, number>;
 
 interface ApiResponse<T> {
   success:   boolean;
@@ -24,22 +27,34 @@ export class ConfigService {
   private readonly baseUrl = `${environment.apiUrl}/config`;
   private readonly headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tauxDevisesService: TauxDevisesService
+  ) {}
 
   getConfig(): Observable<ApiResponse<AppConfig>> {
     return this.http.get<ApiResponse<AppConfig>>(this.baseUrl);
   }
 
-  getTauxUsd(): Observable<number> {
-    return this.getConfig().pipe(
+  /** Taux de change vers CAD pour toutes les devises gérées — voir "Conversion automatique en
+   *  CAD" dans les formulaires usager/admin. Source : la période la plus récente de
+   *  tbl_taux_devises_historique (voir Configuration > Taux de change, admin). CAD = 1
+   *  toujours ; "Autre" n'apparaît jamais (pas de taux, saisie manuelle du prix CAD). */
+  getTauxRates(): Observable<TauxRates> {
+    const DEFAUT: TauxRates = { CAD: 1, USD: 1.368 };
+    return this.tauxDevisesService.getAll().pipe(
       map(res => {
-        if (res.success && res.data?.acq_taux_usd) {
-          const t = parseFloat(res.data.acq_taux_usd.replace(',', '.'));
-          return isNaN(t) ? 1.368 : t;
-        }
-        return 1.368;
+        const derniere = res.data?.[0];
+        if (!res.success || !derniere) return DEFAUT;
+        const rates: TauxRates = { CAD: 1 };
+        Object.keys(derniere.taux || {}).forEach(code => {
+          const v = Number(derniere.taux[code]);
+          if (Number.isFinite(v)) rates[code] = v;
+        });
+        if (rates['USD'] == null) rates['USD'] = DEFAUT['USD'];
+        return rates;
       }),
-      catchError(() => of(1.368))
+      catchError(() => of(DEFAUT))
     );
   }
 

@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
-import { ConfigService } from '../../../../services/config.service';
+import { ConfigService, TauxRates } from '../../../../services/config.service';
 import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
+import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
 
 @Component({
   selector: 'app-modification-ccol',
@@ -20,7 +21,8 @@ export class ModificationCcolComponent implements OnInit {
   showElectronique = false;
   showImprime      = true;
   editId:  number | null = null;
-  tauxUsd = 1.368;
+  /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
+  tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -119,6 +121,7 @@ export class ModificationCcolComponent implements OnInit {
       nombre_titres_inclus:     [null, Validators.min(1)],
       usager_aviser_activation: [{ value: '', disabled: true }, Validators.email],
       devise_originale:      ['',   Validators.required],
+      devise_autre_precision: [''],
       prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
       prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
       fonds_sn_projet:    ['', Validators.maxLength(50)],
@@ -145,16 +148,17 @@ export class ModificationCcolComponent implements OnInit {
       aviser.updateValueAndValidity();
     });
 
-    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => {
-      const d = this.form.get('devise_originale')?.value;
-      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
-    });
+    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.form.get('devise_originale')!.valueChanges.subscribe(() => {
       this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
-      const d = this.form.get('devise_originale')?.value;
-      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
+      this.updateDeviseAutreValidator();
+      this.convertirPrix();
     });
-    this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
+    this.configService.getTauxRates().subscribe(rates => {
+      this.tauxRates = rates;
+      this.convertirPrix();
+    });
+    this.updateDeviseAutreValidator();
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -170,6 +174,7 @@ export class ModificationCcolComponent implements OnInit {
         const bd = row.reponses?.baseData ?? {};
         const sd = row.reponses?.specificData ?? {};
         if (bd.format_support) this.form.get('format_support')!.setValue(bd.format_support);
+        const deviseConnue = this.devises.some(d => d.code === bd.devise_originale);
         this.form.patchValue({
           bibliotheque:             bd.bibliotheque,
           fonds_budgetaire:         bd.fonds_budgetaire,
@@ -191,7 +196,8 @@ export class ModificationCcolComponent implements OnInit {
           nombre_utilisateurs:      bd.nombre_utilisateurs,
           nombre_titres_inclus:     bd.nombre_titres_inclus,
           usager_aviser_activation: sd.usager_aviser_activation,
-          devise_originale:         bd.devise_originale,
+          devise_originale:         deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
+          devise_autre_precision:   deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
           prix_devise_originale:    bd.prix_devise_originale,
           prix_cad:                 bd.prix_cad,
           fonds_sn_projet:          bd.fonds_sn_projet,
@@ -200,16 +206,35 @@ export class ModificationCcolComponent implements OnInit {
           statut_bibliotheque:      bd.statut_bibliotheque,
           bibliotheque_note_interne:         bd.bibliotheque_note_interne,
         });
+        this.updateDeviseAutreValidator();
       }
     });
   }
 
   private convertirPrix(): void {
-    const prix = this.form.get('prix_devise_originale')?.value;
+    const prix   = this.form.get('prix_devise_originale')?.value;
     const devise = this.form.get('devise_originale')?.value;
-    if (!prix) return;
-    const result = devise === 'CAD' ? prix : parseFloat((prix * this.tauxUsd).toFixed(2));
-    this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
+    const result = convertirPrixCad(prix, devise, this.tauxRates);
+    if (result != null) this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
+  }
+
+  get deviseConvertible(): boolean {
+    return estDeviseConvertible(this.form.get('devise_originale')?.value, this.tauxRates);
+  }
+
+  private updateDeviseAutreValidator(): void {
+    const ctrl = this.form.get('devise_autre_precision');
+    if (!ctrl) return;
+    if (this.form.get('devise_originale')?.value === 'Autre') {
+      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
+    } else {
+      ctrl.clearValidators();
+    }
+    ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private deviseAEnvoyer(v: any): string {
+    return v.devise_originale === 'Autre' ? (v.devise_autre_precision || 'Autre') : v.devise_originale;
   }
 
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
@@ -288,7 +313,7 @@ export class ModificationCcolComponent implements OnInit {
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
         prix_cad:                 v.prix_cad,
-        devise_originale:         v.devise_originale,
+        devise_originale:         this.deviseAEnvoyer(v),
         prix_devise_originale:    v.prix_devise_originale,
         periode_couverte:         v.periode_couverte,
         fonds_sn_projet:          v.fonds_sn_projet,
@@ -358,7 +383,7 @@ export class ModificationCcolComponent implements OnInit {
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
         prix_cad:                 v.prix_cad,
-        devise_originale:         v.devise_originale,
+        devise_originale:         this.deviseAEnvoyer(v),
         prix_devise_originale:    v.prix_devise_originale,
         periode_couverte:         v.periode_couverte,
         fonds_sn_projet:          v.fonds_sn_projet,

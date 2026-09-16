@@ -55,35 +55,53 @@
         </div>
       </div>
 
-      <!-- ── Chip : Taux USD ── -->
-      <div class="info-chip info-chip--orange" [class.info-chip--open]="editingCard === 'taux'">
-        <div class="info-chip__icon">
-          <i class="bi bi-currency-dollar"></i>
+      <!-- ── Chip : Taux de change (lecture seule) ── -->
+      <div class="info-chip info-chip--orange info-chip--link" [class.info-chip--open]="showTauxDetail">
+        <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
+          <div class="info-chip__icon">
+            <i class="bi bi-currency-exchange"></i>
+          </div>
+          <div class="info-chip__body">
+            <span class="info-chip__label">
+              {{ 'accueil.taux-change' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
+              <i class="bi tdv-chevron" [class.bi-chevron-down]="!showTauxDetail" [class.bi-chevron-up]="showTauxDetail"></i>
+            </span>
+            <span class="info-chip__val info-chip__val--lg" *ngIf="tauxActuels?.taux?.['USD'] as usd; else pasDeTauxPrincipal">
+              1 USD = {{ usd }} CAD
+            </span>
+            <ng-template #pasDeTauxPrincipal>
+              <span class="info-chip__val text-muted" style="font-weight:500;">
+                {{ isLoadingTaux ? ('accueil.chargement' | translate) : ('accueil.aucun-taux' | translate) }}
+              </span>
+            </ng-template>
+          </div>
         </div>
-        <div class="info-chip__body">
-          <span class="info-chip__label">{{ 'accueil.taux-usd' | translate }} · {{ acqConfig.tauxPeriode }}</span>
-          <span class="info-chip__val info-chip__val--lg">{{ acqConfig.tauxRate }}</span>
-        </div>
-        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('taux')" [title]="'accueil.modifier' | translate">
-          <i class="bi bi-pencil"></i>
-        </button>
-        <div *ngIf="editingCard === 'taux'" class="info-chip__dropdown">
-          <p class="info-chip__dropdown-title">{{ 'accueil.taux-usd-securise' | translate }}</p>
-          <div class="info-chip__field">
-            <label>{{ 'accueil.taux' | translate }}</label>
-            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxRate" [placeholder]="'accueil.taux-placeholder' | translate">
+
+        <div *ngIf="showTauxDetail" class="info-chip__dropdown info-chip__dropdown--readonly">
+          <p class="info-chip__dropdown-title">
+            <i class="bi bi-clock-history me-1"></i>
+            {{ tauxActuels?.periode || ('accueil.aucun-taux' | translate) }}
+          </p>
+          <p class="tdv-readonly-date" *ngIf="tauxActuels as ta">
+            {{ 'accueil.en-vigueur-depuis' | translate }} {{ formatDateTaux(ta.date_debut) }}
+          </p>
+
+          <div class="tdv-readonly-list" *ngIf="tauxActuels as ta; else pasDeTauxListe">
+            <div class="tdv-readonly-row" *ngFor="let code of devisesTriees(ta.taux)">
+              <span class="tdv-readonly-row__devise">{{ deviseLabel(code) }}</span>
+              <span class="tdv-readonly-row__valeur">{{ ta.taux[code] }} CAD</span>
+            </div>
+            <div *ngIf="devisesTriees(ta.taux).length === 0" class="text-muted small fst-italic py-1">
+              {{ 'accueil.aucune-devise-periode' | translate }}
+            </div>
           </div>
-          <div class="info-chip__field">
-            <label>{{ 'accueil.periode' | translate }}</label>
-            <input class="form-control form-control-sm" [(ngModel)]="editConfig.tauxPeriode" [placeholder]="'accueil.periode-placeholder' | translate">
-          </div>
-          <div class="info-chip__dropdown-actions">
-            <button class="btn btn-sm btn-primary" (click)="saveConfig()" [disabled]="isSavingConfig">
-              <span *ngIf="isSavingConfig" class="spinner-border spinner-border-sm me-1"></span>
-              {{ isSavingConfig ? ('accueil.enregistrement' | translate) : ('accueil.enregistrer' | translate) }}
-            </button>
-            <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()" [disabled]="isSavingConfig">{{ 'accueil.annuler' | translate }}</button>
-          </div>
+          <ng-template #pasDeTauxListe>
+            <p class="text-muted small fst-italic mb-0">{{ 'accueil.aucun-taux' | translate }}</p>
+          </ng-template>
+
+          <a *ngIf="authService.isAdmin" routerLink="/configuration/taux-change" class="info-chip__manage-link">
+            <i class="bi bi-sliders2 me-1"></i>{{ 'accueil.gerer-taux' | translate }}
+          </a>
         </div>
       </div>
 

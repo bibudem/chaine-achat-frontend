@@ -6,7 +6,8 @@ import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { ReponsesService } from '../../../services/reponses.service';
-import { ConfigService } from '../../../services/config.service';
+import { ConfigService, TauxRates } from '../../../services/config.service';
+import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionDevise';
 
 @Component({
   selector: 'app-item-formulaire',
@@ -27,7 +28,8 @@ export class ItemFormulaireComponent implements OnInit {
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
 
-  tauxUsd = 1.368;
+  /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
+  tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
   devises = this.options.devisesOptions;
 
   readonly OUI_NON_NA: string[] = ['OUI', 'NON', "Ne s'applique pas"];
@@ -128,16 +130,16 @@ export class ItemFormulaireComponent implements OnInit {
       }
     }
 
-    this.itemForm.get('prix_devise_originale')!.valueChanges.subscribe(() => {
-      const d = this.itemForm.get('devise_originale')?.value;
-      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
-    });
+    this.itemForm.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.itemForm.get('devise_originale')!.valueChanges.subscribe(() => {
       this.itemForm.get('prix_cad')?.setValue(null, { emitEvent: false });
-      const d = this.itemForm.get('devise_originale')?.value;
-      if (d === 'USD' || d === 'CAD') { this.convertirPrix(); }
+      this.updateDeviseAutreValidator();
+      this.convertirPrix();
     });
-    this.configService.getTauxUsd().subscribe(t => { this.tauxUsd = t; });
+    this.configService.getTauxRates().subscribe(rates => {
+      this.tauxRates = rates;
+      this.convertirPrix();
+    });
   }
 
   // Même règle que StatutDecisionComponent.applyAcqDefaults() : Oui si le format n'est pas
@@ -161,10 +163,24 @@ export class ItemFormulaireComponent implements OnInit {
       isSaisie ? ctrl.clearValidators() : ctrl.setValidators(Validators.required);
       ctrl.updateValueAndValidity({ emitEvent: false });
     });
+    this.updateDeviseAutreValidator();
   }
 
   get financeFieldsRequired(): boolean {
     return !(this.itemForm.get('statut_bibliotheque')?.value ?? '').startsWith('Saisie en cours');
+  }
+
+  /** "Autre" (devise hors liste) exige la précision en texte libre, mais seulement quand le
+   *  reste des champs financiers est lui-même requis (voir updateFinanceValidators). */
+  private updateDeviseAutreValidator(): void {
+    const ctrl = this.itemForm.get('devise_autre_precision');
+    if (!ctrl) return;
+    if (this.financeFieldsRequired && this.itemForm.get('devise_originale')?.value === 'Autre') {
+      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
+    } else {
+      ctrl.clearValidators();
+    }
+    ctrl.updateValueAndValidity({ emitEvent: false });
   }
 
   get showDecisionAcqTab(): boolean {
@@ -228,6 +244,7 @@ export class ItemFormulaireComponent implements OnInit {
       note_dtdm: [''],
       prix_cad: [null, Validators.required],
       devise_originale: ['', Validators.required],
+      devise_autre_precision: [''],
       prix_devise_originale: [null, Validators.required],
       periode_couverte: [''],
       nombre_titres_inclus: [null],
@@ -422,8 +439,19 @@ export class ItemFormulaireComponent implements OnInit {
           const normalizedType = (rawType && typeAliases[rawType]) ? typeAliases[rawType] : rawType;
           this.selectedFormulaireType = normalizedType;
 
-          // Patch les champs de base (toujours à la racine de response.data)
-          this.itemForm.patchValue({ ...response.data, formulaire_type: normalizedType }, { emitEvent: false });
+          // Patch les champs de base (toujours à la racine de response.data). Rétrocompatibilité
+          // devise : une valeur enregistrée qui ne correspond à aucun code connu (ancienne
+          // saisie "Autre" avant l'ajout de la précision, ou texte déjà libre) est restaurée
+          // comme "Autre" + la valeur d'origine dans le champ de précision.
+          const deviseOriginale = (response.data as any).devise_originale;
+          const deviseConnue    = this.devises.some(d => d.code === deviseOriginale);
+          this.itemForm.patchValue({
+            ...response.data,
+            formulaire_type:        normalizedType,
+            devise_originale:       deviseConnue || !deviseOriginale ? deviseOriginale : 'Autre',
+            devise_autre_precision: deviseConnue || !deviseOriginale ? '' : deviseOriginale,
+          }, { emitEvent: false });
+          this.updateDeviseAutreValidator();
 
           // Patch les champs spécifiques si le backend les retourne dans un objet imbriqué
           const specificData = (response.data as any).specificData;
@@ -596,7 +624,7 @@ export class ItemFormulaireComponent implements OnInit {
       note_commentaire: formData.note_commentaire,
       catalogue: formData.catalogue,
       prix_cad: formData.prix_cad,
-      devise_originale: formData.devise_originale,
+      devise_originale: this.deviseAEnvoyer(formData),
       prix_devise_originale: formData.prix_devise_originale,
       periode_couverte: formData.periode_couverte,
       nombre_titres_inclus: formData.nombre_titres_inclus,
@@ -689,11 +717,20 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   private convertirPrix(): void {
-    const prix = this.itemForm.get('prix_devise_originale')?.value;
+    const prix   = this.itemForm.get('prix_devise_originale')?.value;
     const devise = this.itemForm.get('devise_originale')?.value;
-    if (!prix) return;
-    const result = devise === 'CAD' ? prix : parseFloat((prix * this.tauxUsd).toFixed(2));
-    this.itemForm.get('prix_cad')?.setValue(result, { emitEvent: false });
+    const result = convertirPrixCad(prix, devise, this.tauxRates);
+    if (result != null) this.itemForm.get('prix_cad')?.setValue(result, { emitEvent: false });
+  }
+
+  get deviseConvertible(): boolean {
+    return estDeviseConvertible(this.itemForm.get('devise_originale')?.value, this.tauxRates);
+  }
+
+  /** "Autre" + précision libre → la valeur envoyée/stockée en base est directement le texte
+   *  saisi (ex. "Réal brésilien"), sans colonne dédiée — voir devise_autre_precision. */
+  private deviseAEnvoyer(v: any): string {
+    return v.devise_originale === 'Autre' ? (v.devise_autre_precision || 'Autre') : v.devise_originale;
   }
 
   async onCancel(): Promise<void> {

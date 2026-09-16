@@ -1,0 +1,153 @@
+/* ── Page ──────────────────────────────────────────────────────────── */
+.tdv-page { padding-top: 1.5rem; }
+
+/* ── En-tête ───────────────────────────────────────────────────────── */
+.tdv-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         1rem 1.25rem;
+  background:      #fff;
+  border-bottom:   2px solid #E7EBEE;
+  margin-bottom:   1.25rem;
+  border-radius:   10px;
+  box-shadow:      0 1px 4px rgba(0,0,0,.06);
+  flex-wrap:       wrap;
+  gap:             .75rem;
+}
+.tdv-header__left  { display: flex; align-items: center; gap: .85rem; }
+.tdv-header__icon  { font-size: 2rem; color: #0057AC; }
+.tdv-header__title { font-size: 1.15rem; font-weight: 700; color: #1A2B3C; margin: 0; }
+.tdv-header__sub   { font-size: .78rem; color: #607386; margin: 0; }
+.tdv-header__add-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: #0057AC; color: #fff; border: none;
+  font-size: .82rem; font-weight: 600;
+  padding: .5rem 1rem; border-radius: 8px;
+  cursor: pointer; transition: background .15s;
+}
+.tdv-header__add-btn:hover { background: #00407F; }
+
+/* ── Vide ──────────────────────────────────────────────────────────── */
+.tdv-empty { text-align: center; padding: 4rem 1rem; color: #9FB3C8; }
+.tdv-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }
+.tdv-empty p { margin-bottom: 1rem; }
+
+/* ── Tableau ───────────────────────────────────────────────────────── */
+.tdv-table-wrap {
+  background:    #fff;
+  border:        1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow:    0 1px 4px rgba(0,0,0,.05);
+  overflow-x:    auto;
+}
+.tdv-table { margin: 0; font-size: .83rem; border-collapse: collapse; width: 100%; }
+.tdv-table thead th {
+  background:     #f8fafc;
+  color:          #64748b;
+  font-size:      .7rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  border-bottom:  1.5px solid #e2e8f0;
+  border-top:     none;
+  white-space:    nowrap;
+  padding:        .6rem .75rem;
+}
+.tdv-th--periode  { min-width: 200px; }
+.tdv-th--actions  { width: 48px; }
+
+.tdv-table tbody tr { transition: background .1s; }
+.tdv-table tbody td {
+  padding: .55rem .6rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+.tdv-table tbody tr:last-child td { border-bottom: none; }
+
+/* ── Colonne Période ───────────────────────────────────────────────── */
+.tdv-td--periode { position: relative; }
+.tdv-periode__label { font-weight: 700; color: #1A2B3C; font-size: .88rem; }
+.tdv-periode__date  { font-size: .7rem; color: #9FB3C8; margin-top: .1rem; }
+.tdv-periode__note  { font-size: .72rem; color: #7C6A3D; font-style: italic; margin-top: .2rem; }
+.tdv-periode__edit-btn {
+  position: absolute; top: .5rem; right: .4rem;
+  background: none; border: none; color: #cbd5e1;
+  cursor: pointer; padding: .15rem .3rem; font-size: .78rem;
+  opacity: 0; transition: opacity .15s, color .15s;
+}
+.tdv-td--periode:hover .tdv-periode__edit-btn { opacity: 1; }
+.tdv-periode__edit-btn:hover { color: #0057AC; }
+.tdv-periode__form { min-width: 190px; }
+
+/* ── Cellules de taux ──────────────────────────────────────────────── */
+.tdv-td--taux { min-width: 92px; }
+
+.tdv-cell-val {
+  display: inline-flex; align-items: center; gap: .3rem;
+  justify-content: center;
+}
+.tdv-cell-val__nombre {
+  font-weight: 700; color: #0057AC; cursor: pointer;
+  padding: .15rem .4rem; border-radius: 6px;
+  transition: background .15s;
+}
+.tdv-cell-val__nombre:hover { background: #EAF3FC; }
+.tdv-cell-val__delete {
+  background: none; border: none; color: #cbd5e1;
+  cursor: pointer; padding: 0 .15rem; font-size: .85rem;
+  opacity: 0; transition: opacity .15s, color .15s;
+}
+.tdv-td--taux:hover .tdv-cell-val__delete { opacity: 1; }
+.tdv-cell-val__delete:hover { color: #dc2626; }
+
+.tdv-cell-add {
+  width: 26px; height: 26px;
+  border: 1.5px dashed #cbd5e1; border-radius: 6px;
+  background: none; color: #9FB3C8;
+  cursor: pointer; font-size: .85rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.tdv-cell-add:hover { border-color: #0057AC; color: #0057AC; background: #EAF3FC; }
+
+.tdv-cell-edit { display: flex; align-items: center; gap: .2rem; justify-content: center; }
+.tdv-cell-edit__input { width: 72px; text-align: center; padding: .2rem .3rem; font-size: .8rem; }
+.tdv-cell-edit__btn {
+  border: none; background: none; color: #9FB3C8;
+  cursor: pointer; padding: .1rem .2rem; font-size: .8rem;
+}
+.tdv-cell-edit__btn:hover { color: #334155; }
+.tdv-cell-edit__btn--ok:hover { color: #10B981; }
+
+/* ── Actions (suppression période) ─────────────────────────────────── */
+.tdv-td--actions { text-align: center; }
+
+/* ── Modal ─────────────────────────────────────────────────────────── */
+.tdv-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1050;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.tdv-modal {
+  background: #fff; border-radius: 12px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+.tdv-modal__head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.25rem .75rem;
+  border-bottom: 1px solid #E7EBEE;
+}
+.tdv-modal__title { font-size: .92rem; font-weight: 700; color: #1A2B3C; }
+.tdv-modal__close { background: none; border: none; color: #607386; font-size: 1rem; cursor: pointer; padding: .25rem; }
+.tdv-modal__close:hover { color: #1A2B3C; }
+.tdv-modal__body  { padding: 1rem 1.25rem; }
+.tdv-modal__label { font-size: .76rem; font-weight: 600; color: #334155; margin-bottom: .3rem; display: block; }
+.tdv-modal__foot  {
+  padding: .75rem 1.25rem; border-top: 1px solid #E7EBEE;
+  text-align: right; display: flex; justify-content: flex-end; gap: .5rem;
+}

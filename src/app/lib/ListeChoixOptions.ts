@@ -33,14 +33,18 @@ export function formulaireTypeIcon(value: string | undefined | null): string {
 
 export class ListeChoixOptions {
 
-  // Options pour la devise originale
+  // Options pour la devise originale — toutes les devises disponibles dans WMS (voir
+  // "Uniformisation champ Informations financières"), plus Autre (saisie libre du nom).
   devisesOptions: { label: string; code: string }[] = [
-    { label: 'CAD — Dollar Canadien', code: 'CAD' },
-    { label: 'USD — Dollar US',       code: 'USD' },
-    { label: 'EUR — Euro',            code: 'EUR' },
-    { label: 'GBP — Livre Sterling',  code: 'GBP' },
-    { label: 'CHF — Franc Suisse',    code: 'CHF' },
-    { label: 'Autre',                 code: 'Autre' }
+    { label: 'CAD — Dollar canadien',       code: 'CAD' },
+    { label: 'USD — Dollar américain',      code: 'USD' },
+    { label: 'EUR — Euro',                  code: 'EUR' },
+    { label: 'GBP — Livre sterling',        code: 'GBP' },
+    { label: 'CHF — Franc suisse',          code: 'CHF' },
+    { label: 'AUD — Dollar australien',     code: 'AUD' },
+    { label: 'JPY — Yen japonais',          code: 'JPY' },
+    { label: 'NZD — Dollar néo-zélandais',  code: 'NZD' },
+    { label: 'Autre',                       code: 'Autre' }
   ];
 
   // Options pour le statut (bibliothèque)

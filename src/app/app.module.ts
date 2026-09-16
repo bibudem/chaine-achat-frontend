@@ -71,6 +71,7 @@ import { UsagerProfilComponent } from './components/usager/usager-profil/usager-
 import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
+import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { SuggestionEmbedComponent } from './components/public/suggestion-embed/s
     ItemDetailComponent,
     ImportComponent,
     ImportLogsComponent,
+    TauxDevisesComponent,
     NouvelAchatComponent,
     ModificationCcolComponent,
     RequeteAccessibiliteComponent,

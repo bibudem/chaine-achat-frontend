@@ -858,6 +858,37 @@
 }
 .info-chip__dropdown-actions { display: flex; gap: 6px; margin-top: 2px; }
 
+/* Taux de change — chip en lecture seule (voir Configuration > Taux de change pour la
+   gestion complète) : liste des devises de la période la plus récente, sans champs éditables. */
+.info-chip__dropdown--readonly { min-width: 220px; max-height: 70vh; overflow-y: auto; gap: 8px; }
+.tdv-chevron { font-size: .6rem; margin-left: 3px; vertical-align: 1px; opacity: .7; }
+.tdv-readonly-date {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.7rem; color: var(--text-gray, #607386);
+  margin: -6px 0 2px;
+}
+.tdv-readonly-list { display: flex; flex-direction: column; gap: 2px; }
+.tdv-readonly-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 2px; border-radius: 6px;
+  font-family: 'Figtree', sans-serif; font-size: 0.8rem;
+  border-bottom: 1px solid var(--extra-light-blue, #E5F0F8);
+}
+.tdv-readonly-row:last-child { border-bottom: none; }
+.tdv-readonly-row__devise { color: var(--text-gray, #607386); font-weight: 500; }
+.tdv-readonly-row__valeur { color: var(--primary-blue, #0b113a); font-weight: 700; }
+.info-chip__manage-link {
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.76rem; font-weight: 600;
+  color: var(--primary-blue, #0057AC);
+  background: var(--extra-light-blue, #E5F0F8);
+  border-radius: 8px; padding: 7px 10px;
+  text-decoration: none; margin-top: 4px;
+  transition: background .15s;
+}
+.info-chip__manage-link:hover { background: var(--light-blue, #cfe3f5); color: var(--primary-blue, #0057AC); }
+
 @media (max-width: 991px) {
   .info-chip__label  { display: none; }
   .info-chip__val--lg { font-size: 0.88rem; }
