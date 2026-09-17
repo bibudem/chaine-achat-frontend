@@ -242,6 +242,29 @@
 .items-table tbody tr { transition: background .1s; }
 .items-table tbody tr:hover td { background: #f8fafc; }
 
+/* Actions */
+.item-actions {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.item-action-btn {
+  background: #fff;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: .35rem .5rem;
+  font-size: .85rem;
+  transition: background .15s, color .15s;
+}
+.item-action-btn + .item-action-btn { border-left: 1px solid #e2e8f0; }
+.item-action-btn--view:hover,
+.item-action-btn--edit:hover   { color: #0057AC; background: #E5F0F8; }
+.item-action-btn--decision:hover { color: #16a34a; background: #ecfdf5; }
+.item-action-btn--delete:hover { color: #dc2626; background: #fef2f2; }
+
 /* ID — style discret */
 .items-table td.col-id .fw-semibold {
   color: #94a3b8;

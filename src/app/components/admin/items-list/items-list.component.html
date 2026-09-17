@@ -261,18 +261,18 @@
                     </div>
                   </td>
                   <td class="col-actions text-center">
-                    <div class="btn-group btn-group-sm" role="group">
-                      <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
+                    <div class="item-actions">
+                      <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success"
+                      <button *ngIf="authService.canAccessDecision" class="item-action-btn item-action-btn--decision"
                               [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
-                      <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
+                      <button *ngIf="authService.canEdit" class="item-action-btn item-action-btn--edit" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
+                      <button *ngIf="authService.canEdit" class="item-action-btn item-action-btn--delete" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
                         <i class="bi bi-trash"></i>
                       </button>
                     </div>
@@ -297,18 +297,18 @@
                 <span *ngIf="item.priorite_demande" class="ms-1" [ngClass]="getPrioriteBadgeClass(item.priorite_demande)">
                   {{ item.priorite_demande }}
                 </span>
-                <div class="ms-auto btn-group btn-group-sm">
-                  <button class="btn btn-outline-primary" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
+                <div class="ms-auto item-actions">
+                  <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success"
+                  <button *ngIf="authService.canAccessDecision" class="item-action-btn item-action-btn--decision"
                           [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
-                  <button *ngIf="authService.canEdit" class="btn btn-outline-primary" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
+                  <button *ngIf="authService.canEdit" class="item-action-btn item-action-btn--edit" (click)="editItem(item.item_id)" [title]="'items.modifier' | translate">
                     <i class="bi bi-pencil"></i>
                   </button>
-                  <button *ngIf="authService.canEdit" class="btn btn-outline-danger" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
+                  <button *ngIf="authService.canEdit" class="item-action-btn item-action-btn--delete" (click)="deleteItem(item.item_id)" [title]="'items.supprimer' | translate">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>

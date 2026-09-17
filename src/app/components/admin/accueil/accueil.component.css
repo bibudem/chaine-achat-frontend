@@ -860,7 +860,7 @@
 
 /* Taux de change — chip en lecture seule (voir Configuration > Taux de change pour la
    gestion complète) : liste des devises de la période la plus récente, sans champs éditables. */
-.info-chip__dropdown--readonly { min-width: 220px; max-height: 70vh; overflow-y: auto; gap: 8px; }
+.info-chip__dropdown--readonly { min-width: 270px; max-height: 70vh; overflow-y: auto; gap: 8px; }
 .tdv-chevron { font-size: .6rem; margin-left: 3px; vertical-align: 1px; opacity: .7; }
 .tdv-readonly-date {
   font-family: 'Figtree', sans-serif;
@@ -875,7 +875,7 @@
   border-bottom: 1px solid var(--extra-light-blue, #E5F0F8);
 }
 .tdv-readonly-row:last-child { border-bottom: none; }
-.tdv-readonly-row__devise { color: var(--text-gray, #607386); font-weight: 500; }
+.tdv-readonly-row__devise { color: var(--text-gray, #607386); font-weight: 500; white-space: nowrap; }
 .tdv-readonly-row__valeur { color: var(--primary-blue, #0b113a); font-weight: 700; }
 .info-chip__manage-link {
   display: flex; align-items: center; justify-content: center;

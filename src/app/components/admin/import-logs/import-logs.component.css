@@ -125,6 +125,13 @@
   overflow:      hidden;
 }
 .ilog-table { margin: 0; font-size: .83rem; border-collapse: collapse; width: 100%; }
+.ilog-action-btn {
+  background: none; border: none; border-radius: 6px;
+  color: #94a3b8; cursor: pointer; padding: .3rem .45rem; font-size: .85rem;
+  transition: background .15s, color .15s;
+}
+.ilog-action-btn--primary:hover { color: #0057AC; background: #E5F0F8; }
+.ilog-action-btn--danger:hover  { color: #dc2626; background: #fef2f2; }
 .ilog-table thead th {
   background:     #f8fafc;
   color:          #64748b;

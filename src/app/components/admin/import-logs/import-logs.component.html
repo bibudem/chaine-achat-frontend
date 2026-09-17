@@ -154,13 +154,13 @@
 
           <td class="d-flex gap-1">
             <button *ngIf="log.nb_inseres + log.nb_maj > 0"
-                    class="btn btn-sm btn-outline-primary py-0"
+                    class="ilog-action-btn ilog-action-btn--primary"
                     (click)="voirItemsImportes(log)"
                     title="Voir les items importés">
               <i class="bi bi-box-arrow-up-right"></i>
             </button>
             <button *ngIf="log.nb_erreurs > 0"
-                    class="btn btn-sm btn-outline-danger py-0"
+                    class="ilog-action-btn ilog-action-btn--danger"
                     (click)="openDetail(log)"
                     title="Voir les erreurs">
               <i class="bi bi-list-ul"></i>

@@ -22,7 +22,7 @@
 .tdv-header__add-btn {
   display: inline-flex; align-items: center; gap: .4rem;
   background: #0057AC; color: #fff; border: none;
-  font-size: .82rem; font-weight: 600;
+  font-size: .82rem; font-weight: 500;
   padding: .5rem 1rem; border-radius: 8px;
   cursor: pointer; transition: background .15s;
 }
@@ -111,6 +111,13 @@
   transition: all .15s;
 }
 .tdv-cell-add:hover { border-color: #0057AC; color: #0057AC; background: #EAF3FC; }
+
+.tdv-action-btn {
+  background: none; border: none; border-radius: 6px;
+  color: #cbd5e1; cursor: pointer; padding: .3rem .45rem; font-size: .85rem;
+  transition: background .15s, color .15s;
+}
+.tdv-action-btn--delete:hover { color: #dc2626; background: #fef2f2; }
 
 .tdv-cell-edit { display: flex; align-items: center; gap: .2rem; justify-content: center; }
 .tdv-cell-edit__input { width: 72px; text-align: center; padding: .2rem .3rem; font-size: .8rem; }
