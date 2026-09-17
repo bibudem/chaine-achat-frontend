@@ -196,12 +196,12 @@
 
 /* 12 colonnes — total = 100% */
 .col-id          { width: 4%;  }
-.col-titre       { width: 13%; }
+.col-titre       { width: 15%; }
 .col-type        { width: 8%;  }
 .col-priorite    { width: 7%;  }
 .col-isbn        { width: 8%;  }
 .col-demandeur   { width: 8%;  }
-.col-bib         { width: 10%; }
+.col-bib         { width: 8%;  }
 .col-fonds       { width: 5%;  }
 .col-statut-acq  { width: 8%;  }
 .col-suivi       { width: 10%; }
@@ -237,6 +237,7 @@
 .items-table td.col-id      { white-space: nowrap; vertical-align: middle; }
 .items-table td.col-date    { white-space: nowrap; vertical-align: middle; color: #64748b; }
 .items-table td.col-actions { white-space: nowrap; vertical-align: middle; }
+.items-table td.col-titre .fw-semibold { font-weight: 500; }
 
 /* Hover sur les lignes */
 .items-table tbody tr { transition: background .1s; }
@@ -255,8 +256,8 @@
   border: none;
   color: #94a3b8;
   cursor: pointer;
-  padding: .35rem .5rem;
-  font-size: .85rem;
+  padding: .4rem .55rem;
+  font-size: 1rem;
   transition: background .15s, color .15s;
 }
 .item-action-btn + .item-action-btn { border-left: 1px solid #e2e8f0; }
@@ -278,7 +279,6 @@
   gap:         .3rem;
 }
 .id-badge--pending {
-  color:       #b45309 !important;
   font-weight: 700 !important;
 }
 .id-badge__pulse {

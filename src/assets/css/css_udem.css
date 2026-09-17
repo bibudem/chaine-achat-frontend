@@ -1412,9 +1412,9 @@ select.typeahead, select.tt-query, select.tt-hint {
    items-list, item-detail.
    ============================================= */
 .badge-priorite--urgent      { color: #B72600; } /* Urgent — Rouge-orangé */
-.badge-priorite--prioritaire { color: #166534; } /* Prioritaire — Vert    */
+.badge-priorite--prioritaire { }                 /* Prioritaire — couleur de texte par défaut */
 .badge-priorite--regulier    { }                 /* Régulier — couleur de texte par défaut */
-.badge-priorite--autre       { color: var(--medium-gray); } /* Non spécifiée — Neutre */
+.badge-priorite--autre       { }                 /* Non spécifiée — couleur de texte par défaut */
 
 /* =============================================
    SPINNER
@@ -2486,7 +2486,7 @@ body.sidebar-open { overflow: hidden; }
 .badge-statut-acq {
   background: #ffffff;
   color: #0b113a;
-  border: 1px solid #0b113a;
+  border: 1px solid #e2e8f0;
 }
 
 
