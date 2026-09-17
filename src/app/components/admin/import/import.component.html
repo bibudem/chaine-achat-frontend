@@ -366,7 +366,10 @@
     </div>
 
     <div class="imp-nav">
-      <button class="btn btn-outline-secondary" (click)="navigateTo('/items')">
+      <button class="btn btn-outline-secondary" (click)="retourAuRegistre()">
+        <i class="bi bi-arrow-left me-1"></i>{{ 'import.etape5.btn-retour-registre' | translate }}
+      </button>
+      <button *ngIf="result.inserted > 0" class="btn btn-outline-primary" (click)="voirItemsImportes()">
         <i class="bi bi-list-ul me-1"></i>{{ 'import.etape5.btn-voir-items' | translate }}
       </button>
       <button class="btn btn-primary" (click)="reset()">

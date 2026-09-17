@@ -22,6 +22,9 @@ export interface ImportResult {
   inserted: number;
   total:    number;
   errors:   Array<{ ligne: number; erreur: string }>;
+  /** Identifiant du log d'import (tbl_import_logs.log_id) — permet de filtrer /items sur
+   *  les items créés par CET import précis (bouton "Voir les items importés"). */
+  logId?:   number | null;
 }
 
 export interface ColumnInfo {

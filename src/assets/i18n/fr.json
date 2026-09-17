@@ -334,7 +334,8 @@
       "lignes": "lignes"
     },
     "etape5": {
-      "btn-voir-items": "Voir les items",
+      "btn-retour-registre": "Retour au registre",
+      "btn-voir-items": "Voir les items importés",
       "btn-nouvel": "Nouvel import",
       "lignes-erreur": "Lignes en erreur",
       "reussite": "% de réussite",
@@ -458,6 +459,7 @@
   "items": {
     "titre": "Gestion des demandes",
     "sous-titre": "Liste des items enregistrés",
+    "filtre-import": "Liste filtrée : items de l'import",
     "creer": "Créer un item",
     "creer-nouvel": "Créer un nouvel item",
     "recherche-placeholder": "ID, titre, ISBN, demandeur...",

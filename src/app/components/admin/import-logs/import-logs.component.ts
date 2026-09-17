@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ImportLogsService, ImportLog } from '../../../services/import-logs.service';
 import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 
@@ -41,7 +42,10 @@ export class ImportLogsComponent implements OnInit {
   readonly formTypes  = FORM_TYPES;
   readonly statuts    = ['succès', 'partiel', 'échec'];
 
-  constructor(private importLogsService: ImportLogsService) {}
+  constructor(
+    private importLogsService: ImportLogsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void { this.load(); }
 
@@ -107,6 +111,11 @@ export class ImportLogsComponent implements OnInit {
   }
 
   closeDetail(): void { this.selectedLog = null; }
+
+  /** Liste des items (/items) filtrée sur cet import précis — voir tbl_items.import_log_id. */
+  voirItemsImportes(log: ImportLog): void {
+    this.router.navigate(['/items'], { queryParams: { import_log_id: log.log_id } });
+  }
 
   get totalPages(): number { return Math.ceil(this.total / this.limit) || 1; }
 

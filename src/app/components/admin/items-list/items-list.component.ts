@@ -42,6 +42,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
    *  barre (jugé pas nécessaire ici) — comme selectedStatutBib, activé uniquement via le
    *  query param annee=YYYY (voir « Répartition par type », accueil.component.ts). */
   selectedAnnee           = '';
+  /** Filtre "Voir les items importés" depuis le résultat/registre d'un import en lot —
+   *  transmis en query param (import_log_id), pas de contrôle dédié dans la barre de
+   *  filtres (voir import.component.ts, voirItemsImportes()). */
+  selectedImportLogId     = '';
 
   favoris:          FavoriFilter[] = [];
   showFavorisPanel  = false;
@@ -104,7 +108,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedSuiviAcq,
       this.selectedFonds,
       this.selectedAnnee,
-      this.selectedPriorite
+      this.selectedPriorite,
+      this.selectedImportLogId
     ].filter(v => !!v).length;
   }
 
@@ -152,7 +157,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     const bibliothequeParam = this.route.snapshot.queryParamMap.get('bibliotheque');
     const prioriteParam     = this.route.snapshot.queryParamMap.get('priorite_demande');
     const searchParam       = this.route.snapshot.queryParamMap.get('search');
-    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam) {
+    const importLogIdParam  = this.route.snapshot.queryParamMap.get('import_log_id');
+    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam || importLogIdParam) {
       this.searchTerm             = searchParam       ?? '';
       this.selectedBibliotheque   = bibliothequeParam ?? '';
       this.selectedStatutBib      = '';
@@ -162,6 +168,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedStatutAcq      = statutAcqParam    ?? '';
       this.selectedSuiviAcq       = suiviAcqParam     ?? '';
       this.selectedPriorite       = prioriteParam     ?? '';
+      this.selectedImportLogId    = importLogIdParam  ?? '';
       this.currentPage            = 1;
     }
 
@@ -216,6 +223,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       fonds_budgetaire:      this.selectedFonds          || undefined,
       annee:                 this.selectedAnnee          || undefined,
       priorite_demande:      this.selectedPriorite       || undefined,
+      import_log_id:         this.selectedImportLogId    || undefined,
       // Profil TDM : restreint systématiquement aux items routés vers le TDM (Création de
       // notice TDM = Oui) — imposé par le rôle, pas un filtre que l'utilisateur peut lever.
       creation_notice_dtdm:  this.authService.isTdm ? true : undefined,
@@ -286,10 +294,19 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedFonds          = '';
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
+    this.selectedImportLogId    = '';
     this.sortColumn             = 'date_creation';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
     sessionStorage.removeItem(this.FILTER_STATE_KEY);
+    this.loadItems();
+  }
+
+  /** Retire uniquement le filtre "items importés" (bandeau dédié), sans toucher aux autres
+   *  filtres actifs — voir selectedImportLogId. */
+  clearImportFilter(): void {
+    this.selectedImportLogId = '';
+    this.currentPage         = 1;
     this.loadItems();
   }
 

@@ -178,6 +178,9 @@ export class ItemFormulaireService {
     creation_notice_dtdm?: boolean;
     /** Année de date_creation (ex. "2026") — voir tableau de bord admin. */
     annee?: string;
+    /** Ne renvoyer que les items créés par CET import en lot (tbl_items.import_log_id) —
+     *  voir import.component.ts, bouton "Voir les items importés". */
+    import_log_id?: string;
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -196,6 +199,7 @@ export class ItemFormulaireService {
     if (opts.priorite_demande)     p = p.set('priorite_demande',     opts.priorite_demande);
     if (opts.creation_notice_dtdm != null) p = p.set('creation_notice_dtdm', String(opts.creation_notice_dtdm));
     if (opts.annee)                p = p.set('annee',                opts.annee);
+    if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);
     if (opts.sort)                 p = p.set('sort',                 opts.sort);
     if (opts.order)                p = p.set('order',                opts.order);
 

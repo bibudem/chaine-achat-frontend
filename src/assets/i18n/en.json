@@ -253,7 +253,8 @@
       "lignes": "rows"
     },
     "etape5": {
-      "btn-voir-items": "View items",
+      "btn-retour-registre": "Back to registry",
+      "btn-voir-items": "View imported items",
       "btn-nouvel": "New import",
       "lignes-erreur": "Error rows",
       "reussite": "% success",
@@ -462,6 +463,7 @@
   "items": {
     "titre": "Request management",
     "sous-titre": "List of registered items",
+    "filtre-import": "Filtered list: items from import",
     "creer": "Create an item",
     "creer-nouvel": "Create a new item",
     "recherche-placeholder": "ID, title, ISBN, requester...",

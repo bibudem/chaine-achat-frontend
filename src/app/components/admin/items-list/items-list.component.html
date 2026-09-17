@@ -20,6 +20,14 @@
         <span>{{ decisionMessage.texte }}</span>
         <button type="button" class="btn-close ms-auto" (click)="decisionMessage = null" aria-label="Fermer"></button>
       </div>
+
+      <div *ngIf="selectedImportLogId"
+           class="alert alert-info alert-dismissible fade show d-flex align-items-center"
+           role="alert">
+        <i class="bi bi-funnel me-2"></i>
+        <span>{{ 'items.filtre-import' | translate }} #{{ selectedImportLogId }}</span>
+        <button type="button" class="btn-close ms-auto" (click)="clearImportFilter()" aria-label="Fermer"></button>
+      </div>
     </div>
   </div>
 

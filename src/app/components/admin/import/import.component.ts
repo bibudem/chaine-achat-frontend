@@ -128,6 +128,16 @@ export class ImportComponent implements OnDestroy {
     this.router.navigate([path]);
   }
 
+  /* ── Étape résultat : navigation post-import ── */
+  retourAuRegistre(): void {
+    this.router.navigate(['/import-logs']);
+  }
+
+  voirItemsImportes(): void {
+    if (!this.result?.logId) { this.navigateTo('/items'); return; }
+    this.router.navigate(['/items'], { queryParams: { import_log_id: this.result.logId } });
+  }
+
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      GESTION DU FICHIER
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -289,7 +299,8 @@ export class ImportComponent implements OnDestroy {
             message:  err.error?.error || err.error?.message || "Erreur lors de l'import",
             inserted: 0,
             total:    0,
-            errors:   []
+            errors:   [],
+            logId:    null
           };
           this.step      = 'result';
           this.isLoading = false;
