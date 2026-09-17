@@ -11,6 +11,52 @@
         Portail de gestion des acquisitions — Bibliothèques UdeM
       </p>
     </div>
+
+    <!-- ── Chip : Taux de change (lecture seule, sans gestion) ── -->
+    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" [class.info-chip--open]="showTauxDetail">
+      <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
+        <div class="info-chip__icon">
+          <i class="bi bi-currency-exchange"></i>
+        </div>
+        <div class="info-chip__body">
+          <span class="info-chip__label">
+            {{ 'accueil.taux-change' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
+            <i class="bi tdv-chevron" [class.bi-chevron-down]="!showTauxDetail" [class.bi-chevron-up]="showTauxDetail"></i>
+          </span>
+          <span class="info-chip__val info-chip__val--lg" *ngIf="tauxActuels?.taux?.['USD'] as usd; else pasDeTauxPrincipal">
+            1 USD = {{ usd }} CAD
+          </span>
+          <ng-template #pasDeTauxPrincipal>
+            <span class="info-chip__val text-muted" style="font-weight:500;">
+              {{ isLoadingTaux ? ('accueil.chargement' | translate) : ('accueil.aucun-taux' | translate) }}
+            </span>
+          </ng-template>
+        </div>
+      </div>
+
+      <div *ngIf="showTauxDetail" class="info-chip__dropdown info-chip__dropdown--readonly">
+        <p class="info-chip__dropdown-title">
+          <i class="bi bi-clock-history me-1"></i>
+          {{ tauxActuels?.periode || ('accueil.aucun-taux' | translate) }}
+        </p>
+        <p class="tdv-readonly-date" *ngIf="tauxActuels as ta">
+          {{ 'accueil.en-vigueur-depuis' | translate }} {{ formatDateTaux(ta.date_debut) }}
+        </p>
+
+        <div class="tdv-readonly-list" *ngIf="tauxActuels as ta; else pasDeTauxListe">
+          <div class="tdv-readonly-row" *ngFor="let code of devisesTriees(ta.taux)">
+            <span class="tdv-readonly-row__devise">{{ deviseLabel(code) }}</span>
+            <span class="tdv-readonly-row__valeur">{{ ta.taux[code] }} CAD</span>
+          </div>
+          <div *ngIf="devisesTriees(ta.taux).length === 0" class="text-muted small fst-italic py-1">
+            {{ 'accueil.aucune-devise-periode' | translate }}
+          </div>
+        </div>
+        <ng-template #pasDeTauxListe>
+          <p class="text-muted small fst-italic mb-0">{{ 'accueil.aucun-taux' | translate }}</p>
+        </ng-template>
+      </div>
+    </div>
   </div>
 
   <!-- ── Mes demandes : tableau de bord unifié (accès + répartition par statut) ──────────── -->

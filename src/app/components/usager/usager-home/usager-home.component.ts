@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
+import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
+import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 
 export interface FormulaireCard {
   titre:       string;
@@ -28,7 +30,37 @@ export class UsagerHomeComponent implements OnInit {
   // ToutesLesDemandesComponent) : simple compteur, un seul appel léger (limit: 1).
   totalSysteme: number | null = null;
 
-  constructor(private reponsesService: ReponsesService) {}
+  // Taux de change en vigueur aujourd'hui (lecture seule — gestion complète côté admin).
+  tauxActuels: TauxPeriode | null = null;
+  isLoadingTaux = true;
+  showTauxDetail = false;
+
+  private readonly devisesOptions = new ListeChoixOptions().devisesOptions;
+
+  toggleTauxDetail(): void {
+    this.showTauxDetail = !this.showTauxDetail;
+  }
+
+  deviseLabel(code: string): string {
+    return this.devisesOptions.find(d => d.code === code)?.label ?? code;
+  }
+
+  /** Codes de devise présents dans la période affichée, triés selon l'ordre canonique. */
+  devisesTriees(taux: Record<string, number> | undefined | null): string[] {
+    if (!taux) return [];
+    const ordre = this.devisesOptions.map(d => d.code);
+    return Object.keys(taux).sort((a, b) => ordre.indexOf(a) - ordre.indexOf(b));
+  }
+
+  formatDateTaux(d: string | undefined | null): string {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  constructor(
+    private reponsesService: ReponsesService,
+    private tauxDevisesService: TauxDevisesService,
+  ) {}
 
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
   get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
@@ -54,6 +86,11 @@ export class UsagerHomeComponent implements OnInit {
     this.reponsesService.getAllPublic({ limit: 1, offset: 0 }).subscribe({
       next:  res => { this.totalSysteme = res.total; },
       error: ()  => { this.totalSysteme = null; }
+    });
+
+    this.tauxDevisesService.getActuelle().subscribe({
+      next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
+      error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
     });
   }
 
