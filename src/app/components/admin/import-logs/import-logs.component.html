@@ -87,6 +87,7 @@
           <th>Utilisateur</th>
           <th class="text-center">Total</th>
           <th class="text-center">Insérés</th>
+          <th class="text-center">Mis à jour</th>
           <th class="text-center">Erreurs</th>
           <th class="text-center">Taux</th>
           <th class="text-center">Statut</th>
@@ -125,6 +126,10 @@
           </td>
 
           <td class="text-center">
+            <span class="fw-semibold" [class.text-primary]="log.nb_maj > 0" [class.text-muted]="!log.nb_maj">{{ log.nb_maj || 0 }}</span>
+          </td>
+
+          <td class="text-center">
             <span [class.text-danger]="log.nb_erreurs > 0"
                   [class.text-muted]="log.nb_erreurs === 0"
                   class="fw-semibold">{{ log.nb_erreurs }}</span>
@@ -148,7 +153,7 @@
           </td>
 
           <td class="d-flex gap-1">
-            <button *ngIf="log.nb_inseres > 0"
+            <button *ngIf="log.nb_inseres + log.nb_maj > 0"
                     class="btn btn-sm btn-outline-primary py-0"
                     (click)="voirItemsImportes(log)"
                     title="Voir les items importés">
@@ -203,6 +208,7 @@
     <div class="ilog-modal__body">
       <div class="ilog-modal__stats">
         <span class="text-success"><i class="bi bi-check-circle me-1"></i>{{ selectedLog.nb_inseres }} insérés</span>
+        <span *ngIf="selectedLog.nb_maj" class="text-primary"><i class="bi bi-arrow-repeat me-1"></i>{{ selectedLog.nb_maj }} mis à jour</span>
         <span class="text-danger"><i class="bi bi-x-circle me-1"></i>{{ selectedLog.nb_erreurs }} erreurs</span>
         <span class="text-muted">sur {{ selectedLog.nb_total }} lignes</span>
       </div>

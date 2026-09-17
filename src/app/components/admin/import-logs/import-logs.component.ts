@@ -155,7 +155,7 @@ export class ImportLogsComponent implements OnInit {
 
   tauxSucces(log: ImportLog): number {
     if (!log.nb_total) { return 0; }
-    return Math.round((log.nb_inseres / log.nb_total) * 100);
+    return Math.round(((log.nb_inseres + (log.nb_maj ?? 0)) / log.nb_total) * 100);
   }
 
   formatDate(d: string): string {

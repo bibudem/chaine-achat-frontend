@@ -332,7 +332,7 @@
         <p class="imp-result__msg">{{ result.message }}</p>
         <div *ngIf="result.success" class="imp-result__stats">
           <span class="imp-stat imp-stat--green">
-            <strong>{{ nouveauxCount }}</strong> {{ 'import.etape5.inserees' | translate }}
+            <strong>{{ result.inserted }}</strong> {{ 'import.etape5.inserees' | translate }}
           </span>
           <span *ngIf="result.updated" class="imp-stat imp-stat--blue">
             <strong>{{ result.updated }}</strong> {{ 'import.etape5.majees' | translate }}
@@ -372,7 +372,7 @@
       <button class="btn btn-outline-secondary" (click)="retourAuRegistre()">
         <i class="bi bi-arrow-left me-1"></i>{{ 'import.etape5.btn-retour-registre' | translate }}
       </button>
-      <button *ngIf="result.inserted > 0" class="btn btn-outline-primary" (click)="voirItemsImportes()">
+      <button *ngIf="result.inserted + (result.updated ?? 0) > 0" class="btn btn-outline-primary" (click)="voirItemsImportes()">
         <i class="bi bi-list-ul me-1"></i>{{ 'import.etape5.btn-voir-items' | translate }}
       </button>
       <button class="btn btn-primary" (click)="reset()">

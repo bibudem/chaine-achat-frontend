@@ -345,13 +345,8 @@ export class ImportComponent implements OnDestroy {
 
   get successRate(): number {
     if (!this.result?.total) { return 0; }
-    return Math.round((this.result.inserted / this.result.total) * 100);
-  }
-
-  /** Lignes réellement créées (result.inserted comprend aussi les mises à jour — voir
-   *  ImportResult.updated, controllers/import.js). */
-  get nouveauxCount(): number {
-    return (this.result?.inserted ?? 0) - (this.result?.updated ?? 0);
+    const traites = this.result.inserted + (this.result.updated ?? 0);
+    return Math.round((traites / this.result.total) * 100);
   }
 
   get stepIndex(): number {

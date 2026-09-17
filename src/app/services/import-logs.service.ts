@@ -11,6 +11,9 @@ export interface ImportLog {
   fichier_nom:     string;
   nb_total:        number;
   nb_inseres:      number;
+  /** Items existants mis à jour (déduplication titre+ISBN) — voir controllers/import.js,
+   *  upsertRow. Absent/0 sur les logs antérieurs à ce suivi. */
+  nb_maj:          number;
   nb_erreurs:      number;
   details_erreurs: Array<{ ligne: number; erreur: string }> | null;
   utilisateur:     string;
