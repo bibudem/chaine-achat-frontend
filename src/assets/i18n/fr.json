@@ -455,7 +455,16 @@
     "demandes-urgentes": "Demandes urgentes",
     "prioritaires": "prioritaires",
     "demandes-traitees": "Demandes traitées",
-    "du-total": "% du total"
+    "du-total": "% du total",
+    "mon-activite": "Mon activité",
+    "mon-activite-desc": "Aperçu des demandes qui vous sont assignées pour le catalogage (Création de notice TDM).",
+    "tdm-total-nom": "Total assignées",
+    "tdm-total-desc": "Toutes les demandes qui vous sont routées",
+    "tdm-attente-nom": "En attente ACQ",
+    "tdm-attente-desc": "Pas encore traitées par les ACQ",
+    "tdm-urgentes-nom": "Urgentes en attente",
+    "tdm-urgentes-desc": "Priorité urgente, en attente ACQ",
+    "tdm-par-bibliotheque": "Ma file par bibliothèque"
   },
   "items": {
     "titre": "Gestion des demandes",

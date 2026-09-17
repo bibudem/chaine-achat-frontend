@@ -502,11 +502,75 @@
 }
 .catalog-row:hover .catalog-row__arrow { opacity: 1; transform: translateX(3px); }
 
-/* Profil TDM (tableau de bord en lecture seule) : neutralise les liens de navigation
-   vers la liste des items — catalogue, légende de répartition. */
+/* Neutralise un lien de navigation vers la liste des items — catalogue en édition
+   restreinte, ou bibliothèque "Non spécifiée" (non filtrable). */
 .db-link-disabled { cursor: default; pointer-events: none; }
 .db-link-disabled:hover { background: none; }
 .db-link-disabled .catalog-row__arrow { opacity: 0 !important; }
+
+/* ══════════════════════════════════════════════════════════
+   TDM — « Mon activité » (remplace les statistiques Admin)
+   Panneau à hauteur naturelle (ne s'étire pas pour égaler la colonne
+   "Types de formulaire", plus longue) — évite le grand vide vertical.
+══════════════════════════════════════════════════════════ */
+.db-col-tdm-activity { align-self: flex-start; }
+.panel--tdm-activity { min-height: 0; overflow: visible !important; }
+.panel--tdm-activity .panel__body { flex: none; overflow: visible; }
+
+.db-tdm-desc {
+  font-size: .83rem;
+  color: var(--text-gray, #607386);
+  margin: 0 0 4px;
+}
+.tdm-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--extra-light-blue, #E5F0F8);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .12s;
+}
+.tdm-stat-row:last-child { border-bottom: none; }
+.tdm-stat-row:hover { background: rgba(0,64,127,.05); }
+.tdm-stat-row:hover .tdm-stat-row__arrow { opacity: 1; transform: translateX(3px); }
+
+.tdm-stat-row__icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1rem;
+}
+.tdm-stat-row__icon--blue   { background: var(--primary-blue, #0057AC); }
+.tdm-stat-row__icon--amber  { background: var(--sc-amber-mid, #C8872A); }
+.tdm-stat-row__icon--green  { background: var(--secondary-green, #2E9E6B); }
+.tdm-stat-row__icon--orange { background: var(--sc-orange-mid, #E8622C); }
+
+.tdm-stat-row__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.tdm-stat-row__name {
+  font-family: 'Figtree', sans-serif;
+  font-size: .85rem; font-weight: 600;
+  color: var(--dark-blue, #0B113A);
+}
+.tdm-stat-row__desc {
+  font-family: 'Figtree', sans-serif;
+  font-size: .7rem;
+  color: var(--text-gray, #607386);
+}
+.tdm-stat-row__value {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.3rem; font-weight: 700;
+  color: var(--dark-blue, #0B113A);
+  flex-shrink: 0;
+  min-width: 32px;
+  text-align: right;
+}
+.tdm-stat-row__arrow {
+  font-size: 1.1rem; color: var(--text-gray, #607386);
+  opacity: 0; transition: opacity .15s, transform .15s;
+  flex-shrink: 0;
+}
 
 /* ══════════════════════════════════════════════════════════
    STATUTS — 4 mini-cartes 2×2

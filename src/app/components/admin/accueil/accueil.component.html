@@ -128,11 +128,12 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       LIGNE 1 — STAT CARDS
+       LIGNE 1 — STAT CARDS (Admin uniquement — le profil TDM voit à la place
+       la section "Mon activité", ci-dessous dans LIGNE 2)
   ══════════════════════════════════════════════ -->
-  <div class="db-stats">
+  <div class="db-stats" *ngIf="!authService.isTdm">
 
-    <div class="sc sc--blue" [class.sc--clickable]="!authService.isTdm" (click)="navigateToItemsListe()">
+    <div class="sc sc--blue sc--clickable" (click)="navigateToItemsListe()">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingTotalItems ? '—' : formatNumber(totalItemsSysteme || 0) }}</span>
         <span class="sc__badge" *ngIf="!isLoadingDashboard">+{{ formatNumber(totals.items_last_7_days) }} / 7j</span>
@@ -146,7 +147,7 @@
       </div>
     </div>
 
-    <div class="sc sc--amber" [class.sc--clickable]="!authService.isTdm" (click)="navigateToEnAttente()">
+    <div class="sc sc--amber sc--clickable" (click)="navigateToEnAttente()">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingEnAttente ? '—' : formatNumber(totalEnAttente || 0) }}</span>
         <span class="sc__badge"><i class="bi bi-hourglass-split"></i></span>
@@ -174,7 +175,7 @@
       </div>
     </div>
 
-    <div class="sc sc--orange" [class.sc--clickable]="!authService.isTdm" (click)="navigateToUrgentesEnAttente()">
+    <div class="sc sc--orange sc--clickable" (click)="navigateToUrgentesEnAttente()">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_urgentes_attente) }}</span>
         <span class="sc__badge" *ngIf="!isLoadingDashboard">{{ formatNumber(prioritaireCount) }} {{ 'accueil.prioritaires' | translate }}</span>
@@ -237,13 +238,91 @@
       </div>
 
     </div>
-    <!-- ══ COL centre ══ -->
+
+    <!-- ══ TDM — Mon activité : compteurs + graphique restreints à sa propre file
+         (creation_notice_dtdm = true), voir loadTdmStats/loadTdmLibraryBreakdown. ══ -->
+    <div class="col-12 col-sm-6 col-xl-8 db-col-tdm-activity" *ngIf="authService.isTdm">
+      <div class="panel panel--tdm-activity">
+        <div class="panel__head">
+          <span class="panel__title">{{ 'accueil.mon-activite' | translate }}</span>
+        </div>
+        <div class="panel__body">
+          <p class="db-tdm-desc">{{ 'accueil.mon-activite-desc' | translate }}</p>
+
+          <div class="tdm-stat-row" (click)="navigateToTdmTotal()">
+            <div class="tdm-stat-row__icon tdm-stat-row__icon--blue"><i class="bi bi-inbox-fill"></i></div>
+            <div class="tdm-stat-row__body">
+              <span class="tdm-stat-row__name">{{ 'accueil.tdm-total-nom' | translate }}</span>
+              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-total-desc' | translate }}</span>
+            </div>
+            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmAssignees || 0) }}</span>
+            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
+          </div>
+
+          <div class="tdm-stat-row" (click)="navigateToTdmEnAttente()">
+            <div class="tdm-stat-row__icon tdm-stat-row__icon--amber"><i class="bi bi-hourglass-split"></i></div>
+            <div class="tdm-stat-row__body">
+              <span class="tdm-stat-row__name">{{ 'accueil.tdm-attente-nom' | translate }}</span>
+              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-attente-desc' | translate }}</span>
+            </div>
+            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmEnAttente || 0) }}</span>
+            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
+          </div>
+
+          <div class="tdm-stat-row" (click)="navigateToTdmUrgentes()">
+            <div class="tdm-stat-row__icon tdm-stat-row__icon--orange"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="tdm-stat-row__body">
+              <span class="tdm-stat-row__name">{{ 'accueil.tdm-urgentes-nom' | translate }}</span>
+              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-urgentes-desc' | translate }}</span>
+            </div>
+            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmUrgentes || 0) }}</span>
+            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
+          </div>
+
+          <div class="panel__section-divider"></div>
+          <p class="panel__section-label">{{ 'accueil.tdm-par-bibliotheque' | translate }}</p>
+
+          <div *ngIf="isLoadingTdmLibrary" class="db-spinner">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+
+          <ng-container *ngIf="!isLoadingTdmLibrary && tdmLibraryBreakdown.length > 0">
+            <div class="type-seg-bar">
+              <div *ngFor="let lib of tdmLibraryBreakdown; let i = index"
+                   class="type-seg-bar__slice"
+                   [style.background]="getBibColor(i)"
+                   [style.width.%]="lib.percentage"
+                   [title]="lib.bibliotheque + ' — ' + lib.percentage + '%'">
+              </div>
+            </div>
+            <div class="type-legend">
+              <div *ngFor="let lib of tdmLibraryBreakdown; let i = index" class="type-legend__row">
+                <span class="type-legend__dot" [style.background]="getBibColor(i)"></span>
+                <span class="type-legend__name">{{ lib.bibliotheque }}</span>
+                <div class="type-legend__track">
+                  <div class="type-legend__fill" [style.background]="getBibColor(i)" [style.width.%]="lib.percentage"></div>
+                </div>
+                <span class="type-legend__pct">{{ lib.percentage }}%</span>
+                <span class="type-legend__cnt">{{ formatNumber(lib.count) }}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <p *ngIf="!isLoadingTdmLibrary && tdmLibraryBreakdown.length === 0" class="db-empty">
+            {{ 'accueil.aucune-donnee' | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COL centre (Admin uniquement) ══ -->
+    <ng-container *ngIf="!authService.isTdm">
     <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-right">
       <!-- Rangée 1 : Répartition par type -->
       <div class="panel panel--types mb-3 flex-grow-1">
         <div class="panel__head">
           <span class="panel__title">{{ 'accueil.repartition-par-type' | translate }}</span>
-          <button class="btn btn-link btn-sm p-0" [disabled]="authService.isTdm" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
+          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
         </div>
         <div class="panel__body">
 
@@ -263,9 +342,8 @@
             <div class="type-legend">
               <div *ngFor="let t of byType"
                    class="type-legend__row type-legend__row--link"
-                   [class.db-link-disabled]="authService.isTdm"
                    (click)="navigateToType(t.formulaire_type)"
-                   [title]="authService.isTdm ? '' : ('Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type))">
+                   [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
                 <span class="type-legend__dot" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'"></span>
                 <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
                 <div class="type-legend__track">
@@ -295,9 +373,9 @@
 
           <ng-container *ngIf="!isLoadingGraphs && libraryStats.length > 0">
             <div *ngFor="let lib of libraryStats; let i = index" class="bib-row"
-                 [class.db-link-disabled]="authService.isTdm || lib.bibliotheque === 'Non spécifiée'"
+                 [class.db-link-disabled]="lib.bibliotheque === 'Non spécifiée'"
                  (click)="lib.bibliotheque !== 'Non spécifiée' && navigateToBibliotheque(lib.bibliotheque)"
-                 [title]="authService.isTdm || lib.bibliotheque === 'Non spécifiée' ? '' : ('Voir les demandes · ' + lib.bibliotheque)">
+                 [title]="lib.bibliotheque === 'Non spécifiée' ? '' : ('Voir les demandes · ' + lib.bibliotheque)">
               <div class="bib-gauge"
                    [style.background]="'conic-gradient(' + getBibColor(i) + ' 0% ' + lib.percentage + '%, #E5F0F8 ' + lib.percentage + '% 100%)'">
                 <div class="bib-gauge__inner">
@@ -376,9 +454,8 @@
             <!-- Barres top 5 -->
             <ng-container *ngIf="topDemandeurs.length > 0">
               <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row"
-                   [class.db-link-disabled]="authService.isTdm"
                    (click)="navigateToDemandeur(d.demandeur)"
-                   [title]="authService.isTdm ? '' : ('Voir les demandes · ' + d.demandeur)">
+                   [title]="'Voir les demandes · ' + d.demandeur">
                 <span class="hbar-label">{{ d.demandeur }}</span>
                 <div class="hbar-track">
                   <div class="hbar-fill"
@@ -399,6 +476,7 @@
       </div>
 
     </div>
+    </ng-container>
 
   </div><!-- /db-panels -->
 

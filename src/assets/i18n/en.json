@@ -459,7 +459,16 @@
     "demandes-urgentes": "Urgent requests",
     "prioritaires": "priority",
     "demandes-traitees": "Processed requests",
-    "du-total": "% of total"
+    "du-total": "% of total",
+    "mon-activite": "My activity",
+    "mon-activite-desc": "Overview of the requests assigned to you for cataloging (TDM record creation).",
+    "tdm-total-nom": "Total assigned",
+    "tdm-total-desc": "All requests routed to you",
+    "tdm-attente-nom": "Pending ACQ",
+    "tdm-attente-desc": "Not yet processed by ACQ",
+    "tdm-urgentes-nom": "Urgent pending",
+    "tdm-urgentes-desc": "Urgent priority, pending ACQ",
+    "tdm-par-bibliotheque": "My queue by library"
   },
   "items": {
     "titre": "Request management",

@@ -47,6 +47,19 @@ export class AccueilComponent implements OnInit, OnDestroy {
   totalItemsSysteme: number | null = null;
   isLoadingTotalItems = true;
 
+  /** Profil TDM : « Mon activité » — compteurs restreints aux demandes qui lui sont
+   *  routées (creation_notice_dtdm = true), mêmes filtres que les cartes Admin. */
+  totalTdmAssignees: number | null = null;
+  totalTdmEnAttente: number | null = null;
+  totalTdmUrgentes:  number | null = null;
+  isLoadingTdmStats = true;
+
+  /** Profil TDM : répartition de sa file par bibliothèque, pour le graphique de « Mon
+   *  activité ». Pas d'agrégat serveur filtré par creation_notice_dtdm (voir home.service) —
+   *  calculé côté client à partir de sa liste complète (voir loadTdmLibraryBreakdown). */
+  tdmLibraryBreakdown: { bibliotheque: string; count: number; percentage: number }[] = [];
+  isLoadingTdmLibrary = true;
+
   /* ─── Panneau aide ─── */
   showHelpPanel = false;
 
@@ -177,10 +190,19 @@ export class AccueilComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAcqConfig();
     this.loadTauxActuels();
-    this.loadAllData();
     this.loadTypeCounts();
-    this.loadTotalEnAttente();
-    this.loadTotalItemsSysteme();
+
+    // Le profil TDM ne voit que "Types de formulaire" et "Mon activité" (compteurs +
+    // graphique restreints à sa file) — inutile de charger les statistiques globales
+    // réservées à l'Admin.
+    if (this.authService.isTdm) {
+      this.loadTdmStats();
+      this.loadTdmLibraryBreakdown();
+    } else {
+      this.loadAllData();
+      this.loadTotalEnAttente();
+      this.loadTotalItemsSysteme();
+    }
   }
 
   ngOnDestroy(): void {
@@ -257,10 +279,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
-  /** Le profil TDM consulte le tableau de bord en lecture seule : les liens de navigation
-   *  vers la liste des items (catalogue, légende, « Voir tout ») sont désactivés. */
   navigateTo(path: string): void {
-    if (this.authService.isTdm) return;
     this.router.navigate([path], { queryParams: { annee: this.anneeQueryParam } });
   }
 
@@ -268,7 +287,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
    *  bord — les liens vers la liste des items doivent porter le même filtre, sinon le
    *  nombre affiché ici ne correspond plus à ce qu'on voit en arrivant sur /items. */
   navigateToType(formulaire_type: string): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], { queryParams: { formulaire_type, annee: this.anneeQueryParam } });
   }
 
@@ -276,7 +294,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
    *  (mêmes valeurs par défaut que « Demandes en attente » — voir total_urgentes_attente dans
    *  models/home.js). Pas d'année transmise : toujours toutes années, comme la carte. */
   navigateToUrgentesEnAttente(): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], {
       queryParams: { priorite_demande: 'Urgent', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
     });
@@ -286,7 +303,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
    *  liste des items, avec le nom du demandeur dans la recherche libre (même champ que
    *  demandeur/titre/isbn/éditeur/id sur /items). */
   navigateToDemandeur(demandeur: string): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], { queryParams: { search: demandeur, annee: this.anneeQueryParam } });
   }
 
@@ -306,7 +322,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /** « Par bibliothèque » (libraryStats) reflète aussi l'année sélectionnée — même raison
    *  que navigateToType. */
   navigateToBibliotheque(bibliotheque: string): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], { queryParams: { bibliotheque, annee: this.anneeQueryParam } });
   }
 
@@ -314,7 +329,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
    *  réellement sélectionnés dans la barre (pas un drapeau caché) — mêmes valeurs par défaut
    *  que la cloche de notifications (voir loadTotalEnAttente). */
   navigateToEnAttente(): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items'], {
       queryParams: { statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
     });
@@ -331,7 +345,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   /** Carte « Total demandes » → liste des items, sans filtre. */
   navigateToItemsListe(): void {
-    if (this.authService.isTdm) return;
     this.router.navigate(['/items']);
   }
 
@@ -342,6 +355,77 @@ export class AccueilComponent implements OnInit, OnDestroy {
       error: ()  => { this.totalItemsSysteme = null;           this.isLoadingTotalItems = false; }
     });
     this.subs.add(sub);
+  }
+
+  /** Profil TDM : les 3 compteurs de « Mon activité », restreints à sa file (creation_notice_dtdm
+   *  = true) — mêmes filtres que les cartes Admin (Total / En attente / Urgentes), 3 requêtes
+   *  légères (limit=1, seul le total nous intéresse). */
+  private loadTdmStats(): void {
+    this.isLoadingTdmStats = true;
+    const sub = forkJoin({
+      total: this.itemService.getAll({ limit: 1, creation_notice_dtdm: true }),
+      enAttente: this.itemService.getAll({
+        limit: 1, creation_notice_dtdm: true,
+        statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
+      }),
+      urgentes: this.itemService.getAll({
+        limit: 1, creation_notice_dtdm: true, priorite_demande: 'Urgent',
+        statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
+      }),
+    }).subscribe({
+      next: ({ total, enAttente, urgentes }) => {
+        this.totalTdmAssignees = total.total     ?? 0;
+        this.totalTdmEnAttente = enAttente.total ?? 0;
+        this.totalTdmUrgentes  = urgentes.total  ?? 0;
+        this.isLoadingTdmStats = false;
+      },
+      error: () => { this.isLoadingTdmStats = false; }
+    });
+    this.subs.add(sub);
+  }
+
+  /** Profil TDM : répartition de sa file par bibliothèque (graphique de « Mon activité »).
+   *  Aucun endpoint serveur n'agrège par bibliothèque en filtrant par creation_notice_dtdm
+   *  (voir home.service.ts) — on récupère donc sa liste complète et on agrège côté client.
+   *  Une file TDM reste d'une taille raisonnable (quelques centaines d'items au plus), donc
+   *  ce coût reste négligeable ; à revoir si ça change. */
+  private loadTdmLibraryBreakdown(): void {
+    this.isLoadingTdmLibrary = true;
+    const sub = this.itemService.getAll({ creation_notice_dtdm: true, limit: 500 }).subscribe({
+      next: res => {
+        const items  = Array.isArray(res.data) ? res.data : [];
+        const counts = new Map<string, number>();
+        for (const item of items) {
+          const bib = item.bibliotheque?.trim() || 'Non spécifiée';
+          counts.set(bib, (counts.get(bib) ?? 0) + 1);
+        }
+        const total = items.length;
+        this.tdmLibraryBreakdown = Array.from(counts, ([bibliotheque, count]) => ({
+          bibliotheque, count, percentage: total ? Math.round((count / total) * 100) : 0
+        })).sort((a, b) => b.count - a.count);
+        this.isLoadingTdmLibrary = false;
+      },
+      error: () => { this.tdmLibraryBreakdown = []; this.isLoadingTdmLibrary = false; }
+    });
+    this.subs.add(sub);
+  }
+
+  /** Carte « Total assignées » (TDM) → liste des items (déjà scopée à sa file par items-list
+   *  lui-même, voir items-list.component.ts). */
+  navigateToTdmTotal(): void {
+    this.router.navigate(['/items']);
+  }
+
+  navigateToTdmEnAttente(): void {
+    this.router.navigate(['/items'], {
+      queryParams: { statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    });
+  }
+
+  navigateToTdmUrgentes(): void {
+    this.router.navigate(['/items'], {
+      queryParams: { priorite_demande: 'Urgent', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    });
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
