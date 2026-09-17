@@ -330,6 +330,7 @@
 .imp-stat--green  { background: var(--import-stat-green-bg); color: var(--import-stat-green-text); }
 .imp-stat--gray   { background: var(--import-stat-gray-bg); color: var(--text-gray); }
 .imp-stat--orange { background: var(--import-stat-orange-bg); color: var(--import-stat-orange-text); }
+.imp-stat--blue   { background: var(--extra-light-blue, #E5F0F8); color: var(--secondary-blue, #00407F); }
 
 .imp-result__bar {
   width: 130px; height: 6px; background: var(--import-border); border-radius: 3px; overflow: hidden;

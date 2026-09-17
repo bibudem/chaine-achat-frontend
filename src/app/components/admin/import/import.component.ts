@@ -348,6 +348,12 @@ export class ImportComponent implements OnDestroy {
     return Math.round((this.result.inserted / this.result.total) * 100);
   }
 
+  /** Lignes réellement créées (result.inserted comprend aussi les mises à jour — voir
+   *  ImportResult.updated, controllers/import.js). */
+  get nouveauxCount(): number {
+    return (this.result?.inserted ?? 0) - (this.result?.updated ?? 0);
+  }
+
   get stepIndex(): number {
     const steps: Step[] = ['select', 'notice', 'upload', 'preview', 'result'];
     return steps.indexOf(this.step) + 1;

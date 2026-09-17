@@ -19,7 +19,11 @@ export type FormType =
 export interface ImportResult {
   success:  boolean;
   message:  string;
+  /** Lignes traitées avec succès — créations ET mises à jour confondues. */
   inserted: number;
+  /** Parmi `inserted`, celles qui ont mis à jour un item déjà existant (même formulaire_type
+   *  + titre + ISBN/ISSN) au lieu d'en créer un doublon — voir controllers/import.js. */
+  updated?: number;
   total:    number;
   errors:   Array<{ ligne: number; erreur: string }>;
   /** Identifiant du log d'import (tbl_import_logs.log_id) — permet de filtrer /items sur

@@ -332,7 +332,10 @@
         <p class="imp-result__msg">{{ result.message }}</p>
         <div *ngIf="result.success" class="imp-result__stats">
           <span class="imp-stat imp-stat--green">
-            <strong>{{ result.inserted }}</strong> {{ 'import.etape5.inserees' | translate }}
+            <strong>{{ nouveauxCount }}</strong> {{ 'import.etape5.inserees' | translate }}
+          </span>
+          <span *ngIf="result.updated" class="imp-stat imp-stat--blue">
+            <strong>{{ result.updated }}</strong> {{ 'import.etape5.majees' | translate }}
           </span>
           <span class="imp-stat imp-stat--gray">
             <strong>{{ result.total }}</strong> {{ 'import.etape5.total' | translate }}
