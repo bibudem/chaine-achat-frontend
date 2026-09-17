@@ -9,7 +9,11 @@
   inset:           0;
   background:      rgba(11, 17, 58, 0.45);   /* --primary-blue opacifié */
   backdrop-filter: blur(2px);
-  z-index:         1050;
+  /* Doit toujours passer au-dessus de n'importe quel modal/overlay de page (ex. les modals
+     de item-formulaire, import-logs, taux-devises, tous à 1050, ou l'en-tête à 1400) — sinon
+     un show*()/confirm() déclenché pendant qu'un autre modal est ouvert peut s'afficher
+     dessous, invisible et donc impossible à fermer. */
+  z-index:         2000;
   display:         flex;
   align-items:     center;
   justify-content: center;

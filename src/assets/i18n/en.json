@@ -259,6 +259,7 @@
       "lignes-erreur": "Error rows",
       "reussite": "% success",
       "inserees": "inserted",
+      "majees": "updated",
       "total": "total",
       "erreurs": "error(s)"
     },

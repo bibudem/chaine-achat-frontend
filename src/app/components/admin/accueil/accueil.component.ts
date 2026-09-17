@@ -464,13 +464,13 @@ export class AccueilComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Taux de change en vigueur (lecture seule) — la période la plus récente de
-   *  tbl_taux_devises_historique. Gestion complète via Configuration > Taux de change. */
+  /** Taux de change en vigueur aujourd'hui (lecture seule) — ignore une période planifiée
+   *  pour une date future. Gestion complète via Configuration > Taux de change. */
   private loadTauxActuels(): void {
     this.isLoadingTaux = true;
-    this.tauxDevisesService.getAll().subscribe({
+    this.tauxDevisesService.getActuelle().subscribe({
       next: (res) => {
-        this.tauxActuels   = res.data?.[0] ?? null;
+        this.tauxActuels   = res.data ?? null;
         this.isLoadingTaux = false;
       },
       error: () => {

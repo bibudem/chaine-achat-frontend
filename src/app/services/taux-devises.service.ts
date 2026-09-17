@@ -43,6 +43,13 @@ export class TauxDevisesService {
     return this.http.get<ApiResponse<TauxPeriode[]>>(this.baseUrl);
   }
 
+  /** Période réellement en vigueur aujourd'hui (ignore une période planifiée pour une date
+   *  future) — utilisé pour le taux affiché en en-tête de l'accueil et pour la conversion
+   *  automatique en CAD des formulaires (voir ConfigService.getTauxRates()). */
+  getActuelle(): Observable<ApiResponse<TauxPeriode | null>> {
+    return this.http.get<ApiResponse<TauxPeriode | null>>(`${this.baseUrl}/actuelle`);
+  }
+
   /** Nouvelle période (ligne) — taux initialement vide, à compléter ensuite devise par devise. */
   creerPeriode(periode: string, date_debut?: string | null, note?: string | null): Observable<ApiResponse<TauxPeriode>> {
     return this.http.post<ApiResponse<TauxPeriode>>(

@@ -37,18 +37,19 @@ export class ConfigService {
   }
 
   /** Taux de change vers CAD pour toutes les devises gérées — voir "Conversion automatique en
-   *  CAD" dans les formulaires usager/admin. Source : la période la plus récente de
-   *  tbl_taux_devises_historique (voir Configuration > Taux de change, admin). CAD = 1
-   *  toujours ; "Autre" n'apparaît jamais (pas de taux, saisie manuelle du prix CAD). */
+   *  CAD" dans les formulaires usager/admin. Source : la période réellement EN VIGUEUR
+   *  aujourd'hui dans tbl_taux_devises_historique (ignore une période planifiée pour une date
+   *  future — voir Configuration > Taux de change, admin). CAD = 1 toujours ; "Autre"
+   *  n'apparaît jamais (pas de taux, saisie manuelle du prix CAD). */
   getTauxRates(): Observable<TauxRates> {
     const DEFAUT: TauxRates = { CAD: 1, USD: 1.368 };
-    return this.tauxDevisesService.getAll().pipe(
+    return this.tauxDevisesService.getActuelle().pipe(
       map(res => {
-        const derniere = res.data?.[0];
-        if (!res.success || !derniere) return DEFAUT;
+        const actuelle = res.data;
+        if (!res.success || !actuelle) return DEFAUT;
         const rates: TauxRates = { CAD: 1 };
-        Object.keys(derniere.taux || {}).forEach(code => {
-          const v = Number(derniere.taux[code]);
+        Object.keys(actuelle.taux || {}).forEach(code => {
+          const v = Number(actuelle.taux[code]);
           if (Number.isFinite(v)) rates[code] = v;
         });
         if (rates['USD'] == null) rates['USD'] = DEFAUT['USD'];
