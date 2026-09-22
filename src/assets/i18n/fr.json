@@ -905,7 +905,8 @@
   "user-layout": {
     "les-bibliotheques": "| Les bibliothèques",
     "role": "Bibliothèques",
-    "deconnexion": "Déconnexion"
+    "deconnexion": "Déconnexion",
+    "retour-gestion": "Retour gestion"
   },
   "forms-usager": {
     "confirmation-soumise": "Demande soumise !",

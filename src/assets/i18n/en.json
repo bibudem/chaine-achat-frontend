@@ -906,7 +906,8 @@
   "user-layout": {
     "les-bibliotheques": "| The libraries",
     "role": "Bibliothèques",
-    "deconnexion": "Sign out"
+    "deconnexion": "Sign out",
+    "retour-gestion": "Back to management"
   },
   "forms-usager": {
     "confirmation-soumise": "Request submitted!",

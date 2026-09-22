@@ -77,6 +77,11 @@
             </div>
           </div>
           <div class="ul-user__body">
+            <button *ngIf="authService.isAdmin || authService.isTdm" class="ul-user__item" (click)="retourGestion()">
+              <i class="bi bi-arrow-return-left ul-user__item-icon"></i>
+              <span>{{ 'user-layout.retour-gestion' | translate }}</span>
+              <i class="bi bi-chevron-right ul-user__item-arrow"></i>
+            </button>
             <button class="ul-user__item" (click)="mesDemandes()">
               <i class="bi bi-clock-history ul-user__item-icon"></i>
               <span>Mes demandes</span>
