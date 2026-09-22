@@ -1,7 +1,21 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { tap, delay } from 'rxjs/operators';
+import { tap, delay, map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+
+interface MeResponse {
+  success: boolean;
+  data: {
+    sub: string;
+    email: string;
+    nom: string;
+    prenom: string;
+    groupe: string;
+    role: UserRole;
+  };
+}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
@@ -23,8 +37,8 @@ export interface SimulatedProfile {
 }
 
 /**
- * Profils de simulation pour l'installation locale.
- * Supprimés (ou ignorés) lorsque l'authentification Azure AD sera activée.
+ * Profils de simulation pour l'installation locale (dev uniquement — voir isProduction
+ * dans login.component.ts). En production, la connexion passe par Azure AD (loginWithAzure).
  */
 export const SIMULATED_PROFILES: SimulatedProfile[] = [
   {
@@ -73,13 +87,20 @@ export class AuthService {
 
   redirectUrl: string = '/accueil';
 
-  constructor(@Inject(DOCUMENT) readonly document: Document) {}
+  private readonly apiUrl = environment.apiUrl;
+
+  constructor(
+    @Inject(DOCUMENT) readonly document: Document,
+    private http: HttpClient
+  ) {}
 
   /* ── Accesseurs de rôle ──────────────────────── */
 
   get role(): UserRole | null {
     return sessionStorage.getItem('role') as UserRole | null;
   }
+
+  get token(): string | null    { return sessionStorage.getItem('jwt'); }
 
   get isAdmin(): boolean        { return this.role === 'Admin'; }
   get isTdm(): boolean          { return this.role === 'TDM'; }
@@ -92,9 +113,8 @@ export class AuthService {
    *  ACQ complète) et le TDM (catalogage/note TDM — champs ACQ affichés en lecture seule). */
   get canAccessDecision(): boolean { return this.isAdmin || this.isTdm; }
 
-  /* ── Connexion simulée (installation locale) ─────
-     Remplacer par le flux Azure AD OAuth2 en production :
-     window.location.href = '/api/auth/azure';
+  /* ── Connexion simulée (dev uniquement) ──────────
+     En production, voir loginWithAzure() + completeAzureLogin().
   ─────────────────────────────────────────────────── */
   simulateLogin(profile: SimulatedProfile): void {
     sessionStorage.setItem('nomAdmin',      profile.nom);
@@ -116,12 +136,51 @@ export class AuthService {
     );
   }
 
+  /* ── Connexion réelle Azure AD (production) ──────
+     Redirige vers le backend qui gère le flux OAuth2 avec Azure AD.
+  ─────────────────────────────────────────────────── */
+  loginWithAzure(): void {
+    window.location.href = `${this.apiUrl}/auth/login`;
+  }
+
+  /**
+   * Appelée par AuthCallbackComponent après la redirection Azure AD (?token=...).
+   * Valide le token auprès du backend (/auth/me) et peuple la session, comme simulateLogin().
+   */
+  completeAzureLogin(token: string): Observable<boolean> {
+    sessionStorage.setItem('jwt', token);
+    return this.http.get<MeResponse>(`${this.apiUrl}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).pipe(
+      map(res => {
+        if (!res?.success) throw new Error('Échec de récupération du profil');
+        const { nom, prenom, email, groupe, role } = res.data;
+        sessionStorage.setItem('nomAdmin',      nom);
+        sessionStorage.setItem('prenomAdmin',   prenom);
+        sessionStorage.setItem('courrielAdmin', email);
+        sessionStorage.setItem('groupeAdmin',   groupe);
+        sessionStorage.setItem('role',          role);
+        this.isLoggedIn = true;
+        return true;
+      }),
+      catchError(() => {
+        sessionStorage.clear();
+        this.isLoggedIn = false;
+        return of(false);
+      })
+    );
+  }
+
   /* ── Déconnexion ─────────────────────────────── */
   async logout(): Promise<void> {
+    const wasAzureSession = !!this.token;
     this.isLoggedIn = false;
     sessionStorage.clear();
     caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
-    // En production : window.location.href = '/api/logout';
-    window.location.href = '/login';
+    if (environment.production && wasAzureSession) {
+      window.location.href = `${this.apiUrl}/auth/logout`;
+    } else {
+      window.location.href = '/login';
+    }
   }
 }

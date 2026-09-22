@@ -1,0 +1,9 @@
+<div class="auth-callback">
+  <ng-container *ngIf="!erreur; else erreurTpl">
+    <div class="spinner-border" role="status"></div>
+    <p>{{ 'login-page.connexion-en-cours' | translate }}</p>
+  </ng-container>
+  <ng-template #erreurTpl>
+    <p>{{ 'login-page.acces-refuse' | translate }}</p>
+  </ng-template>
+</div>

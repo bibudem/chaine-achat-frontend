@@ -32,4 +32,8 @@ export class LoginComponent implements OnInit {
       : (saved && saved !== '/accueil' ? saved : '/accueil');
     this.router.navigateByUrl(dest);
   }
+
+  loginWithAzure(): void {
+    this.authService.loginWithAzure();
+  }
 }

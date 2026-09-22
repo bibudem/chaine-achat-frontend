@@ -891,7 +891,9 @@
     "badge-prod": "Application interne",
     "badge-local": "Version locale — développement",
     "hint": "Sélectionnez un profil pour accéder à l'application",
-    "acces-refuse": "Votre profil actuel n'a pas les droits nécessaires pour accéder à cette page."
+    "acces-refuse": "Votre profil actuel n'a pas les droits nécessaires pour accéder à cette page.",
+    "connexion-en-cours": "Connexion en cours...",
+    "se-connecter": "Se connecter avec Microsoft"
   },
   "usager-home": {
     "bonjour": "Bonjour",

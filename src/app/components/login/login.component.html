@@ -21,21 +21,35 @@
         {{ 'login-page.acces-refuse' | translate }}
       </div>
 
-      <p class="login-hint">{{ 'login-page.hint' | translate }}</p>
-
-      <div class="login-cards">
-        <button *ngFor="let p of profiles" class="login-card" (click)="select(p)">
+      <ng-container *ngIf="isProduction; else simulation">
+        <button class="login-card" (click)="loginWithAzure()">
           <div class="login-card__icon-wrap">
-            <i class="bi {{ p.icon }}"></i>
+            <i class="bi bi-microsoft"></i>
           </div>
           <div class="login-card__text">
-            <div class="login-card__label">{{ p.label }}</div>
-            <div class="login-card__subtitle" *ngIf="p.subtitle">{{ p.subtitle }}</div>
-            <div class="login-card__desc">{{ p.description }}</div>
+            <div class="login-card__label">{{ 'login-page.se-connecter' | translate }}</div>
           </div>
           <i class="bi bi-chevron-right login-card__arrow"></i>
         </button>
-      </div>
+      </ng-container>
+
+      <ng-template #simulation>
+        <p class="login-hint">{{ 'login-page.hint' | translate }}</p>
+
+        <div class="login-cards">
+          <button *ngFor="let p of profiles" class="login-card" (click)="select(p)">
+            <div class="login-card__icon-wrap">
+              <i class="bi {{ p.icon }}"></i>
+            </div>
+            <div class="login-card__text">
+              <div class="login-card__label">{{ p.label }}</div>
+              <div class="login-card__subtitle" *ngIf="p.subtitle">{{ p.subtitle }}</div>
+              <div class="login-card__desc">{{ p.description }}</div>
+            </div>
+            <i class="bi bi-chevron-right login-card__arrow"></i>
+          </button>
+        </div>
+      </ng-template>
     </div>
 
   </div>

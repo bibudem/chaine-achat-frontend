@@ -16,7 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 
 // import pour multiselect
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 //import pour traduction
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -26,6 +27,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
 import { AccueilComponent } from './components/admin/accueil/accueil.component';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { LoginRoutingModule } from './components/login/login-routing.module';
@@ -81,6 +83,7 @@ import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devis
     MenuComponent,
     AccueilComponent,
     LoginComponent,
+    AuthCallbackComponent,
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
@@ -145,13 +148,14 @@ import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devis
         MatInputModule
     ],
   providers: [
-    CurrencyPipe, 
+    CurrencyPipe,
     DialogService,
     AuthGuard,
     AdminGuard,
     EditGuard,
     StaffGuard,
-    { provide: LOCALE_ID, useValue: "fr-FR" }
+    { provide: LOCALE_ID, useValue: "fr-FR" },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
