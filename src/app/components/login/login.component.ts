@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   profiles = SIMULATED_PROFILES;
   isProduction = environment.production;
   accessDenied = false;
+  sessionExpired = false;
 
   constructor(
     public authService: AuthService,
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessDenied = this.route.snapshot.queryParamMap.get('acces') === 'refuse';
+    this.sessionExpired = this.route.snapshot.queryParamMap.get('error') === 'session_expired';
   }
 
   select(profile: SimulatedProfile): void {

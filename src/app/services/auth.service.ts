@@ -171,18 +171,13 @@ export class AuthService {
     );
   }
 
-  /* ── Déconnexion ─────────────────────────────── */
-  async logout(): Promise<void> {
-    const wasAzureSession = !!this.token;
+  /* ── Déconnexion (application seulement — ne ferme pas la session Microsoft) ── */
+  async logout(sessionExpired = false): Promise<void> {
     this.isLoggedIn = false;
     sessionStorage.clear();
     this.clearCookies();
     caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
-    if (environment.production && wasAzureSession) {
-      window.location.href = `${this.apiUrl}/auth/logout`;
-    } else {
-      window.location.href = '/login';
-    }
+    window.location.href = sessionExpired ? '/login?error=session_expired' : '/login';
   }
 
   /** Supprime tous les cookies du domaine de l'application (nettoyage à la déconnexion). */

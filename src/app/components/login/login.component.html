@@ -21,6 +21,11 @@
         {{ 'login-page.acces-refuse' | translate }}
       </div>
 
+      <div class="login-alert" *ngIf="sessionExpired">
+        <i class="bi bi-clock-history me-2"></i>
+        {{ 'login-page.session-expiree' | translate }}
+      </div>
+
       <ng-container *ngIf="isProduction; else simulation">
         <button class="login-card" (click)="loginWithAzure()">
           <div class="login-card__icon-wrap">

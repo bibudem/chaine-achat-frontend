@@ -3,6 +3,7 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './services/auth.service';
+import { IdleTimeoutService } from './services/idle-timeout.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     public authService: AuthService,
+    private idleTimeout: IdleTimeoutService,
     private router: Router
   ) {
     translate.setDefaultLang('fr');
@@ -38,6 +40,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.idleTimeout.start();
+
     this.router.events.pipe(
       // NavigationStart au lieu de NavigationEnd pour réagir avant le rendu
       filter(event => event instanceof NavigationStart)

@@ -894,7 +894,8 @@
     "hint": "Select a profile to access the application",
     "acces-refuse": "Your current profile does not have the required permissions to access this page.",
     "connexion-en-cours": "Signing in...",
-    "se-connecter": "UdeM Authentication"
+    "se-connecter": "UdeM Authentication",
+    "session-expiree": "Your session expired after a period of inactivity. Please sign in again."
   },
   "usager-home": {
     "bonjour": "Hello",
