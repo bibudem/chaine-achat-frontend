@@ -176,11 +176,21 @@ export class AuthService {
     const wasAzureSession = !!this.token;
     this.isLoggedIn = false;
     sessionStorage.clear();
+    this.clearCookies();
     caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
     if (environment.production && wasAzureSession) {
       window.location.href = `${this.apiUrl}/auth/logout`;
     } else {
       window.location.href = '/login';
     }
+  }
+
+  /** Supprime tous les cookies du domaine de l'application (nettoyage à la déconnexion). */
+  private clearCookies(): void {
+    this.document.cookie.split(';').forEach(cookie => {
+      const name = cookie.split('=')[0].trim();
+      if (!name) return;
+      this.document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    });
   }
 }

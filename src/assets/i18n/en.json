@@ -894,7 +894,7 @@
     "hint": "Select a profile to access the application",
     "acces-refuse": "Your current profile does not have the required permissions to access this page.",
     "connexion-en-cours": "Signing in...",
-    "se-connecter": "Sign in with Microsoft"
+    "se-connecter": "UdeM Authentication"
   },
   "usager-home": {
     "bonjour": "Hello",
