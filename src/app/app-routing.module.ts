@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccueilComponent } from './components/admin/accueil/accueil.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { DebugMeComponent } from './components/debug-me/debug-me.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from "./services/auth-guard.service";
 import {NotUserComponent} from "./components/not-user/not-user.component";
@@ -34,6 +35,8 @@ import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devis
 
 const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
+  // TEMPORAIRE — debug, à retirer
+  { path: 'debug-me', component: DebugMeComponent, canActivate: [AuthGuard] },
   { path: '', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },

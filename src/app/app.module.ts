@@ -28,6 +28,7 @@ import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
 import { AccueilComponent } from './components/admin/accueil/accueil.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { DebugMeComponent } from './components/debug-me/debug-me.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { LoginRoutingModule } from './components/login/login-routing.module';
@@ -84,6 +85,7 @@ import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devis
     AccueilComponent,
     LoginComponent,
     AuthCallbackComponent,
+    DebugMeComponent,
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
