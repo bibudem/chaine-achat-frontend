@@ -27,11 +27,17 @@
       </div>
 
       <ng-container *ngIf="isProduction; else simulation">
-        <button class="login-btn" (click)="loginWithAzure()">
-          <span class="login-btn__icon"><i class="bi bi-microsoft"></i></span>
-          <span class="login-btn__label">{{ 'login-page.se-connecter' | translate }}</span>
-          <i class="bi bi-arrow-right login-btn__arrow"></i>
-        </button>
+        <div class="login-cards">
+          <button class="login-card" (click)="loginWithAzure()">
+            <div class="login-card__icon-wrap">
+              <i class="bi bi-microsoft"></i>
+            </div>
+            <div class="login-card__text">
+              <div class="login-card__label">{{ 'login-page.se-connecter' | translate }}</div>
+            </div>
+            <i class="bi bi-chevron-right login-card__arrow"></i>
+          </button>
+        </div>
         <p class="login-footnote">
           <i class="bi bi-shield-lock me-1"></i>
           {{ 'login-page.redirection-note' | translate }}
