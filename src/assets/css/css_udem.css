@@ -194,7 +194,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand img {
-  max-height: auto;
+  height: auto;
   max-width: 200px;
   object-fit: contain;
   /* Décommenter si le logo doit s'afficher en blanc sur fond sombre : */
