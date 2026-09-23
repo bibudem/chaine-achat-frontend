@@ -895,6 +895,7 @@
     "acces-refuse": "Your current profile does not have the required permissions to access this page.",
     "connexion-en-cours": "Signing in...",
     "se-connecter": "UdeM Authentication",
+    "redirection-note": "You will be redirected to UdeM's secure authentication portal.",
     "session-expiree": "Your session expired after a period of inactivity. Please sign in again."
   },
   "usager-home": {

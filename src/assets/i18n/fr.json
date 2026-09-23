@@ -894,6 +894,7 @@
     "acces-refuse": "Votre profil actuel n'a pas les droits nécessaires pour accéder à cette page.",
     "connexion-en-cours": "Connexion en cours...",
     "se-connecter": "Authentification UdeM",
+    "redirection-note": "Vous serez redirigé vers le portail d'authentification sécurisé de l'UdeM.",
     "session-expiree": "Votre session a expiré après une période d'inactivité. Veuillez vous reconnecter."
   },
   "usager-home": {

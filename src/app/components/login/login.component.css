@@ -3,16 +3,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #EEF0F2;
+  background: radial-gradient(circle at 20% 15%, #eef4fb 0%, #e6ecf3 45%, #dde5ee 100%);
   padding: 1.5rem;
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .login-box {
   background: #fff;
-  border-radius: 18px;
-  max-width: 460px;
+  border-radius: 20px;
+  max-width: 500px;
   width: 100%;
-  box-shadow: 0 14px 34px rgba(0, 48, 95, 0.35);
+  box-shadow: 0 20px 48px rgba(11, 17, 58, 0.16), 0 2px 8px rgba(11, 17, 58, 0.08);
   overflow: hidden;
 }
 
@@ -24,7 +25,7 @@
 
 /* ── Zone principale (fond blanc) ── */
 .login-content {
-  padding: 0 2rem 2rem;
+  padding: 0 2rem 0.5rem;
   text-align: center;
 }
 
@@ -46,17 +47,17 @@
 
 /* ── Titre ── */
 .login-title {
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   font-weight: 700;
-  color: #00407F;
+  color: #0b113a;
   letter-spacing: -.01em;
 }
 
 .login-subtitle {
-  font-size: .8rem;
+  font-size: .82rem;
   color: #607386;
   margin-top: .25rem;
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.1rem;
   letter-spacing: .01em;
 }
 
@@ -65,12 +66,13 @@
   display: inline-flex;
   align-items: center;
   font-size: .775rem;
+  font-weight: 500;
   background: #E8F1F8;
   color: #1A4E72;
   border: 1px solid #C9D8E5;
   border-radius: 20px;
   padding: .3rem 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .login-badge--dev {
@@ -79,7 +81,7 @@
   border-color: #F9C800;
 }
 
-/* ── Alerte accès refusé ── */
+/* ── Alerte accès refusé / session expirée ── */
 .login-alert {
   display: flex;
   align-items: flex-start;
@@ -89,22 +91,100 @@
   border: 1px solid #FFCA2C;
   border-radius: 10px;
   padding: .75rem 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   text-align: left;
 }
 
-/* ── Hint ── */
+/* ── Hint (mode simulation dev) ── */
 .login-hint {
   font-size: .9rem;
   color: #607386;
   margin-bottom: 1.25rem;
 }
 
-/* ── Cards ── */
+/* ══════════════════════════════════════════════════════
+   Bouton principal — Authentification UdeM (production)
+   ══════════════════════════════════════════════════════ */
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  background: #00407F;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 8px 20px rgba(0, 64, 127, .28);
+  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+  margin-bottom: 1.1rem;
+}
+
+.login-btn:hover,
+.login-btn:focus-visible {
+  background: #0b113a;
+  box-shadow: 0 10px 26px rgba(11, 17, 58, .32);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.login-btn__label {
+  flex: 1;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.login-btn__arrow {
+  font-size: 1rem;
+  opacity: .75;
+  flex-shrink: 0;
+  transition: transform .18s ease;
+}
+
+.login-btn:hover .login-btn__arrow {
+  transform: translateX(3px);
+}
+
+.login-footnote {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: .35rem;
+  font-size: .74rem;
+  line-height: 1.4;
+  color: #8794A3;
+  margin: 0 0 1.5rem;
+  padding: 0 .5rem;
+}
+
+.login-footnote i { margin-top: .15rem; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════════════════
+   Cards — mode simulation (dev)
+   ══════════════════════════════════════════════════════ */
 .login-cards {
   display: flex;
   flex-direction: column;
   gap: .75rem;
+  margin-bottom: 1.5rem;
 }
 
 .login-card {
@@ -178,4 +258,25 @@
 
 .login-card:hover .login-card__arrow {
   color: #00407F;
+}
+
+/* ── Pied de carte ── */
+.login-footer {
+  border-top: 1px solid #EEF1F4;
+  padding: .9rem 2rem;
+  text-align: center;
+  font-size: .72rem;
+  color: #8794A3;
+}
+
+.login-footer__sep { margin: 0 .4rem; }
+
+.login-footer a {
+  color: #8794A3;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  color: #00407F;
+  text-decoration: underline;
 }
