@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UtilisateursService, Utilisateur } from '../../../services/utilisateurs.service';
 import { UserRole } from '../../../services/auth.service';
 import { DialogService } from '../../../services/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector:    'app-utilisateurs',
@@ -25,8 +26,13 @@ export class UtilisateursComponent implements OnInit {
 
   constructor(
     private utilisateursService: UtilisateursService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private translate: TranslateService
   ) {}
+
+  private t(key: string, params?: object): string {
+    return this.translate.instant(`utilisateurs-page.${key}`, params);
+  }
 
   ngOnInit(): void {
     this.load();
@@ -41,7 +47,7 @@ export class UtilisateursComponent implements OnInit {
         this.loading       = false;
       },
       error: (err) => {
-        this.errorMessage = err.message || 'Erreur lors du chargement des usagers';
+        this.errorMessage = err.message || this.t('erreur-chargement');
         this.loading       = false;
       }
     });
@@ -69,7 +75,7 @@ export class UtilisateursComponent implements OnInit {
   submitModal(): void {
     const email = this.formUtilisateur.email.trim();
     if (!email) {
-      this.dialog.showError('Veuillez indiquer un courriel.');
+      this.dialog.showError(this.t('erreur-courriel-manquant'));
       return;
     }
 
@@ -96,13 +102,13 @@ export class UtilisateursComponent implements OnInit {
         this.showModal = false;
         this.dialog.showSuccess(
           this.editingId
-            ? 'Usager mis à jour.'
-            : `${email} pourra se connecter avec le rôle ${role} dès sa première authentification UdeM.`
+            ? this.t('succes-modifie')
+            : this.t('succes-cree', { email, role })
         );
       },
       error: (err) => {
         this.isSaving = false;
-        this.dialog.showError(err.error?.error || 'Erreur lors de l\'enregistrement.');
+        this.dialog.showError(err.error?.error || this.t('erreur-enregistrement'));
       }
     });
   }
@@ -112,17 +118,17 @@ export class UtilisateursComponent implements OnInit {
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   async supprimer(utilisateur: Utilisateur): Promise<void> {
     const confirmed = await this.dialog.confirm(
-      `Retirer l'accès de ${this.nomAffiche(utilisateur)} (${utilisateur.email}) ? Cette personne devra être ré-ajoutée pour se reconnecter.`,
-      'Confirmer la suppression'
+      this.t('confirmer-suppression-message', { nom: this.nomAffiche(utilisateur), email: utilisateur.email }),
+      this.t('confirmer-suppression-titre')
     );
     if (!confirmed) return;
 
     this.utilisateursService.supprimer(utilisateur.utilisateur_id).subscribe({
       next: () => {
         this.utilisateurs = this.utilisateurs.filter(u => u.utilisateur_id !== utilisateur.utilisateur_id);
-        this.dialog.showSuccess('Accès retiré.');
+        this.dialog.showSuccess(this.t('succes-supprime'));
       },
-      error: () => this.dialog.showError('Erreur lors de la suppression.')
+      error: () => this.dialog.showError(this.t('erreur-suppression'))
     });
   }
 
