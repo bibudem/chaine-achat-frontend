@@ -180,7 +180,8 @@
     "reponses": "Requests by Form",
     "import-logs": "Import list",
     "configuration": "Configuration",
-    "taux-change": "Exchange rates"
+    "taux-change": "Exchange rates",
+    "utilisateurs": "Users"
   },
   "home": {
     "board": "Our statistics",
@@ -896,7 +897,8 @@
     "connexion-en-cours": "Signing in...",
     "se-connecter": "UdeM Authentication",
     "redirection-note": "You will be redirected to UdeM's secure authentication portal.",
-    "session-expiree": "Your session expired after a period of inactivity. Please sign in again."
+    "session-expiree": "Your session expired after a period of inactivity. Please sign in again.",
+    "acces-non-autorise": "Your UdeM account is not authorized to access this application. Contact the administrator if you believe this is a mistake."
   },
   "usager-home": {
     "bonjour": "Hello",

@@ -26,6 +26,11 @@
         {{ 'login-page.session-expiree' | translate }}
       </div>
 
+      <div class="login-alert" *ngIf="accesNonAutorise">
+        <i class="bi bi-shield-x me-2"></i>
+        {{ 'login-page.acces-non-autorise' | translate }}
+      </div>
+
       <ng-container *ngIf="isProduction; else simulation">
         <div class="login-cards">
           <button class="login-card" (click)="loginWithAzure()">

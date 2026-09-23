@@ -155,7 +155,8 @@
     "reponses": "Demandes par forms",
     "import-logs": "Liste des imports",
     "configuration": "Configuration",
-    "taux-change": "Taux de change"
+    "taux-change": "Taux de change",
+    "utilisateurs": "Utilisateurs"
   },
   "rapport": {
     "titre": "Rapports",
@@ -895,7 +896,8 @@
     "connexion-en-cours": "Connexion en cours...",
     "se-connecter": "Authentification UdeM",
     "redirection-note": "Vous serez redirigé vers le portail d'authentification sécurisé de l'UdeM.",
-    "session-expiree": "Votre session a expiré après une période d'inactivité. Veuillez vous reconnecter."
+    "session-expiree": "Votre session a expiré après une période d'inactivité. Veuillez vous reconnecter.",
+    "acces-non-autorise": "Votre compte UdeM n'est pas autorisé à accéder à cette application. Contactez l'administrateur si vous pensez qu'il s'agit d'une erreur."
   },
   "usager-home": {
     "bonjour": "Bonjour",

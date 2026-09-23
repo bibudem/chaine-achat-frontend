@@ -1,0 +1,122 @@
+/* ── Page ──────────────────────────────────────────────────────────── */
+.utl-page { padding-top: 1.5rem; }
+
+/* ── En-tête ───────────────────────────────────────────────────────── */
+.utl-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         1rem 1.25rem;
+  background:      #fff;
+  border-bottom:   2px solid #E7EBEE;
+  margin-bottom:   1.25rem;
+  border-radius:   10px;
+  box-shadow:      0 1px 4px rgba(0,0,0,.06);
+  flex-wrap:       wrap;
+  gap:             .75rem;
+}
+.utl-header__left  { display: flex; align-items: center; gap: .85rem; }
+.utl-header__icon  { font-size: 2rem; color: #0057AC; }
+.utl-header__title { font-size: 1.15rem; font-weight: 700; color: #1A2B3C; margin: 0; }
+.utl-header__sub   { font-size: .78rem; color: #607386; margin: 0; }
+.utl-header__add-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: #0057AC; color: #fff; border: none;
+  font-size: .82rem; font-weight: 500;
+  padding: .5rem 1rem; border-radius: 8px;
+  cursor: pointer; transition: background .15s;
+  white-space: nowrap;
+}
+.utl-header__add-btn:hover { background: #00407F; }
+
+/* ── Vide ──────────────────────────────────────────────────────────── */
+.utl-empty { text-align: center; padding: 4rem 1rem; color: #9FB3C8; }
+.utl-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }
+.utl-empty p { margin-bottom: 1rem; }
+
+/* ── Tableau ───────────────────────────────────────────────────────── */
+.utl-table-wrap {
+  background:    #fff;
+  border:        1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow:    0 1px 4px rgba(0,0,0,.05);
+  overflow-x:    auto;
+}
+.utl-table { margin: 0; font-size: .83rem; border-collapse: collapse; width: 100%; }
+.utl-table thead th {
+  background:     #f8fafc;
+  color:          #64748b;
+  font-size:      .7rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  border-bottom:  1.5px solid #e2e8f0;
+  border-top:     none;
+  white-space:    nowrap;
+  padding:        .6rem .75rem;
+}
+.utl-th--actions { width: 48px; }
+
+.utl-table tbody tr { transition: background .1s; }
+.utl-table tbody td {
+  padding: .55rem .75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+.utl-table tbody tr:last-child td { border-bottom: none; }
+
+.utl-td--nom   { font-weight: 700; color: #1A2B3C; }
+.utl-td--email { color: #607386; }
+.utl-td--date  { font-size: .78rem; color: #9FB3C8; white-space: nowrap; }
+
+/* ── Badge de rôle (lecture seule — modifiable uniquement via la modale) ──── */
+.utl-role-badge {
+  display: inline-block;
+  min-width: 90px;
+  font-size: .78rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: .3rem .9rem;
+}
+.utl-role-badge--Admin  { background: #FEF3E7; color: #9A5B0F; }
+.utl-role-badge--TDM    { background: #E8F1F8; color: #1A4E72; }
+.utl-role-badge--Usager { background: #EEF2F6; color: #475569; }
+
+/* ── Actions ───────────────────────────────────────────────────────── */
+.utl-td--actions { text-align: center; }
+.utl-action-btn {
+  background: none; border: none; border-radius: 6px;
+  color: #cbd5e1; cursor: pointer; padding: .3rem .45rem; font-size: .85rem;
+  transition: background .15s, color .15s;
+}
+.utl-action-btn:hover { color: #0057AC; background: #EAF3FC; }
+.utl-action-btn--delete:hover { color: #dc2626; background: #fef2f2; }
+
+/* ── Modal ─────────────────────────────────────────────────────────── */
+.utl-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1050;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.utl-modal {
+  background: #fff; border-radius: 12px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+.utl-modal__head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.25rem .75rem;
+  border-bottom: 1px solid #E7EBEE;
+}
+.utl-modal__title { font-size: .92rem; font-weight: 700; color: #1A2B3C; }
+.utl-modal__close { background: none; border: none; color: #607386; font-size: 1rem; cursor: pointer; padding: .25rem; }
+.utl-modal__close:hover { color: #1A2B3C; }
+.utl-modal__body  { padding: 1rem 1.25rem; }
+.utl-modal__label { font-size: .76rem; font-weight: 600; color: #334155; margin-bottom: .3rem; display: block; }
+.utl-modal__foot  {
+  padding: .75rem 1.25rem; border-top: 1px solid #E7EBEE;
+  text-align: right; display: flex; justify-content: flex-end; gap: .5rem;
+}

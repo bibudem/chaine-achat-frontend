@@ -114,15 +114,14 @@ export class AuthService {
   get canAccessDecision(): boolean { return this.isAdmin || this.isTdm; }
 
   /* ── Connexion simulée (dev uniquement) ──────────
-     En production, voir loginWithAzure() + completeAzureLogin().
+     Passe par le vrai backend (/auth/dev-login, actif seulement hors production —
+     voir routes/auth.js) pour obtenir un vrai JWT, comme le ferait Azure AD. Sans ça,
+     sessionStorage serait peuplé côté client sans aucun token à envoyer à l'API,
+     et tout appel protégé par requireAuth échouerait (401).
   ─────────────────────────────────────────────────── */
-  simulateLogin(profile: SimulatedProfile): void {
-    sessionStorage.setItem('nomAdmin',      profile.nom);
-    sessionStorage.setItem('prenomAdmin',   profile.prenom);
-    sessionStorage.setItem('courrielAdmin', profile.courriel);
-    sessionStorage.setItem('groupeAdmin',   profile.groupe);
-    sessionStorage.setItem('role',          profile.role);
-    this.isLoggedIn = true;
+  loginWithDevProfile(role: UserRole): void {
+    const cle: Record<UserRole, string> = { Admin: 'admin', TDM: 'acq', Usager: 'usager' };
+    window.location.href = `${this.apiUrl}/auth/dev-login?role=${cle[role]}`;
   }
 
   /**
@@ -145,7 +144,7 @@ export class AuthService {
 
   /**
    * Appelée par AuthCallbackComponent après la redirection Azure AD (?token=...).
-   * Valide le token auprès du backend (/auth/me) et peuple la session, comme simulateLogin().
+   * Valide le token auprès du backend (/auth/me) et peuple la session.
    */
   completeAzureLogin(token: string): Observable<boolean> {
     sessionStorage.setItem('jwt', token);

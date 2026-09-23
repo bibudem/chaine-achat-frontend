@@ -75,6 +75,7 @@ import { PieceJointeGestionComponent } from './components/shared/piece-jointe-ge
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
+import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devis
     ImportComponent,
     ImportLogsComponent,
     TauxDevisesComponent,
+    UtilisateursComponent,
     NouvelAchatComponent,
     ModificationCcolComponent,
     RequeteAccessibiliteComponent,

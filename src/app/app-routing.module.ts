@@ -32,6 +32,7 @@ import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
+import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
 
 const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'configuration/utilisateurs', component: UtilisateursComponent, canActivate: [AuthGuard, AdminGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',

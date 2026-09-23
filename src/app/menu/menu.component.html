@@ -90,6 +90,11 @@
               {{ 'menu.taux-change' | translate }}
             </a>
           </li>
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/configuration/utilisateurs" (click)="closeSidebar()">
+              {{ 'menu.utilisateurs' | translate }}
+            </a>
+          </li>
         </ul>
       </div>
     </li>

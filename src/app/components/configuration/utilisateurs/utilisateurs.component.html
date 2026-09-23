@@ -1,0 +1,120 @@
+<div class="utl-page container-fluid pb-5 mt-5">
+
+  <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
+  <div class="utl-header">
+    <div class="utl-header__left">
+      <i class="bi bi-people-fill utl-header__icon"></i>
+      <div>
+        <h1 class="utl-header__title">Utilisateurs</h1>
+        <p class="utl-header__sub">Rôles applicatifs (Admin / TDM / Usager) — l'authentification UdeM reste requise pour se connecter</p>
+      </div>
+    </div>
+    <button class="utl-header__add-btn" (click)="openAddUtilisateur()">
+      <i class="bi bi-plus-circle"></i>
+      <span>Nouvel usager</span>
+    </button>
+  </div>
+
+  <!-- ── ERREUR ────────────────────────────────────────────────────── -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- ── VIDE ──────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && !errorMessage && utilisateurs.length === 0" class="utl-empty">
+    <i class="bi bi-inbox"></i>
+    <p>Aucun usager enregistré</p>
+    <button class="btn btn-primary btn-sm" (click)="openAddUtilisateur()">
+      <i class="bi bi-plus-lg me-1"></i>Ajouter le premier usager
+    </button>
+  </div>
+
+  <!-- ── TABLEAU ───────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && utilisateurs.length > 0" class="utl-table-wrap">
+    <table class="table utl-table">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Courriel</th>
+          <th class="text-center">Rôle</th>
+          <th>Dernière connexion</th>
+          <th class="utl-th--actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of utilisateurs">
+          <td class="utl-td--nom">{{ u.prenom || '—' }}</td>
+          <td class="utl-td--nom">{{ u.nom || '—' }}</td>
+          <td class="utl-td--email">{{ u.email }}</td>
+          <td class="text-center">
+            <span class="utl-role-badge" [ngClass]="'utl-role-badge--' + u.role">{{ u.role }}</span>
+          </td>
+          <td class="utl-td--date">{{ formatDate(u.date_derniere_connexion) }}</td>
+          <td class="utl-td--actions">
+            <button class="utl-action-btn" (click)="openEditUtilisateur(u)" title="Modifier">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="utl-action-btn utl-action-btn--delete" (click)="supprimer(u)" title="Retirer l'accès">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── MODAL : ajout / modification ────────────────────────────────────── -->
+<div class="utl-overlay" *ngIf="showModal" (click)="cancelModal()">
+  <div class="utl-modal" (click)="$event.stopPropagation()">
+    <div class="utl-modal__head">
+      <span class="utl-modal__title">
+        <i class="bi me-2" [ngClass]="editingId ? 'bi-pencil' : 'bi-plus-circle'"></i>
+        {{ editingId ? 'Modifier l\'usager' : 'Nouvel usager' }}
+      </span>
+      <button class="utl-modal__close" (click)="cancelModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="utl-modal__body">
+      <div class="mb-3">
+        <label class="utl-modal__label">Courriel UdeM</label>
+        <input type="email" class="form-control form-control-sm" [(ngModel)]="formUtilisateur.email" placeholder="prenom.nom@umontreal.ca">
+      </div>
+
+      <div class="mb-3">
+        <label class="utl-modal__label">Prénom (optionnel)</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="formUtilisateur.prenom">
+      </div>
+
+      <div class="mb-3">
+        <label class="utl-modal__label">Nom (optionnel)</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="formUtilisateur.nom">
+      </div>
+
+      <div class="mb-1">
+        <label class="utl-modal__label">Rôle</label>
+        <select class="form-select form-select-sm" [(ngModel)]="formUtilisateur.role">
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+
+      <small class="text-muted d-block mt-2">
+        La personne doit s'authentifier avec un compte UdeM membre du groupe bib-usagers pour pouvoir se connecter.
+      </small>
+    </div>
+
+    <div class="utl-modal__foot">
+      <button class="btn btn-secondary btn-sm" (click)="cancelModal()">Annuler</button>
+      <button class="btn btn-primary btn-sm" [disabled]="isSaving" (click)="submitModal()">
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        {{ editingId ? 'Enregistrer' : 'Créer' }}
+      </button>
+    </div>
+  </div>
+</div>
