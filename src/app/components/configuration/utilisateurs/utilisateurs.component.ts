@@ -18,6 +18,10 @@ export class UtilisateursComponent implements OnInit {
   loading      = true;
   errorMessage = '';
 
+  /** Tri courant du tableau (clic sur l'en-tête Prénom/Nom). */
+  sortColumn: 'prenom' | 'nom' = 'nom';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
   /** Modale d'ajout/modification — editingId null = création, sinon id de l'usager modifié. */
   showModal   = false;
   editingId: number | null = null;
@@ -44,6 +48,7 @@ export class UtilisateursComponent implements OnInit {
     this.utilisateursService.getAll().subscribe({
       next: (res) => {
         this.utilisateurs = res.data || [];
+        this.applySort();
         this.loading       = false;
       },
       error: (err) => {
@@ -51,6 +56,27 @@ export class UtilisateursComponent implements OnInit {
         this.loading       = false;
       }
     });
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TRI (clic sur l'en-tête Prénom/Nom)
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  sortBy(column: 'prenom' | 'nom'): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn    = column;
+      this.sortDirection = 'asc';
+    }
+    this.applySort();
+  }
+
+  private applySort(): void {
+    const dir = this.sortDirection === 'asc' ? 1 : -1;
+    const col = this.sortColumn;
+    this.utilisateurs = [...this.utilisateurs].sort((a, b) =>
+      dir * (a[col] || '').localeCompare(b[col] || '')
+    );
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -96,7 +122,7 @@ export class UtilisateursComponent implements OnInit {
         } else {
           this.utilisateurs = [...this.utilisateurs, res.data];
         }
-        this.utilisateurs.sort((a, b) => this.nomAffiche(a).localeCompare(this.nomAffiche(b)));
+        this.applySort();
 
         this.isSaving  = false;
         this.showModal = false;
@@ -139,6 +165,9 @@ export class UtilisateursComponent implements OnInit {
 
   formatDate(d: string): string {
     if (!d) return '—';
-    return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    return new Date(d).toLocaleString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
   }
 }

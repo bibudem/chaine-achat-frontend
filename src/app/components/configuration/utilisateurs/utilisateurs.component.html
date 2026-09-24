@@ -39,8 +39,17 @@
     <table class="table utl-table">
       <thead>
         <tr>
-          <th>{{ 'utilisateurs-page.col-prenom' | translate }}</th>
-          <th>{{ 'utilisateurs-page.col-nom' | translate }}</th>
+          <th class="utl-th--num">#</th>
+          <th class="utl-th--sortable" (click)="sortBy('prenom')">
+            {{ 'utilisateurs-page.col-prenom' | translate }}
+            <i class="bi utl-sort-icon"
+               [ngClass]="sortColumn === 'prenom' ? (sortDirection === 'asc' ? 'bi-sort-alpha-down' : 'bi-sort-alpha-up') : 'bi-arrow-down-up'"></i>
+          </th>
+          <th class="utl-th--sortable" (click)="sortBy('nom')">
+            {{ 'utilisateurs-page.col-nom' | translate }}
+            <i class="bi utl-sort-icon"
+               [ngClass]="sortColumn === 'nom' ? (sortDirection === 'asc' ? 'bi-sort-alpha-down' : 'bi-sort-alpha-up') : 'bi-arrow-down-up'"></i>
+          </th>
           <th>{{ 'utilisateurs-page.col-courriel' | translate }}</th>
           <th class="text-center">{{ 'utilisateurs-page.col-role' | translate }}</th>
           <th>{{ 'utilisateurs-page.col-derniere-connexion' | translate }}</th>
@@ -48,7 +57,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let u of utilisateurs">
+        <tr *ngFor="let u of utilisateurs; let i = index">
+          <td class="utl-td--num">{{ i + 1 }}</td>
           <td class="utl-td--nom">{{ u.prenom || '—' }}</td>
           <td class="utl-td--nom">{{ u.nom || '—' }}</td>
           <td class="utl-td--email">{{ u.email }}</td>

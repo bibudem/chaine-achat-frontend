@@ -56,6 +56,16 @@
   padding:        .6rem .75rem;
 }
 .utl-th--actions { width: 48px; }
+.utl-th--num     { width: 36px; }
+
+.utl-th--sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s;
+}
+.utl-th--sortable:hover { color: #00407F; }
+.utl-sort-icon { font-size: .8rem; margin-left: .25rem; opacity: .55; }
+.utl-th--sortable:hover .utl-sort-icon { opacity: 1; }
 
 .utl-table tbody tr { transition: background .1s; }
 .utl-table tbody td {
@@ -66,7 +76,8 @@
 }
 .utl-table tbody tr:last-child td { border-bottom: none; }
 
-.utl-td--nom   { font-weight: 700; color: #1A2B3C; }
+.utl-td--num   { color: #9FB3C8; font-variant-numeric: tabular-nums; }
+.utl-td--nom   { font-weight: 500; color: #1A2B3C; }
 .utl-td--email { color: #607386; }
 .utl-td--date  { font-size: .78rem; color: #9FB3C8; white-space: nowrap; }
 
