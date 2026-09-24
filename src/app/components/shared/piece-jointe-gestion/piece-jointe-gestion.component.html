@@ -46,12 +46,12 @@
         <span *ngIf="envoiEnCours" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
         <i *ngIf="!envoiEnCours" class="bi bi-upload me-1"></i>Ajouter un fichier
         <input type="file" class="d-none" multiple
-               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml"
+               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml,.jpg,.jpeg,.png"
                [disabled]="envoiEnCours || (pieces.length + fichiersEnAttente.length) >= nombreMaxFichiers"
                (change)="onFichiersSelectionnes($event)">
       </label>
       <small class="pj-hint">
-        PDF, Word (.doc, .docx), Excel (.xlsx, .xls) ou courriel (.msg, .eml) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
+        PDF, Word (.doc, .docx), Excel (.xlsx, .xls), courriel (.msg, .eml) ou image (.jpg, .png) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
         <span *ngIf="!reponseId && !itemId">Envoyé après l'enregistrement.</span>
       </small>
     </div>

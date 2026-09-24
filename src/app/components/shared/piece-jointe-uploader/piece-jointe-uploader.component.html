@@ -27,12 +27,12 @@
              [class.disabled]="disabled || fichiers.length >= nombreMaxFichiers">
         <i class="bi bi-upload me-1"></i>Choisir un fichier
         <input type="file" class="d-none" multiple
-               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml"
+               accept=".pdf,.doc,.docx,.xlsx,.xls,.msg,.eml,.jpg,.jpeg,.png"
                [disabled]="disabled || fichiers.length >= nombreMaxFichiers"
                (change)="onFichiersSelectionnes($event)">
       </label>
       <small class="pju-hint">
-        PDF, Word (.doc, .docx), Excel (.xlsx, .xls) ou courriel (.msg, .eml) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
+        PDF, Word (.doc, .docx), Excel (.xlsx, .xls), courriel (.msg, .eml) ou image (.jpg, .png) — {{ nombreMaxFichiers }} max, 10 Mo chacun.
       </small>
     </div>
 

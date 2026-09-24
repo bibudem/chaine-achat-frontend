@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
  * émet `filesChange` à chaque changement. Le composant parent est responsable de l'upload
  * (via ReponsesService.uploaderPiecesJointes) une fois que la réponse a un id (après onSubmit/onSave).
  *
- * Fichiers acceptés : PDF, Word (.doc/.docx), Excel (.xlsx/.xls), courriel (.msg/.eml) — 3 max, 10 Mo chacun.
+ * Fichiers acceptés : PDF, Word (.doc/.docx), Excel (.xlsx/.xls), courriel (.msg/.eml), image (.jpg/.png) — 3 max, 10 Mo chacun.
  * Ces limites doivent rester alignées avec controllers/pieces-jointes.js (backend).
  */
 @Component({
@@ -18,7 +18,7 @@ export class PieceJointeUploaderComponent {
   @Input() disabled = false;
   @Output() filesChange = new EventEmitter<File[]>();
 
-  readonly extensionsAcceptees = ['.pdf', '.doc', '.docx', '.xlsx', '.xls', '.msg', '.eml'];
+  readonly extensionsAcceptees = ['.pdf', '.doc', '.docx', '.xlsx', '.xls', '.msg', '.eml', '.jpg', '.jpeg', '.png'];
   readonly tailleMaxOctets     = 10 * 1024 * 1024; // 10 Mo
   readonly nombreMaxFichiers   = 3;
 
@@ -40,7 +40,7 @@ export class PieceJointeUploaderComponent {
       const nomMinuscule = fichier.name.toLowerCase();
       const extension    = nomMinuscule.slice(nomMinuscule.lastIndexOf('.'));
       if (!this.extensionsAcceptees.includes(extension)) {
-        this.erreur = `« ${fichier.name} » : type de fichier non accepté (PDF, Word, Excel ou courriel uniquement).`;
+        this.erreur = `« ${fichier.name} » : type de fichier non accepté (PDF, Word, Excel, courriel ou image uniquement).`;
         continue;
       }
       if (fichier.size > this.tailleMaxOctets) {

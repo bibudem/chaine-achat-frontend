@@ -35,7 +35,7 @@ export class PieceJointeGestionComponent implements OnInit, OnChanges {
   @Input() itemId:    number | null = null;
   @Input() readonlyMode = false; // masque l'ajout/la suppression (consultation seule)
 
-  readonly extensionsAcceptees = ['.pdf', '.doc', '.docx', '.xlsx', '.xls', '.msg', '.eml'];
+  readonly extensionsAcceptees = ['.pdf', '.doc', '.docx', '.xlsx', '.xls', '.msg', '.eml', '.jpg', '.jpeg', '.png'];
   readonly tailleMaxOctets     = 10 * 1024 * 1024; // 10 Mo
   readonly nombreMaxFichiers   = 3;
 
@@ -102,7 +102,7 @@ export class PieceJointeGestionComponent implements OnInit, OnChanges {
       const nomMinuscule = fichier.name.toLowerCase();
       const extension    = nomMinuscule.slice(nomMinuscule.lastIndexOf('.'));
       if (!this.extensionsAcceptees.includes(extension)) {
-        this.erreur = `« ${fichier.name} » : type de fichier non accepté (PDF, Word, Excel ou courriel uniquement).`;
+        this.erreur = `« ${fichier.name} » : type de fichier non accepté (PDF, Word, Excel, courriel ou image uniquement).`;
         continue;
       }
       if (fichier.size > this.tailleMaxOctets) {
