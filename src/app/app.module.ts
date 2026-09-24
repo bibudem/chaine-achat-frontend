@@ -71,6 +71,7 @@ import { FaqComponent } from './components/faq/faq.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
+import { FondsRepartitionComponent } from './components/shared/fonds-repartition/fonds-repartition.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
@@ -112,6 +113,7 @@ import { UtilisateursComponent } from './components/configuration/utilisateurs/u
     PebTipasaNumeriqueComponent,
     UsagerProfilComponent,
     PieceJointeGestionComponent,
+    FondsRepartitionComponent,
     PieceJointeUploaderComponent,
     SuggestionEmbedComponent,
     FondsBudgetaireMaskDirective,

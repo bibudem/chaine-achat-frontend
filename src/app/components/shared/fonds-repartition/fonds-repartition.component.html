@@ -1,0 +1,174 @@
+<!-- Cas normal (1 fonds) : Devise / Prix / Prix CAD / Fonds budgétaire alignés dans la même
+     rangée Bootstrap que le reste d'"Informations financières" (voir :host display:contents). -->
+<ng-container *ngIf="!partage">
+  <div class="col-md-3" [formGroup]="lignes[0]">
+    <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
+    <select formControlName="devise_originale" class="form-select"
+            [class.is-invalid]="isInvalid(lignes[0], 'devise_originale')"
+            (change)="onDeviseChange(lignes[0])">
+      <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+      <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
+    </select>
+    <div *ngIf="isInvalid(lignes[0], 'devise_originale')" class="invalid-feedback">
+      <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-required' | translate }}
+    </div>
+  </div>
+
+  <div class="col-md-3" *ngIf="lignes[0].get('devise_originale')?.value === 'Autre'" [formGroup]="lignes[0]">
+    <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+    <input type="text" formControlName="devise_autre_precision" class="form-control"
+           [class.is-invalid]="isInvalid(lignes[0], 'devise_autre_precision')"
+           [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
+    <div *ngIf="isInvalid(lignes[0], 'devise_autre_precision')" class="invalid-feedback">
+      <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-autre-required' | translate }}
+    </div>
+  </div>
+
+  <div class="col-md-3" [formGroup]="lignes[0]">
+    <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input type="number" step="0.01" min="0.01" formControlName="prix_devise_originale"
+             class="form-control" [class.is-invalid]="isInvalid(lignes[0], 'prix_devise_originale')"
+             placeholder="0,00" (input)="onPrixChange(lignes[0])">
+    </div>
+    <div *ngIf="isInvalid(lignes[0], 'prix_devise_originale')" class="invalid-feedback">
+      <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.prix-valide-required' | translate }}
+    </div>
+  </div>
+
+  <div class="col-md-3" [formGroup]="lignes[0]">
+    <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
+             [class.is-invalid]="isInvalid(lignes[0], 'prix_cad')"
+             [readonly]="deviseConvertible(lignes[0])"
+             [placeholder]="deviseConvertible(lignes[0]) ? ('forms-usager.converti-auto' | translate) : '0,00'">
+    </div>
+    <div *ngIf="isInvalid(lignes[0], 'prix_cad')" class="invalid-feedback">
+      <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.entrez-devise-prix' | translate }}
+    </div>
+    <small class="form-text" *ngIf="lignes[0].get('devise_originale')?.value">
+      {{ deviseConvertible(lignes[0]) ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+    </small>
+  </div>
+
+  <div class="col-md-3" [formGroup]="lignes[0]">
+    <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+    <div class="fr-fonds-inline">
+      <input type="text" formControlName="fonds_budgetaire" class="form-control"
+             [class.is-invalid]="isInvalid(lignes[0], 'fonds_budgetaire')"
+             [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
+      <button type="button" class="fr-btn fr-btn--ajouter" (click)="ajouter()"
+              [title]="'forms-usager.fonds-ajouter' | translate">
+        <i class="bi bi-plus-circle-fill"></i>
+      </button>
+    </div>
+    <div *ngIf="isInvalid(lignes[0], 'fonds_budgetaire')" class="invalid-feedback d-block">
+      <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-format' | translate }}
+    </div>
+    <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
+  </div>
+</ng-container>
+
+<!-- Fonds partagés (2+ fonds) : chaque ligne est une rangée complète et indépendante
+     (sa propre devise/prix/prix CAD/fonds/pourcentage) — même style de boîte/liste que
+     Pièces jointes (piece-jointe-gestion.component), pour rester visuellement cohérent. -->
+<div class="col-12 fr-box" *ngIf="partage">
+  <ul class="fr-list">
+  <li class="fr-ligne" *ngFor="let ligne of lignes; let i = index" [formGroup]="ligne">
+    <i class="bi bi-cash-coin fr-ligne__icone" [title]="'Fonds ' + (i + 1)"></i>
+
+    <div class="fr-champ fr-champ--devise">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.devise' | translate }}</label>
+      <select formControlName="devise_originale" class="form-select"
+              [class.is-invalid]="isInvalid(ligne, 'devise_originale')"
+              (change)="onDeviseChange(ligne)">
+        <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+        <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
+      </select>
+      <div *ngIf="isInvalid(ligne, 'devise_originale')" class="invalid-feedback">
+        <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-required' | translate }}
+      </div>
+    </div>
+
+    <div class="fr-champ fr-champ--devise-autre" *ngIf="ligne.get('devise_originale')?.value === 'Autre'">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+      <input type="text" formControlName="devise_autre_precision" class="form-control"
+             [class.is-invalid]="isInvalid(ligne, 'devise_autre_precision')"
+             [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
+      <div *ngIf="isInvalid(ligne, 'devise_autre_precision')" class="invalid-feedback">
+        <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-autre-required' | translate }}
+      </div>
+    </div>
+
+    <div class="fr-champ fr-champ--prix">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input type="number" step="0.01" min="0.01" formControlName="prix_devise_originale"
+               class="form-control" [class.is-invalid]="isInvalid(ligne, 'prix_devise_originale')"
+               placeholder="0,00" (input)="onPrixChange(ligne)">
+      </div>
+      <div *ngIf="isInvalid(ligne, 'prix_devise_originale')" class="invalid-feedback">
+        <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.prix-valide-required' | translate }}
+      </div>
+    </div>
+
+    <div class="fr-champ fr-champ--prixcad">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
+               [class.is-invalid]="isInvalid(ligne, 'prix_cad')"
+               [readonly]="deviseConvertible(ligne)"
+               [placeholder]="deviseConvertible(ligne) ? ('forms-usager.converti-auto' | translate) : '0,00'">
+      </div>
+      <div *ngIf="isInvalid(ligne, 'prix_cad')" class="invalid-feedback">
+        <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.entrez-devise-prix' | translate }}
+      </div>
+    </div>
+
+    <div class="fr-champ fr-champ--fonds">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+      <input type="text" formControlName="fonds_budgetaire" class="form-control"
+             [class.is-invalid]="isInvalid(ligne, 'fonds_budgetaire')"
+             [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
+      <div *ngIf="isInvalid(ligne, 'fonds_budgetaire')" class="invalid-feedback">
+        <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-format' | translate }}
+      </div>
+    </div>
+
+    <div class="fr-champ fr-champ--pourcentage">
+      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.pourcentage' | translate }}</label>
+      <div class="input-group">
+        <input type="number" min="0.01" max="100" step="0.01"
+               formControlName="pourcentage" class="form-control text-end"
+               [class.is-invalid]="isInvalid(ligne, 'pourcentage')"
+               placeholder="0,00">
+        <span class="input-group-text">%</span>
+      </div>
+    </div>
+
+    <button type="button" class="fr-ligne__retirer" [class.fr-ligne__retirer--decale]="i === 0"
+            (click)="retirer(i)" [title]="'forms-usager.fonds-retirer' | translate"
+            [attr.aria-label]="'forms-usager.fonds-retirer' | translate">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </li>
+  </ul>
+
+  <div class="fr-actions">
+    <button type="button" class="btn btn-outline-secondary btn-sm mb-0"
+            (click)="ajouter()">
+      <i class="bi bi-plus-lg me-1"></i>{{ 'forms-usager.fonds-ajouter' | translate }}
+    </button>
+    <small class="fr-hint" [class.fr-hint--avertissement]="sommeIncorrecte">
+      <i class="bi bi-exclamation-triangle me-1" *ngIf="sommeIncorrecte"></i>
+      {{ 'forms-usager.fonds-total' | translate }} : <strong>{{ sommePourcentage }} %</strong>
+      <ng-container *ngIf="sommeIncorrecte"> — {{ 'forms-usager.fonds-total-avertissement' | translate }}</ng-container>
+      · {{ 'forms-usager.fonds-total-paye' | translate }} : <strong>{{ sommePrixCad | number:'1.2-2' }} $</strong>
+    </small>
+  </div>
+</div>

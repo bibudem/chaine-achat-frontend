@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
-import { ConfigService, TauxRates } from '../../../../services/config.service';
 import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
-import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
+import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
   selector: 'app-nouvel-achat',
@@ -24,8 +23,6 @@ export class NouvelAchatComponent implements OnInit {
   showMonographie       = false;
   showAviserReservation = true;
   editId:  number | null = null;
-  /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
-  tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -84,8 +81,7 @@ export class NouvelAchatComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    private router: Router,
-    private configService: ConfigService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -114,11 +110,7 @@ export class NouvelAchatComponent implements OnInit {
       nombre_titres_inclus:        [null, Validators.min(1)],
       aviser_reservation:          ['', Validators.email],
       aviser_activation:           [{ value: '', disabled: true }, Validators.email],
-      prix_cad:                    [null, [Validators.required, Validators.min(0.01)]],
-      devise_originale:            ['',   Validators.required],
-      devise_autre_precision:      [''],
-      prix_devise_originale:       [null, [Validators.required, Validators.min(0.01)]],
-      fonds_budgetaire:            ['',   [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      fonds_repartition:           this.fb.array([FondsRepartitionComponent.creerLigne()]),
       fonds_sn_projet:             ['',   Validators.maxLength(50)],
       quantite:                    [1, [Validators.required, Validators.min(1)]],
       mettreReserve:               [false],
@@ -181,18 +173,6 @@ export class NouvelAchatComponent implements OnInit {
       aviserAct.updateValueAndValidity();
     });
 
-    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
-    this.form.get('devise_originale')!.valueChanges.subscribe(() => {
-      this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
-      this.updateDeviseAutreValidator();
-      this.convertirPrix();
-    });
-    this.configService.getTauxRates().subscribe(rates => {
-      this.tauxRates = rates;
-      this.convertirPrix();
-    });
-    this.updateDeviseAutreValidator();
-
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
         this.editId = +params['id'];
@@ -209,10 +189,6 @@ export class NouvelAchatComponent implements OnInit {
         if (bd.format_support)     this.form.get('format_support')!.setValue(bd.format_support);
         if (bd.categorie_document) this.form.get('categorie_document')!.setValue(bd.categorie_document);
         if (sd.reserve_cours)      this.form.get('mettreReserve')!.setValue(sd.reserve_cours);
-        // Rétrocompatibilité : une devise enregistrée qui ne correspond à aucun code connu
-        // (ancienne saisie "Autre" avant l'ajout de la précision, ou valeur déjà en texte
-        // libre) est restaurée comme "Autre" + la valeur d'origine dans le champ de précision.
-        const deviseConnue = this.devises.some(d => d.code === bd.devise_originale);
         this.form.patchValue({
           bibliotheque:           bd.bibliotheque,
           priorite_demande:       bd.priorite_demande,
@@ -228,11 +204,6 @@ export class NouvelAchatComponent implements OnInit {
           nombre_titres_inclus:   bd.nombre_titres_inclus,
           aviser_reservation:     sd.usager_aviser_reservation,
           aviser_activation:      sd.usager_aviser_activation,
-          prix_cad:               bd.prix_cad,
-          devise_originale:       deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
-          devise_autre_precision: deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
-          prix_devise_originale:  bd.prix_devise_originale,
-          fonds_budgetaire:       bd.fonds_budgetaire,
           fonds_sn_projet:        bd.fonds_sn_projet,
           quantite:               sd.quantite,
           type_monographie:       sd.type_monographie,
@@ -243,7 +214,7 @@ export class NouvelAchatComponent implements OnInit {
           statut_bibliotheque:    bd.statut_bibliotheque,
           bibliotheque_note_interne:       bd.bibliotheque_note_interne,
         });
-        this.updateDeviseAutreValidator();
+        this.chargerFondsRepartition(bd);
       }
     });
   }
@@ -267,39 +238,61 @@ export class NouvelAchatComponent implements OnInit {
     }
   }
 
-  private convertirPrix(): void {
-    const prix   = this.form.get('prix_devise_originale')?.value;
-    const devise = this.form.get('devise_originale')?.value;
-    const result = convertirPrixCad(prix, devise, this.tauxRates);
-    if (result != null) this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
-  }
-
-  /** Vrai si la devise sélectionnée a un taux connu — prix_cad devient alors calculé/lecture
-   *  seule dans le gabarit (voir estDeviseConvertible, lib/ConversionDevise.ts). */
-  get deviseConvertible(): boolean {
-    return estDeviseConvertible(this.form.get('devise_originale')?.value, this.tauxRates);
-  }
-
-  /** "Autre" (devise hors liste) exige la précision en texte libre — voir
-   *  devise_autre_precision, combiné à devise_originale au moment de l'envoi. */
-  private updateDeviseAutreValidator(): void {
-    const ctrl = this.form.get('devise_autre_precision');
-    if (!ctrl) return;
-    if (this.form.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
-    } else {
-      ctrl.clearValidators();
-    }
-    ctrl.updateValueAndValidity({ emitEvent: false });
-  }
+  get f() { return this.form.controls; }
 
   /** "Autre" + précision libre → la valeur envoyée/stockée en base est directement le texte
    *  saisi (ex. "Réal brésilien"), sans colonne dédiée — voir devise_autre_precision. */
-  private deviseAEnvoyer(v: any): string {
-    return v.devise_originale === 'Autre' ? (v.devise_autre_precision || 'Autre') : v.devise_originale;
+  private resoudreDevise(l: any): string {
+    return l.devise_originale === 'Autre' ? (l.devise_autre_precision || 'Autre') : l.devise_originale;
   }
 
-  get f() { return this.form.controls; }
+  /** Répartition prête pour l'envoi : devise résolue (voir resoudreDevise), sans le champ
+   *  devise_autre_precision (usage FE uniquement, non stocké côté serveur). */
+  private repartitionAEnvoyer(v: any): any[] {
+    return v.fonds_repartition.map((l: any) => ({
+      devise_originale:      this.resoudreDevise(l),
+      prix_devise_originale: l.prix_devise_originale,
+      prix_cad:              l.prix_cad,
+      fonds_budgetaire:      l.fonds_budgetaire,
+      pourcentage:           l.pourcentage,
+    }));
+  }
+
+  get fondsRepartitionArray(): FormArray {
+    return this.form.get('fonds_repartition') as FormArray;
+  }
+
+  /** Reconstruit le FormArray fonds_repartition à partir d'une réponse chargée (édition) —
+   *  fonds_repartition (fonds partagés, ≥ 2 lignes, chacune avec sa propre devise/prix) si
+   *  présent, sinon une seule ligne à partir des anciens champs top-level (rétrocompatibilité
+   *  avec les réponses enregistrées avant l'ajout des fonds partagés). */
+  private chargerFondsRepartition(bd: any): void {
+    const arr = this.fondsRepartitionArray;
+    while (arr.length) arr.removeAt(0);
+    const lignesSource = Array.isArray(bd.fonds_repartition) && bd.fonds_repartition.length > 1
+      ? bd.fonds_repartition
+      : [{
+          devise_originale:      bd.devise_originale,
+          prix_devise_originale: bd.prix_devise_originale,
+          prix_cad:              bd.prix_cad,
+          fonds_budgetaire:      bd.fonds_budgetaire,
+          pourcentage:           100,
+        }];
+    lignesSource.forEach((l: any) => {
+      // Rétrocompatibilité : une devise enregistrée qui ne correspond à aucun code connu
+      // (ancienne saisie "Autre" avant l'ajout de la précision, ou valeur déjà en texte
+      // libre) est restaurée comme "Autre" + la valeur d'origine dans le champ de précision.
+      const deviseConnue = this.devises.some(d => d.code === l.devise_originale);
+      arr.push(FondsRepartitionComponent.creerLigne({
+        devise_originale:       deviseConnue || !l.devise_originale ? (l.devise_originale || '') : 'Autre',
+        devise_autre_precision: deviseConnue || !l.devise_originale ? '' : l.devise_originale,
+        prix_devise_originale:  l.prix_devise_originale ?? null,
+        prix_cad:               l.prix_cad ?? null,
+        fonds_budgetaire:       l.fonds_budgetaire || '',
+        pourcentage:            l.pourcentage != null ? Number(l.pourcentage) : 100,
+      }));
+    });
+  }
 
   isInvalid(field: string): boolean {
     const c = this.form.get(field);
@@ -327,6 +320,7 @@ export class NouvelAchatComponent implements OnInit {
       quantite:              1,
       statut_bibliotheque:   'Saisie en cours - En attente',
     });
+    this.chargerFondsRepartition({});
   }
 
   onSubmit(): void {
@@ -335,10 +329,11 @@ export class NouvelAchatComponent implements OnInit {
 
     this.isLoading = true;
     const v = this.form.getRawValue();
+    const repartition = this.repartitionAEnvoyer(v);
 
     this.derniereTitre        = v.titre_document;
     this.derniereBibliotheque = v.bibliotheque;
-    this.dernierPrixCAD       = v.prix_cad;
+    this.dernierPrixCAD       = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
 
     const payload = {
       baseData: {
@@ -358,10 +353,11 @@ export class NouvelAchatComponent implements OnInit {
         nombre_utilisateurs:   this.showElectronique ? v.nombre_utilisateurs : null,
         lien_plateforme:       this.showElectronique ? v.lien_plateforme : null,
         nombre_titres_inclus:  this.showElectronique ? v.nombre_titres_inclus : null,
-        prix_cad:              v.prix_cad,
-        devise_originale:      this.deviseAEnvoyer(v),
-        prix_devise_originale: v.prix_devise_originale,
-        fonds_budgetaire:      v.fonds_budgetaire,
+        prix_cad:              this.dernierPrixCAD,
+        devise_originale:      repartition[0]?.devise_originale || '',
+        prix_devise_originale: repartition[0]?.prix_devise_originale ?? null,
+        fonds_budgetaire:      repartition[0]?.fonds_budgetaire || '',
+        fonds_repartition:     repartition,
         fonds_sn_projet:       v.fonds_sn_projet,
         note_commentaire:      v.note_commentaire,
         statut_bibliotheque:   v.statut_bibliotheque,
@@ -412,6 +408,7 @@ export class NouvelAchatComponent implements OnInit {
     if (this.form.invalid) return;
     this.isLoading = true;
     const v = this.form.getRawValue();
+    const repartition = this.repartitionAEnvoyer(v);
     const payload = {
       baseData: {
         formulaire_type:       'Nouvel achat unique',
@@ -430,10 +427,11 @@ export class NouvelAchatComponent implements OnInit {
         nombre_utilisateurs:   this.showElectronique ? v.nombre_utilisateurs : null,
         lien_plateforme:       this.showElectronique ? v.lien_plateforme : null,
         nombre_titres_inclus:  this.showElectronique ? v.nombre_titres_inclus : null,
-        prix_cad:              v.prix_cad,
-        devise_originale:      this.deviseAEnvoyer(v),
-        prix_devise_originale: v.prix_devise_originale,
-        fonds_budgetaire:      v.fonds_budgetaire,
+        prix_cad:              repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        devise_originale:      repartition[0]?.devise_originale || '',
+        prix_devise_originale: repartition[0]?.prix_devise_originale ?? null,
+        fonds_budgetaire:      repartition[0]?.fonds_budgetaire || '',
+        fonds_repartition:     repartition,
         fonds_sn_projet:       v.fonds_sn_projet,
         note_commentaire:      v.note_commentaire,
         statut_bibliotheque:   v.statut_bibliotheque || 'Saisie en cours - En attente',

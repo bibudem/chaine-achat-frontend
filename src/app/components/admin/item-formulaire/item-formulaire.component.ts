@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { ReponsesService } from '../../../services/reponses.service';
 import { ConfigService, TauxRates } from '../../../services/config.service';
 import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionDevise';
+import { FondsRepartitionComponent } from '../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
   selector: 'app-item-formulaire',
@@ -23,6 +24,7 @@ export class ItemFormulaireComponent implements OnInit {
   isEditMode = false;
   loading = false;
   submitting = false;
+  submitted = false;
   activeTab = 'base';
 
   options = new ListeChoixOptions();
@@ -157,10 +159,13 @@ export class ItemFormulaireComponent implements OnInit {
 
   private updateFinanceValidators(statut: string): void {
     const isSaisie = (statut ?? '').startsWith('Saisie en cours');
+    // Fonds partagés (Nouvel achat unique / Nouvel abonnement / Modification et CCOL) :
+    // ces 4 champs plats sont remplacés par fonds_repartition (voir app-fonds-repartition),
+    // qui gère lui-même sa propre validation par ligne — on les laisse optionnels ici.
     ['prix_cad', 'devise_originale', 'prix_devise_originale', 'fonds_budgetaire'].forEach(field => {
       const ctrl = this.itemForm.get(field);
       if (!ctrl) return;
-      isSaisie ? ctrl.clearValidators() : ctrl.setValidators(Validators.required);
+      (isSaisie || this.gereFondsPartages) ? ctrl.clearValidators() : ctrl.setValidators(Validators.required);
       ctrl.updateValueAndValidity({ emitEvent: false });
     });
     this.updateDeviseAutreValidator();
@@ -171,16 +176,75 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   /** "Autre" (devise hors liste) exige la précision en texte libre, mais seulement quand le
-   *  reste des champs financiers est lui-même requis (voir updateFinanceValidators). */
+   *  reste des champs financiers est lui-même requis (voir updateFinanceValidators) — et
+   *  jamais en fonds partagés, où chaque ligne gère sa propre précision de devise. */
   private updateDeviseAutreValidator(): void {
     const ctrl = this.itemForm.get('devise_autre_precision');
     if (!ctrl) return;
-    if (this.financeFieldsRequired && this.itemForm.get('devise_originale')?.value === 'Autre') {
+    if (!this.gereFondsPartages && this.financeFieldsRequired && this.itemForm.get('devise_originale')?.value === 'Autre') {
       ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
     } else {
       ctrl.clearValidators();
     }
     ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  /** Fonds partagés : uniquement pour les 3 formulaires usager qui le supportent — voir
+   *  sql/items_fonds.sql. Les 3 autres types (PEB Tipasa, Requête Accessibilité, Suggestion
+   *  d'achat) gardent les champs plats prix_cad/devise_originale/prix_devise_originale/
+   *  fonds_budgetaire tels quels. */
+  get gereFondsPartages(): boolean {
+    return this.isNouvelAchatUnique() || this.isNouvelAbonnement() || this.isModificationCCOL();
+  }
+
+  get fondsRepartitionArray(): FormArray {
+    return this.itemForm.get('fonds_repartition') as FormArray;
+  }
+
+  /** "Autre" + précision libre → la valeur envoyée/stockée en base est directement le texte
+   *  saisi (ex. "Réal brésilien"), sans colonne dédiée — voir devise_autre_precision. */
+  private resoudreDeviseRepartition(l: any): string {
+    return l.devise_originale === 'Autre' ? (l.devise_autre_precision || 'Autre') : l.devise_originale;
+  }
+
+  /** Répartition prête pour l'envoi : devise résolue (voir resoudreDeviseRepartition), sans
+   *  le champ devise_autre_precision (usage FE uniquement, non stocké côté serveur). */
+  private repartitionAEnvoyer(): any[] {
+    return this.fondsRepartitionArray.getRawValue().map((l: any) => ({
+      devise_originale:      this.resoudreDeviseRepartition(l),
+      prix_devise_originale: l.prix_devise_originale,
+      prix_cad:              l.prix_cad,
+      fonds_budgetaire:      l.fonds_budgetaire,
+      pourcentage:           l.pourcentage,
+    }));
+  }
+
+  /** Reconstruit le FormArray fonds_repartition à partir d'un item/réponse chargé —
+   *  fonds_repartition (fonds partagés, ≥ 2 lignes, chacune avec sa propre devise/prix) si
+   *  présent, sinon une seule ligne à partir des champs plats habituels. */
+  private chargerFondsRepartition(source: any): void {
+    const arr = this.fondsRepartitionArray;
+    while (arr.length) arr.removeAt(0);
+    const lignesSource = Array.isArray(source?.fonds_repartition) && source.fonds_repartition.length > 1
+      ? source.fonds_repartition
+      : [{
+          devise_originale:      source?.devise_originale,
+          prix_devise_originale: source?.prix_devise_originale,
+          prix_cad:              source?.prix_cad,
+          fonds_budgetaire:      source?.fonds_budgetaire,
+          pourcentage:           100,
+        }];
+    lignesSource.forEach((l: any) => {
+      const deviseConnue = this.devises.some(d => d.code === l.devise_originale);
+      arr.push(FondsRepartitionComponent.creerLigne({
+        devise_originale:       deviseConnue || !l.devise_originale ? (l.devise_originale || '') : 'Autre',
+        devise_autre_precision: deviseConnue || !l.devise_originale ? '' : l.devise_originale,
+        prix_devise_originale:  l.prix_devise_originale ?? null,
+        prix_cad:               l.prix_cad ?? null,
+        fonds_budgetaire:       l.fonds_budgetaire || '',
+        pourcentage:            l.pourcentage != null ? Number(l.pourcentage) : 100,
+      }));
+    });
   }
 
   get showDecisionAcqTab(): boolean {
@@ -228,6 +292,10 @@ export class ItemFormulaireComponent implements OnInit {
       ...baseData,
       ...specificData
     }, { emitEvent: false });
+
+    if (this.gereFondsPartages) {
+      this.chargerFondsRepartition({ ...flat, ...baseData });
+    }
   }
 
   createForm(): FormGroup {
@@ -246,6 +314,7 @@ export class ItemFormulaireComponent implements OnInit {
       devise_originale: ['', Validators.required],
       devise_autre_precision: [''],
       prix_devise_originale: [null, Validators.required],
+      fonds_repartition: this.fb.array([]),
       periode_couverte: [''],
       nombre_titres_inclus: [null],
       nombre_utilisateurs: [''],
@@ -360,6 +429,19 @@ export class ItemFormulaireComponent implements OnInit {
       const control = this.itemForm.get(field);
       if (control) control.updateValueAndValidity({ emitEvent: false });
     });
+
+    // Réévalue immédiatement les validateurs des champs financiers plats (au lieu d'attendre
+    // un changement de statut_bibliotheque sans rapport) — nécessaire pour gereFondsPartages,
+    // qui dépend du type qu'on vient de changer.
+    this.updateFinanceValidators(this.itemForm.get('statut_bibliotheque')?.value);
+    if (this.gereFondsPartages && this.fondsRepartitionArray.length === 0) {
+      this.chargerFondsRepartition({
+        devise_originale:      this.itemForm.get('devise_originale')?.value,
+        prix_devise_originale: this.itemForm.get('prix_devise_originale')?.value,
+        prix_cad:              this.itemForm.get('prix_cad')?.value,
+        fonds_budgetaire:      this.itemForm.get('fonds_budgetaire')?.value,
+      });
+    }
   }
 
   resetSpecificFields(): void {
@@ -453,6 +535,10 @@ export class ItemFormulaireComponent implements OnInit {
           }, { emitEvent: false });
           this.updateDeviseAutreValidator();
 
+          if (this.gereFondsPartages) {
+            this.chargerFondsRepartition(response.data);
+          }
+
           // Patch les champs spécifiques si le backend les retourne dans un objet imbriqué
           const specificData = (response.data as any).specificData;
           if (specificData && typeof specificData === 'object') {
@@ -516,6 +602,7 @@ export class ItemFormulaireComponent implements OnInit {
   }
  
   async onSubmit(): Promise<void> {
+    this.submitted = true;
     if (this.itemForm.invalid) {
       this.markFormGroupTouched();
       const acqInvalidFields = ['suivi_acq'];
@@ -595,6 +682,8 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   private extractBaseData(formData: any): any {
+    const repartition = this.gereFondsPartages ? this.repartitionAEnvoyer() : null;
+
     return {
       formulaire_type: formData.formulaire_type,
       date_creation: formData.date_creation,
@@ -608,7 +697,7 @@ export class ItemFormulaireComponent implements OnInit {
       note_dtdm: formData.note_dtdm,
       categorie_document: formData.categorie_document,
       format_support: formData.format_support,
-      fonds_budgetaire: formData.fonds_budgetaire,
+      fonds_budgetaire: repartition ? (repartition[0]?.fonds_budgetaire || '') : formData.fonds_budgetaire,
       fonds_sn_projet: formData.fonds_sn_projet,
       bibliotheque: formData.bibliotheque,
       localisation_emplacement: formData.localisation_emplacement,
@@ -623,15 +712,15 @@ export class ItemFormulaireComponent implements OnInit {
       source_information: formData.source_information,
       note_commentaire: formData.note_commentaire,
       catalogue: formData.catalogue,
-      prix_cad: formData.prix_cad,
-      devise_originale: this.deviseAEnvoyer(formData),
-      prix_devise_originale: formData.prix_devise_originale,
+      prix_cad: repartition ? repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0) : formData.prix_cad,
+      devise_originale: repartition ? (repartition[0]?.devise_originale || '') : this.deviseAEnvoyer(formData),
+      prix_devise_originale: repartition ? (repartition[0]?.prix_devise_originale ?? null) : formData.prix_devise_originale,
       periode_couverte: formData.periode_couverte,
       nombre_titres_inclus: formData.nombre_titres_inclus,
       nombre_utilisateurs: formData.nombre_utilisateurs,
       lien_plateforme: formData.lien_plateforme,
       format_pret_numerique: formData.format_pret_numerique,
-
+      ...(repartition ? { fonds_repartition: repartition } : {}),
     };
   }
 

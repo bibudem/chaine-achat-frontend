@@ -45,6 +45,13 @@ export interface Item {
   // FIX: devise_originale est VARCHAR(10) en DB → stocker le code court (CAD, USD, EUR, GBP)
   devise_originale?: string;
   prix_devise_originale?: number;
+  /** Fonds partagés (Nouvel achat unique / Nouvel abonnement / Modification et CCOL
+   *  uniquement) — présent seulement s'il y a un vrai partage (≥ 2 lignes), voir
+   *  tbl_items_fonds / models/items-fonds.js. */
+  fonds_repartition?: {
+    devise_originale: string; prix_devise_originale: number; prix_cad: number;
+    fonds_budgetaire: string; pourcentage: number;
+  }[];
   periode_couverte?: string;
   nombre_titres_inclus?: number;
   nombre_utilisateurs?: string;

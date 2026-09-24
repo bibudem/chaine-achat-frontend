@@ -1,0 +1,106 @@
+/* Le composant s'insère directement dans la "row g-3" du parent (Devise/Prix/Prix CAD) :
+   :host s'efface du layout (display: contents) pour que chaque élément top-level du
+   template agisse comme une colonne Bootstrap de plein droit dans cette même rangée. */
+:host {
+  display: contents;
+}
+
+/* Cas normal (1 fonds) : le champ Fonds budgétaire + bouton "+" tiennent dans sa colonne. */
+.fr-fonds-inline {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.fr-fonds-inline .form-control { flex: 1 1 auto; min-width: 0; }
+.fr-fonds-inline .fr-btn { font-size: 1.3rem; }
+
+/* Fonds partagés (2+) : même style de boîte/liste que Pièces jointes
+   (piece-jointe-gestion.component.css — pj-box/pj-list) pour rester cohérent. */
+.fr-box {
+  /* Valeur de repli (1rem) si le parent n'utilise pas "row g-3" (ex. formulaire admin,
+     qui espace ses champs via .mb-3 plutôt que le gutter-y de la rangée) — pour un
+     visuel identique partout où ce composant est utilisé. */
+  margin-top: var(--bs-gutter-y, 1rem);
+  border: 1px solid #ced4da;
+  border-radius: .375rem;
+  padding: .65rem .75rem;
+  background: #fff;
+}
+
+.fr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fr-ligne {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .55rem 2rem .55rem 1.9rem;
+  border-bottom: 1px solid #f1f3f5;
+}
+.fr-ligne:last-child { border-bottom: none; }
+
+/* Icône de repère — constant pour chaque ligne, y compris la 2e et suivantes qui n'ont pas
+   de libellés de colonne (voir *ngIf="i === 0" sur les <label>), dans l'esprit de
+   .pj-list__icon. */
+.fr-ligne__icone {
+  position: absolute;
+  left: 0;
+  top: .65rem;
+  color: #868e96;
+  font-size: .9rem;
+}
+
+.fr-champ { flex: 1 1 160px; min-width: 0; }
+.fr-champ--pourcentage { flex: 0 0 130px; }
+
+.fr-ligne__retirer {
+  position: absolute;
+  right: 0;
+  top: .55rem;
+  border: none;
+  background: none;
+  color: #adb5bd;
+  padding: 0 .15rem;
+  line-height: 1;
+  cursor: pointer;
+  font-size: .85rem;
+}
+/* La 1ère ligne a des libellés au-dessus des champs (i === 0) : le bouton descend d'autant
+   pour rester aligné avec les champs plutôt qu'avec les libellés. */
+.fr-ligne__retirer--decale { top: calc(.55rem + 1.55rem); }
+.fr-ligne__retirer:hover { color: #dc3545; }
+
+.fr-actions {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-top: .6rem;
+  padding-top: .5rem;
+  border-top: 1px solid #f1f3f5;
+}
+
+.fr-hint {
+  color: #868e96;
+  font-size: .72rem;
+}
+.fr-hint strong { color: #0B113A; }
+.fr-hint--avertissement,
+.fr-hint--avertissement strong { color: #9A5B0F; }
+
+.fr-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.fr-btn--ajouter { color: #198754; }
+.fr-btn:hover { opacity: .75; }

@@ -258,10 +258,7 @@
                      placeholder="https://...">
             </div>
           </div>
-        </div>
-        <!-- Rangée 4 : Finances -->
-        <div class="row">
-          <div class="col-md-3">
+          <div class="col-md">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.source-info' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="source_information"
@@ -275,59 +272,73 @@
               </ng-template>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
-                      [class.is-invalid]="isInvalid('prix_cad')"
-                      min="0" step="0.01" placeholder="0,00"
-                      [readonly]="deviseConvertible">
-                <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
-              </div>
-              <small class="form-text" *ngIf="itemForm.get('devise_originale')?.value">
-                {{ deviseConvertible ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
-              </small>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
-              <select class="form-select form-control" formControlName="devise_originale"
-                      [class.is-invalid]="isInvalid('devise_originale')">
-                <option value="">--</option>
-                <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
-              </select>
-              <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">{{ 'item-formulaire.devise-required' | translate }}</div>
-            </div>
-          </div>
-          <div class="col-md-2" *ngIf="itemForm.get('devise_originale')?.value === 'Autre'">
-            <div class="mb-3">
-              <label class="form-label">{{ 'forms-usager.devise-autre-label' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
-              <input type="text" class="form-control" formControlName="devise_autre_precision"
-                     [class.is-invalid]="isInvalid('devise_autre_precision')"
-                     [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
-              <div class="invalid-feedback" *ngIf="hasError('devise_autre_precision', 'required')">{{ 'item-formulaire.devise-autre-required' | translate }}</div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="number" class="form-control" formControlName="prix_devise_originale"
-                      [class.is-invalid]="isInvalid('prix_devise_originale')"
-                      min="0" step="0.01" placeholder="0,00">
-              </div>
-              <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
-            </div>
+        </div>
+        <!-- Section Finances (Rangées 4 et 5) — même style de titre discret que "Usager à aviser" -->
+        <div class="row mt-2">
+          <div class="col-12">
+            <h6 class="pb-1 border-bottom text-muted small fw-semibold mb-3">
+              <i class="bi bi-cash-coin me-1"></i>{{ 'forms-usager.section-finances' | translate }}
+            </h6>
           </div>
         </div>
 
-        <!-- Rangée 5 : Fonds budgétaires -->
+        <!-- Rangée 4 : Finances -->
         <div class="row">
-          <div class="col-md-4">
+
+          <ng-container *ngIf="!gereFondsPartages">
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
+                <select class="form-select form-control" formControlName="devise_originale"
+                        [class.is-invalid]="isInvalid('devise_originale')">
+                  <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+                  <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="hasError('devise_originale', 'required')">{{ 'item-formulaire.devise-required' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="itemForm.get('devise_originale')?.value === 'Autre'">
+              <div class="mb-3">
+                <label class="form-label">{{ 'forms-usager.devise-autre-label' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
+                <input type="text" class="form-control" formControlName="devise_autre_precision"
+                       [class.is-invalid]="isInvalid('devise_autre_precision')"
+                       [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
+                <div class="invalid-feedback" *ngIf="hasError('devise_autre_precision', 'required')">{{ 'item-formulaire.devise-autre-required' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" formControlName="prix_devise_originale"
+                        [class.is-invalid]="isInvalid('prix_devise_originale')"
+                        min="0" step="0.01" placeholder="0,00">
+                </div>
+                <div class="invalid-feedback" *ngIf="hasError('prix_devise_originale', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control bib-input-icon" formControlName="prix_cad"
+                        [class.is-invalid]="isInvalid('prix_cad')"
+                        min="0" step="0.01" placeholder="0,00"
+                        [readonly]="deviseConvertible">
+                  <div class="invalid-feedback" *ngIf="hasError('prix_cad', 'required')">{{ 'item-formulaire.prix-required' | translate }}</div>
+                </div>
+                <small class="form-text" *ngIf="itemForm.get('devise_originale')?.value">
+                  {{ deviseConvertible ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+                </small>
+              </div>
+            </div>
+          </ng-container>
+
+          <app-fonds-repartition *ngIf="gereFondsPartages"
+            [fondsArray]="fondsRepartitionArray" [submitted]="submitted"></app-fonds-repartition>
+          <div class="col-md-4" *ngIf="!gereFondsPartages">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
               <input type="text" class="form-control" formControlName="fonds_budgetaire"
@@ -340,7 +351,12 @@
               <small class="form-text">{{ 'item-formulaire.fonds-budgetaire-hint' | translate }}</small>
             </div>
           </div>
-          <div class="col-md-4" *ngIf="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL()">
+      </div>
+
+        <!-- Rangée 5 : Fonds budgétaires -->
+        <div class="row">
+          
+          <div class="col-md-6" *ngIf="isNouvelAchatUnique() || isNouvelAbonnement() || isModificationCCOL()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.fonds-sn' | translate }}</label>
               <input type="text" class="form-control" formControlName="fonds_sn_projet"
@@ -348,16 +364,18 @@
               <small class="form-text">{{ 'item-formulaire.fonds-sn-hint' | translate }}</small>
             </div>
           </div>
-          <div class="col-md-4" *ngIf="selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL()">
+          <div class="col-md-2" *ngIf="isNouvelAbonnement() || isModificationCCOL()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.periode-couverte' | translate }}</label>
               <input type="text" class="form-control" formControlName="periode_couverte"
-                    [placeholder]="'item-formulaire.periode-placeholder' | translate">
+                    [placeholder]="isNouvelAbonnement() ? 'Ex: 2024 ou 2020-2025' : 'Ex : 1996-2000'">
+              <small class="form-text" *ngIf="isNouvelAbonnement()">{{ 'form-abonnement.periode-hint' | translate }}</small>
+              <small class="form-text" *ngIf="isModificationCCOL()">{{ 'form-modification-ccol.periode-hint' | translate }}</small>
             </div>
           </div>
 
-          <div class="col-12">
-            <small class="form-text">
+          <div class="col-md-4 d-flex align-items-center">
+            <small class="form-text mb-0">
               {{ 'forms-usager.taux-change-note' | translate }}
               <a href="https://umontreal.share.worldcat.org/wms/cmnd/acq/exchangerates" target="_blank" rel="noopener">
                 {{ 'forms-usager.taux-change-lien-texte' | translate }} <i class="fas fa-external-link-alt"></i>

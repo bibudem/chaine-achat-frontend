@@ -108,6 +108,11 @@
               {{ 'import.etape2.regle-dates' | translate }}
               <code>YYYY-MM-DD</code>
             </span>
+            <span class="imp-format-rule" *ngIf="supporteFondsPartages">
+              <i class="bi bi-diagram-3"></i>
+              {{ 'import.etape2.regle-fonds-partages' | translate }}
+              <code>PE-034;PE-028</code>
+            </span>
           </div>
           <div class="imp-format-card__divider"></div>
           <div class="imp-format-card__cols">

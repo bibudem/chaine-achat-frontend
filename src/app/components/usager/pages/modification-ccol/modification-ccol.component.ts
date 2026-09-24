@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
-import { ConfigService, TauxRates } from '../../../../services/config.service';
 import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
-import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
+import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
   selector: 'app-modification-ccol',
@@ -21,8 +20,6 @@ export class ModificationCcolComponent implements OnInit {
   showElectronique = false;
   showImprime      = true;
   editId:  number | null = null;
-  /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
-  tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
 
   bibliotheques: string[] = [
     'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
@@ -86,8 +83,7 @@ export class ModificationCcolComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    private router: Router,
-    private configService: ConfigService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +96,7 @@ export class ModificationCcolComponent implements OnInit {
       statut:               [statut],
       courriel:             [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:         ['',       Validators.required],
-      fonds_budgetaire:     ['',       [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      fonds_repartition:    this.fb.array([FondsRepartitionComponent.creerLigne()]),
       priorite_demande:     ['Régulier', Validators.required],
       titre_document:       ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:           ['', Validators.maxLength(500)],
@@ -120,10 +116,6 @@ export class ModificationCcolComponent implements OnInit {
       nombre_utilisateurs:      ['Accès illimité'],
       nombre_titres_inclus:     [null, Validators.min(1)],
       usager_aviser_activation: [{ value: '', disabled: true }, Validators.email],
-      devise_originale:      ['',   Validators.required],
-      devise_autre_precision: [''],
-      prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
-      prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
       fonds_sn_projet:    ['', Validators.maxLength(50)],
       source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
       note_commentaire: ['', Validators.maxLength(1000)],
@@ -148,18 +140,6 @@ export class ModificationCcolComponent implements OnInit {
       aviser.updateValueAndValidity();
     });
 
-    this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
-    this.form.get('devise_originale')!.valueChanges.subscribe(() => {
-      this.form.get('prix_cad')?.setValue(null, { emitEvent: false });
-      this.updateDeviseAutreValidator();
-      this.convertirPrix();
-    });
-    this.configService.getTauxRates().subscribe(rates => {
-      this.tauxRates = rates;
-      this.convertirPrix();
-    });
-    this.updateDeviseAutreValidator();
-
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
         this.editId = +params['id'];
@@ -174,10 +154,9 @@ export class ModificationCcolComponent implements OnInit {
         const bd = row.reponses?.baseData ?? {};
         const sd = row.reponses?.specificData ?? {};
         if (bd.format_support) this.form.get('format_support')!.setValue(bd.format_support);
-        const deviseConnue = this.devises.some(d => d.code === bd.devise_originale);
+        this.chargerFondsRepartition(bd);
         this.form.patchValue({
           bibliotheque:             bd.bibliotheque,
-          fonds_budgetaire:         bd.fonds_budgetaire,
           priorite_demande:         bd.priorite_demande,
           titre_document:           bd.titre_document,
           sous_titre:               bd.sous_titre,
@@ -196,45 +175,14 @@ export class ModificationCcolComponent implements OnInit {
           nombre_utilisateurs:      bd.nombre_utilisateurs,
           nombre_titres_inclus:     bd.nombre_titres_inclus,
           usager_aviser_activation: sd.usager_aviser_activation,
-          devise_originale:         deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
-          devise_autre_precision:   deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
-          prix_devise_originale:    bd.prix_devise_originale,
-          prix_cad:                 bd.prix_cad,
           fonds_sn_projet:          bd.fonds_sn_projet,
           source_information:       bd.source_information,
           note_commentaire:         bd.note_commentaire,
           statut_bibliotheque:      bd.statut_bibliotheque,
           bibliotheque_note_interne:         bd.bibliotheque_note_interne,
         });
-        this.updateDeviseAutreValidator();
       }
     });
-  }
-
-  private convertirPrix(): void {
-    const prix   = this.form.get('prix_devise_originale')?.value;
-    const devise = this.form.get('devise_originale')?.value;
-    const result = convertirPrixCad(prix, devise, this.tauxRates);
-    if (result != null) this.form.get('prix_cad')?.setValue(result, { emitEvent: false });
-  }
-
-  get deviseConvertible(): boolean {
-    return estDeviseConvertible(this.form.get('devise_originale')?.value, this.tauxRates);
-  }
-
-  private updateDeviseAutreValidator(): void {
-    const ctrl = this.form.get('devise_autre_precision');
-    if (!ctrl) return;
-    if (this.form.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
-    } else {
-      ctrl.clearValidators();
-    }
-    ctrl.updateValueAndValidity({ emitEvent: false });
-  }
-
-  private deviseAEnvoyer(v: any): string {
-    return v.devise_originale === 'Autre' ? (v.devise_autre_precision || 'Autre') : v.devise_originale;
   }
 
   private isbnValidator(control: AbstractControl): ValidationErrors | null {
@@ -258,6 +206,57 @@ export class ModificationCcolComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  get fondsRepartitionArray(): FormArray {
+    return this.form.get('fonds_repartition') as FormArray;
+  }
+
+  /** "Autre" + précision libre → la valeur envoyée/stockée en base est directement le texte
+   *  saisi (ex. "Réal brésilien"), sans colonne dédiée — voir devise_autre_precision. */
+  private resoudreDevise(l: any): string {
+    return l.devise_originale === 'Autre' ? (l.devise_autre_precision || 'Autre') : l.devise_originale;
+  }
+
+  /** Répartition prête pour l'envoi : devise résolue (voir resoudreDevise), sans le champ
+   *  devise_autre_precision (usage FE uniquement, non stocké côté serveur). */
+  private repartitionAEnvoyer(v: any): any[] {
+    return v.fonds_repartition.map((l: any) => ({
+      devise_originale:      this.resoudreDevise(l),
+      prix_devise_originale: l.prix_devise_originale,
+      prix_cad:              l.prix_cad,
+      fonds_budgetaire:      l.fonds_budgetaire,
+      pourcentage:           l.pourcentage,
+    }));
+  }
+
+  /** Reconstruit le FormArray fonds_repartition à partir d'une réponse chargée (édition) —
+   *  fonds_repartition (fonds partagés, ≥ 2 lignes, chacune avec sa propre devise/prix) si
+   *  présent, sinon une seule ligne à partir des anciens champs top-level (rétrocompatibilité
+   *  avec les réponses enregistrées avant l'ajout des fonds partagés). */
+  private chargerFondsRepartition(bd: any): void {
+    const array = this.fondsRepartitionArray;
+    while (array.length) array.removeAt(0);
+    const lignesSource = Array.isArray(bd.fonds_repartition) && bd.fonds_repartition.length > 1
+      ? bd.fonds_repartition
+      : [{
+          devise_originale:      bd.devise_originale,
+          prix_devise_originale: bd.prix_devise_originale,
+          prix_cad:              bd.prix_cad,
+          fonds_budgetaire:      bd.fonds_budgetaire,
+          pourcentage:           100,
+        }];
+    lignesSource.forEach((l: any) => {
+      const deviseConnue = this.devises.some(d => d.code === l.devise_originale);
+      array.push(FondsRepartitionComponent.creerLigne({
+        devise_originale:       deviseConnue || !l.devise_originale ? (l.devise_originale || '') : 'Autre',
+        devise_autre_precision: deviseConnue || !l.devise_originale ? '' : l.devise_originale,
+        prix_devise_originale:  l.prix_devise_originale ?? null,
+        prix_cad:               l.prix_cad ?? null,
+        fonds_budgetaire:       l.fonds_budgetaire || '',
+        pourcentage:            l.pourcentage != null ? Number(l.pourcentage) : 100,
+      }));
+    });
+  }
+
   isInvalid(field: string): boolean {
     const c = this.form.get(field);
     return !!c && c.invalid && (c.dirty || c.touched || this.submitted);
@@ -280,6 +279,7 @@ export class ModificationCcolComponent implements OnInit {
       creation_notice_dtdm: true,
       statut_bibliotheque:  'Saisie en cours - En attente',
     });
+    this.chargerFondsRepartition({});
   }
 
   onSubmit(): void {
@@ -288,6 +288,7 @@ export class ModificationCcolComponent implements OnInit {
 
     this.isLoading = true;
     const v = this.form.getRawValue();
+    const repartition = this.repartitionAEnvoyer(v);
 
     this.derniereTitre        = v.titre_document;
     this.derniereBibliotheque = v.bibliotheque;
@@ -297,7 +298,8 @@ export class ModificationCcolComponent implements OnInit {
         formulaire_type:          'Modification et CCOL',
         demandeur:                v.nom,
         bibliotheque:             v.bibliotheque,
-        fonds_budgetaire:         v.fonds_budgetaire,
+        fonds_budgetaire:         repartition[0]?.fonds_budgetaire || '',
+        fonds_repartition:        repartition,
         priorite_demande:         v.priorite_demande,
         titre_document:           v.titre_document,
         sous_titre:               v.sous_titre,
@@ -312,9 +314,9 @@ export class ModificationCcolComponent implements OnInit {
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
-        prix_cad:                 v.prix_cad,
-        devise_originale:         this.deviseAEnvoyer(v),
-        prix_devise_originale:    v.prix_devise_originale,
+        prix_cad:                 repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        devise_originale:         repartition[0]?.devise_originale || '',
+        prix_devise_originale:    repartition[0]?.prix_devise_originale ?? null,
         periode_couverte:         v.periode_couverte,
         fonds_sn_projet:          v.fonds_sn_projet,
         source_information:       v.source_information,
@@ -362,12 +364,14 @@ export class ModificationCcolComponent implements OnInit {
     if (this.form.invalid) return;
     this.isLoading = true;
     const v = this.form.getRawValue();
+    const repartition = this.repartitionAEnvoyer(v);
     const payload = {
       baseData: {
         formulaire_type:          'Modification et CCOL',
         demandeur:                v.nom,
         bibliotheque:             v.bibliotheque,
-        fonds_budgetaire:         v.fonds_budgetaire,
+        fonds_budgetaire:         repartition[0]?.fonds_budgetaire || '',
+        fonds_repartition:        repartition,
         priorite_demande:         v.priorite_demande,
         titre_document:           v.titre_document,
         sous_titre:               v.sous_titre,
@@ -382,9 +386,9 @@ export class ModificationCcolComponent implements OnInit {
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
-        prix_cad:                 v.prix_cad,
-        devise_originale:         this.deviseAEnvoyer(v),
-        prix_devise_originale:    v.prix_devise_originale,
+        prix_cad:                 repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        devise_originale:         repartition[0]?.devise_originale || '',
+        prix_devise_originale:    repartition[0]?.prix_devise_originale ?? null,
         periode_couverte:         v.periode_couverte,
         fonds_sn_projet:          v.fonds_sn_projet,
         source_information:       v.source_information,

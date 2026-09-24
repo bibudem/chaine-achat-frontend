@@ -317,6 +317,47 @@ export class UsagerProfilComponent implements OnInit {
     return d.statut_bibliotheque !== 'Soumettre aux ACQ';
   }
 
+  /** Champs remplacés par une rangée par fonds quand la demande est partagée entre plusieurs
+   *  fonds budgétaires (voir fonds_repartition) — chacun avec sa propre devise/prix, au lieu
+   *  de n'afficher que les valeurs du 1er fonds (celles stockées telles quelles dans ces
+   *  champs, pour compatibilité avec les rapports/exports existants). */
+  private static readonly CHAMPS_FONDS_PARTAGES = new Set([
+    'fonds_budgetaire', 'devise_originale', 'prix_devise_originale', 'prix_cad',
+  ]);
+
+  /** Construit les rangées label/valeur d'une demande à partir de sa réponse (baseData +
+   *  specificData aplatis) — utilisé par le détail dépliable et l'impression, pour que les
+   *  deux affichent exactement les mêmes informations. Si la demande est un partage de fonds
+   *  (fonds_repartition ≥ 2 lignes), une rangée par fonds (devise/prix/pourcentage propres)
+   *  remplace les 4 champs singuliers habituels (qui ne portent que les valeurs du 1er fonds). */
+  private construireLignesDetail(flat: Record<string, any>): { label: string; value: string }[] {
+    const repartition = Array.isArray(flat.fonds_repartition) ? flat.fonds_repartition : [];
+    const partage = repartition.length > 1;
+
+    const rangees: { label: string; value: string }[] = [];
+    this.FIELD_ORDER.forEach(k => {
+      if (partage && UsagerProfilComponent.CHAMPS_FONDS_PARTAGES.has(k)) {
+        if (k === 'prix_devise_originale') {
+          repartition.forEach((l: any, i: number) => {
+            const prix = l.prix_devise_originale != null ? Number(l.prix_devise_originale).toFixed(2) : '—';
+            const cad  = l.prix_cad != null ? Number(l.prix_cad).toFixed(2) : '—';
+            rangees.push({
+              label: `Fonds budgétaire ${i + 1}`,
+              value: `${l.fonds_budgetaire} — ${l.pourcentage} % — ${prix} ${l.devise_originale} → ${cad} $ CAD`,
+            });
+          });
+        }
+        return;
+      }
+      if (!this.FIELD_LABELS[k] || flat[k] === null || flat[k] === undefined || flat[k] === '' || flat[k] === false) return;
+      rangees.push({
+        label: this.FIELD_LABELS[k],
+        value: typeof flat[k] === 'boolean' ? 'Oui' : String(flat[k]),
+      });
+    });
+    return rangees;
+  }
+
   toggleDetails(d: DemandeUsager): void {
     if (this.expandedId === d.id) {
       this.expandedId = null;
@@ -332,12 +373,7 @@ export class UsagerProfilComponent implements OnInit {
         const flat: Record<string, any> = raw.baseData
           ? { ...raw.baseData, ...(raw.specificData ?? {}) }
           : { ...raw };
-        this.expandedData = this.FIELD_ORDER
-          .filter(k => this.FIELD_LABELS[k] && flat[k] !== null && flat[k] !== undefined && flat[k] !== '' && flat[k] !== false)
-          .map(k => ({
-            label: this.FIELD_LABELS[k],
-            value: typeof flat[k] === 'boolean' ? 'Oui' : String(flat[k]),
-          }));
+        this.expandedData = this.construireLignesDetail(flat);
         this.loadingDetails = false;
       },
       error: () => { this.loadingDetails = false; }
@@ -366,13 +402,7 @@ export class UsagerProfilComponent implements OnInit {
         const flat: Record<string, any> = raw.baseData
           ? { ...raw.baseData, ...(raw.specificData ?? {}) }
           : { ...raw };
-        const data = this.FIELD_ORDER
-          .filter(k => this.FIELD_LABELS[k] && flat[k] !== null && flat[k] !== undefined && flat[k] !== '' && flat[k] !== false)
-          .map(k => ({
-            label: this.FIELD_LABELS[k],
-            value: typeof flat[k] === 'boolean' ? 'Oui' : String(flat[k]),
-          }));
-        this.ecrireImpression(fenetre, d, data);
+        this.ecrireImpression(fenetre, d, this.construireLignesDetail(flat));
       },
       error: () => this.ecrireImpression(fenetre, d, [])
     });
@@ -459,6 +489,17 @@ export class UsagerProfilComponent implements OnInit {
         : this.DATE_FIELDS.has(k) ? this.formatDateExport(String(val))
         : String(val);
     });
+
+    // Fonds partagés (≥ 2 lignes) : la colonne "Fonds budgétaire" ne porterait sinon que
+    // le 1er fonds (valeur stockée telle quelle dans flat.fonds_budgetaire) — concaténée
+    // ici de façon ergonomique dans cette même colonne, comme dans le rapport détaillé
+    // (voir models/rapports.js, même format "FONDS (XX,XX %)").
+    const repartition = Array.isArray(flat?.fonds_repartition) ? flat.fonds_repartition : [];
+    if (repartition.length > 1 && this.FIELD_LABELS['fonds_budgetaire']) {
+      row[this.FIELD_LABELS['fonds_budgetaire']] = repartition
+        .map((l: any) => `${l.fonds_budgetaire} (${String(l.pourcentage).replace('.', ',')} %)`)
+        .join(' + ');
+    }
     return row;
   }
 

@@ -315,69 +315,7 @@
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
-            <select formControlName="devise_originale" class="form-select"
-                    [class.is-invalid]="isInvalid('devise_originale')">
-              <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
-              <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
-            </select>
-            <div *ngIf="isInvalid('devise_originale')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-required' | translate }}
-            </div>
-          </div>
-
-          <div class="col-md-4" *ngIf="form.get('devise_originale')?.value === 'Autre'">
-            <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
-            <input type="text" formControlName="devise_autre_precision" class="form-control"
-                   [class.is-invalid]="isInvalid('devise_autre_precision')"
-                   [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
-            <div *ngIf="isInvalid('devise_autre_precision')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.devise-autre-required' | translate }}
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" min="0.01" step="0.01"
-                     formControlName="prix_devise_originale" class="form-control"
-                     [class.is-invalid]="isInvalid('prix_devise_originale')"
-                     placeholder="0,00">
-            </div>
-            <div *ngIf="isInvalid('prix_devise_originale')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.prix-requis-positif' | translate }}
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
-                     [class.is-invalid]="isInvalid('prix_cad')"
-                     [readonly]="deviseConvertible"
-                     [placeholder]="deviseConvertible ? ('forms-usager.converti-auto' | translate) : '0,00'">
-            </div>
-            <div *ngIf="isInvalid('prix_cad')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.entrez-devise-prix' | translate }}
-            </div>
-            <small class="form-text" *ngIf="form.get('devise_originale')?.value">
-              {{ deviseConvertible ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
-            </small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
-            <input type="text" formControlName="fonds_budgetaire" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
-            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
-          </div>
+          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted"></app-fonds-repartition>
 
           <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>

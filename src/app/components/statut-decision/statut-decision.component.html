@@ -438,13 +438,22 @@
               <tr *ngIf="item.isbn_issn"><th>{{ 'acq-decision.col-isbn-issn' | translate }}</th><td>{{ item.isbn_issn }}</td></tr>
               <tr *ngIf="item.date_publication"><th>{{ 'acq-decision.col-date-publication' | translate }}</th><td>{{ item.date_publication | date:'yyyy-MM-dd' }}</td></tr>
 
-              <tr *ngIf="item.fonds_budgetaire"><th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
+              <tr *ngIf="item.fonds_budgetaire && !estFondsPartage"><th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
               <tr *ngIf="item.fonds_sn_projet"><th>{{ 'acq-decision.col-fonds-sn' | translate }}</th><td>{{ item.fonds_sn_projet }}</td></tr>
               <tr *ngIf="item.periode_couverte"><th>{{ 'acq-decision.col-periode-couverte' | translate }}</th><td>{{ item.periode_couverte }}</td></tr>
               <tr *ngIf="item.source_information"><th>{{ 'acq-decision.col-source-info' | translate }}</th><td>{{ item.source_information }}</td></tr>
-              <tr *ngIf="item.prix_cad"><th>{{ 'acq-decision.col-prix-cad' | translate }}</th><td class="fw-semibold text-success">{{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}</td></tr>
-              <tr *ngIf="item.devise_originale"><th>{{ 'acq-decision.col-devise' | translate }}</th><td>{{ item.devise_originale }}</td></tr>
-              <tr *ngIf="item.prix_devise_originale"><th>{{ 'acq-decision.col-prix-devise' | translate }}</th><td>{{ item.prix_devise_originale }}</td></tr>
+              <tr *ngIf="item.prix_cad && !estFondsPartage"><th>{{ 'acq-decision.col-prix-cad' | translate }}</th><td class="fw-semibold text-success">{{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}</td></tr>
+              <tr *ngIf="item.devise_originale && !estFondsPartage"><th>{{ 'acq-decision.col-devise' | translate }}</th><td>{{ item.devise_originale }}</td></tr>
+              <tr *ngIf="item.prix_devise_originale && !estFondsPartage"><th>{{ 'acq-decision.col-prix-devise' | translate }}</th><td>{{ item.prix_devise_originale }}</td></tr>
+              <tr *ngIf="estFondsPartage">
+                <th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th>
+                <td>
+                  <div *ngFor="let ligne of repartitionAffichage"><code>{{ ligne }}</code></div>
+                  <div class="fw-semibold text-success mt-1">
+                    {{ 'acq-decision.col-prix-cad' | translate }} : {{ item.prix_cad | currency:'CAD':'symbol':'1.2-2':'fr' }}
+                  </div>
+                </td>
+              </tr>
 
               <tr *ngIf="item.localisation_emplacement"><th>{{ 'acq-decision.col-localisation' | translate }}</th><td>{{ item.localisation_emplacement }}</td></tr>
               <tr *ngIf="item.nombre_titres_inclus"><th>{{ 'acq-decision.col-nb-titres' | translate }}</th><td>{{ item.nombre_titres_inclus }}</td></tr>

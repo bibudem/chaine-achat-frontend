@@ -104,6 +104,23 @@ case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
               this.item?.nombre_titres_inclus || this.item?.periode_couverte);
   }
 
+  /** Vrai si l'item est réparti entre plusieurs fonds budgétaires (fonds partagés,
+   *  ≥ 2 lignes dans tbl_items_fonds) — sinon fonds_budgetaire/devise_originale/
+   *  prix_devise_originale/prix_cad (tbl_items) restent la seule source à afficher. */
+  get estFondsPartage(): boolean {
+    return (this.item?.fonds_repartition?.length ?? 0) > 1;
+  }
+
+  /** Une ligne formatée par fonds — utilisée à la place des champs plats quand
+   *  estFondsPartage est vrai (voir usager-profil.component.ts, même logique). */
+  get repartitionAffichage(): string[] {
+    return (this.item?.fonds_repartition ?? []).map((l, i) => {
+      const prix = l.prix_devise_originale != null ? Number(l.prix_devise_originale).toFixed(2) : '—';
+      const cad  = l.prix_cad != null ? Number(l.prix_cad).toFixed(2) : '—';
+      return `${l.fonds_budgetaire} — ${l.pourcentage} % — ${prix} ${l.devise_originale} → ${cad} $ CAD`;
+    });
+  }
+
   /** Vrai si le formulaire_type a des champs spécifiques à afficher */
   hasSpecificData(): boolean {
     const types = [

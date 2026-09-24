@@ -108,10 +108,17 @@
           <div class="itd-sidebar__value">{{ item.localisation_emplacement }}</div>
         </div>
 
-        <div class="itd-sidebar__block" *ngIf="item.fonds_budgetaire">
+        <div class="itd-sidebar__block" *ngIf="item.fonds_budgetaire && !estFondsPartage">
           <div class="itd-sidebar__label">{{ 'item-detail.fonds-budgetaire' | translate }}</div>
           <div class="itd-sidebar__value itd-sidebar__value--accent">
             <i class="bi bi-wallet2 me-1"></i>{{ item.fonds_budgetaire }}
+          </div>
+        </div>
+
+        <div class="itd-sidebar__block" *ngIf="estFondsPartage">
+          <div class="itd-sidebar__label">{{ 'item-detail.fonds-budgetaire' | translate }}</div>
+          <div class="itd-sidebar__value itd-sidebar__value--accent" *ngFor="let ligne of repartitionAffichage">
+            <i class="bi bi-wallet2 me-1"></i>{{ ligne }}
           </div>
         </div>
 
@@ -238,11 +245,19 @@
           <div class="itd-card__body">
             <div class="row g-3">
 
-              <div class="col-md-4">
+              <div class="col-md-4" *ngIf="!estFondsPartage">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.fonds-budgetaire' | translate }}</span>
                   <span class="itd-field__value itd-field__value--accent fw-semibold">
                     {{ val(item.fonds_budgetaire) }}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-8" *ngIf="estFondsPartage">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.fonds-budgetaire' | translate }}</span>
+                  <span class="itd-field__value itd-field__value--accent fw-semibold d-block" *ngFor="let ligne of repartitionAffichage">
+                    {{ ligne }}
                   </span>
                 </div>
               </div>
@@ -277,7 +292,7 @@
                 <div class="col-12">
                   <div class="itd-infoband itd-infoband--blue">
                     <div class="row g-3">
-                      <div class="col-md-3">
+                      <div class="col-md-3" *ngIf="!estFondsPartage">
                         <div class="itd-field">
                           <span class="itd-field__label">{{ 'item-detail.prix-cad' | translate }}</span>
                           <span class="itd-field__value fw-semibold" style="color:var(--primary-green)">
@@ -285,16 +300,25 @@
                           </span>
                         </div>
                       </div>
-                      <div class="col-md-2">
+                      <div class="col-md-2" *ngIf="!estFondsPartage">
                         <div class="itd-field">
                           <span class="itd-field__label">{{ 'item-detail.devise' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.devise_originale) }}</span>
                         </div>
                       </div>
-                      <div class="col-md-2">
+                      <div class="col-md-2" *ngIf="!estFondsPartage">
                         <div class="itd-field">
                           <span class="itd-field__label">{{ 'item-detail.prix-devise' | translate }}</span>
                           <span class="itd-field__value">{{ val(item.prix_devise_originale) }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-3" *ngIf="estFondsPartage">
+                        <div class="itd-field">
+                          <span class="itd-field__label">{{ 'item-detail.prix-cad' | translate }}</span>
+                          <span class="itd-field__value fw-semibold" style="color:var(--primary-green)">
+                            {{ item.prix_cad ? '$' + (item.prix_cad | number:'1.2-2') : '—' }}
+                          </span>
+                          <small class="text-muted d-block">{{ 'item-detail.total-fonds-partages' | translate }}</small>
                         </div>
                       </div>
                       <div class="col-md-2">

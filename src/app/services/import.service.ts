@@ -46,6 +46,22 @@ export interface FormTypeInfo {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FONDS PARTAGÉS
+   Réservé à Nouvel achat unique / Nouvel abonnement / Modification et CCOL — voir
+   controllers/import.js (buildFondsRepartition) et sql/items_fonds.sql. Pas de colonnes
+   numérotées par fonds : fonds_budgetaire / prix_cad / devise_originale /
+   prix_devise_originale (déjà des colonnes communes) acceptent plusieurs valeurs séparées
+   par ";" dans la MÊME cellule, dans le même ordre pour chaque colonne (ex.
+   fonds_budgetaire = "PE-034;PE-028", prix_cad = "20;15"). "pourcentage" est la seule
+   colonne réellement nouvelle, et reste informatif (non bloquant, comme dans les
+   formulaires web) — un fonds sans pourcentage renseigné se voit attribuer une
+   répartition égale par défaut.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const FONDS_PARTAGES_COLUMNS: ColumnInfo[] = [
+  { name: 'pourcentage', required: false, example: '60;40' },
+];
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    MÉTADONNÉES UI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export const FORM_TYPES: FormTypeInfo[] = [
@@ -63,10 +79,11 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'editeur',                   required: true,  example: 'Gallimard' },
       { name: 'categorie_document',        required: true,  example: 'Monographie' },
       { name: 'format_support',            required: true,  example: 'Imprimé/support physique' },
-      { name: 'fonds_budgetaire',          required: true,  example: 'SC-24' },
-      { name: 'prix_cad',                  required: true,  example: '49.95' },
       { name: 'devise_originale',          required: true,  example: 'CAD' },
       { name: 'prix_devise_originale',     required: true,  example: '49.95' },
+      { name: 'prix_cad',                  required: true,  example: '49.95' },
+      { name: 'fonds_budgetaire',          required: true,  example: 'SC-24' },
+      ...FONDS_PARTAGES_COLUMNS,
       { name: 'source_information',        required: true,  example: 'https://www.example.com/livre' },
       { name: 'quantite',                  required: true,  example: '1' },
       { name: 'priorite_demande',          required: false, example: 'Régulier' },
@@ -101,10 +118,11 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'editeur',                   required: true,  example: 'Springer Nature' },
       { name: 'categorie_document',        required: true,  example: 'Périodique' },
       { name: 'format_support',            required: true,  example: 'Électronique' },
-      { name: 'fonds_budgetaire',          required: true,  example: 'PE-001' },
-      { name: 'prix_cad',                  required: true,  example: '1200.00' },
       { name: 'devise_originale',          required: true,  example: 'USD' },
       { name: 'prix_devise_originale',     required: true,  example: '900.00' },
+      { name: 'prix_cad',                  required: true,  example: '1200.00' },
+      { name: 'fonds_budgetaire',          required: true,  example: 'PE-001' },
+      ...FONDS_PARTAGES_COLUMNS,
       { name: 'source_information',        required: true,  example: 'https://www.example.com' },
       { name: 'date_debut_abonnement',     required: true,  example: '2025-01-01' },
       { name: 'sous_titre',                required: false, example: 'International Journal of Science' },
@@ -136,10 +154,11 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'precision_demande',         required: true,  example: 'Correction champ 245' },
       { name: 'categorie_document',        required: true,  example: 'Périodique' },
       { name: 'format_support',            required: true,  example: 'Électronique' },
-      { name: 'fonds_budgetaire',          required: true,  example: 'PE-001' },
-      { name: 'prix_cad',                  required: true,  example: '49.95' },
       { name: 'devise_originale',          required: true,  example: 'CAD' },
       { name: 'prix_devise_originale',     required: true,  example: '49.95' },
+      { name: 'prix_cad',                  required: true,  example: '49.95' },
+      { name: 'fonds_budgetaire',          required: true,  example: 'PE-001' },
+      ...FONDS_PARTAGES_COLUMNS,
       { name: 'source_information',        required: true,  example: 'https://www.example.com' },
       { name: 'sous_titre',                required: false, example: 'Tome 2' },
       { name: 'date_publication',          required: false, example: '2024' },
@@ -169,10 +188,10 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'editeur',                     required: true,  example: 'Springer' },
       { name: 'categorie_document',          required: true,  example: 'Monographie' },
       { name: 'format_support',              required: true,  example: 'Électronique' },
-      { name: 'fonds_budgetaire',            required: true,  example: 'PE-001' },
-      { name: 'prix_cad',                    required: true,  example: '49.95' },
       { name: 'devise_originale',            required: true,  example: 'CAD' },
       { name: 'prix_devise_originale',       required: true,  example: '49.95' },
+      { name: 'prix_cad',                    required: true,  example: '49.95' },
+      { name: 'fonds_budgetaire',            required: true,  example: 'PE-001' },
       { name: 'source_information',          required: true,  example: 'https://www.example.com' },
       { name: 'gobi_vu_format_numerique',    required: true,  example: 'Oui' },
       { name: 'priorite_demande',            required: false, example: 'Régulier' },
@@ -203,10 +222,10 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'editeur',                      required: true,  example: 'PUF' },
       { name: 'categorie_document',           required: true,  example: 'Monographie' },
       { name: 'format_support',               required: true,  example: 'Imprimé/support physique' },
-      { name: 'fonds_budgetaire',             required: true,  example: 'SA-001' },
-      { name: 'prix_cad',                     required: true,  example: '49.95' },
       { name: 'devise_originale',             required: true,  example: 'CAD' },
       { name: 'prix_devise_originale',        required: true,  example: '49.95' },
+      { name: 'prix_cad',                     required: true,  example: '49.95' },
+      { name: 'fonds_budgetaire',             required: true,  example: 'SA-001' },
       { name: 'source_information',           required: true,  example: 'https://...' },
       { name: 'sous_titre',                   required: false, example: 'Vol. 2' },
       { name: 'date_publication',             required: false, example: '2023' },
@@ -247,10 +266,10 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'editeur',                      required: true,  example: 'O\'Reilly' },
       { name: 'categorie_document',           required: true,  example: 'Monographie' },
       { name: 'format_support',               required: true,  example: 'Imprimé/support physique' },
-      { name: 'fonds_budgetaire',             required: true,  example: 'SC-001' },
-      { name: 'prix_cad',                     required: true,  example: '79.95' },
       { name: 'devise_originale',             required: true,  example: 'CAD' },
       { name: 'prix_devise_originale',        required: true,  example: '79.95' },
+      { name: 'prix_cad',                     required: true,  example: '79.95' },
+      { name: 'fonds_budgetaire',             required: true,  example: 'SC-001' },
       { name: 'source_information',           required: true,  example: 'https://...' },
       { name: 'sous_titre',                   required: false, example: 'Une approche pratique' },
       { name: 'date_publication',             required: false, example: '2024' },

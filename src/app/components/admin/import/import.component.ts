@@ -14,12 +14,16 @@ import { ReponsesService } from '../../../services/reponses.service';
 
 type Step = 'select' | 'notice' | 'upload' | 'preview' | 'result';
 
-// Champs présents dans tbl_items (buildBaseData) — communs à tous les types
+// Champs présents dans tbl_items (buildBaseData) — communs à tous les types. "pourcentage"
+// n'existe en réalité que pour 3 types (fonds partagés, voir FONDS_PARTAGES_COLUMNS dans
+// import.service.ts) mais est inclus ici pour s'afficher juste après fonds_budgetaire,
+// dans la même liste — de toute façon absent de selectedType.columns pour les 3 autres
+// types, donc jamais affiché à tort.
 const CHAMPS_COMMUNS_IMPORT = new Set<string>([
   'titre_document', 'sous_titre', 'isbn_issn', 'editeur', 'date_publication',
   'categorie_document', 'format_support', 'bibliotheque', 'localisation_emplacement',
   'demandeur', 'priorite_demande',
-  'fonds_budgetaire', 'fonds_sn_projet', 'source_information',
+  'fonds_budgetaire', 'pourcentage', 'fonds_sn_projet', 'source_information',
   'prix_cad', 'devise_originale', 'prix_devise_originale',
   'nombre_utilisateurs', 'lien_plateforme', 'nombre_titres_inclus', 'periode_couverte',
   'note_commentaire', 'creation_notice_dtdm', 'note_dtdm',
@@ -331,6 +335,13 @@ export class ImportComponent implements OnDestroy {
 
   get communColumns(): ColumnInfo[] {
     return this.selectedType?.columns.filter(c => CHAMPS_COMMUNS_IMPORT.has(c.name)) ?? [];
+  }
+
+  /** Fonds partagés (voir controllers/import.js, buildFondsRepartition) — uniquement pour
+   *  ces 3 formulaires, comme dans les formulaires web. */
+  get supporteFondsPartages(): boolean {
+    const type = this.selectedType?.type ?? '';
+    return type === 'Nouvel achat unique' || type === 'Nouvel abonnement' || type === 'Modification et CCOL';
   }
 
   get specificColumns(): ColumnInfo[] {
