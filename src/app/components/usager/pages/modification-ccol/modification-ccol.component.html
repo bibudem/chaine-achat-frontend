@@ -315,7 +315,7 @@
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
@@ -327,7 +327,7 @@
             </div>
           </div>
 
-          <div class="col-md-3" *ngIf="form.get('devise_originale')?.value === 'Autre'">
+          <div class="col-md-4" *ngIf="form.get('devise_originale')?.value === 'Autre'">
             <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
             <input type="text" formControlName="devise_autre_precision" class="form-control"
                    [class.is-invalid]="isInvalid('devise_autre_precision')"
@@ -337,7 +337,7 @@
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
@@ -351,7 +351,7 @@
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
