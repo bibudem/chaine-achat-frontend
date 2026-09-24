@@ -474,8 +474,8 @@ export class UsagerProfilComponent implements OnInit {
       const label = this.FIELD_LABELS[k];
       if (label && !(label in row)) row[label] = '';
     });
-    row['Suivi ACQ']          = d.suivi_acq || '';
     row['Statut ACQ']         = d.statut_acq || '';
+    row['Suivi ACQ']          = d.suivi_acq || '';
     // Cellule vide (plutôt que le "—" affiché à l'écran) tant qu'aucune décision ACQ n'a
     // été prise pour cette demande — un tiret dans un fichier Excel ressemble à une donnée.
     row['Date de traitement'] = this.formatDateExport(d.date_traitement);
@@ -522,8 +522,8 @@ export class UsagerProfilComponent implements OnInit {
   private ecrireImpression(fenetre: Window, d: DemandeUsager, data: RangeeImpression[]): void {
     const rangees: RangeeImpression[] = [
       { label: 'Statut de la demande', value: d.statut_bibliotheque || "En cours d'évaluation" },
-      ...(d.suivi_acq  ? [{ label: 'ACQ — Suivi de la demande',  value: d.suivi_acq  }] : []),
       ...(d.statut_acq ? [{ label: 'ACQ — Statut de la demande', value: d.statut_acq }] : []),
+      ...(d.suivi_acq  ? [{ label: 'ACQ — Suivi de la demande',  value: d.suivi_acq  }] : []),
       ...data,
     ];
 

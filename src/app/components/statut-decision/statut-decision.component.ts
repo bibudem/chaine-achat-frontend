@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 /** Champs ACQ affichés en lecture seule pour le profil TDM — seuls catalogue/note_dtdm
  *  (le catalogage, sous sa responsabilité) restent modifiables. */
 const CHAMPS_ACQ_LECTURE_SEULE_TDM = [
-  'suivi_acq', 'statut_acq', 'note_acq', 'creation_notice_dtdm',
+  'statut_acq', 'suivi_acq', 'note_acq', 'creation_notice_dtdm',
   'bordereau_imprime', 'categorie_document', 'format_support',
 ];
 
@@ -67,8 +67,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {
     this.form = this.fb.group({
-      suivi_acq:            ['', Validators.required],
       statut_acq:           [''],
+      suivi_acq:            ['', Validators.required],
       note_acq:             [''],
       creation_notice_dtdm: [null],
       // Nouvel achat unique et Suggestion d'achat uniquement.
@@ -108,7 +108,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.successMessage      = null;
       this.itemExisteDansItems = false;
       this.form.reset({
-        suivi_acq: '', statut_acq: '', note_acq: '', creation_notice_dtdm: null,
+        statut_acq: '', suivi_acq: '', note_acq: '', creation_notice_dtdm: null,
         categorie_document: '', format_support: '', note_dtdm: '', catalogue: '',
         bordereau_imprime: 'Non',
       });
@@ -203,8 +203,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       data.creation_notice_dtdm, data.format_support
     );
     this.form.patchValue({
-      suivi_acq:            acq.suivi_acq,
       statut_acq:           acq.statut_acq,
+      suivi_acq:            acq.suivi_acq,
       note_acq:             data.note_acq || '',
       creation_notice_dtdm: acq.creation_notice_dtdm,
       categorie_document:   data.categorie_document || '',
@@ -229,11 +229,11 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     statutActuel: string | undefined,
     creationNoticeActuelle: boolean | null | undefined,
     formatSupport: string | undefined
-  ): { suivi_acq: string; statut_acq: string; creation_notice_dtdm: boolean | null } {
+  ): { statut_acq: string; suivi_acq: string; creation_notice_dtdm: boolean | null } {
     const soumiseAuxAcq = statutBibliotheque === 'Soumettre aux ACQ';
     return {
-      suivi_acq:  suiviActuel  || (soumiseAuxAcq ? 'En attente de traitement' : ''), // dircolAcqSuiviOptions
       statut_acq: statutActuel || (soumiseAuxAcq ? 'En attente'                : ''), // dircolAcqStatutOptions
+      suivi_acq:  suiviActuel  || (soumiseAuxAcq ? 'En attente de traitement' : ''), // dircolAcqSuiviOptions
       // formatSupport peut être encore vide pour une Suggestion d'achat (champ désormais
       // saisi par les ACQ, pas par l'usager) — dans ce cas on ne présume pas "Oui".
       creation_notice_dtdm: creationNoticeActuelle != null
@@ -324,8 +324,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.item.creation_notice_dtdm, this.item.format_support
     );
     this.form.patchValue({
-      suivi_acq:            acq.suivi_acq,
       statut_acq:           acq.statut_acq,
+      suivi_acq:            acq.suivi_acq,
       creation_notice_dtdm: acq.creation_notice_dtdm,
       categorie_document:   this.item.categorie_document || '',
       format_support:       this.item.format_support || '',
@@ -458,8 +458,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.successMessage = null;
 
-    const suivi_acq  = this.form.get('suivi_acq')?.value;
     const statut_acq = this.form.get('statut_acq')?.value || null;
+    const suivi_acq  = this.form.get('suivi_acq')?.value;
     const note_acq   = this.form.get('note_acq')?.value   || null;
     const creation_notice_dtdm = this.form.get('creation_notice_dtdm')?.value ?? null;
     const categorie_document = this.form.get('categorie_document')?.value || null;
@@ -482,7 +482,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       ? this.http.put<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
           {
-            item_id: this.itemId, suivi_acq, statut_acq, note_acq, creation_notice_dtdm,
+            item_id: this.itemId, statut_acq, suivi_acq, note_acq, creation_notice_dtdm,
             categorie_document, format_support, note_dtdm, catalogue,
             // Requis par le backend pour router specificData (ex. bordereau_imprime) vers
             // la bonne table spécifique (tbl_nouvel_achat_unique / tbl_suggestion_achat, etc.).
@@ -508,7 +508,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
           }
           // Synchroniser tbl_reponses pour que les notifications header disparaissent
           if (this.reponseId) {
-            this.reponsesService.updateReponseStatut(this.reponseId, { suivi_acq, statut_acq })
+            this.reponsesService.updateReponseStatut(this.reponseId, { statut_acq, suivi_acq })
               .subscribe({ error: err => console.warn('[statut-decision] sync reponse statut:', err) });
           }
           this.reponsesService.triggerPendingRefresh();
@@ -607,8 +607,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const suiviForm          = this.form.get('suivi_acq')?.value;
     const statutForm         = this.form.get('statut_acq')?.value;
+    const suiviForm          = this.form.get('suivi_acq')?.value;
     const noteAcqForm        = this.form.get('note_acq')?.value;
     const creationNoticeForm = this.form.get('creation_notice_dtdm')?.value;
     const bordereauForm      = (this.isNouvelAchat || this.isSuggestion)
@@ -618,8 +618,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const noteDtdmForm       = this.form.get('note_dtdm')?.value;
 
     const rangeesSupplementaires = [
-      ...(suiviForm  ? [{ label: 'ACQ — Suivi de la demande',  value: suiviForm  }] : []),
       ...(statutForm ? [{ label: 'ACQ — Statut de la demande', value: statutForm }] : []),
+      ...(suiviForm  ? [{ label: 'ACQ — Suivi de la demande',  value: suiviForm  }] : []),
       ...(noteAcqForm ? [{ label: 'ACQ — Note / Commentaire', value: noteAcqForm }] : []),
       ...(creationNoticeForm != null
         ? [{ label: 'ACQ — Création de notice TDM', value: creationNoticeForm ? 'Oui' : 'Non' }]

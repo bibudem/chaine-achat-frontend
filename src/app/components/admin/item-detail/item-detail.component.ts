@@ -149,8 +149,8 @@ case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
       || (i.formulaire_type ?? '').includes('Suggestion');
 
     const rangeesSupplementaires: RangeeImpression[] = [
-      ...(i.suivi_acq ? [{ label: 'ACQ — Suivi de la demande',  value: i.suivi_acq }] : []),
       ...(i.statut_acq ? [{ label: 'ACQ — Statut de la demande', value: i.statut_acq }] : []),
+      ...(i.suivi_acq ? [{ label: 'ACQ — Suivi de la demande',  value: i.suivi_acq }] : []),
       ...(i.note_acq ? [{ label: 'ACQ — Note / Commentaire', value: i.note_acq }] : []),
       ...(i.creation_notice_dtdm != null
         ? [{ label: 'ACQ — Création de notice TDM', value: i.creation_notice_dtdm ? 'Oui' : 'Non' }]

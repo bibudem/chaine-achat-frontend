@@ -107,6 +107,16 @@
             <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique, Suggestion) + Bordereau imprimé (Nouvel achat unique, Suggestion) -->
             <div class="row g-3 mb-4">
               <div class="col-md">
+                <label for="statut_acq" class="form-label fw-semibold">
+                  {{ 'item-formulaire.statut-acq' | translate }}
+                </label>
+                <select id="statut_acq" formControlName="statut_acq"
+                        class="form-select form-select-lg">
+                  <option value="">{{ 'acq-decision.selectionner-suivi' | translate }}</option>
+                  <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
+                </select>
+              </div>
+              <div class="col-md">
                 <label for="suivi_acq" class="form-label fw-semibold">
                   {{ 'item-formulaire.suivi-acq' | translate }}
                   <span class="text-danger ms-1">*</span>
@@ -120,16 +130,6 @@
                   *ngIf="form.get('suivi_acq')?.invalid && form.get('suivi_acq')?.touched">
                   {{ 'acq-decision.champ-required' | translate }}
                 </small>
-              </div>
-              <div class="col-md">
-                <label for="statut_acq" class="form-label fw-semibold">
-                  {{ 'item-formulaire.statut-acq' | translate }}
-                </label>
-                <select id="statut_acq" formControlName="statut_acq"
-                        class="form-select form-select-lg">
-                  <option value="">{{ 'acq-decision.selectionner-suivi' | translate }}</option>
-                  <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
-                </select>
               </div>
               <div class="col-md"
                    *ngIf="isNouvelAchat || isNouvelAbonnement || isModificationCcol || isPebTipasa || isSuggestion">

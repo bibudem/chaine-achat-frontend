@@ -10,8 +10,8 @@ export type DemandeBadgeStatut = 'traitee' | 'soumise' | 'attente';
  *  DemandePublique (reponses.service.ts) satisfont tous deux cette forme. */
 export interface DemandeStatutSource {
   statut_bibliotheque: string | null;
-  suivi_acq: string | null;
   statut_acq?: string | null;
+  suivi_acq: string | null;
 }
 
 /**
@@ -37,6 +37,6 @@ export const ACQ_STATUT_DEFAUT = 'En attente';
  *  valeurs par défaut du formulaire de décision — l'ACQ n'a pas réellement statué dessus. */
 export function estAcqEnAttenteDefaut(d: DemandeStatutSource): boolean {
   return d.statut_bibliotheque === 'Soumettre aux ACQ'
-      && d.suivi_acq === ACQ_SUIVI_DEFAUT
-      && (d.statut_acq ?? '') === ACQ_STATUT_DEFAUT;
+      && (d.statut_acq ?? '') === ACQ_STATUT_DEFAUT
+      && d.suivi_acq === ACQ_SUIVI_DEFAUT;
 }

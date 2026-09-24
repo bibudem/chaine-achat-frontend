@@ -205,13 +205,13 @@
                 <!-- Bloc ACQ -->
                 <div *ngIf="d.suivi_acq || d.statut_acq" class="up-acq-block">
                   <span class="up-acq-block__label">ACQ</span>
-                  <div *ngIf="d.suivi_acq" class="up-acq-item">
-                    <span class="up-acq-item__key">Suivi de la demande</span>
-                    <span class="up-acq-item__val">{{ d.suivi_acq }}</span>
-                  </div>
                   <div *ngIf="d.statut_acq" class="up-acq-item">
                     <span class="up-acq-item__key">Statut de la demande</span>
                     <span class="up-acq-item__val">{{ d.statut_acq }}</span>
+                  </div>
+                  <div *ngIf="d.suivi_acq" class="up-acq-item">
+                    <span class="up-acq-item__key">Suivi de la demande</span>
+                    <span class="up-acq-item__val">{{ d.suivi_acq }}</span>
                   </div>
                 </div>
 

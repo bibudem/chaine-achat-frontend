@@ -124,9 +124,14 @@
 
         <hr class="itd-sidebar__divider">
 
-        <!-- Suivi ACQ + Statut ACQ -->
+        <!-- Statut ACQ + Suivi ACQ -->
         <div class="itd-sidebar__block itd-sidebar__block--acq">
-          <div class="itd-sidebar__label itd-sidebar__label--acq">
+          <div class="itd-sidebar__label itd-sidebar__label--acq" *ngIf="item.statut_acq">
+            {{ 'item-detail.statut-acq' | translate }}
+          </div>
+          <span class="badge bg-secondary mt-1" *ngIf="item.statut_acq">{{ item.statut_acq }}</span>
+
+          <div class="itd-sidebar__label itd-sidebar__label--acq mt-2">
             <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.suivi-acq' | translate }}
           </div>
           <span *ngIf="item.suivi_acq; else suiviEnAttente" class="badge itd-badge-suivi mt-1">
@@ -137,11 +142,6 @@
               <i class="bi bi-hourglass-split me-1"></i>{{ 'item-detail.en-attente' | translate }}
             </span>
           </ng-template>
-
-          <div class="itd-sidebar__label itd-sidebar__label--acq mt-2" *ngIf="item.statut_acq">
-            {{ 'item-detail.statut-acq' | translate }}
-          </div>
-          <span class="badge bg-secondary mt-1" *ngIf="item.statut_acq">{{ item.statut_acq }}</span>
 
           <div class="itd-sidebar__value itd-note--sm mt-2" *ngIf="item.note_commentaire">
             {{ item.note_commentaire }}

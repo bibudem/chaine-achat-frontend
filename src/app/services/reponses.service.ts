@@ -33,8 +33,8 @@ export interface Reponse {
   dateA: string;
   item_id_cree?: number | null;
   statut_approbation?: string | null;
-  suivi_acq?: string | null;
   statut_acq?: string | null;
+  suivi_acq?: string | null;
   statut_bibliotheque?: string | null;
   /** Existence réelle de l'item lié (item_id_cree) dans tbl_items — peut être false si
    *  l'item a été supprimé alors que la réponse existe toujours. Voir
@@ -58,8 +58,8 @@ export interface DemandeUsager {
   prix_cad: string | null;
   devise_originale: string | null;
   statut_bibliotheque: string | null;
-  suivi_acq: string | null;
   statut_acq: string | null;
+  suivi_acq: string | null;
   note_acq: string | null;
   note_commentaire: string | null;
 }
@@ -74,8 +74,8 @@ export interface DemandePublique {
   titre_document: string | null;
   bibliotheque: string | null;
   statut_bibliotheque: string | null;
-  suivi_acq: string | null;
   statut_acq: string | null;
+  suivi_acq: string | null;
 }
 
 export interface PaginatedResponse {
@@ -455,8 +455,8 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('updateReponse')));
   }
 
-  /** Synchronise suivi_acq / statut_acq sur tbl_reponses après une décision ACQ. */
-  updateReponseStatut(id: number, fields: { suivi_acq?: string | null; statut_acq?: string | null }): Observable<{ success: boolean }> {
+  /** Synchronise statut_acq / suivi_acq sur tbl_reponses après une décision ACQ. */
+  updateReponseStatut(id: number, fields: { statut_acq?: string | null; suivi_acq?: string | null }): Observable<{ success: boolean }> {
     return this.http
       .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, fields)
       .pipe(catchError(this.handleError('updateReponseStatut')));

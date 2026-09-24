@@ -571,7 +571,7 @@
     "type-formulaire": "Form type",
     "priorite": "Priority",
     "statut-bib": "Library status",
-    "statut-acq": "ACQ status",
+    "statut-acq": "ACQ: Request status",
     "demandeur": "Requester",
     "personne-aviser": "Person to notify upon activation",
     "bibliotheque": "Library",

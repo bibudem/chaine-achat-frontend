@@ -567,7 +567,7 @@
     "type-formulaire": "Type de formulaire",
     "priorite": "Priorité",
     "statut-bib": "Statut bibliothèque",
-    "statut-acq": "Statut ACQ",
+    "statut-acq": "ACQ : Statut de la demande",
     "demandeur": "Demandeur",
     "personne-aviser": "Personne à aviser lors de l'activation",
     "bibliotheque": "Bibliothèque",
