@@ -2483,6 +2483,20 @@ body.sidebar-open { overflow: hidden; }
   border: 1px solid #607386dc;
 }
 
+/* Onglet Recherche (items-list) : gris tant qu'une demande est encore en traitement en
+   bibliothèque (l'équipe ACQ ne devrait pas la modifier), vert une fois réellement soumise
+   aux ACQ — voir getStatutBiblioBadgeClass(), items-list.component.ts. */
+.badge-statut-bib--saisie {
+  background: #ffffff;
+  color: #607386;
+  border: 1px solid #607386dc;
+}
+.badge-statut-bib--soumis {
+  background: #e6f4ea;
+  color: #1e7e34;
+  border: 1px solid #1e7e34aa;
+}
+
 .badge-statut-acq {
   background: #ffffff;
   color: #0b113a;

@@ -69,7 +69,7 @@
         <div class="itd-sidebar__block">
           <div class="itd-sidebar__label">{{ 'item-detail.statut-bib' | translate }}</div>
           <span [class]="getStatutBadgeClass(item.statut_bibliotheque) + ' itd-badge-lg'">
-            {{ val(item.statut_bibliotheque) }}
+            {{ getStatutBiblioLabel(item.statut_bibliotheque) }}
           </span>
         </div>
 

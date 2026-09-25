@@ -194,19 +194,30 @@
 /* ── Tableau desktop ─────────────────────────────────────────────── */
 .items-table { table-layout: fixed; width: 100%; border-collapse: collapse; }
 
-/* 12 colonnes — total = 100% */
+/* 13 colonnes — total ≈ 100% */
 .col-id          { width: 4%;  }
-.col-titre       { width: 15%; }
-.col-type        { width: 8%;  }
-.col-priorite    { width: 7%;  }
-.col-isbn        { width: 8%;  }
-.col-demandeur   { width: 8%;  }
-.col-bib         { width: 8%;  }
-.col-fonds       { width: 5%;  }
-.col-statut-acq  { width: 8%;  }
-.col-suivi       { width: 10%; }
-.col-date        { width: 7%;  }
+.col-titre       { width: 9%;  }
+.col-type        { width: 7%;  }
+.col-priorite    { width: 6%;  }
+.col-isbn        { width: 6%;  }
+.col-bib         { width: 7%;  }
+.col-fonds       { width: 4%;  }
+.col-demandeur   { width: 7%;  }
+.col-statut-bib  { width: 9%;  }
+.col-statut-acq  { width: 9%;  }
+.col-suivi       { width: 9%;  }
+.col-date        { width: 10%; }
 .col-actions     { width: 12%; }
+
+/* Statut Bibliothèque / Statut ACQ / Suivi ACQ : libellés trop longs pour tenir sur une
+   seule ligne dans leur colonne — au lieu de déborder sur la colonne voisine (nowrap
+   hérité de .items-table thead th), on les laisse s'enrouler sur 2 lignes. */
+.items-table th.col-statut-bib,
+.items-table th.col-statut-acq,
+.items-table th.col-suivi {
+  white-space: normal;
+  line-height: 1.2;
+}
 
 /* En-tête */
 .items-table thead th {
@@ -316,6 +327,7 @@
   .items-table    { table-layout: auto; }
   .col-isbn       { display: none; }
   .col-fonds      { display: none; }
+  .col-statut-bib { display: none; }
   .col-statut-acq { display: none; }
   .col-suivi      { display: none; }
   .col-titre      { width: auto;   }

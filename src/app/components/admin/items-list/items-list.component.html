@@ -183,14 +183,17 @@
                   <th class="col-isbn sortable-col" (click)="sortBy('isbn_issn')">
                     {{ 'items.col-isbn' | translate }} <i class="bi {{ getSortIcon('isbn_issn') }} ms-1"></i>
                   </th>
-                  <th class="col-demandeur sortable-col" (click)="sortBy('demandeur')">
-                    {{ 'items.col-demandeur' | translate }} <i class="bi {{ getSortIcon('demandeur') }} ms-1"></i>
-                  </th>
                   <th class="col-bib sortable-col" (click)="sortBy('bibliotheque')">
                     {{ 'items.col-bib' | translate }} <i class="bi {{ getSortIcon('bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-fonds sortable-col" (click)="sortBy('fonds_budgetaire')">
                     {{ 'items.col-fonds' | translate }} <i class="bi {{ getSortIcon('fonds_budgetaire') }} ms-1"></i>
+                  </th>
+                  <th class="col-demandeur sortable-col" (click)="sortBy('demandeur')">
+                    {{ 'items.col-demandeur' | translate }} <i class="bi {{ getSortIcon('demandeur') }} ms-1"></i>
+                  </th>
+                  <th class="col-statut-bib sortable-col" (click)="sortBy('statut_bibliotheque')">
+                    {{ 'items.col-statut-bib' | translate }} <i class="bi {{ getSortIcon('statut_bibliotheque') }} ms-1"></i>
                   </th>
                   <th class="col-statut-acq sortable-col" (click)="sortBy('statut_acq')">
                     {{ 'items.col-statut-acq' | translate }} <i class="bi {{ getSortIcon('statut_acq') }} ms-1"></i>
@@ -234,7 +237,6 @@
                     <div>{{ item.isbn_issn || '—' }}</div>
                     <div class="small text-muted" *ngIf="item.editeur">{{ item.editeur }}</div>
                   </td>
-                  <td class="col-demandeur">{{ item.demandeur || '—' }}</td>
                   <td class="col-bib">
                     <div>{{ item.bibliotheque || '—' }}</div>
                     <div class="small text-muted" *ngIf="item.localisation_emplacement">
@@ -243,6 +245,12 @@
                   </td>
                   <td class="col-fonds">
                     {{ item.fonds_budgetaire || '—' }}
+                  </td>
+                  <td class="col-demandeur">{{ item.demandeur || '—' }}</td>
+                  <td class="col-statut-bib">
+                    <span *ngIf="item.statut_bibliotheque" class="badge" [ngClass]="getStatutBiblioBadgeClass(item.statut_bibliotheque)">
+                      {{ getStatutBiblioLabel(item.statut_bibliotheque) }}
+                    </span>
                   </td>
                   <td class="col-statut-acq">
                     <span *ngIf="item.statut_acq" class="badge badge-statut-acq align-self-start">
@@ -256,9 +264,7 @@
                     <ng-template #noSuivi><span class="text-muted">—</span></ng-template>
                   </td>
                   <td class="col-date">
-                    <div>{{ formatDate(item.date_creation) }}</div>
-                    <div class="small text-muted" *ngIf="item.date_modification && item.date_modification !== item.date_creation">
-                    </div>
+                    <div>{{ formatDate(item.date_modification || item.date_creation) }}</div>
                   </td>
                   <td class="col-actions text-center">
                     <div class="item-actions">
@@ -315,10 +321,6 @@
               </div>
               <div class="item-card__title">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
               <div class="item-card__body">
-                <div class="item-card__row" *ngIf="item.demandeur">
-                  <span class="item-card__label">{{ 'items.col-demandeur' | translate }}</span>
-                  <span>{{ item.demandeur }}</span>
-                </div>
                 <div class="item-card__row" *ngIf="item.bibliotheque">
                   <span class="item-card__label">{{ 'items.col-bib' | translate }}</span>
                   <span>{{ item.bibliotheque }}</span>
@@ -326,6 +328,16 @@
                 <div class="item-card__row" *ngIf="item.fonds_budgetaire">
                   <span class="item-card__label">{{ 'items.col-fonds' | translate }}</span>
                   <span>{{ item.fonds_budgetaire }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.demandeur">
+                  <span class="item-card__label">{{ 'items.col-demandeur' | translate }}</span>
+                  <span>{{ item.demandeur }}</span>
+                </div>
+                <div class="item-card__row" *ngIf="item.statut_bibliotheque">
+                  <span class="item-card__label">{{ 'items.col-statut-bib' | translate }}</span>
+                  <span class="badge" [ngClass]="getStatutBiblioBadgeClass(item.statut_bibliotheque)">
+                    {{ getStatutBiblioLabel(item.statut_bibliotheque) }}
+                  </span>
                 </div>
                 <div class="item-card__row" *ngIf="item.statut_acq">
                   <span class="item-card__label">{{ 'items.col-statut-acq' | translate }}</span>
@@ -337,12 +349,7 @@
                 </div>
                 <div class="item-card__row">
                   <span class="item-card__label">{{ 'items.col-date' | translate }}</span>
-                  <span>
-                    {{ formatDate(item.date_creation) }}
-                    <span class="text-muted ms-1" *ngIf="item.date_modification && item.date_modification !== item.date_creation">
-                      (<i class="bi bi-pencil-fill me-1" style="font-size:0.65rem"></i>{{ formatDate(item.date_modification) }})
-                    </span>
-                  </span>
+                  <span>{{ formatDate(item.date_modification || item.date_creation) }}</span>
                 </div>
               </div>
             </div>

@@ -58,15 +58,16 @@ export class ItemDetailComponent implements OnInit {
 
   /* ── Helpers visuels ── */
 
+  /** Statut Bibliothèque : gris tant que la demande est encore en traitement en
+   *  bibliothèque (l'équipe ACQ ne devrait pas la modifier), vert une fois réellement
+   *  soumise aux ACQ — même règle que items-list.component.ts. */
   getStatutBadgeClass(statut: string | undefined): string {
-    if (!statut) return 'badge bg-light text-dark';
-    if (statut.toLowerCase().includes('soumis'))  return 'badge bg-success';
-    if (statut.toLowerCase().includes('cours'))   return 'badge bg-primary';
-    if (statut.toLowerCase().includes('complét')) return 'badge bg-success';
-    if (statut.toLowerCase().includes('annul'))   return 'badge bg-danger';
-    if (statut.toLowerCase().includes('attente')) return 'badge bg-info';
-    if (statut.toLowerCase().includes('budget'))  return 'badge bg-secondary';
-    return 'badge bg-light text-dark';
+    return statut === 'Soumettre aux ACQ' ? 'badge badge-statut-bib--soumis' : 'badge badge-statut-bib--saisie';
+  }
+
+  /** "Soumettre aux ACQ" (valeur stockée) s'affiche "Soumis aux ACQ". */
+  getStatutBiblioLabel(statut: string | undefined | null): string {
+    return statut === 'Soumettre aux ACQ' ? 'Soumis aux ACQ' : this.val(statut);
   }
 
   getTypeBadgeClass(type: string | undefined): string {

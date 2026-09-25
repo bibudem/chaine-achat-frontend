@@ -91,7 +91,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedAnnee          = s.selectedAnnee          ?? '';
       this.selectedPriorite       = s.selectedPriorite       ?? '';
       this.currentPage            = s.currentPage            ?? 1;
-      this.sortColumn             = s.sortColumn             ?? 'date_creation';
+      this.sortColumn             = s.sortColumn             ?? 'defaut';
       this.sortDirection          = s.sortDirection          ?? 'desc';
     } catch { /* état corrompu, on ignore */ }
   }
@@ -117,7 +117,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   itemsPerPage = 25;
   totalPages   = 0;
 
-  sortColumn: string = 'date_creation';
+  /** 'defaut' : tri multi-critères côté serveur (demandes soumises aux ACQ non traitées en
+   *  premier, par priorité puis date la plus récente — voir controllers/items.js,
+   *  isDefaultSort) — remplacé par un tri simple dès qu'on clique un en-tête (sortBy()). */
+  sortColumn: string = 'defaut';
   sortDirection: 'asc' | 'desc' = 'desc';
 
   decisionMessage: { type: 'success' | 'danger' | 'warning'; texte: string } | null = null;
@@ -295,7 +298,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
     this.selectedImportLogId    = '';
-    this.sortColumn             = 'date_creation';
+    this.sortColumn             = 'defaut';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
     sessionStorage.removeItem(this.FILTER_STATE_KEY);
@@ -414,8 +417,22 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   formatDate(dateString?: string): string {
     if (!dateString) return 'Non spécifié';
     try {
-      return new Date(dateString).toLocaleDateString('fr-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+      return new Date(dateString).toLocaleString('fr-CA', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
     } catch { return dateString; }
+  }
+
+  /** Statut Bibliothèque (onglet Recherche, code de couleur) : gris tant que la demande est
+   *  encore en traitement en bibliothèque (l'équipe ACQ ne devrait pas la modifier), vert
+   *  une fois réellement soumise aux ACQ. */
+  getStatutBiblioBadgeClass(statut?: string | null): string {
+    return statut === 'Soumettre aux ACQ' ? 'badge-statut-bib--soumis' : 'badge-statut-bib--saisie';
+  }
+
+  /** "Soumettre aux ACQ" (valeur stockée) s'affiche "Soumis aux ACQ" (onglet Recherche). */
+  getStatutBiblioLabel(statut?: string | null): string {
+    return statut === 'Soumettre aux ACQ' ? 'Soumis aux ACQ' : (statut || '—');
   }
 
   getStatusBadgeClass(status?: string): string {
