@@ -504,7 +504,8 @@
                 <tr *ngIf="item.besoin_specifique_format"><th>{{ 'acq-decision.col-besoin-format' | translate }}</th><td>{{ item.besoin_specifique_format }}</td></tr>
                 <tr *ngIf="item.permalien_sofia"><th>{{ 'acq-decision.col-permalien-sofia' | translate }}</th><td><a [href]="item.permalien_sofia" target="_blank" rel="noopener noreferrer">{{ item.permalien_sofia }}</a></td></tr>
                 <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
-                <tr *ngIf="item.exemplaire_detenu"><th>{{ 'acq-decision.col-exemplaire-detenu' | translate }}</th><td>{{ item.exemplaire_detenu }}</td></tr>
+                <tr *ngIf="item.exemplaire_detenu"><th>{{ 'acq-decision.col-exemplaire-papier-detenu' | translate }}</th><td>{{ item.exemplaire_detenu }}</td></tr>
+                <tr *ngIf="item.exemplaire_electronique_detenu"><th>{{ 'acq-decision.col-exemplaire-electronique-detenu' | translate }}</th><td>{{ item.exemplaire_electronique_detenu }}</td></tr>
                 <tr *ngIf="item.fournisseur_contacte_sans_succes"><th>{{ 'acq-decision.col-fournisseur-contacte' | translate }}</th><td>{{ item.fournisseur_contacte_sans_succes }}</td></tr>
                 <tr *ngIf="item.verification_caeb"><th>{{ 'acq-decision.col-caeb' | translate }}</th><td>{{ item.verification_caeb }}</td></tr>
                 <tr *ngIf="item.verification_sqla"><th>{{ 'acq-decision.col-sqla' | translate }}</th><td>{{ item.verification_sqla }}</td></tr>

@@ -41,7 +41,7 @@ const CHAMPS_PAR_TYPE: Record<string, string[]> = {
   ],
   'Requête ACQ Accessibilité': [
     'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
-    'fournisseur_contacte_sans_succes', 'exemplaire_detenu',
+    'fournisseur_contacte_sans_succes', 'exemplaire_detenu', 'exemplaire_electronique_detenu',
     'verification_caeb', 'verification_sqla', 'verification_emma',
     'acq_numerisation_recommandee', 'acq_date_demande_editeur', 'acq_date_livraison_estimee',
     'type_monographie', 'acq_responsable_courriel'

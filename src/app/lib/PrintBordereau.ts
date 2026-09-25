@@ -149,7 +149,11 @@ export function ecrireImpressionBordereau(
     ...PRINT_FIELD_ORDER
       .filter(k => i[k] !== null && i[k] !== undefined && i[k] !== '' && i[k] !== false)
       .map(k => ({
-        label: PRINT_FIELD_LABELS[k],
+        // Requête ACQ Accessibilité n'accepte plus que l'ISBN (ISSN retiré du formulaire) —
+        // voir form-accessibilite.isbn-label côté formulaire.
+        label: (k === 'isbn_issn' && i.formulaire_type === 'Requête ACQ Accessibilité')
+          ? 'ISBN'
+          : PRINT_FIELD_LABELS[k],
         value: typeof i[k] === 'boolean' ? 'Oui' : String(i[k]),
       })),
   ];

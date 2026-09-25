@@ -200,7 +200,7 @@
               </div>
               <div class="col-md-3">
                 <div class="itd-field">
-                  <span class="itd-field__label">{{ 'item-detail.isbn-issn' | translate }}</span>
+                  <span class="itd-field__label">{{ (item.formulaire_type === 'Requête ACQ Accessibilité' ? 'item-detail.isbn-label' : 'item-detail.isbn-issn') | translate }}</span>
                   <span class="itd-field__value font-monospace">{{ val(item.isbn_issn) }}</span>
                 </div>
               </div>
@@ -217,7 +217,7 @@
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-4" *ngIf="item.categorie_document">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.categorie' | translate }}</span>
                   <span class="itd-field__value">{{ val(item.categorie_document) }}</span>

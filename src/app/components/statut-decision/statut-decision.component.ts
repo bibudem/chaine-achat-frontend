@@ -314,6 +314,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       besoin_specifique_format:       sd.besoin_specifique_format,
       permalien_sofia:                sd.permalien_sofia,
       exemplaire_detenu:              sd.exemplaire_detenu,
+      exemplaire_electronique_detenu: sd.exemplaire_electronique_detenu,
       fournisseur_contacte_sans_succes: sd.fournisseur_contacte_sans_succes,
       verification_caeb:              sd.verification_caeb,
       verification_sqla:              sd.verification_sqla,
@@ -381,7 +382,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     } else if (this.isAccessibilite) {
       keys = [
         'reference_usager', 'besoin_specifique_format', 'permalien_sofia', 'type_monographie',
-        'exemplaire_detenu', 'fournisseur_contacte_sans_succes',
+        'exemplaire_detenu', 'exemplaire_electronique_detenu', 'fournisseur_contacte_sans_succes',
         'verification_caeb', 'verification_sqla', 'verification_emma'
       ];
     } else if (this.isSuggestion) {
