@@ -554,8 +554,14 @@
                 </div>
                 <div class="col-md-3" *ngIf="item.exemplaire_detenu">
                   <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.exemplaire-detenu' | translate }}</span>
+                    <span class="itd-field__label">{{ 'item-detail.exemplaire-papier-detenu' | translate }}</span>
                     <span class="itd-field__value">{{ val(item.exemplaire_detenu) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.exemplaire_electronique_detenu">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.exemplaire-electronique-detenu' | translate }}</span>
+                    <span class="itd-field__value">{{ val(item.exemplaire_electronique_detenu) }}</span>
                   </div>
                 </div>
                 <div class="col-md-3" *ngIf="item.verification_caeb">

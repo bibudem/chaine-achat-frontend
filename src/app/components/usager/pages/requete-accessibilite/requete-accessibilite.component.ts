@@ -32,9 +32,12 @@ export class RequeteAccessibiliteComponent implements OnInit {
     'Santé', 'Service Accessibilité', 'Service du catalogage', 'TGD', 'TEST-DRIN'
   ];
 
-  categoriesDocument: string[] = [
-    'Monographie', 'Périodique', 'Base de données',
-    'Archives de périodiques', 'Archives de monographies'
+  /** Liste volontairement restreinte pour ce formulaire (voir spec Accessibilité) — pas de
+   *  Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom, absent de la liste générale
+   *  (options.sousTypesMonographie). */
+  typesMonographie: string[] = [
+    'Livre', 'CD-Rom/DVD-Rom', 'Enregistrement sonore', 'Film',
+    'Matériel didactique', 'Partition de musique', 'Carte et données géospatiales'
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
@@ -97,24 +100,29 @@ export class RequeteAccessibiliteComponent implements OnInit {
       nom:              [{ value: nom, disabled: true },      Validators.required],
       statut:           [statut],
       courriel:         [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
-      bibliotheque:     ['',           Validators.required],
-      fonds_budgetaire: ['',           [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      bibliotheque:     ['Service Accessibilité', Validators.required],
+      fonds_budgetaire: ['MO-097',      [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
       priorite_demande: ['Urgent',     Validators.required],
       titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
       isbn_issn:          ['', [Validators.required, this.isbnValidator]],
       date_publication:   [''],
-      categorie_document: ['', Validators.required],
+      type_monographie:   [''],
       reference_usager:                 [''],
-      besoin_specifique_format:         [''],
+      besoin_specifique_format:         ['', Validators.required],
       permalien_sofia:                  ['', Validators.pattern('https?://.+')],
       fournisseur_contacte_sans_succes: [''],
       exemplaire_detenu:                [''],
+      exemplaire_electronique_detenu:   [''],
       verification_caeb:                [''],
       verification_sqla:                [''],
       verification_emma:                [''],
-      format_support:             ['Imprimé/support physique', Validators.required],
+      // format_support n'est plus saisi directement (voir "besoin spécifique/format" qui le
+      // pilote) — conservé en champ caché, dérivé automatiquement, pour ne pas casser les
+      // rapports/filtres existants qui lisent tbl_items.format_support.
+      format_support:             ['Électronique'],
+      nombre_utilisateurs:        ['Accès illimité'],
       format_pret_numerique:      ["Ne s'applique pas"],
       personne_a_aviser_courriel: [{ value: '', disabled: true }, Validators.email],
       devise_originale:      ['',   Validators.required],
@@ -127,13 +135,8 @@ export class RequeteAccessibiliteComponent implements OnInit {
       bibliotheque_note_interne:    ['', Validators.maxLength(1000)],
     });
 
-    this.form.get('format_support')!.valueChanges.subscribe(val => {
-      this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
-      this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
-      const aviser = this.form.get('personne_a_aviser_courriel')!;
-      this.showElectronique ? aviser.enable() : aviser.disable();
-      aviser.updateValueAndValidity();
-    });
+    this.form.get('besoin_specifique_format')!.valueChanges.subscribe(val => this.updateBesoinSpecifiqueDerive(val));
+    this.updateBesoinSpecifiqueDerive(this.form.get('besoin_specifique_format')!.value);
 
     this.form.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.form.get('devise_originale')!.valueChanges.subscribe(() => {
@@ -160,7 +163,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
       next: (row) => {
         const bd = row.reponses?.baseData ?? {};
         const sd = row.reponses?.specificData ?? {};
-        if (bd.format_support) this.form.get('format_support')!.setValue(bd.format_support);
         const deviseConnue = this.devises.some(d => d.code === bd.devise_originale);
         this.form.patchValue({
           bibliotheque:                     bd.bibliotheque,
@@ -171,12 +173,14 @@ export class RequeteAccessibiliteComponent implements OnInit {
           editeur:                          bd.editeur,
           isbn_issn:                        bd.isbn_issn,
           date_publication:                 bd.date_publication,
-          categorie_document:               bd.categorie_document,
+          type_monographie:                 sd.type_monographie,
+          nombre_utilisateurs:              bd.nombre_utilisateurs,
           reference_usager:                 sd.reference_usager,
           besoin_specifique_format:         sd.besoin_specifique_format,
           permalien_sofia:                  sd.permalien_sofia,
           fournisseur_contacte_sans_succes: sd.fournisseur_contacte_sans_succes,
           exemplaire_detenu:                sd.exemplaire_detenu,
+          exemplaire_electronique_detenu:   sd.exemplaire_electronique_detenu,
           verification_caeb:                sd.verification_caeb,
           verification_sqla:                sd.verification_sqla,
           verification_emma:                sd.verification_emma,
@@ -191,7 +195,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
           statut_bibliotheque:              bd.statut_bibliotheque,
           bibliotheque_note_interne:                 bd.bibliotheque_note_interne,
         });
-        this.updateDeviseAutreValidator();
+        this.updateBesoinSpecifiqueDerive(this.form.get('besoin_specifique_format')!.value);
       }
     });
   }
@@ -229,8 +233,59 @@ export class RequeteAccessibiliteComponent implements OnInit {
     const v      = value.replace(/\s/g, '');
     const isbn10 = /^\d{9}[\dX]$/i;
     const isbn13 = /^97[89]\d{10}$/;
-    const issn   = /^\d{7}[\dX]$/i;
-    return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
+    return isbn10.test(v) || isbn13.test(v) ? null : { invalidIsbn: true };
+  }
+
+  /** Dérive l'état (achat / électronique / institutionnel) à partir du champ
+   *  "besoin spécifique / format", qui remplace l'ancien toggle Format et support et
+   *  pilote maintenant toutes les sections conditionnelles du formulaire. */
+  private updateBesoinSpecifiqueDerive(val: string | null): void {
+    const estImprime      = !!val && val.startsWith('Imprimé');
+    const estElectronique = !!val && val.startsWith('Électronique');
+    const estAchat         = !!val && val !== this.besoinsFormat[0];
+
+    this.showElectronique = estElectronique;
+    this.showImprime      = estImprime;
+
+    this.form.get('format_support')!.setValue(
+      estImprime ? 'Imprimé/support physique' : 'Électronique',
+      { emitEvent: false }
+    );
+
+    const aviser = this.form.get('personne_a_aviser_courriel')!;
+    estElectronique ? aviser.enable() : aviser.disable();
+    aviser.updateValueAndValidity({ emitEvent: false });
+
+    const devise   = this.form.get('devise_originale')!;
+    const prixOrig = this.form.get('prix_devise_originale')!;
+    const prixCad  = this.form.get('prix_cad')!;
+    if (estAchat) {
+      devise.setValidators([Validators.required]);
+      prixOrig.setValidators([Validators.required, Validators.min(0.01)]);
+      prixCad.setValidators([Validators.required, Validators.min(0.01)]);
+    } else {
+      devise.clearValidators();
+      prixOrig.clearValidators();
+      prixCad.clearValidators();
+    }
+    devise.updateValueAndValidity({ emitEvent: false });
+    prixOrig.updateValueAndValidity({ emitEvent: false });
+    prixCad.updateValueAndValidity({ emitEvent: false });
+    this.updateDeviseAutreValidator();
+  }
+
+  /** Achat requis (prix/devise) : toute option sauf « écrire à l'éditeur pour version
+   *  numérique gratuite », qui est la seule option sans coût. */
+  get estAchat(): boolean {
+    const val = this.form?.get('besoin_specifique_format')?.value;
+    return !!val && val !== this.besoinsFormat[0];
+  }
+
+  /** Licence institutionnelle électronique : pilote nombre d'utilisateurs et
+   *  format PrêtNumérique. */
+  get estElectroniqueInstitutionnel(): boolean {
+    const val = this.form?.get('besoin_specifique_format')?.value;
+    return val === this.besoinsFormat[1] || val === this.besoinsFormat[2];
   }
 
   stripDashes(event: Event): void {
@@ -259,11 +314,15 @@ export class RequeteAccessibiliteComponent implements OnInit {
       // explicitement fournis ici — on les réinjecte depuis l'authentification.
       nom:                    `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
       courriel:               sessionStorage.getItem('courrielAdmin') ?? '',
+      bibliotheque:           'Service Accessibilité',
+      fonds_budgetaire:       'MO-097',
       priorite_demande:      'Urgent',
-      format_support:        'Imprimé/support physique',
+      format_support:        'Électronique',
+      nombre_utilisateurs:   'Accès illimité',
       format_pret_numerique: "Ne s'applique pas",
       statut_bibliotheque:   'Saisie en cours - En attente',
     });
+    this.updateBesoinSpecifiqueDerive(null);
   }
 
   onSubmit(): void {
@@ -289,12 +348,12 @@ export class RequeteAccessibiliteComponent implements OnInit {
         editeur:                    v.editeur,
         isbn_issn:                  v.isbn_issn,
         date_publication:           v.date_publication,
-        categorie_document:         v.categorie_document,
+        nombre_utilisateurs:        this.estElectroniqueInstitutionnel ? v.nombre_utilisateurs : null,
         format_support:             v.format_support,
-        format_pret_numerique:      this.showElectronique ? v.format_pret_numerique : null,
-        prix_cad:                   v.prix_cad,
-        devise_originale:           this.deviseAEnvoyer(v),
-        prix_devise_originale:      v.prix_devise_originale,
+        format_pret_numerique:      this.estElectroniqueInstitutionnel ? v.format_pret_numerique : null,
+        prix_cad:                   this.estAchat ? v.prix_cad : null,
+        devise_originale:           this.estAchat ? this.deviseAEnvoyer(v) : null,
+        prix_devise_originale:      this.estAchat ? v.prix_devise_originale : null,
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
         statut_bibliotheque:        v.statut_bibliotheque,
@@ -308,6 +367,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
         permalien_sofia:                  v.permalien_sofia,
         fournisseur_contacte_sans_succes: v.fournisseur_contacte_sans_succes,
         exemplaire_detenu:                v.exemplaire_detenu,
+        exemplaire_electronique_detenu:   v.exemplaire_electronique_detenu,
         verification_caeb:                v.verification_caeb,
         verification_sqla:                v.verification_sqla,
         verification_emma:                v.verification_emma,
@@ -315,7 +375,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
         acq_date_demande_editeur:         null,
         acq_date_livraison_estimee:       null,
         acq_responsable_courriel:         null,
-        type_monographie:                 null,
+        type_monographie:                 v.type_monographie,
       },
     };
 
@@ -362,12 +422,12 @@ export class RequeteAccessibiliteComponent implements OnInit {
         editeur:                    v.editeur,
         isbn_issn:                  v.isbn_issn,
         date_publication:           v.date_publication,
-        categorie_document:         v.categorie_document,
+        nombre_utilisateurs:        this.estElectroniqueInstitutionnel ? v.nombre_utilisateurs : null,
         format_support:             v.format_support,
-        format_pret_numerique:      this.showElectronique ? v.format_pret_numerique : null,
-        prix_cad:                   v.prix_cad,
-        devise_originale:           this.deviseAEnvoyer(v),
-        prix_devise_originale:      v.prix_devise_originale,
+        format_pret_numerique:      this.estElectroniqueInstitutionnel ? v.format_pret_numerique : null,
+        prix_cad:                   this.estAchat ? v.prix_cad : null,
+        devise_originale:           this.estAchat ? this.deviseAEnvoyer(v) : null,
+        prix_devise_originale:      this.estAchat ? v.prix_devise_originale : null,
         source_information:         v.source_information,
         note_commentaire:           v.note_commentaire,
         statut_bibliotheque:        v.statut_bibliotheque || 'Saisie en cours - En attente',
@@ -381,6 +441,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
         permalien_sofia:                  v.permalien_sofia,
         fournisseur_contacte_sans_succes: v.fournisseur_contacte_sans_succes,
         exemplaire_detenu:                v.exemplaire_detenu,
+        exemplaire_electronique_detenu:   v.exemplaire_electronique_detenu,
         verification_caeb:                v.verification_caeb,
         verification_sqla:                v.verification_sqla,
         verification_emma:                v.verification_emma,
@@ -388,7 +449,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
         acq_date_demande_editeur:         null,
         acq_date_livraison_estimee:       null,
         acq_responsable_courriel:         null,
-        type_monographie:                 null,
+        type_monographie:                 v.type_monographie,
       },
     };
     const obs = this.editId

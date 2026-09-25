@@ -87,6 +87,7 @@ export interface Item {
   permalien_sofia?: string;
   fournisseur_contacte_sans_succes?: string;
   exemplaire_detenu?: string;
+  exemplaire_electronique_detenu?: string;
   verification_caeb?: string;
   verification_sqla?: string;
   verification_emma?: string;

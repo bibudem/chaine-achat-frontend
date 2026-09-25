@@ -35,6 +35,13 @@ export class ItemFormulaireComponent implements OnInit {
   devises = this.options.devisesOptions;
 
   readonly OUI_NON_NA: string[] = ['OUI', 'NON', "Ne s'applique pas"];
+  /** Liste volontairement restreinte pour Requête ACQ Accessibilité (voir requete-accessibilite
+   *  côté usager) — pas de Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom, absent de
+   *  la liste générale (options.sousTypesMonographie). */
+  readonly typesMonographieAccessibilite: string[] = [
+    'Livre', 'CD-Rom/DVD-Rom', 'Enregistrement sonore', 'Film',
+    'Matériel didactique', 'Partition de musique', 'Carte et données géospatiales'
+  ];
   readonly besoinsFormat: string[] = [
     "Électronique : écrire à l'éditeur pour version numérique gratuite",
     'Électronique : acheter licence institutionnelle standard + version numérique gratuite',
@@ -365,6 +372,7 @@ export class ItemFormulaireComponent implements OnInit {
       permalien_sofia:                [''],
       fournisseur_contacte_sans_succes: [''],
       exemplaire_detenu:              [''],
+      exemplaire_electronique_detenu: [''],
       verification_caeb:              [''],
       verification_sqla:              [''],
       verification_emma:              [''],
@@ -391,6 +399,13 @@ export class ItemFormulaireComponent implements OnInit {
   onFormulaireTypeChange(type: string): void {
     this.selectedFormulaireType = type;
     this.resetSpecificFields();
+
+    // categorie_document est requis par défaut (voir sa définition dans le FormGroup) sauf pour
+    // Requête ACQ Accessibilité, qui n'affiche plus ce champ (remplacé par Type de monographie,
+    // spécifique à ce formulaire — voir requete-accessibilite côté usager).
+    this.itemForm.get('categorie_document')?.setValidators(
+      type === 'Requête ACQ Accessibilité' ? [] : [Validators.required]
+    );
 
     switch(type) {
       case 'Modification et CCOL':
@@ -422,7 +437,8 @@ export class ItemFormulaireComponent implements OnInit {
     const specificFieldsToUpdate = [
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
       'gobi_vu_format_numerique', 'besoin_specifique_format', 'quantite',
-      'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
+      'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire',
+      'categorie_document'
     ];
 
     specificFieldsToUpdate.forEach(field => {
@@ -465,7 +481,7 @@ export class ItemFormulaireComponent implements OnInit {
       'reference_tipasa', 'gobi_version_moins_365_usd', 'acq_responsable_courriel',
       // Requête Accessibilité
       'reference_usager', 'besoin_specifique_format', 'permalien_sofia',
-      'fournisseur_contacte_sans_succes', 'exemplaire_detenu',
+      'fournisseur_contacte_sans_succes', 'exemplaire_detenu', 'exemplaire_electronique_detenu',
       'verification_caeb', 'verification_sqla', 'verification_emma',
       'acq_numerisation_recommandee', 'acq_date_demande_editeur', 'acq_date_livraison_estimee',
       // Suggestion d'achat
@@ -567,6 +583,9 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   private applyValidatorsForEditMode(type: string | null): void {
+    this.itemForm.get('categorie_document')?.setValidators(
+      type === 'Requête ACQ Accessibilité' ? [] : [Validators.required]
+    );
     switch (type) {
       case 'Modification et CCOL':
         this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
@@ -594,7 +613,8 @@ export class ItemFormulaireComponent implements OnInit {
     const specificFields = [
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
       'gobi_vu_format_numerique', 'besoin_specifique_format', 'quantite',
-      'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
+      'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire',
+      'categorie_document'
     ];
     specificFields.forEach(field => {
       this.itemForm.get(field)?.updateValueAndValidity({ emitEvent: false });
@@ -770,6 +790,7 @@ export class ItemFormulaireComponent implements OnInit {
           permalien_sofia:                  formData.permalien_sofia,
           fournisseur_contacte_sans_succes: formData.fournisseur_contacte_sans_succes,
           exemplaire_detenu:                formData.exemplaire_detenu,
+          exemplaire_electronique_detenu:   formData.exemplaire_electronique_detenu,
           verification_caeb:                formData.verification_caeb,
           verification_sqla:                formData.verification_sqla,
           verification_emma:                formData.verification_emma,

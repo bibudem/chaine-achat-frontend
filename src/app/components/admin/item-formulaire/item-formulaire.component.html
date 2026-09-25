@@ -771,12 +771,12 @@
                        placeholder="https://...">
               </div>
             </div>
-            <div class="col-md" *ngIf="itemForm.get('categorie_document')?.value === 'Monographie'">
+            <div class="col-md">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.type-monographie' | translate }}</label>
                 <select class="form-select form-control" formControlName="type_monographie">
                   <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
-                  <option *ngFor="let t of options.sousTypesMonographie" [value]="t">{{ t }}</option>
+                  <option *ngFor="let t of typesMonographieAccessibilite" [value]="t">{{ t }}</option>
                 </select>
               </div>
             </div>
@@ -801,12 +801,19 @@
             </div>
             <div class="col-md-2">
               <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.exemplaire-detenu' | translate }}</label>
+                <label class="form-label">{{ 'item-formulaire.exemplaire-papier-detenu' | translate }}</label>
                 <select class="form-select form-control" formControlName="exemplaire_detenu">
                   <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
-                  <option value="Imprimé">Imprimé</option>
-                  <option value="Électronique">Électronique</option>
-                  <option value="Ne s'applique pas">Ne s'applique pas</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.exemplaire-electronique-detenu' | translate }}</label>
+                <select class="form-select form-control" formControlName="exemplaire_electronique_detenu">
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                  <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
                 </select>
               </div>
             </div>
@@ -828,6 +835,8 @@
                 </select>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.emma' | translate }}</label>

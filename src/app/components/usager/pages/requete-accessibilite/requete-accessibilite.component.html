@@ -12,7 +12,7 @@
     <span class="form-nav__breadcrumb">
       <a routerLink="/usager" class="form-nav__crumb-link">Portail acquisitions</a>
       <i class="bi bi-chevron-right form-nav__sep"></i>
-      <span class="form-nav__crumb-current">Requête ACQ Accessibilité</span>
+      <span class="form-nav__crumb-current">Accessibilité</span>
     </span>
   </nav>
 
@@ -62,7 +62,7 @@
             <small class="form-text">{{ 'forms-usager.courriel-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-5">
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -75,6 +75,17 @@
           </div>
 
           <div class="col-md-4">
+            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+            <input type="text" formControlName="fonds_budgetaire" class="form-control"
+                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
+                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
+            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.priorite' | translate }}</label>
             <select formControlName="priorite_demande" class="form-select priorite-select"
                     [ngClass]="{
@@ -89,10 +100,10 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DOCUMENT -->
+      <!-- SECTION 2 — INFORMATION BIBLIOGRAPHIQUE -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>{{ 'forms-usager.label-document' | translate }}
+          <i class="fas fa-book-open"></i>{{ 'form-accessibilite.label-document' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
@@ -118,15 +129,15 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label required">{{ 'form-accessibilite.isbn-label' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    placeholder="Ex : 9782070360024"
                    (input)="stripDashes($event)">
             <div *ngIf="isInvalid('isbn_issn')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-accessibilite.isbn-invalid' | translate }}
             </div>
-            <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
+            <small class="form-text">{{ 'form-accessibilite.isbn-hint' | translate }}</small>
           </div>
 
           <div class="col-md-4">
@@ -135,15 +146,11 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
-            <select formControlName="categorie_document" class="form-select"
-                    [class.is-invalid]="isInvalid('categorie_document')">
+            <label class="form-label">{{ 'form-accessibilite.type-monographie' | translate }}</label>
+            <select formControlName="type_monographie" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
-              <option *ngFor="let c of categoriesDocument" [value]="c">{{ c }}</option>
+              <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
             </select>
-            <div *ngIf="isInvalid('categorie_document')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.categorie-required' | translate }}
-            </div>
           </div>
 
           <div class="col-md-6">
@@ -173,11 +180,15 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">{{ 'form-accessibilite.besoin-format' | translate }}</label>
-            <select formControlName="besoin_specifique_format" class="form-select">
+            <label class="form-label required">{{ 'form-accessibilite.besoin-format' | translate }}</label>
+            <select formControlName="besoin_specifique_format" class="form-select"
+                    [class.is-invalid]="isInvalid('besoin_specifique_format')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let b of besoinsFormat" [value]="b">{{ b }}</option>
             </select>
+            <div *ngIf="isInvalid('besoin_specifique_format')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-accessibilite.besoin-format-required' | translate }}
+            </div>
           </div>
 
           <div class="col-md-4">
@@ -187,46 +198,21 @@
               <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
             </select>
           </div>
-        </div>
-      </div>
 
-      <!-- SECTION 4 — FORMAT ET SUPPORT -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="fas fa-layer-group"></i>{{ 'forms-usager.section-format' | translate }}
-        </h2>
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
-            <div class="format-toggle">
-              <div class="format-toggle-btn"
-                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
-                   role="button" tabindex="0"
-                   (click)="form.patchValue({ format_support: 'Imprimé/support physique' })"
-                   (keydown.enter)="form.patchValue({ format_support: 'Imprimé/support physique' })">
-                <i class="fas fa-print"></i>{{ 'forms-usager.imprime-physique' | translate }}
-              </div>
-              <div class="format-toggle-btn"
-                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Électronique'"
-                   role="button" tabindex="0"
-                   (click)="form.patchValue({ format_support: 'Électronique' })"
-                   (keydown.enter)="form.patchValue({ format_support: 'Électronique' })">
-                <i class="fas fa-laptop"></i>{{ 'forms-usager.electronique' | translate }}
-              </div>
-              <div class="format-toggle-btn"
-                   [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé et électronique'"
-                   role="button" tabindex="0"
-                   (click)="form.patchValue({ format_support: 'Imprimé et électronique' })"
-                   (keydown.enter)="form.patchValue({ format_support: 'Imprimé et électronique' })">
-                <i class="fas fa-layer-group"></i>{{ 'forms-usager.imprime-et-electronique' | translate }}
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12" *ngIf="showElectronique">
+          <div class="col-12" *ngIf="estElectroniqueInstitutionnel">
             <div class="electronique-fields">
               <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
+                  <label class="form-label">{{ 'forms-usager.nb-utilisateurs' | translate }}</label>
+                  <select formControlName="nombre_utilisateurs" class="form-select">
+                    <option value="Accès illimité">{{ 'forms-usager.acces-illimite' | translate }}</option>
+                    <option value="Un seul usager">{{ 'forms-usager.un-seul-usager' | translate }}</option>
+                    <option value="Trois usagers simultanés">{{ 'forms-usager.trois-usagers' | translate }}</option>
+                    <option value="Autre">{{ 'forms-usager.autre' | translate }}</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
                   <label class="form-label">{{ 'forms-usager.format-pret' | translate }}</label>
                   <select formControlName="format_pret_numerique" class="form-select">
                     <option value="Ne s'applique pas">{{ 'forms-usager.ne-sapplique-pas' | translate }}</option>
@@ -235,7 +221,13 @@
                   </select>
                   <small class="form-text">{{ 'form-accessibilite.format-pret-hint' | translate }}</small>
                 </div>
+              </div>
+            </div>
+          </div>
 
+          <div class="col-12" *ngIf="showElectronique">
+            <div class="electronique-fields">
+              <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">{{ 'form-accessibilite.courriel-aviser' | translate }}</label>
                   <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
@@ -259,16 +251,22 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-3">
-            <label class="form-label">{{ 'form-accessibilite.exemplaire-detenu' | translate }}</label>
+            <label class="form-label">{{ 'form-accessibilite.exemplaire-papier-detenu' | translate }}</label>
             <select formControlName="exemplaire_detenu" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
-              <option value="Imprimé">Imprimé</option>
-              <option value="Électronique">Électronique</option>
-              <option value="Ne s'applique pas">{{ 'forms-usager.ne-sapplique-pas' | translate }}</option>
+              <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
             </select>
           </div>
 
           <div class="col-md-3">
+            <label class="form-label">{{ 'form-accessibilite.exemplaire-electronique-detenu' | translate }}</label>
+            <select formControlName="exemplaire_electronique_detenu" class="form-select">
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
+              <option *ngFor="let o of OUI_NON_NA" [value]="o">{{ o }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-2">
             <label class="form-label">{{ 'form-accessibilite.caeb' | translate }}</label>
             <select formControlName="verification_caeb" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -276,7 +274,7 @@
             </select>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label">{{ 'form-accessibilite.sqla' | translate }}</label>
             <select formControlName="verification_sqla" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -284,7 +282,7 @@
             </select>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label">{{ 'form-accessibilite.emma' | translate }}</label>
             <select formControlName="verification_emma" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -295,6 +293,7 @@
       </div>
 
       <!-- SECTION 6 — INFORMATIONS FINANCIÈRES -->
+      <ng-container *ngIf="estAchat">
       <div class="form-section">
         <h2 class="form-section__title">
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
@@ -353,17 +352,6 @@
             </small>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
-            <input type="text" formControlName="fonds_budgetaire" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
-            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>
-          </div>
-
           <div class="col-12">
             <small class="form-text">
               {{ 'forms-usager.taux-change-note' | translate }}
@@ -374,6 +362,7 @@
           </div>
         </div>
       </div>
+      </ng-container>
 
       <!-- SECTION 7 — SOURCE ET NOTES -->
       <div class="form-section">
