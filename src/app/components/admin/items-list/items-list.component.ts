@@ -435,27 +435,6 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     return statut === 'Soumettre aux ACQ' ? 'Soumis aux ACQ' : (statut || '—');
   }
 
-  getStatusBadgeClass(status?: string): string {
-    if (!status) return 'badge bg-light text-dark';
-    if (status.includes('Saisie en cours'))  return 'badge bg-warning';
-    if (status.includes('En attente'))       return 'badge bg-info';
-    if (status.includes('Soumis aux ACQ') || status.includes('Complété')) return 'badge bg-success';
-    if (status.includes('Demande annulée')) return 'badge bg-danger';
-    if (status.includes('Budget atteint'))  return 'badge bg-secondary';
-    return 'badge bg-light text-dark';
-  }
-
-  getStatusText(status?: string): string {
-    if (!status) return 'Non spécifié';
-    if (status.includes('Saisie en cours')) return 'Saisie en cours';
-    if (status.includes('En attente'))      return 'En attente';
-    if (status.includes('Soumis aux ACQ'))  return 'Soumis ACQ';
-    if (status.includes('Complété'))        return 'Complété';
-    if (status.includes('Demande annulée')) return 'Annulé';
-    if (status.includes('Budget atteint'))  return 'Budget atteint';
-    return status;
-  }
-
   getDocumentCategory(category?: string): string {
     if (!category) return '';
     const abbreviations: { [key: string]: string } = {

@@ -402,10 +402,17 @@ export class ItemFormulaireComponent implements OnInit {
 
     // categorie_document est requis par défaut (voir sa définition dans le FormGroup) sauf pour
     // Requête ACQ Accessibilité, qui n'affiche plus ce champ (remplacé par Type de monographie,
-    // spécifique à ce formulaire — voir requete-accessibilite côté usager).
-    this.itemForm.get('categorie_document')?.setValidators(
-      type === 'Requête ACQ Accessibilité' ? [] : [Validators.required]
-    );
+    // spécifique à ce formulaire — voir requete-accessibilite côté usager). On efface aussi sa
+    // valeur en passant à ce type : sinon une valeur choisie pour un type précédent (ex.
+    // "Monographie") resterait en mémoire dans le contrôle, invisible dans ce tab, mais tout
+    // de même envoyée à la sauvegarde (extractBaseData l'inclut pour tous les types).
+    const categorieDocCtrl = this.itemForm.get('categorie_document');
+    if (type === 'Requête ACQ Accessibilité') {
+      categorieDocCtrl?.setValidators([]);
+      categorieDocCtrl?.setValue(null, { emitEvent: false });
+    } else {
+      categorieDocCtrl?.setValidators([Validators.required]);
+    }
 
     switch(type) {
       case 'Modification et CCOL':

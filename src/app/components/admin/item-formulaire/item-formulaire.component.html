@@ -169,7 +169,7 @@
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.categorie-document' | translate }} <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'item-formulaire.categorie-document' | translate }} <span class="text-danger" *ngIf="!isRequeteAccessibilite()">*</span></label>
               <select class="form-select form-control" formControlName="categorie_document"
                       [class.is-invalid]="isInvalid('categorie_document')">
                 <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
