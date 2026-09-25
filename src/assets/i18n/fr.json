@@ -507,7 +507,7 @@
     "filtre-import": "Liste filtrée : items de l'import",
     "creer": "Créer un item",
     "creer-nouvel": "Créer un nouvel item",
-    "recherche-placeholder": "Titre, ISBN, demandeur... (#5 pour l'ID exact)",
+    "recherche-placeholder": "Titre, ISBN, demandeur, #ID...",
     "type-formulaire-placeholder": "Type formulaire",
     "toutes-bibliotheques": "Toutes les bibliothèques",
     "statut-placeholder": "Statut",

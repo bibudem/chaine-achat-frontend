@@ -511,7 +511,7 @@
     "filtre-import": "Filtered list: items from import",
     "creer": "Create an item",
     "creer-nouvel": "Create a new item",
-    "recherche-placeholder": "Title, ISBN, requester... (#5 for exact ID)",
+    "recherche-placeholder": "Title, ISBN, requester, #ID...",
     "type-formulaire-placeholder": "Form type",
     "toutes-bibliotheques": "All libraries",
     "statut-placeholder": "Status",
