@@ -1,22 +1,6 @@
 /* ── Page ──────────────────────────────────────────────────────────── */
 .bib-page { padding-top: 1.5rem; }
 
-/* ── Recherche ─────────────────────────────────────────────────────── */
-.bib-search {
-  position: relative;
-  max-width: 320px;
-  margin-bottom: 1rem;
-}
-.bib-search__input { padding-left: 2.1rem !important; }
-.bib-search__icon {
-  position: absolute;
-  left: .75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9FB3C8;
-  pointer-events: none;
-}
-
 /* ── Vide ──────────────────────────────────────────────────────────── */
 .bib-empty { text-align: center; padding: 4rem 1rem; color: #9FB3C8; }
 .bib-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }

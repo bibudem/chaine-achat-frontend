@@ -15,9 +15,6 @@ export class BibliothequesComponent implements OnInit {
   loading      = true;
   errorMessage = '';
 
-  /** Filtre live du tableau. */
-  recherche = '';
-
   /** Modale d'ajout/modification — editingId null = création, sinon id modifié. */
   showModal  = false;
   editingId: number | null = null;
@@ -51,12 +48,6 @@ export class BibliothequesComponent implements OnInit {
         this.loading       = false;
       }
     });
-  }
-
-  get bibliothequesFiltrees(): Bibliotheque[] {
-    const q = this.recherche.trim().toLowerCase();
-    if (!q) return this.bibliotheques;
-    return this.bibliotheques.filter(b => b.nom.toLowerCase().includes(q));
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

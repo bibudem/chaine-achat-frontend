@@ -31,21 +31,20 @@
     </button>
   </div>
 
-  <!-- ── RECHERCHE + TABLEAU ───────────────────────────────────────── -->
+  <!-- ── TABLEAU ───────────────────────────────────────────────────── -->
   <ng-container *ngIf="!loading && fonds.length > 0">
-    <div class="fbp-search">
-      <i class="bi bi-search fbp-search__icon"></i>
-      <input type="text" class="form-control fbp-search__input" [(ngModel)]="recherche"
-             (ngModelChange)="onRechercheChange()"
-             [placeholder]="'fonds-budgetaires-page.rechercher-placeholder' | translate">
-    </div>
-
     <div class="fbp-table-wrap">
       <table class="table fbp-table">
         <thead>
           <tr>
             <th class="fbp-th--num">#</th>
-            <th>{{ 'fonds-budgetaires-page.col-code' | translate }}</th>
+            <th class="fbp-th--code-search">
+              <div class="fbp-th-search">
+                <i class="bi bi-search"></i>
+                <input type="text" [(ngModel)]="recherche" (ngModelChange)="onRechercheChange()"
+                       [placeholder]="'fonds-budgetaires-page.filtrer-code-placeholder' | translate">
+              </div>
+            </th>
             <th>{{ 'fonds-budgetaires-page.col-date-creation' | translate }}</th>
             <th class="fbp-th--actions"></th>
           </tr>

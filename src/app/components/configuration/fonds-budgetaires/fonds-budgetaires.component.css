@@ -1,22 +1,6 @@
 /* ── Page ──────────────────────────────────────────────────────────── */
 .fbp-page { padding-top: 1.5rem; }
 
-/* ── Recherche ─────────────────────────────────────────────────────── */
-.fbp-search {
-  position: relative;
-  max-width: 320px;
-  margin-bottom: 1rem;
-}
-.fbp-search__input { padding-left: 2.1rem !important; }
-.fbp-search__icon {
-  position: absolute;
-  left: .75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9FB3C8;
-  pointer-events: none;
-}
-
 /* ── Vide ──────────────────────────────────────────────────────────── */
 .fbp-empty { text-align: center; padding: 4rem 1rem; color: #9FB3C8; }
 .fbp-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }
@@ -45,6 +29,42 @@
 }
 .fbp-th--actions { width: 48px; }
 .fbp-th--num     { width: 36px; }
+
+/* Recherche intégrée directement dans l'en-tête de colonne "Code" — plus compact
+   qu'un champ de recherche séparé au-dessus du tableau. */
+.fbp-th--code-search { padding: .3rem .5rem; }
+
+.fbp-th-search {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  max-width: 180px;
+  background: #fff;
+  border: 1px solid #dfe3ea;
+  border-radius: 6px;
+  padding: .3rem .5rem;
+}
+
+.fbp-th-search i { color: #9FB3C8; font-size: .8rem; }
+
+.fbp-th-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #334155;
+}
+
+.fbp-th-search input::placeholder {
+  color: #b3bcc7;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
 
 .fbp-table tbody tr { transition: background .1s; }
 .fbp-table tbody td {

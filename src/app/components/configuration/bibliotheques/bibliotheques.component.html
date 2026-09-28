@@ -31,14 +31,8 @@
     </button>
   </div>
 
-  <!-- ── RECHERCHE + TABLEAU ───────────────────────────────────────── -->
+  <!-- ── TABLEAU ───────────────────────────────────────────────────── -->
   <ng-container *ngIf="!loading && bibliotheques.length > 0">
-    <div class="bib-search">
-      <i class="bi bi-search bib-search__icon"></i>
-      <input type="text" class="form-control bib-search__input" [(ngModel)]="recherche"
-             [placeholder]="'bibliotheques-page.rechercher-placeholder' | translate">
-    </div>
-
     <div class="bib-table-wrap">
       <table class="table bib-table">
         <thead>
@@ -50,7 +44,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let b of bibliothequesFiltrees; let i = index">
+          <tr *ngFor="let b of bibliotheques; let i = index">
             <td class="bib-td--num">{{ i + 1 }}</td>
             <td class="bib-td--nom">{{ b.nom }}</td>
             <td class="bib-td--date">{{ b.date_creation | date: 'dd MMM yyyy' }}</td>
@@ -62,9 +56,6 @@
                 <i class="bi bi-trash3"></i>
               </button>
             </td>
-          </tr>
-          <tr *ngIf="bibliothequesFiltrees.length === 0">
-            <td colspan="4" class="bib-td--vide">{{ 'bibliotheques-page.aucun-resultat' | translate }}</td>
           </tr>
         </tbody>
       </table>
