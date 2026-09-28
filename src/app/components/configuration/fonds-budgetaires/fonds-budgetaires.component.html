@@ -1,19 +1,16 @@
 <div class="fbp-page container-fluid pb-5 mt-5">
 
   <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
-  <div class="fbp-header">
-    <div class="fbp-header__left">
-      <i class="bi bi-cash-coin fbp-header__icon"></i>
-      <div>
-        <h1 class="fbp-header__title">{{ 'fonds-budgetaires-page.titre' | translate }}</h1>
-        <p class="fbp-header__sub">{{ 'fonds-budgetaires-page.sous-titre' | translate }}</p>
-      </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 mb-1">{{ 'fonds-budgetaires-page.titre' | translate }}</h1>
+      <p class="text-muted mb-0">{{ 'fonds-budgetaires-page.sous-titre' | translate }}</p>
     </div>
-    <button class="fbp-header__add-btn" (click)="openAdd()">
-      <i class="bi bi-plus-circle"></i>
-      <span>{{ 'fonds-budgetaires-page.nouveau-fonds' | translate }}</span>
+    <button type="button" class="btn btn-primary" (click)="openAdd()">
+      <i class="bi bi-plus-circle me-2"></i>{{ 'fonds-budgetaires-page.nouveau-fonds' | translate }}
     </button>
   </div>
+  <hr>
 
   <!-- ── ERREUR ────────────────────────────────────────────────────── -->
   <div *ngIf="errorMessage" class="alert alert-danger">

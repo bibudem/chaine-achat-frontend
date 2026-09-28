@@ -187,7 +187,7 @@
   },
   "utilisateurs-page": {
     "titre": "Users",
-    "sous-titre": "Application roles (Admin / TDM) — Usager by default — UdeM authentication is still required to sign in",
+    "sous-titre": "Application roles — Usager by default — UdeM authentication is still required to sign in",
     "nouvel-usager": "New user",
     "vide": "No users registered",
     "ajouter-premier": "Add the first user",
@@ -220,7 +220,7 @@
   },
   "fonds-budgetaires-page": {
     "titre": "Budget funds",
-    "sous-titre": "List of budget funds offered in forms (search + \"Other\" option if a fund isn't listed)",
+    "sous-titre": "List of budget funds offered in forms",
     "nouveau-fonds": "New fund",
     "vide": "No budget funds registered",
     "ajouter-premier": "Add the first fund",
@@ -250,7 +250,7 @@
   },
   "bibliotheques-page": {
     "titre": "Libraries",
-    "sous-titre": "List of libraries offered in forms (user and admin)",
+    "sous-titre": "List of libraries offered in forms",
     "nouvelle-bibliotheque": "New library",
     "vide": "No libraries registered",
     "ajouter-premiere": "Add the first library",
@@ -275,6 +275,11 @@
     "confirmer-suppression-message": "Remove {{nom}} from the libraries list? Requests already saved with this name will not be changed.",
     "succes-supprime": "Library deleted.",
     "erreur-suppression": "Error while deleting."
+  },
+  "taux-devises-page": {
+    "titre": "Exchange rates",
+    "sous-titre": "History of conversion rates to CAD, by period",
+    "nouvelle-periode": "New period"
   },
   "home": {
     "board": "Our statistics",

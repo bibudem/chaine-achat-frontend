@@ -162,7 +162,7 @@
   },
   "utilisateurs-page": {
     "titre": "Utilisateurs",
-    "sous-titre": "Rôles applicatifs (Admin / TDM) — Usager par défaut — l'authentification UdeM reste requise pour se connecter",
+    "sous-titre": "Rôles applicatifs — Usager par défaut — l'authentification UdeM reste requise pour se connecter",
     "nouvel-usager": "Nouvel usager",
     "vide": "Aucun usager enregistré",
     "ajouter-premier": "Ajouter le premier usager",
@@ -195,7 +195,7 @@
   },
   "fonds-budgetaires-page": {
     "titre": "Fonds budgétaires",
-    "sous-titre": "Liste des fonds budgétaires proposée dans les formulaires (recherche + option « Autre » si un fonds n'y figure pas)",
+    "sous-titre": "Liste des fonds budgétaires proposée dans les formulaires",
     "nouveau-fonds": "Nouveau fonds",
     "vide": "Aucun fonds budgétaire enregistré",
     "ajouter-premier": "Ajouter le premier fonds",
@@ -225,7 +225,7 @@
   },
   "bibliotheques-page": {
     "titre": "Bibliothèques",
-    "sous-titre": "Liste des bibliothèques proposée dans les formulaires (usager et admin)",
+    "sous-titre": "Liste des bibliothèques proposée dans les formulaires",
     "nouvelle-bibliotheque": "Nouvelle bibliothèque",
     "vide": "Aucune bibliothèque enregistrée",
     "ajouter-premiere": "Ajouter la première bibliothèque",
@@ -250,6 +250,11 @@
     "confirmer-suppression-message": "Retirer {{nom}} de la liste des bibliothèques ? Les demandes déjà enregistrées avec ce nom ne seront pas modifiées.",
     "succes-supprime": "Bibliothèque supprimée.",
     "erreur-suppression": "Erreur lors de la suppression."
+  },
+  "taux-devises-page": {
+    "titre": "Taux de change",
+    "sous-titre": "Historique des taux de conversion en CAD, par période",
+    "nouvelle-periode": "Nouvelle période"
   },
   "rapport": {
     "titre": "Rapports",

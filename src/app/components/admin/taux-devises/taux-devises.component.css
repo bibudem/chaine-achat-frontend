@@ -1,33 +1,6 @@
 /* ── Page ──────────────────────────────────────────────────────────── */
 .tdv-page { padding-top: 1.5rem; }
 
-/* ── En-tête ───────────────────────────────────────────────────────── */
-.tdv-header {
-  display:         flex;
-  justify-content: space-between;
-  align-items:     center;
-  padding:         1rem 1.25rem;
-  background:      #fff;
-  border-bottom:   2px solid #E7EBEE;
-  margin-bottom:   1.25rem;
-  border-radius:   10px;
-  box-shadow:      0 1px 4px rgba(0,0,0,.06);
-  flex-wrap:       wrap;
-  gap:             .75rem;
-}
-.tdv-header__left  { display: flex; align-items: center; gap: .85rem; }
-.tdv-header__icon  { font-size: 2rem; color: #0057AC; }
-.tdv-header__title { font-size: 1.15rem; font-weight: 700; color: #1A2B3C; margin: 0; }
-.tdv-header__sub   { font-size: .78rem; color: #607386; margin: 0; }
-.tdv-header__add-btn {
-  display: inline-flex; align-items: center; gap: .4rem;
-  background: #0057AC; color: #fff; border: none;
-  font-size: .82rem; font-weight: 500;
-  padding: .5rem 1rem; border-radius: 8px;
-  cursor: pointer; transition: background .15s;
-}
-.tdv-header__add-btn:hover { background: #00407F; }
-
 /* ── Vide ──────────────────────────────────────────────────────────── */
 .tdv-empty { text-align: center; padding: 4rem 1rem; color: #9FB3C8; }
 .tdv-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }

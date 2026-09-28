@@ -2,22 +2,6 @@
   color: white !important;
 }
 
-/* ─── Sous-menu : correction positionnement des puces ────────────────────
-   Sans position:relative sur le li, le ::before absolu s'ancre au mauvais
-   conteneur parent et se déplace selon la quantité d'items du sous-menu.  */
-
-.sidebar .nav.sub-menu .nav-item {
-  position: relative;
-}
-
-/* Centre la puce dans la zone de padding gauche du sous-menu (1.1rem) */
-.sidebar .nav.sub-menu .nav-item::before {
-  left: -0.7rem;
-  top: 50%;
-  margin-top: 0;
-  transform: translateY(-50%);
-}
-
 /* ─── Chevron du sous-menu : animation à l'ouverture ─────────────────── */
 
 .sidebar .nav-item .nav-link .toggle-icon {
@@ -27,4 +11,54 @@
 
 .sidebar .nav-item .nav-link[aria-expanded="true"] .toggle-icon {
   transform: rotate(180deg);
+}
+
+/* ─── Sous-menu : indentation + repère visuel ─────────────────────────
+   Le thème de base indente à peine les items (puce ronde presque collée
+   au libellé du parent) — ici on aligne le texte sous le libellé "Configuration"/
+   "Outils" (pas juste sous l'icône), on retire la puce, et on ajoute une ligne
+   verticale + une surbrillance au survol/actif pour une hiérarchie plus lisible. */
+
+.sidebar .nav.sub-menu {
+  padding: 0.35rem 0 0.35rem 1.65rem;
+  position: relative;
+}
+
+.sidebar .nav.sub-menu::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0.85rem;
+  width: 1px;
+  background: #dfe3ea;
+}
+
+.sidebar .nav.sub-menu .nav-item {
+  padding: 0;
+}
+
+.sidebar .nav.sub-menu .nav-item::before {
+  content: none;
+}
+
+.sidebar .nav.sub-menu .nav-item .nav-link {
+  padding: 0.55rem 0.75rem;
+  margin: 0.05rem 0;
+  border-radius: 6px;
+  transition: background-color .15s, color .15s;
+}
+
+.sidebar .nav.sub-menu .nav-item .nav-link:hover {
+  background: #f1f5fb;
+  color: #001737;
+}
+
+/* routerLinkActive="active" est posé sur le <li class="nav-item">, pas sur .nav-link —
+   la règle .nav-link.active du thème de base ne peut donc jamais matcher. Même
+   fond/couleur que le menu principal actif (.nav-item.active > .nav-link, style.css)
+   — pas de gras, pour rester cohérent avec le menu principal. */
+.sidebar .nav.sub-menu .nav-item.active .nav-link {
+  background: #f7f8fc;
+  color: #12253f;
 }
