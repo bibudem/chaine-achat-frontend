@@ -39,6 +39,7 @@
     <div class="fbp-search">
       <i class="bi bi-search fbp-search__icon"></i>
       <input type="text" class="form-control fbp-search__input" [(ngModel)]="recherche"
+             (ngModelChange)="onRechercheChange()"
              [placeholder]="'fonds-budgetaires-page.rechercher-placeholder' | translate">
     </div>
 
@@ -53,8 +54,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let f of fondsFiltres; let i = index">
-            <td class="fbp-td--num">{{ i + 1 }}</td>
+          <tr *ngFor="let f of fondsPagines; let i = index">
+            <td class="fbp-td--num">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
             <td class="fbp-td--code">{{ f.code }}</td>
             <td class="fbp-td--date">{{ f.date_creation | date: 'dd MMM yyyy' }}</td>
             <td class="fbp-td--actions">
@@ -71,6 +72,55 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- ── PAGINATION ──────────────────────────────────────────────── -->
+    <div *ngIf="fondsFiltres.length > 0" class="fbp-pagination">
+      <div class="text-muted small">
+        {{ 'items.affichage-de' | translate }}
+        <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
+        {{ 'items.a' | translate }}
+        <strong>{{ getLastItemIndex() }}</strong>
+        {{ 'items.sur' | translate }}
+        <strong>{{ fondsFiltres.length }}</strong>
+      </div>
+      <nav *ngIf="totalPages > 1" aria-label="Pagination">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(1)" [title]="'items.premiere-page' | translate">
+              <i class="bi bi-chevron-double-left"></i>
+            </button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
+          <ng-container *ngFor="let page of pages">
+            <li class="page-item disabled" *ngIf="page === currentPage - 3 && page > 1">
+              <span class="page-link">…</span>
+            </li>
+            <li class="page-item"
+                *ngIf="page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)"
+                [class.active]="page === currentPage">
+              <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+            </li>
+            <li class="page-item disabled" *ngIf="page === currentPage + 3 && page < totalPages">
+              <span class="page-link">…</span>
+            </li>
+          </ng-container>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(totalPages)" [title]="'items.derniere-page' | translate">
+              <i class="bi bi-chevron-double-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   </ng-container>
 </div>

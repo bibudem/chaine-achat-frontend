@@ -83,6 +83,16 @@
 }
 .fbp-table tbody tr:last-child td { border-bottom: none; }
 
+/* ── Pagination ────────────────────────────────────────────────────── */
+.fbp-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
 .fbp-td--num  { color: #9FB3C8; font-variant-numeric: tabular-nums; }
 .fbp-td--code { font-weight: 600; color: #1A2B3C; font-variant-numeric: tabular-nums; }
 .fbp-td--date { font-size: .78rem; color: #9FB3C8; white-space: nowrap; }

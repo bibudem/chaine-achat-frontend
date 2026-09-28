@@ -16,25 +16,27 @@ Le backend (API Node.js / Express) et l'orchestrateur de notifications (n8n) se 
   - Nouvel abonnement
   - Modification et CCOL
   - PEB Tipasa numérique
-  - Requête ACQ Accessibilité
+  - Accessibilité (anciennement « Requête ACQ Accessibilité »)
   - Suggestion d'achat
+- Répartir un achat/abonnement entre plusieurs fonds budgétaires (fonds partagés)
 - Consulter ses demandes et leur statut depuis le profil usager
 
 ### Espace administrateur (bibliothèques)
-- **Gestion des items** : liste, filtres avancés, tri, pagination
+- **Gestion des items** : liste, filtres avancés, recherche (titre/ISBN/demandeur, ou `#5` pour l'ID exact), tri par colonne ou tri multi-critères par défaut, pagination
 - **Statut Bibliothèque** : mise à jour du statut de traitement par demande
 - **Décision ACQ / TDM** : suivi et statut ACQ, création de notice TDM, catalogage — sur la fiche item et la page de décision
-- **Formulaire d'item** : création et modification avec 3 onglets (Informations de base · Champs spécifiques · Décision ACQ)
+- **Formulaire d'item** : création et modification avec plusieurs onglets (Informations de base · Champs spécifiques · Décision ACQ)
 - **Réponses formulaires** : consultation et traitement des soumissions usager
-- **Pièces jointes** : ajout, consultation et téléchargement de documents liés à une demande ou un item
+- **Pièces jointes** : ajout, consultation et téléchargement de documents liés à une demande ou un item (PDF, Office, courriel, images)
 - **Rapports** : génération et export Excel de données filtrées
 - **Import en lot** : insertion de demandes depuis un fichier Excel, avec historique des imports
+- **Configuration** (Admin) : gestion des utilisateurs et de leurs rôles, des fonds budgétaires, des bibliothèques et des taux de change — listes utilisées comme source pour les listes déroulantes des formulaires
 - **Tableau de bord** : statistiques, répartition par type/bibliothèque/priorité
 - Notifications automatiques par courriel via **n8n** à la soumission et à la mise à jour du statut
 
 ### Général
 - Interface **bilingue** FR / EN (sélecteur masqué en production)
-- Authentification par profil (Admin, Bibliothécaire, Usager) — actuellement simulée côté frontend
+- Authentification Azure AD (UdeM) — rôle applicatif (Admin / TDM / Usager) géré côté backend
 - FAQ intégrée
 - Design responsive (desktop, tablette, mobile)
 
@@ -156,10 +158,13 @@ chaine-achat-frontend/
 
 ## Rôles et accès
 
+Le rôle applicatif est géré côté backend (table `tbl_utilisateurs`, voir Configuration >
+Utilisateurs) — Azure AD (UdeM) sert uniquement de porte d'entrée à l'authentification.
+
 | Rôle | Description | Accès |
 |---|---|---|
-| `Admin` | Administrateur bibliothèque | Toutes les pages |
-| `Bibliothécaire` | Personnel bibliothèque | Items, rapports, réponses |
+| `Admin` | Administrateur bibliothèque | Toutes les pages, y compris Configuration |
+| `TDM` | Traitement documentaire | Items, rapports, réponses, décision (champs ACQ en lecture seule) |
 | `Usager` | Communauté UdeM | Portail usager uniquement |
 
 ---

@@ -18,6 +18,11 @@ export class FondsBudgetairesComponent implements OnInit {
   /** Filtre live du tableau (même besoin que la liste déroulante : liste longue). */
   recherche = '';
 
+  /** Pagination client (la liste complète est déjà chargée en mémoire — pas d'appel réseau
+   *  par page). */
+  currentPage  = 1;
+  itemsPerPage = 25;
+
   /** Modale d'ajout/modification — editingId null = création, sinon id du fonds modifié. */
   showModal  = false;
   editingId: number | null = null;
@@ -57,6 +62,34 @@ export class FondsBudgetairesComponent implements OnInit {
     const q = this.recherche.trim().toLowerCase();
     if (!q) return this.fonds;
     return this.fonds.filter(f => f.code.toLowerCase().includes(q));
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.fondsFiltres.length / this.itemsPerPage));
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get fondsPagines(): FondBudgetaire[] {
+    const debut = (this.currentPage - 1) * this.itemsPerPage;
+    return this.fondsFiltres.slice(debut, debut + this.itemsPerPage);
+  }
+
+  getLastItemIndex(): number {
+    return Math.min(this.currentPage * this.itemsPerPage, this.fondsFiltres.length);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
+
+  /** Recherche modifiée : on revient toujours à la première page, sinon le tableau peut
+   *  s'afficher vide si la page courante n'existe plus dans les résultats filtrés. */
+  onRechercheChange(): void {
+    this.currentPage = 1;
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -129,6 +162,11 @@ export class FondsBudgetairesComponent implements OnInit {
     this.fondsService.supprimer(f.fond_id).subscribe({
       next: () => {
         this.fonds = this.fonds.filter(x => x.fond_id !== f.fond_id);
+        // Dernière ligne de la dernière page supprimée : revenir à la page précédente
+        // plutôt que d'afficher une page vide.
+        if (this.currentPage > 1 && this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages;
+        }
         this.dialog.showSuccess(this.t('succes-supprime'));
       },
       error: () => this.dialog.showError(this.t('erreur-suppression'))
