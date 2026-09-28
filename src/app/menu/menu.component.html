@@ -95,6 +95,16 @@
               {{ 'menu.utilisateurs' | translate }}
             </a>
           </li>
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/configuration/fonds-budgetaires" (click)="closeSidebar()">
+              {{ 'menu.fonds-budgetaires' | translate }}
+            </a>
+          </li>
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/configuration/bibliotheques" (click)="closeSidebar()">
+              {{ 'menu.bibliotheques' | translate }}
+            </a>
+          </li>
         </ul>
       </div>
     </li>

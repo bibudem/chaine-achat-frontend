@@ -57,9 +57,8 @@
   <div class="col-md-3" [formGroup]="lignes[0]">
     <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
     <div class="fr-fonds-inline">
-      <input type="text" formControlName="fonds_budgetaire" class="form-control"
-             [class.is-invalid]="isInvalid(lignes[0], 'fonds_budgetaire')"
-             [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
+      <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
+             [invalid]="isInvalid(lignes[0], 'fonds_budgetaire')"></app-fonds-budgetaire-select>
       <button type="button" class="fr-btn fr-btn--ajouter" (click)="ajouter()"
               [title]="'forms-usager.fonds-ajouter' | translate">
         <i class="bi bi-plus-circle-fill"></i>
@@ -132,10 +131,9 @@
 
     <div class="fr-champ fr-champ--fonds">
       <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
-      <input type="text" formControlName="fonds_budgetaire" class="form-control"
-             [class.is-invalid]="isInvalid(ligne, 'fonds_budgetaire')"
-             [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
-      <div *ngIf="isInvalid(ligne, 'fonds_budgetaire')" class="invalid-feedback">
+      <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
+             [invalid]="isInvalid(ligne, 'fonds_budgetaire')"></app-fonds-budgetaire-select>
+      <div *ngIf="isInvalid(ligne, 'fonds_budgetaire')" class="invalid-feedback d-block">
         <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-format' | translate }}
       </div>
     </div>

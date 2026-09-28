@@ -7,6 +7,7 @@ import { ListeChoixOptions, formulaireTypeLabel } from '../../../lib/ListeChoixO
 import { DialogService } from '../../../services/dialog.service';
 import { AuthService } from '../../../services/auth.service';
 import { ReponsesService } from '../../../services/reponses.service';
+import { BibliothequesService } from '../../../services/bibliotheques.service';
 
 interface FavoriFilter {
   nom: string;
@@ -128,6 +129,9 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
 
+  /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
+  bibliotheques: string[] = [];
+
   // Items présents dans la cloche de notifications (statut biblio "Soumettre aux ACQ" +
   // décision ACQ encore en attente) — sert à mettre en évidence leur ID dans la liste.
   pendingItemIds = new Set<number>();
@@ -141,10 +145,15 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     private route:           ActivatedRoute,
     private dialogService:   DialogService,
     public  authService:     AuthService,
-    private reponsesService: ReponsesService
+    private reponsesService: ReponsesService,
+    private bibliothequesService: BibliothequesService
   ) {}
 
   ngOnInit(): void {
+    this.bibliothequesService.getAll().subscribe(res => {
+      this.bibliotheques = (res.data || []).map(b => b.nom);
+    });
+
     this.lireDecisionParams();
     this.restoreFilterState();
 

@@ -1,0 +1,108 @@
+<div class="fbp-page container-fluid pb-5 mt-5">
+
+  <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
+  <div class="fbp-header">
+    <div class="fbp-header__left">
+      <i class="bi bi-cash-coin fbp-header__icon"></i>
+      <div>
+        <h1 class="fbp-header__title">{{ 'fonds-budgetaires-page.titre' | translate }}</h1>
+        <p class="fbp-header__sub">{{ 'fonds-budgetaires-page.sous-titre' | translate }}</p>
+      </div>
+    </div>
+    <button class="fbp-header__add-btn" (click)="openAdd()">
+      <i class="bi bi-plus-circle"></i>
+      <span>{{ 'fonds-budgetaires-page.nouveau-fonds' | translate }}</span>
+    </button>
+  </div>
+
+  <!-- ── ERREUR ────────────────────────────────────────────────────── -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- ── VIDE ──────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && !errorMessage && fonds.length === 0" class="fbp-empty">
+    <i class="bi bi-inbox"></i>
+    <p>{{ 'fonds-budgetaires-page.vide' | translate }}</p>
+    <button class="btn btn-primary btn-sm" (click)="openAdd()">
+      <i class="bi bi-plus-lg me-1"></i>{{ 'fonds-budgetaires-page.ajouter-premier' | translate }}
+    </button>
+  </div>
+
+  <!-- ── RECHERCHE + TABLEAU ───────────────────────────────────────── -->
+  <ng-container *ngIf="!loading && fonds.length > 0">
+    <div class="fbp-search">
+      <i class="bi bi-search fbp-search__icon"></i>
+      <input type="text" class="form-control fbp-search__input" [(ngModel)]="recherche"
+             [placeholder]="'fonds-budgetaires-page.rechercher-placeholder' | translate">
+    </div>
+
+    <div class="fbp-table-wrap">
+      <table class="table fbp-table">
+        <thead>
+          <tr>
+            <th class="fbp-th--num">#</th>
+            <th>{{ 'fonds-budgetaires-page.col-code' | translate }}</th>
+            <th>{{ 'fonds-budgetaires-page.col-date-creation' | translate }}</th>
+            <th class="fbp-th--actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of fondsFiltres; let i = index">
+            <td class="fbp-td--num">{{ i + 1 }}</td>
+            <td class="fbp-td--code">{{ f.code }}</td>
+            <td class="fbp-td--date">{{ f.date_creation | date: 'dd MMM yyyy' }}</td>
+            <td class="fbp-td--actions">
+              <button class="fbp-action-btn" (click)="openEdit(f)" [title]="'fonds-budgetaires-page.modifier' | translate">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="fbp-action-btn fbp-action-btn--delete" (click)="supprimer(f)" [title]="'fonds-budgetaires-page.supprimer' | translate">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="fondsFiltres.length === 0">
+            <td colspan="4" class="fbp-td--vide">{{ 'fonds-budgetaires-page.aucun-resultat' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>
+
+<!-- ── MODAL : ajout / modification ────────────────────────────────────── -->
+<div class="fbp-overlay" *ngIf="showModal" (click)="cancelModal()">
+  <div class="fbp-modal" (click)="$event.stopPropagation()">
+    <div class="fbp-modal__head">
+      <span class="fbp-modal__title">
+        <i class="bi me-2" [ngClass]="editingId ? 'bi-pencil' : 'bi-plus-circle'"></i>
+        {{ (editingId ? 'fonds-budgetaires-page.modal-titre-modifier' : 'fonds-budgetaires-page.nouveau-fonds') | translate }}
+      </span>
+      <button class="fbp-modal__close" (click)="cancelModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="fbp-modal__body">
+      <div class="mb-1">
+        <label class="fbp-modal__label">{{ 'fonds-budgetaires-page.label-code' | translate }}</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="formCode"
+               [placeholder]="'fonds-budgetaires-page.code-placeholder' | translate">
+      </div>
+      <small class="text-muted d-block mt-2">
+        {{ 'fonds-budgetaires-page.note-format' | translate }}
+      </small>
+    </div>
+
+    <div class="fbp-modal__foot">
+      <button class="btn btn-secondary btn-sm" (click)="cancelModal()">{{ 'fonds-budgetaires-page.annuler' | translate }}</button>
+      <button class="btn btn-primary btn-sm" [disabled]="isSaving" (click)="submitModal()">
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        {{ (editingId ? 'fonds-budgetaires-page.enregistrer' : 'fonds-budgetaires-page.creer') | translate }}
+      </button>
+    </div>
+  </div>
+</div>

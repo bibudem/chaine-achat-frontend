@@ -7,6 +7,7 @@ import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { ReponsesService } from '../../../services/reponses.service';
 import { ConfigService, TauxRates } from '../../../services/config.service';
+import { BibliothequesService } from '../../../services/bibliotheques.service';
 import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionDevise';
 import { FondsRepartitionComponent } from '../../shared/fonds-repartition/fonds-repartition.component';
 
@@ -29,6 +30,9 @@ export class ItemFormulaireComponent implements OnInit {
 
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
+
+  /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
+  bibliotheques: string[] = [];
 
   /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
   tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
@@ -70,12 +74,17 @@ export class ItemFormulaireComponent implements OnInit {
     private dialogService:   DialogService,
     private location:        Location,
     private reponsesService: ReponsesService,
-    private configService:   ConfigService
+    private configService:   ConfigService,
+    private bibliothequesService: BibliothequesService
   ) {
     this.itemForm = this.createForm();
   }
 
   ngOnInit(): void {
+    this.bibliothequesService.getAll().subscribe(res => {
+      this.bibliotheques = (res.data || []).map(b => b.nom);
+    });
+
     this.itemId = Number(this.route.snapshot.paramMap.get('id'));
     this.isEditMode = !!this.itemId;
 

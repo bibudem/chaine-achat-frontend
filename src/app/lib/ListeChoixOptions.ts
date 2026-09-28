@@ -75,28 +75,6 @@ statusOptions = [
     'Ne s\'applique pas'
   ];
 
-  // Options pour les bibliothèques
-  bibliothequeOptions = [
-    'Aménagement',
-    'Campus Laval',
-    'Direction générale',
-    'Droit',
-    'Du Parc',
-    'Hubert-Reeves',
-    'Kinésiologie',
-    'L.S.H.',
-    'Livres rares',
-    'Mathématiques-Informatique',
-    'Médecine vétérinaire',
-    'Musique',
-    'Marguerite-d\'Youville',
-    'Prêt entre bibliothèques',
-    'Santé',
-    'Service du catalogage',
-    'Service Accessibilité',
-    'TGD',
-  ];
-
   // Options pour la précision de demande
   precisionDemandeOptions = [
     'Achat de complément de collection (CCOL) pour abonnement (courant ou ancien)',

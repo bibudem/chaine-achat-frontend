@@ -1,0 +1,47 @@
+<div class="fbs-wrap">
+
+  <ng-container *ngIf="!modeAutre; else autreTpl">
+    <button type="button" class="form-select fbs-trigger" [class.is-invalid]="invalid"
+            [disabled]="disabled" (click)="toggleOuvert()">
+      <span [class.fbs-trigger__placeholder]="!valeur">
+        {{ valeur || ('forms-usager.fonds-budgetaire-selectionner' | translate) }}
+      </span>
+    </button>
+
+    <div class="fbs-panel" *ngIf="ouvert">
+      <input type="text" class="form-control form-control-sm fbs-search" autofocus
+             [(ngModel)]="recherche" [ngModelOptions]="{standalone: true}"
+             [placeholder]="'forms-usager.fonds-budgetaire-rechercher' | translate"
+             (click)="$event.stopPropagation()">
+      <ul class="fbs-list">
+        <li *ngFor="let c of resultatsFiltres" class="fbs-item" [class.fbs-item--actif]="c === valeur"
+            (click)="choisir(c)">
+          {{ c }}
+        </li>
+        <li *ngIf="resultatsFiltres.length === 0" class="fbs-item fbs-item--vide">
+          {{ 'forms-usager.fonds-budgetaire-aucun-resultat' | translate }}
+        </li>
+      </ul>
+      <div class="fbs-autre-btn" (click)="choisirAutre()">
+        <i class="fas fa-plus-circle me-1"></i>{{ 'forms-usager.fonds-budgetaire-autre' | translate }}
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #autreTpl>
+    <div class="fbs-autre-group">
+      <input type="text" class="form-control fbs-autre-input"
+             [class.is-invalid]="invalid"
+             [ngModel]="autreTexte" [ngModelOptions]="{standalone: true}"
+             (ngModelChange)="onAutreInput($event)" (blur)="onAutreBlur()"
+             [disabled]="disabled"
+             [placeholder]="'forms-usager.fonds-budgetaire-autre-placeholder' | translate">
+      <button type="button" class="fbs-retour-icon"
+              [title]="'forms-usager.fonds-budgetaire-retour-liste' | translate"
+              [disabled]="disabled" (click)="revenirListe()">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
+  </ng-template>
+
+</div>

@@ -76,10 +76,9 @@
 
           <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
-            <input type="text" formControlName="fonds_budgetaire" class="form-control"
-                   [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                   [placeholder]="'forms-usager.fonds-budgetaire-placeholder' | translate">
-            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback">
+            <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
+                   [invalid]="isInvalid('fonds_budgetaire')"></app-fonds-budgetaire-select>
+            <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback d-block">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-budgetaire-required' | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.fonds-budgetaire-hint' | translate }}</small>

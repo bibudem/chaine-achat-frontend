@@ -11,7 +11,8 @@
   align-items: center;
   gap: .5rem;
 }
-.fr-fonds-inline .form-control { flex: 1 1 auto; min-width: 0; }
+.fr-fonds-inline .form-control,
+.fr-fonds-inline app-fonds-budgetaire-select { flex: 1 1 auto; min-width: 0; }
 .fr-fonds-inline .fr-btn { font-size: 1.3rem; }
 
 /* Fonds partagés (2+) : même style de boîte/liste que Pièces jointes

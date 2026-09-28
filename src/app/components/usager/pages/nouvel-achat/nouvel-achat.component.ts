@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, Validat
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
+import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
@@ -24,13 +25,8 @@ export class NouvelAchatComponent implements OnInit {
   showAviserReservation = true;
   editId:  number | null = null;
 
-  bibliotheques: string[] = [
-    'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
-    'Du Parc', 'Hubert-Reeves', 'Kinésiologie', 'L.S.H.',
-    'Livres rares', 'Mathématiques-Informatique', 'Médecine vétérinaire',
-    'Musique', "Marguerite-d'Youville", 'Prêt entre bibliothèques',
-    'Santé', 'Service Accessibilité', 'Service du catalogage', 'TGD', 'TEST-DRIN'
-  ];
+  /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
+  bibliotheques: string[] = [];
 
   categoriesDocument: string[] = [
     'Monographie', 'Périodique', 'Base de données',
@@ -81,13 +77,18 @@ export class NouvelAchatComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private bibliothequesService: BibliothequesService
   ) {}
 
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
     const statut   = sessionStorage.getItem('groupeAdmin')  ?? '';
+
+    this.bibliothequesService.getAll().subscribe(res => {
+      this.bibliotheques = (res.data || []).map(b => b.nom);
+    });
 
     this.form = this.fb.group({
       nom:                         [{ value: nom, disabled: true },      Validators.required],

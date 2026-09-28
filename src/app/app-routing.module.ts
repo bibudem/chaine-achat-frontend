@@ -32,6 +32,8 @@ import { ImportLogsComponent } from './components/admin/import-logs/import-logs.
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
 import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
+import { FondsBudgetairesComponent } from './components/configuration/fonds-budgetaires/fonds-budgetaires.component';
+import { BibliothequesComponent } from './components/configuration/bibliotheques/bibliotheques.component';
 
 const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
@@ -48,6 +50,8 @@ const routes: Routes = [
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/utilisateurs', component: UtilisateursComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'configuration/fonds-budgetaires', component: FondsBudgetairesComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'configuration/bibliotheques', component: BibliothequesComponent, canActivate: [AuthGuard, AdminGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',

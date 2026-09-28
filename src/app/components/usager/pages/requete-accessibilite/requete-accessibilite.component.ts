@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { ConfigService, TauxRates } from '../../../../services/config.service';
+import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
 import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
 
@@ -24,13 +25,8 @@ export class RequeteAccessibiliteComponent implements OnInit {
   /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
   tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
 
-  bibliotheques: string[] = [
-    'Aménagement', 'Campus Laval', 'Direction générale', 'Droit',
-    'Du Parc', 'Hubert-Reeves', 'Kinésiologie', 'L.S.H.',
-    'Livres rares', 'Mathématiques-Informatique', 'Médecine vétérinaire',
-    'Musique', "Marguerite-d'Youville", 'Prêt entre bibliothèques',
-    'Santé', 'Service Accessibilité', 'Service du catalogage', 'TGD', 'TEST-DRIN'
-  ];
+  /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
+  bibliotheques: string[] = [];
 
   /** Liste volontairement restreinte pour ce formulaire (voir spec Accessibilité) — pas de
    *  Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom, absent de la liste générale
@@ -88,13 +84,18 @@ export class RequeteAccessibiliteComponent implements OnInit {
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
     private router: Router,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private bibliothequesService: BibliothequesService
   ) {}
 
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
     const statut   = sessionStorage.getItem('groupeAdmin')   ?? '';
+
+    this.bibliothequesService.getAll().subscribe(res => {
+      this.bibliotheques = (res.data || []).map(b => b.nom);
+    });
 
     this.form = this.fb.group({
       nom:              [{ value: nom, disabled: true },      Validators.required],

@@ -162,7 +162,7 @@
               <select class="form-select form-control" formControlName="bibliotheque"
                       [class.is-invalid]="isInvalid('bibliotheque')">
                 <option value="">{{ 'item-formulaire.bibliotheque-placeholder' | translate }}</option>
-                <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
+                <option *ngFor="let bib of bibliotheques" [value]="bib">{{ bib }}</option>
               </select>
               <div class="invalid-feedback" *ngIf="hasError('bibliotheque', 'required')">{{ 'item-formulaire.bibliotheque-required' | translate }}</div>
             </div>
@@ -341,11 +341,9 @@
           <div class="col-md-4" *ngIf="!gereFondsPartages">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.fonds-budgetaire' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
-              <input type="text" class="form-control" formControlName="fonds_budgetaire"
-                     appFondsBudgetaireMask
-                     [class.is-invalid]="isInvalid('fonds_budgetaire')"
-                     [placeholder]="'item-formulaire.fonds-budgetaire-placeholder' | translate">
-              <div class="invalid-feedback" *ngIf="hasError('fonds_budgetaire', 'required')">
+              <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
+                     [invalid]="isInvalid('fonds_budgetaire')"></app-fonds-budgetaire-select>
+              <div class="invalid-feedback d-block" *ngIf="hasError('fonds_budgetaire', 'required')">
                 {{ 'item-formulaire.fonds-budgetaire-required' | translate }}
               </div>
               <small class="form-text">{{ 'item-formulaire.fonds-budgetaire-hint' | translate }}</small>

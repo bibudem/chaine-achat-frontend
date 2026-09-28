@@ -52,7 +52,7 @@
 
     <select class="filterbar__select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
       <option value="">{{ 'items.bib-placeholder' | translate }}</option>
-      <option *ngFor="let bib of options.bibliothequeOptions" [value]="bib">{{ bib }}</option>
+      <option *ngFor="let bib of bibliotheques" [value]="bib">{{ bib }}</option>
     </select>
 
     <select class="filterbar__select" [(ngModel)]="selectedPriorite" (change)="onFilterChange()">

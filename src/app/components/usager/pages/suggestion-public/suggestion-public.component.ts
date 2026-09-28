@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
+import { BibliothequesService } from '../../../../services/bibliotheques.service';
 
 @Component({
   selector: 'app-suggestion-public',
@@ -38,12 +39,12 @@ export class SuggestionPublicComponent implements OnInit {
     });
   }
 
-  bibliotheques: string[] = [
-    'Aménagement', 'Campus Laval', 'Droit', 'Du Parc',
-    'Hubert-Reeves', 'Kinésiologie', 'L.S.H.', 'Livres rares',
-    'Mathématiques-Informatique', 'Médecine vétérinaire', 'Musique',
-    "Marguerite-d'Youville", 'Santé', 'Service Accessibilité', 'TGD',
-  ];
+  /** Chargée dynamiquement — voir Configuration > Bibliothèques. Ce formulaire de suggestion
+   *  n'a jamais proposé les unités internes/administratives (pas de public à qui suggérer un
+   *  achat) — on les retire de la liste commune plutôt que d'élargir silencieusement ce
+   *  formulaire à des unités qui n'ont pas de sens ici. */
+  private readonly UNITES_INTERNES_EXCLUES = ['Direction générale', 'Prêt entre bibliothèques', 'Service du catalogage'];
+  bibliotheques: string[] = [];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
@@ -60,13 +61,20 @@ export class SuggestionPublicComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private bibliothequesService: BibliothequesService
   ) {}
 
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
     const statut   = sessionStorage.getItem('groupeAdmin')   ?? '';
     const courriel = sessionStorage.getItem('courrielAdmin') ?? '';
+
+    this.bibliothequesService.getAll().subscribe(res => {
+      this.bibliotheques = (res.data || [])
+        .map(b => b.nom)
+        .filter(nom => !this.UNITES_INTERNES_EXCLUES.includes(nom));
+    });
 
     this.form = this.fb.group({
       nom:                          [{ value: nom, disabled: true },      Validators.required],

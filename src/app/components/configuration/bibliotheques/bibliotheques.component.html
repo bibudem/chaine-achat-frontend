@@ -1,0 +1,105 @@
+<div class="bib-page container-fluid pb-5 mt-5">
+
+  <!-- ── EN-TÊTE ──────────────────────────────────────────────────── -->
+  <div class="bib-header">
+    <div class="bib-header__left">
+      <i class="bi bi-building bib-header__icon"></i>
+      <div>
+        <h1 class="bib-header__title">{{ 'bibliotheques-page.titre' | translate }}</h1>
+        <p class="bib-header__sub">{{ 'bibliotheques-page.sous-titre' | translate }}</p>
+      </div>
+    </div>
+    <button class="bib-header__add-btn" (click)="openAdd()">
+      <i class="bi bi-plus-circle"></i>
+      <span>{{ 'bibliotheques-page.nouvelle-bibliotheque' | translate }}</span>
+    </button>
+  </div>
+
+  <!-- ── ERREUR ────────────────────────────────────────────────────── -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- ── VIDE ──────────────────────────────────────────────────────── -->
+  <div *ngIf="!loading && !errorMessage && bibliotheques.length === 0" class="bib-empty">
+    <i class="bi bi-inbox"></i>
+    <p>{{ 'bibliotheques-page.vide' | translate }}</p>
+    <button class="btn btn-primary btn-sm" (click)="openAdd()">
+      <i class="bi bi-plus-lg me-1"></i>{{ 'bibliotheques-page.ajouter-premiere' | translate }}
+    </button>
+  </div>
+
+  <!-- ── RECHERCHE + TABLEAU ───────────────────────────────────────── -->
+  <ng-container *ngIf="!loading && bibliotheques.length > 0">
+    <div class="bib-search">
+      <i class="bi bi-search bib-search__icon"></i>
+      <input type="text" class="form-control bib-search__input" [(ngModel)]="recherche"
+             [placeholder]="'bibliotheques-page.rechercher-placeholder' | translate">
+    </div>
+
+    <div class="bib-table-wrap">
+      <table class="table bib-table">
+        <thead>
+          <tr>
+            <th class="bib-th--num">#</th>
+            <th>{{ 'bibliotheques-page.col-nom' | translate }}</th>
+            <th>{{ 'bibliotheques-page.col-date-creation' | translate }}</th>
+            <th class="bib-th--actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of bibliothequesFiltrees; let i = index">
+            <td class="bib-td--num">{{ i + 1 }}</td>
+            <td class="bib-td--nom">{{ b.nom }}</td>
+            <td class="bib-td--date">{{ b.date_creation | date: 'dd MMM yyyy' }}</td>
+            <td class="bib-td--actions">
+              <button class="bib-action-btn" (click)="openEdit(b)" [title]="'bibliotheques-page.modifier' | translate">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="bib-action-btn bib-action-btn--delete" (click)="supprimer(b)" [title]="'bibliotheques-page.supprimer' | translate">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="bibliothequesFiltrees.length === 0">
+            <td colspan="4" class="bib-td--vide">{{ 'bibliotheques-page.aucun-resultat' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>
+
+<!-- ── MODAL : ajout / modification ────────────────────────────────────── -->
+<div class="bib-overlay" *ngIf="showModal" (click)="cancelModal()">
+  <div class="bib-modal" (click)="$event.stopPropagation()">
+    <div class="bib-modal__head">
+      <span class="bib-modal__title">
+        <i class="bi me-2" [ngClass]="editingId ? 'bi-pencil' : 'bi-plus-circle'"></i>
+        {{ (editingId ? 'bibliotheques-page.modal-titre-modifier' : 'bibliotheques-page.nouvelle-bibliotheque') | translate }}
+      </span>
+      <button class="bib-modal__close" (click)="cancelModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="bib-modal__body">
+      <div class="mb-1">
+        <label class="bib-modal__label">{{ 'bibliotheques-page.label-nom' | translate }}</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="formNom"
+               [placeholder]="'bibliotheques-page.nom-placeholder' | translate">
+      </div>
+    </div>
+
+    <div class="bib-modal__foot">
+      <button class="btn btn-secondary btn-sm" (click)="cancelModal()">{{ 'bibliotheques-page.annuler' | translate }}</button>
+      <button class="btn btn-primary btn-sm" [disabled]="isSaving" (click)="submitModal()">
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        {{ (editingId ? 'bibliotheques-page.enregistrer' : 'bibliotheques-page.creer') | translate }}
+      </button>
+    </div>
+  </div>
+</div>

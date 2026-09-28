@@ -72,10 +72,13 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
 import { FondsRepartitionComponent } from './components/shared/fonds-repartition/fonds-repartition.component';
+import { FondsBudgetaireSelectComponent } from './components/shared/fonds-budgetaire-select/fonds-budgetaire-select.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
 import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
+import { FondsBudgetairesComponent } from './components/configuration/fonds-budgetaires/fonds-budgetaires.component';
+import { BibliothequesComponent } from './components/configuration/bibliotheques/bibliotheques.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +106,8 @@ import { UtilisateursComponent } from './components/configuration/utilisateurs/u
     ImportLogsComponent,
     TauxDevisesComponent,
     UtilisateursComponent,
+    FondsBudgetairesComponent,
+    BibliothequesComponent,
     NouvelAchatComponent,
     ModificationCcolComponent,
     RequeteAccessibiliteComponent,
@@ -114,6 +119,7 @@ import { UtilisateursComponent } from './components/configuration/utilisateurs/u
     UsagerProfilComponent,
     PieceJointeGestionComponent,
     FondsRepartitionComponent,
+    FondsBudgetaireSelectComponent,
     PieceJointeUploaderComponent,
     SuggestionEmbedComponent,
     FondsBudgetaireMaskDirective,
