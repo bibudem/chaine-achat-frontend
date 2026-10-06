@@ -1011,7 +1011,8 @@
     "les-bibliotheques": "| Les bibliothèques",
     "role": "Bibliothèques",
     "deconnexion": "Déconnexion",
-    "espace-gestion": "Espace système"
+    "espace-gestion": "Espace système",
+    "ajouter-demande": "Ajouter une demande"
   },
   "forms-usager": {
     "confirmation-soumise": "Demande soumise !",

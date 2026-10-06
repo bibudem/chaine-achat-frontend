@@ -1012,7 +1012,8 @@
     "les-bibliotheques": "| The libraries",
     "role": "Bibliothèques",
     "deconnexion": "Sign out",
-    "espace-gestion": "System area"
+    "espace-gestion": "System area",
+    "ajouter-demande": "Add a request"
   },
   "forms-usager": {
     "confirmation-soumise": "Request submitted!",

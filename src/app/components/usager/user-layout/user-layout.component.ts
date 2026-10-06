@@ -61,7 +61,12 @@ export class UserLayoutComponent implements OnInit {
     this.router.navigate(['/usager/profil']);
   }
 
-  /** Admin/TDM seulement — retour à l'interface de gestion (voir header.component.ts,
+  nouvelleDemande(): void {
+    this.userOpen = false;
+    this.router.navigate(['/usager']);
+  }
+
+  /** Admin/TDM/Employé — accès à l'interface de gestion (voir header.component.ts,
    *  accederEspaceUsager : simple navigation, la session reste la même). */
   retourGestion(): void {
     this.userOpen = false;
