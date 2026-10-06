@@ -27,10 +27,6 @@ export class UsagerHomeComponent implements OnInit {
   totalDemandes: number | null = null;
   loadingDemandes = true;
 
-  // Total du système (toutes les demandes, tous usagers confondus — lecture seule, voir
-  // ToutesLesDemandesComponent) : simple compteur, un seul appel léger (limit: 1).
-  totalSysteme: number | null = null;
-
   // Taux de change en vigueur aujourd'hui (lecture seule — gestion complète côté admin).
   tauxActuels: TauxPeriode | null = null;
   isLoadingTaux = true;
@@ -85,19 +81,14 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
-    // Consultation de toutes les demandes (et son compteur) réservée à l'Employé — le rôle
-    // Usager n'a accès qu'à ses propres demandes, voir isEmploye.
+    // Taux de change réservé à l'Employé (personnel des bibliothèques) — non pertinent pour
+    // le reste de la communauté UdeM (rôle Usager).
     if (this.authService.isEmploye) {
-      this.reponsesService.getAllPublic({ limit: 1, offset: 0 }).subscribe({
-        next:  res => { this.totalSysteme = res.total; },
-        error: ()  => { this.totalSysteme = null; }
+      this.tauxDevisesService.getActuelle().subscribe({
+        next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
+        error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
       });
     }
-
-    this.tauxDevisesService.getActuelle().subscribe({
-      next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
-      error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
-    });
   }
 
   // ── Tableau de bord : répartition des demandes par statut (même catégorisation que les

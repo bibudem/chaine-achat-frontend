@@ -192,18 +192,11 @@ export class UsagerProfilComponent implements OnInit {
       if (!this.mesDemandesSeulement) this.chargerPublique();
     });
 
-    // Arrivée depuis une carte du tableau de bord d'accueil : ?toutes=1 décoche la case
-    // d'entrée (toutes les demandes du système), ?statut=attente|soumise|traitee présélectionne
-    // le filtre de statut correspondant — dans l'un ou l'autre mode. La consultation de
-    // toutes les demandes est réservée à l'Employé (personnel des bibliothèques) ; le rôle
-    // Usager n'a accès qu'à ses propres demandes, même via ce lien direct.
+    // ?statut=attente|soumise|traitee présélectionne le filtre de statut correspondant,
+    // depuis une carte du tableau de bord d'accueil.
     const statutParam = this.route.snapshot.queryParamMap.get('statut');
     if (statutParam === 'attente' || statutParam === 'soumise' || statutParam === 'traitee') {
       this.filtreStatut = statutParam;
-    }
-    if (this.authService.isEmploye && this.route.snapshot.queryParamMap.get('toutes') === '1') {
-      this.mesDemandesSeulement = false;
-      this.chargerPublique();
     }
   }
 

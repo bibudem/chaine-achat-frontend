@@ -29,14 +29,7 @@ export class AppComponent implements OnInit {
     translate.use(savedLang);
 
     // Initialisation immédiate avant le premier rendu
-    const path = window.location.pathname;
-    this.isEmbedRoute  = path.startsWith('/suggestion-public');
-    this.isUsagerRoute = path.startsWith('/usager') || path.startsWith('/login') || this.isEmbedRoute;
-    this.isLoginRoute  = path.startsWith('/login');
-    if (!this.isUsagerRoute){
-      document.documentElement.classList.remove('usager-route');
-    }
-
+    this.updateRouteFlags(window.location.pathname);
   }
 
   ngOnInit() {
@@ -46,10 +39,18 @@ export class AppComponent implements OnInit {
       // NavigationStart au lieu de NavigationEnd pour réagir avant le rendu
       filter(event => event instanceof NavigationStart)
     ).subscribe((event: any) => {
-      this.isEmbedRoute  = event.url.startsWith('/suggestion-public');
-      this.isUsagerRoute = event.url.startsWith('/usager') || event.url.startsWith('/login') || this.isEmbedRoute;
-      this.isLoginRoute  = event.url.startsWith('/login');
+      this.updateRouteFlags(event.url);
     });
+  }
+
+  /** Doit s'exécuter à chaque navigation (pas seulement au premier chargement) — sinon la
+   *  classe `usager-route` (qui cache app-header/app-menu, voir css_udem.css) reste figée sur
+   *  celle du tout premier chargement : un F5 la recalcule, une navigation SPA non. */
+  private updateRouteFlags(url: string): void {
+    this.isEmbedRoute  = url.startsWith('/suggestion-public');
+    this.isUsagerRoute = url.startsWith('/usager') || url.startsWith('/login') || this.isEmbedRoute;
+    this.isLoginRoute  = url.startsWith('/login');
+    document.documentElement.classList.toggle('usager-route', this.isUsagerRoute);
   }
 
   switchLanguage(language: string) {

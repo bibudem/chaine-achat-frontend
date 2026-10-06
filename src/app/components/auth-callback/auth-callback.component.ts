@@ -33,7 +33,10 @@ export class AuthCallbackComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/login'], { queryParams: { error: 'auth_failed' } }), 1500);
         return;
       }
-      const dest = this.authService.isUsagerSpace ? '/usager' : this.authService.redirectUrl;
+      // L'Employé atterrit sur l'interface admin (StaffGuard l'y autorise désormais, en
+      // lecture seule) comme Admin/TDM — seul le rôle Usager (communauté UdeM) va vers le
+      // portail de dépôt des demandes.
+      const dest = this.authService.isUsager ? '/usager' : this.authService.redirectUrl;
       this.authService.redirectUrl = '/accueil';
       this.router.navigateByUrl(dest);
     });

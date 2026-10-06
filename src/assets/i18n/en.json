@@ -1012,7 +1012,7 @@
     "les-bibliotheques": "| The libraries",
     "role": "Bibliothèques",
     "deconnexion": "Sign out",
-    "retour-gestion": "Back to management"
+    "espace-gestion": "System area"
   },
   "forms-usager": {
     "confirmation-soumise": "Request submitted!",

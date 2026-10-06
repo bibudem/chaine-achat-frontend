@@ -93,12 +93,6 @@
 
         <!-- Bascule (gauche) + Réinitialiser / compteur / Exporter (droite) — même ligne -->
         <div class="up-filter-footer">
-          <label class="up-toggle-mine" *ngIf="authService.isEmploye">
-            <input type="checkbox" [(ngModel)]="mesDemandesSeulement" (ngModelChange)="onToggleMesDemandes()">
-            <span class="up-toggle-mine__box"><i class="bi bi-check"></i></span>
-            <span class="up-toggle-mine__label">Mes demandes seulement</span>
-          </label>
-
           <div class="filterbar__actions">
             <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreBibliotheque || filtreStatut || filtreDateDebut || filtreDateFin"
                     class="filterbar__reset"
