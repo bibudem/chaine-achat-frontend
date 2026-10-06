@@ -74,7 +74,7 @@
       </span>
     </a>
 
-    <div class="uh-dashboard__stats" *ngIf="!loadingDemandes && totalDemandes">
+    <div class="uh-dashboard__stats" *ngIf="!loadingDemandes && totalDemandes !== null">
       <a routerLink="/usager/profil" class="uh-dstat" title="Voir toutes mes demandes">
         <span class="uh-dstat__icon uh-dstat__icon--total"><i class="bi bi-inbox-fill"></i></span>
         <span class="uh-dstat__body">
