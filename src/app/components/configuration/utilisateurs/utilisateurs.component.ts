@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UtilisateursComponent implements OnInit {
 
-  readonly roles: UserRole[] = ['Admin', 'TDM', 'Usager'];
+  readonly roles: UserRole[] = ['SuperAdmin', 'Admin', 'TDM', 'Usager'];
 
   utilisateurs: Utilisateur[] = [];
 

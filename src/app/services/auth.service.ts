@@ -20,7 +20,7 @@ interface MeResponse {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export type UserRole = 'Admin' | 'TDM' | 'Usager';
+export type UserRole = 'SuperAdmin' | 'Admin' | 'TDM' | 'Usager';
 
 export interface SimulatedProfile {
   role:     UserRole;
@@ -41,6 +41,17 @@ export interface SimulatedProfile {
  * dans login.component.ts). En production, la connexion passe par Azure AD (loginWithAzure).
  */
 export const SIMULATED_PROFILES: SimulatedProfile[] = [
+  {
+    role:        'SuperAdmin',
+    nom:         'Système',
+    prenom:      'Super',
+    courriel:    'superadmin@bib.umontreal.ca',
+    groupe:      'Gestionnaire',
+    label:       'Super administrateur',
+    subtitle:    'Gestion des comptes et des accès',
+    description: 'Tout ce que voit le Services des acquisitions, plus la création des profils utilisateurs',
+    icon:        'bi-shield-fill-check',
+  },
   {
     role:        'Admin',
     nom:         'Admin',
@@ -102,11 +113,15 @@ export class AuthService {
 
   get token(): string | null    { return sessionStorage.getItem('jwt'); }
 
-  get isAdmin(): boolean        { return this.role === 'Admin'; }
+  /** Le SuperAdmin est un niveau supérieur à l'Admin : il hérite de tous ses accès (tableau
+   *  de bord, configuration, édition des items…), voir isSuperAdmin ci-dessous pour son
+   *  privilège exclusif (créer des profils utilisateurs). */
+  get isAdmin(): boolean        { return this.role === 'Admin' || this.role === 'SuperAdmin'; }
+  get isSuperAdmin(): boolean   { return this.role === 'SuperAdmin'; }
   get isTdm(): boolean          { return this.role === 'TDM'; }
   get isUsager(): boolean       { return this.role === 'Usager'; }
 
-  /** Seul l'Administrateur peut créer / modifier / supprimer des items. */
+  /** Seul l'Administrateur (et le SuperAdmin) peut créer / modifier / supprimer des items. */
   get canEdit(): boolean        { return this.isAdmin; }
 
   /** Accès à la page de décision ACQ/TDM (/statut-decision) : l'Administrateur (décision
@@ -120,7 +135,7 @@ export class AuthService {
      et tout appel protégé par requireAuth échouerait (401).
   ─────────────────────────────────────────────────── */
   loginWithDevProfile(role: UserRole): void {
-    const cle: Record<UserRole, string> = { Admin: 'admin', TDM: 'acq', Usager: 'usager' };
+    const cle: Record<UserRole, string> = { SuperAdmin: 'superadmin', Admin: 'admin', TDM: 'acq', Usager: 'usager' };
     window.location.href = `${this.apiUrl}/auth/dev-login?role=${cle[role]}`;
   }
 

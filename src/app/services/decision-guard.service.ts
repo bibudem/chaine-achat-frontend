@@ -13,7 +13,7 @@ export class DecisionGuard implements CanActivate {
 
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
-    if (role === 'Admin' || role === 'TDM') { return true; }
+    if (role === 'Admin' || role === 'SuperAdmin' || role === 'TDM') { return true; }
 
     this.router.navigate(['/login'], { queryParams: { acces: 'refuse' } });
     return false;

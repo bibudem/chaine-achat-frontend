@@ -34,6 +34,7 @@ import { LoginRoutingModule } from './components/login/login-routing.module';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from "./services/auth-guard.service";
 import { AdminGuard } from "./services/admin-guard.service";
+import { SuperAdminGuard } from "./services/super-admin-guard.service";
 import { EditGuard } from "./services/edit-guard.service";
 import { StaffGuard } from "./services/staff-guard.service";
 import { registerLocaleData } from '@angular/common';
@@ -162,6 +163,7 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     DialogService,
     AuthGuard,
     AdminGuard,
+    SuperAdminGuard,
     EditGuard,
     StaffGuard,
     { provide: LOCALE_ID, useValue: "fr-FR" },

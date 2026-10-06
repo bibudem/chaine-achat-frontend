@@ -62,6 +62,7 @@
   border-radius: 20px;
   padding: .3rem .9rem;
 }
+.utl-role-badge--SuperAdmin { background: #F1E9FB; color: #5B2A9E; }
 .utl-role-badge--Admin  { background: #FEF3E7; color: #9A5B0F; }
 .utl-role-badge--TDM    { background: #E8F1F8; color: #1A4E72; }
 .utl-role-badge--Usager { background: #EEF2F6; color: #475569; }

@@ -6,6 +6,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AuthGuard } from "./services/auth-guard.service";
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {AdminGuard} from "./services/admin-guard.service";
+import { SuperAdminGuard } from "./services/super-admin-guard.service";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import {ItemDetailComponent} from "./components/admin/item-detail/item-detail.component";
 import {RapportsComponent} from "./components/admin/rapports/rapports.component";
@@ -49,7 +50,9 @@ const routes: Routes = [
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'configuration/utilisateurs', component: UtilisateursComponent, canActivate: [AuthGuard, AdminGuard] },
+  // Exclusif au SuperAdmin : pas d'AdminGuard ici, même si l'Admin peut accéder au reste de
+  // Configuration (voir authService.isAdmin / AdminGuard, qui incluent le SuperAdmin).
+  { path: 'configuration/utilisateurs', component: UtilisateursComponent, canActivate: [AuthGuard, SuperAdminGuard] },
   { path: 'configuration/fonds-budgetaires', component: FondsBudgetairesComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/bibliotheques', component: BibliothequesComponent, canActivate: [AuthGuard, AdminGuard] },
   // ── Nouvelle section usager ──

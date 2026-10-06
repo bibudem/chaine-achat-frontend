@@ -6,7 +6,8 @@ export class EditGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    if (sessionStorage.getItem('role') === 'Admin') return true;
+    const role = sessionStorage.getItem('role');
+    if (role === 'Admin' || role === 'SuperAdmin') return true;
     this.router.navigate(['/not-acces']);
     return false;
   }
