@@ -17,7 +17,7 @@ const CHAMPS_COMMUNS = new Set<string>([
   'nombre_utilisateurs', 'format_pret_numerique', 'lien_plateforme',
   'demandeur', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
   'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'priorite_demande',
-  'note_dtdm', 'note_commentaire', 'note_acq', 'bibliotheque_note_interne',
+  'note_dtdm', 'note_interne_dtdm', 'note_commentaire', 'note_acq', 'bibliotheque_note_interne',
   'utilisateur_modification', 'date_creation', 'date_modification'
 ]);
 

@@ -11,8 +11,9 @@ import { ReponsesService } from '../../services/reponses.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from 'src/environments/environment';
 
-/** Champs ACQ affichés en lecture seule pour le profil TDM — seuls catalogue/note_dtdm
- *  (le catalogage, sous sa responsabilité) restent modifiables. */
+/** Champs ACQ affichés en lecture seule pour le profil TDM — seuls les champs de l'onglet
+ *  « TDM – Choix de notice » (catalogue/note_dtdm/note_interne_dtdm, sous sa responsabilité)
+ *  restent modifiables. */
 const CHAMPS_ACQ_LECTURE_SEULE_TDM = [
   'statut_acq', 'suivi_acq', 'note_acq', 'creation_notice_dtdm',
   'bordereau_imprime', 'categorie_document', 'format_support',
@@ -35,6 +36,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   emailSent = false;
   options = new ListeChoixOptions();
+  /** Onglet affiché — « acq » (Décision ACQ) ou « tdm » (TDM – Choix de notice), piloté par
+   *  ?tab= (voir item-detail.component.ts, bouton "TDM – Choix de notice"). */
+  activeTab: 'acq' | 'tdm' = 'acq';
+  setActiveTab(tab: 'acq' | 'tdm'): void { this.activeTab = tab; }
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
   itemExisteDansItems = false;
@@ -77,9 +82,12 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       // (retirés — « à compléter par les ACQ »), ils sont donc saisis ici.
       categorie_document:   [''],
       format_support:       [''],
-      // TDM : Suivi de la demande — même formulaire que la décision ACQ, pas d'étape séparée.
+      // TDM – Choix de notice — même formulaire que la décision ACQ, onglet séparé seulement
+      // dans le template (voir activeTab).
       note_dtdm:            [''],
-      catalogue:            ['', Validators.maxLength(200)],
+      note_interne_dtdm:    [''],
+      // Devenu un select (Vide/Complété) — plus de validateur de longueur nécessaire.
+      catalogue:            [''],
     });
 
     if (this.readOnlyAcq) {
@@ -101,6 +109,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       const legacyIdParam  = Number(params.get('id'))         || null; // compat ancien lien
       const itemIdParam    = Number(params.get('item_id'))    || null; // import / reponse-created
 
+      this.activeTab = params.get('tab') === 'tdm' ? 'tdm' : 'acq';
+
       this.reponseId           = null;
       this.itemId              = null;
       this.item                = null;
@@ -109,7 +119,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.itemExisteDansItems = false;
       this.form.reset({
         statut_acq: '', suivi_acq: '', note_acq: '', creation_notice_dtdm: null,
-        categorie_document: '', format_support: '', note_dtdm: '', catalogue: '',
+        categorie_document: '', format_support: '', note_dtdm: '', note_interne_dtdm: '', catalogue: '',
         bordereau_imprime: 'Non',
       });
 
@@ -210,6 +220,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       categorie_document:   data.categorie_document || '',
       format_support:       data.format_support || '',
       note_dtdm:            data.note_dtdm || '',
+      note_interne_dtdm:    data.note_interne_dtdm || '',
       catalogue:            data.catalogue || '',
       bordereau_imprime:    data.bordereau_imprime || 'Non',
     }, { emitEvent: false });
@@ -221,7 +232,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   // respective, s'ils ne sont pas déjà renseignés (mêmes valeurs que ItemFormulaireComponent
   // et creerItemDepuisReponse côté backend).
   // creation_notice_dtdm suit la même logique de pré-remplissage : Oui si le format n'est pas
-  // Électronique (Imprimé/support physique ou Imprimé et électronique), vide si Électronique —
+  // Électronique (Imprimé/support physique ou Imprimé et électronique), Non si Électronique —
   // sans jamais écraser une valeur déjà renseignée (par l'usager ou une décision précédente).
   private applyAcqDefaults(
     statutBibliotheque: string | undefined,
@@ -238,7 +249,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       // saisi par les ACQ, pas par l'usager) — dans ce cas on ne présume pas "Oui".
       creation_notice_dtdm: creationNoticeActuelle != null
         ? creationNoticeActuelle
-        : (soumiseAuxAcq && formatSupport ? (formatSupport === 'Électronique' ? null : true) : null),
+        : (soumiseAuxAcq && formatSupport ? (formatSupport === 'Électronique' ? false : true) : null),
     };
   }
 
@@ -269,6 +280,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       bibliotheque:                   f(bd.bibliotheque,    'bibliotheque'),
       creation_notice_dtdm:           bd.creation_notice_dtdm ?? flat.creation_notice_dtdm ?? sd.creation_notice_dtdm,
       note_dtdm:                      f(bd.note_dtdm,       'note_dtdm'),
+      note_interne_dtdm:              f(bd.note_interne_dtdm, 'note_interne_dtdm'),
       catalogue:                      f(bd.catalogue,       'catalogue'),
       fonds_budgetaire:               f(bd.fonds_budgetaire,'fonds_budgetaire'),
       fonds_sn_projet:                f(bd.fonds_sn_projet, 'fonds_sn_projet'),
@@ -331,6 +343,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       categorie_document:   this.item.categorie_document || '',
       format_support:       this.item.format_support || '',
       note_dtdm:            this.item.note_dtdm || '',
+      note_interne_dtdm:    this.item.note_interne_dtdm || '',
       catalogue:            this.item.catalogue || '',
       bordereau_imprime:    (this.item as any).bordereau_imprime || 'Non',
     }, { emitEvent: false });
@@ -345,7 +358,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       'formulaire_type', 'titre_document', 'sous_titre', 'demandeur',
       'editeur', 'isbn_issn', 'date_publication', 'categorie_document',
       'format_support', 'priorite_demande', 'bibliotheque',
-      'localisation_emplacement', 'creation_notice_dtdm', 'catalogue', 'note_dtdm',
+      'localisation_emplacement', 'creation_notice_dtdm', 'catalogue', 'note_dtdm', 'note_interne_dtdm',
       'fonds_budgetaire', 'fonds_sn_projet', 'periode_couverte',
       'source_information', 'prix_cad', 'devise_originale', 'prix_devise_originale',
       'nombre_titres_inclus', 'nombre_utilisateurs', 'lien_plateforme',
@@ -466,6 +479,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const categorie_document = this.form.get('categorie_document')?.value || null;
     const format_support     = this.form.get('format_support')?.value     || null;
     const note_dtdm  = this.form.get('note_dtdm')?.value   || null;
+    const note_interne_dtdm = this.form.get('note_interne_dtdm')?.value || null;
     const catalogue  = this.form.get('catalogue')?.value   || null;
     // bordereau_imprime appartient à tbl_nouvel_achat_unique / tbl_suggestion_achat (specificData),
     // pas à tbl_items — on l'ajoute à specificData après coup pour que la valeur du formulaire
@@ -484,7 +498,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
           `${environment.apiUrl}/items/save/${this.itemId}`,
           {
             item_id: this.itemId, statut_acq, suivi_acq, note_acq, creation_notice_dtdm,
-            categorie_document, format_support, note_dtdm, catalogue,
+            categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue,
             // Requis par le backend pour router specificData (ex. bordereau_imprime) vers
             // la bonne table spécifique (tbl_nouvel_achat_unique / tbl_suggestion_achat, etc.).
             formulaire_type: this.item?.formulaire_type,
@@ -494,7 +508,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, catalogue, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
+          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         );
 
@@ -617,6 +631,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       : null;
     const catalogueForm      = this.form.get('catalogue')?.value;
     const noteDtdmForm       = this.form.get('note_dtdm')?.value;
+    const noteInterneForm    = this.form.get('note_interne_dtdm')?.value;
 
     const rangeesSupplementaires = [
       ...(statutForm ? [{ label: 'ACQ — Statut de la demande', value: statutForm }] : []),
@@ -626,8 +641,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         ? [{ label: 'ACQ — Création de notice TDM', value: creationNoticeForm ? 'Oui' : 'Non' }]
         : []),
       ...(bordereauForm ? [{ label: 'ACQ — Bordereau imprimé', value: bordereauForm }] : []),
-      ...(catalogueForm ? [{ label: 'TDM — Catalogage', value: catalogueForm }] : []),
-      ...(noteDtdmForm  ? [{ label: 'TDM — Note / OCN', value: noteDtdmForm }] : []),
+      ...(noteDtdmForm  ? [{ label: 'TDM — OCN', value: noteDtdmForm }] : []),
+      ...(noteInterneForm ? [{ label: 'TDM — Note interne', value: noteInterneForm }] : []),
+      ...(catalogueForm ? [{ label: 'TDM — Suivi Catalogage', value: catalogueForm }] : []),
     ];
 
     // Les données de l'item sont déjà en mémoire (this.item) — pas d'appel réseau requis.

@@ -119,7 +119,7 @@ export class ItemFormulaireComponent implements OnInit {
           }
           this.applyCreationNoticeDefault();
         }
-        if (this.activeTab === 'acq-decision' && !this.showDecisionAcqTab) {
+        if ((this.activeTab === 'acq-decision' || this.activeTab === 'tdm-choix-notice') && !this.showDecisionAcqTab) {
           this.setActiveTab('base');
         }
       });
@@ -161,15 +161,15 @@ export class ItemFormulaireComponent implements OnInit {
   }
 
   // Même règle que StatutDecisionComponent.applyAcqDefaults() : Oui si le format n'est pas
-  // Électronique (Imprimé/support physique ou Imprimé et électronique), vide si Électronique —
+  // Électronique (Imprimé/support physique ou Imprimé et électronique), Non si Électronique —
   // sans jamais écraser une valeur déjà renseignée (décision ACQ existante ou chargée en édition).
   private applyCreationNoticeDefault(): void {
     const ctrl = this.itemForm.get('creation_notice_dtdm');
     if (!ctrl || ctrl.value != null) { return; }
     if (this.itemForm.get('statut_bibliotheque')?.value !== 'Soumettre aux ACQ') { return; }
     const format = this.itemForm.get('format_support')?.value;
-    if (format && format !== 'Électronique') {
-      ctrl.setValue(true, { emitEvent: false });
+    if (format) {
+      ctrl.setValue(format !== 'Électronique', { emitEvent: false });
     }
   }
 
@@ -348,7 +348,9 @@ export class ItemFormulaireComponent implements OnInit {
       source_information: ['', [Validators.required, Validators.maxLength(500)]],
       note_commentaire: [''],
       id_ressource: ['', Validators.maxLength(50)],
-      catalogue: ['', Validators.maxLength(200)],
+      note_interne_dtdm: [''],
+      // Devenu un select (Vide/Complété) — plus de validateur de longueur nécessaire.
+      catalogue: [''],
       statut_bibliotheque: ['Saisie en cours - En attente'],
       statut_acq: ['En attente'],
       suivi_acq: [''],
@@ -731,6 +733,7 @@ export class ItemFormulaireComponent implements OnInit {
       date_publication: formData.date_publication,
       creation_notice_dtdm: formData.creation_notice_dtdm,
       note_dtdm: formData.note_dtdm,
+      note_interne_dtdm: formData.note_interne_dtdm,
       categorie_document: formData.categorie_document,
       format_support: formData.format_support,
       fonds_budgetaire: repartition ? (repartition[0]?.fonds_budgetaire || '') : formData.fonds_budgetaire,

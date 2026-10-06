@@ -37,6 +37,8 @@ export interface Item {
   note_commentaire?: string;
   id_ressource?: string;
   catalogue?: string;
+  /** Note interne TDM — distincte de note_dtdm (OCN), voir ChoixNotice_2026-09-22.pdf. */
+  note_interne_dtdm?: string;
   date_modification?: string;
   utilisateur_modification?: string;
 

@@ -33,6 +33,11 @@
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
+        <button *ngIf="authService.canAccessDecision && item.creation_notice_dtdm != null"
+                class="btn btn-outline-success btn-sm"
+                [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tdm'}">
+          <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
+        </button>
         <button *ngIf="authService.canEdit" class="btn btn-primary btn-sm" (click)="onEdit()">
           <i class="bi bi-pencil me-1"></i>{{ 'item-detail.modifier' | translate }}
         </button>
@@ -746,10 +751,10 @@
           </div>
         </div>
 
-        <!-- ── Section : TDM — Suivi de la demande ─────────────── -->
+        <!-- ── Section : TDM – Choix de notice ─────────────── -->
         <div class="itd-card" *ngIf="item.creation_notice_dtdm != null">
           <div class="itd-card__header">
-            <i class="bi bi-journal-bookmark me-2"></i>{{ 'tdm-decision.section-decision' | translate }}
+            <i class="bi bi-journal-bookmark me-2"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
           </div>
           <div class="itd-card__body">
             <div class="row g-3">
@@ -762,16 +767,22 @@
                 </div>
               </div>
               <ng-container *ngIf="item.creation_notice_dtdm">
+                <div class="col-md-3" *ngIf="item.note_dtdm">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
+                    <span class="itd-note">{{ item.note_dtdm }}</span>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="item.note_interne_dtdm">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.note-interne-dtdm' | translate }}</span>
+                    <span class="itd-note">{{ item.note_interne_dtdm }}</span>
+                  </div>
+                </div>
                 <div class="col-md-3" *ngIf="item.catalogue">
                   <div class="itd-field">
                     <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
                     <span class="itd-field__value">{{ item.catalogue }}</span>
-                  </div>
-                </div>
-                <div class="col-md-6" *ngIf="item.note_dtdm">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
-                    <span class="itd-note">{{ item.note_dtdm }}</span>
                   </div>
                 </div>
               </ng-container>
