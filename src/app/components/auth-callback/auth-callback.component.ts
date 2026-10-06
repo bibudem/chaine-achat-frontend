@@ -33,7 +33,7 @@ export class AuthCallbackComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/login'], { queryParams: { error: 'auth_failed' } }), 1500);
         return;
       }
-      const dest = this.authService.role === 'Usager' ? '/usager' : this.authService.redirectUrl;
+      const dest = this.authService.isUsagerSpace ? '/usager' : this.authService.redirectUrl;
       this.authService.redirectUrl = '/accueil';
       this.router.navigateByUrl(dest);
     });

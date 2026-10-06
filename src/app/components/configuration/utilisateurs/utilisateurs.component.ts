@@ -11,7 +11,15 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UtilisateursComponent implements OnInit {
 
-  readonly roles: UserRole[] = ['SuperAdmin', 'Admin', 'TDM', 'Usager'];
+  // 'Usager' (communauté UdeM) est auto-provisionné au premier login Azure AD, jamais créé
+  // manuellement ici — voir auth/callback.js (backend).
+  readonly roles: UserRole[] = ['SuperAdmin', 'Admin', 'TDM', 'Employe'];
+
+  /** "Employé" ne s'affiche qu'ici — la valeur stockée/comparée reste 'Employe' (sans
+   *  accent), comme les autres rôles. */
+  roleLabel(role: UserRole): string {
+    return role === 'Employe' ? 'Employé' : role;
+  }
 
   utilisateurs: Utilisateur[] = [];
 
@@ -25,7 +33,7 @@ export class UtilisateursComponent implements OnInit {
   /** Modale d'ajout/modification — editingId null = création, sinon id de l'usager modifié. */
   showModal   = false;
   editingId: number | null = null;
-  formUtilisateur = { email: '', nom: '', prenom: '', role: 'Usager' as UserRole };
+  formUtilisateur = { email: '', nom: '', prenom: '', role: 'Employe' as UserRole };
   isSaving = false;
 
   constructor(
@@ -84,7 +92,7 @@ export class UtilisateursComponent implements OnInit {
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   openAddUtilisateur(): void {
     this.editingId = null;
-    this.formUtilisateur = { email: '', nom: '', prenom: '', role: 'Usager' };
+    this.formUtilisateur = { email: '', nom: '', prenom: '', role: 'Employe' };
     this.showModal = true;
   }
 

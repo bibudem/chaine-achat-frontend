@@ -20,7 +20,11 @@ interface MeResponse {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export type UserRole = 'SuperAdmin' | 'Admin' | 'TDM' | 'Usager';
+/** 'Employe' = ancien rôle 'Usager' (personnel des bibliothèques, membre du groupe Azure AD
+ *  bib-usagers), renommé pour laisser 'Usager' au nouveau rôle, plus restreint (toute
+ *  personne avec un compte UdeM — accès à ses seules demandes). Valeur sans accent (comme
+ *  les autres rôles) ; "Employé" n'apparaît qu'à l'affichage, voir roleLabel(). */
+export type UserRole = 'SuperAdmin' | 'Admin' | 'TDM' | 'Employe' | 'Usager';
 
 export interface SimulatedProfile {
   role:     UserRole;
@@ -74,15 +78,26 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     icon:        'bi-journal-bookmark-fill',
   },
   {
-    role:        'Usager',
+    role:        'Employe',
     nom:         'Bibliothèques',
+    prenom:      'Test',
+    courriel:    'employe@umontreal.ca',
+    groupe:      'Employé',
+    label:       'Bibliothèques',
+    subtitle:    'Personnel des bibliothèques (bib-usagers)',
+    description: 'Formulaires de demande, suivi de mes demandes et consultation de toutes les demandes',
+    icon:        'bi-person-fill',
+  },
+  {
+    role:        'Usager',
+    nom:         'UdeM',
     prenom:      'Test',
     courriel:    'usager@umontreal.ca',
     groupe:      'Usager',
-    label:       'Bibliothèques',
-    subtitle:    'Bibliothèques et Communauté UdeM',
-    description: 'Formulaires de demande, suivi de mes demandes et consultation de toutes les demandes',
-    icon:        'bi-person-fill',
+    label:       'Communauté UdeM',
+    subtitle:    'Toute personne avec un compte UdeM',
+    description: 'Formulaires de demande et suivi de mes demandes seulement',
+    icon:        'bi-person',
   },
 ];
 
@@ -119,7 +134,15 @@ export class AuthService {
   get isAdmin(): boolean        { return this.role === 'Admin' || this.role === 'SuperAdmin'; }
   get isSuperAdmin(): boolean   { return this.role === 'SuperAdmin'; }
   get isTdm(): boolean          { return this.role === 'TDM'; }
+  /** Personnel des bibliothèques (ex-rôle 'Usager', renommé) — accès complet au portail
+   *  usager, y compris la consultation de toutes les demandes. */
+  get isEmploye(): boolean      { return this.role === 'Employe'; }
+  /** Toute personne avec un compte UdeM, sans être membre du personnel — accès au portail
+   *  usager restreint à ses propres demandes (voir isUsagerSpace pour les deux combinés). */
   get isUsager(): boolean       { return this.role === 'Usager'; }
+  /** Les deux rôles du portail usager — pour les droits communs (navigation, "Mes
+   *  demandes"...) ; utiliser isEmploye seul pour ce qui est réservé au personnel. */
+  get isUsagerSpace(): boolean  { return this.isUsager || this.isEmploye; }
 
   /** Seul l'Administrateur (et le SuperAdmin) peut créer / modifier / supprimer des items. */
   get canEdit(): boolean        { return this.isAdmin; }
@@ -135,7 +158,9 @@ export class AuthService {
      et tout appel protégé par requireAuth échouerait (401).
   ─────────────────────────────────────────────────── */
   loginWithDevProfile(role: UserRole): void {
-    const cle: Record<UserRole, string> = { SuperAdmin: 'superadmin', Admin: 'admin', TDM: 'acq', Usager: 'usager' };
+    const cle: Record<UserRole, string> = {
+      SuperAdmin: 'superadmin', Admin: 'admin', TDM: 'acq', Employe: 'employe', Usager: 'usager'
+    };
     window.location.href = `${this.apiUrl}/auth/dev-login?role=${cle[role]}`;
   }
 

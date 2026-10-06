@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
 import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
+import { AuthService } from '../../../services/auth.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 
@@ -60,6 +61,7 @@ export class UsagerHomeComponent implements OnInit {
   constructor(
     private reponsesService: ReponsesService,
     private tauxDevisesService: TauxDevisesService,
+    public authService: AuthService,
   ) {}
 
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
@@ -83,10 +85,14 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
-    this.reponsesService.getAllPublic({ limit: 1, offset: 0 }).subscribe({
-      next:  res => { this.totalSysteme = res.total; },
-      error: ()  => { this.totalSysteme = null; }
-    });
+    // Consultation de toutes les demandes (et son compteur) réservée à l'Employé — le rôle
+    // Usager n'a accès qu'à ses propres demandes, voir isEmploye.
+    if (this.authService.isEmploye) {
+      this.reponsesService.getAllPublic({ limit: 1, offset: 0 }).subscribe({
+        next:  res => { this.totalSysteme = res.total; },
+        error: ()  => { this.totalSysteme = null; }
+      });
+    }
 
     this.tauxDevisesService.getActuelle().subscribe({
       next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },

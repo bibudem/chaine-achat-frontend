@@ -163,9 +163,11 @@ Utilisateurs) — Azure AD (UdeM) sert uniquement de porte d'entrée à l'authen
 
 | Rôle | Description | Accès |
 |---|---|---|
-| `Admin` | Administrateur bibliothèque | Toutes les pages, y compris Configuration |
+| `SuperAdmin` | Gère les accès | Tout ce que voit l'Admin, plus Configuration > Utilisateurs (création de profils) |
+| `Admin` | Administrateur bibliothèque | Toutes les pages, y compris Configuration (sauf Utilisateurs) |
 | `TDM` | Traitement documentaire | Items, rapports, réponses, décision (champs ACQ en lecture seule) |
-| `Usager` | Communauté UdeM | Portail usager uniquement |
+| `Employe` | Personnel des bibliothèques (groupe Azure AD bib-usagers) | Portail usager, y compris consultation de toutes les demandes |
+| `Usager` | Reste de la communauté UdeM | Portail usager, limité à ses propres demandes |
 
 ---
 

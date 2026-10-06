@@ -57,7 +57,7 @@
 
       <div class="collapse" id="outils" [class.show]="isOutilsRoute">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="!authService.isUsager">
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.isAdmin || authService.isTdm">
             <a class="nav-link" routerLink="/reponses" (click)="closeSidebar()">
               {{ 'menu.reponses' | translate }}
             </a>

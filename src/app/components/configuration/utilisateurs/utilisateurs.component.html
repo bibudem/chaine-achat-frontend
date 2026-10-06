@@ -60,7 +60,7 @@
           <td class="utl-td--nom">{{ u.nom || '—' }}</td>
           <td class="utl-td--email">{{ u.email }}</td>
           <td class="text-center">
-            <span class="utl-role-badge" [ngClass]="'utl-role-badge--' + u.role">{{ u.role }}</span>
+            <span class="utl-role-badge" [ngClass]="'utl-role-badge--' + u.role">{{ roleLabel(u.role) }}</span>
           </td>
           <td class="utl-td--date">{{ formatDate(u.date_derniere_connexion) }}</td>
           <td class="utl-td--actions">
@@ -107,7 +107,7 @@
       <div class="mb-1">
         <label class="utl-modal__label">{{ 'utilisateurs-page.label-role' | translate }}</label>
         <select class="form-select form-select-sm" [(ngModel)]="formUtilisateur.role">
-          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+          <option *ngFor="let r of roles" [value]="r">{{ roleLabel(r) }}</option>
         </select>
       </div>
 

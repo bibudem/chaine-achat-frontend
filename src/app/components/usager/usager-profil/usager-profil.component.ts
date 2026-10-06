@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReponsesService, DemandeUsager, DemandePublique } from '../../../services/reponses.service';
+import { AuthService } from '../../../services/auth.service';
 import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
 import { demandeBadgeStatut, estAcqEnAttenteDefaut } from '../../../lib/DemandeStatut';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
@@ -167,7 +168,11 @@ export class UsagerProfilComponent implements OnInit {
     if (!this.mesDemandesSeulement) this.chargerPublique();
   }
 
-  constructor(private reponsesService: ReponsesService, private route: ActivatedRoute) {}
+  constructor(
+    private reponsesService: ReponsesService,
+    private route: ActivatedRoute,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     const state = history.state;
@@ -189,12 +194,14 @@ export class UsagerProfilComponent implements OnInit {
 
     // Arrivée depuis une carte du tableau de bord d'accueil : ?toutes=1 décoche la case
     // d'entrée (toutes les demandes du système), ?statut=attente|soumise|traitee présélectionne
-    // le filtre de statut correspondant — dans l'un ou l'autre mode.
+    // le filtre de statut correspondant — dans l'un ou l'autre mode. La consultation de
+    // toutes les demandes est réservée à l'Employé (personnel des bibliothèques) ; le rôle
+    // Usager n'a accès qu'à ses propres demandes, même via ce lien direct.
     const statutParam = this.route.snapshot.queryParamMap.get('statut');
     if (statutParam === 'attente' || statutParam === 'soumise' || statutParam === 'traitee') {
       this.filtreStatut = statutParam;
     }
-    if (this.route.snapshot.queryParamMap.get('toutes') === '1') {
+    if (this.authService.isEmploye && this.route.snapshot.queryParamMap.get('toutes') === '1') {
       this.mesDemandesSeulement = false;
       this.chargerPublique();
     }
