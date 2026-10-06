@@ -293,6 +293,19 @@
                 <div class="up-card__top">
                   <span class="up-type-label">{{ d.type_formulaire }}</span>
                   <span class="up-badge" [ngClass]="badgeClassPublique(d)">{{ statutLabelPublique(d) }}</span>
+                  <div class="up-card__actions">
+                    <button class="up-btn-detail-icon"
+                            [class.active]="expandedId === d.id"
+                            (click)="toggleDetails(d)"
+                            [title]="expandedId === d.id ? 'Masquer les détails' : 'Voir les détails'">
+                      <i class="bi" [ngClass]="expandedId === d.id ? 'bi-chevron-up' : 'bi-list-ul'"></i>
+                    </button>
+                    <button class="up-btn-print-icon"
+                            (click)="imprimerDemande(d)"
+                            title="Imprimer cette demande">
+                      <i class="bi bi-printer"></i>
+                    </button>
+                  </div>
                 </div>
                 <div class="up-card__titre">{{ d.titre_document || '—' }}</div>
                 <div class="up-card__meta">
@@ -300,6 +313,29 @@
                   <span *ngIf="d.bibliotheque" class="up-meta__chip"><i class="bi bi-building"></i> {{ d.bibliotheque }}</span>
                 </div>
               </div>
+            </div>
+
+            <!-- Détails de la demande (lecture seule) -->
+            <div *ngIf="expandedId === d.id" class="up-details">
+              <div *ngIf="loadingDetails" class="up-details__loading">
+                <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+                <span>Chargement des détails…</span>
+              </div>
+              <ng-container *ngIf="!loadingDetails">
+                <dl *ngIf="expandedData.length > 0" class="up-details__grid">
+                  <ng-container *ngFor="let item of expandedData">
+                    <dt>{{ item.label }}</dt>
+                    <dd>{{ item.value }}</dd>
+                  </ng-container>
+                </dl>
+                <p *ngIf="expandedData.length === 0" class="up-details__empty">
+                  Aucun détail disponible pour cette demande.
+                </p>
+
+                <div class="up-details__pieces-jointes">
+                  <app-piece-jointe-gestion [reponseId]="d.id" [readonlyMode]="true"></app-piece-jointe-gestion>
+                </div>
+              </ng-container>
             </div>
           </div>
 

@@ -366,7 +366,9 @@ export class UsagerProfilComponent implements OnInit {
     return rangees;
   }
 
-  toggleDetails(d: DemandeUsager): void {
+  // N'utilise que `id` — accepte aussi bien une demande personnelle (DemandeUsager) qu'une
+  // demande publique en lecture seule (DemandePublique), voir la liste "Toutes les demandes".
+  toggleDetails(d: { id: number }): void {
     if (this.expandedId === d.id) {
       this.expandedId = null;
       this.expandedData = [];
@@ -388,7 +390,7 @@ export class UsagerProfilComponent implements OnInit {
     });
   }
 
-  imprimerDemande(d: DemandeUsager): void {
+  imprimerDemande(d: DemandeUsager | DemandePublique): void {
     // La fenêtre doit s'ouvrir de façon SYNCHRONE dans le geste de clic, sinon
     // les navigateurs (Safari en particulier) la bloquent silencieusement si elle
     // n'ouvre qu'après le retour d'un appel réseau asynchrone.
@@ -527,7 +529,7 @@ export class UsagerProfilComponent implements OnInit {
     document.body.removeChild(link);
   }
 
-  private ecrireImpression(fenetre: Window, d: DemandeUsager, data: RangeeImpression[]): void {
+  private ecrireImpression(fenetre: Window, d: DemandeUsager | DemandePublique, data: RangeeImpression[]): void {
     const rangees: RangeeImpression[] = [
       { label: 'Statut de la demande', value: d.statut_bibliotheque || "En cours d'évaluation" },
       ...(d.statut_acq ? [{ label: 'ACQ — Statut de la demande', value: d.statut_acq }] : []),
@@ -539,8 +541,11 @@ export class UsagerProfilComponent implements OnInit {
     const dateImpression   = new Date().toLocaleString('fr-CA', {
       year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
     });
-    const rappelTraitement = d.date_traitement
-      ? ` · Traitée le ${this.formatDate(d.date_traitement)}`
+    // date_traitement n'existe pas sur DemandePublique (liste "Toutes les demandes") —
+    // simplement absent du rappel dans ce cas.
+    const dateTraitement   = 'date_traitement' in d ? d.date_traitement : null;
+    const rappelTraitement = dateTraitement
+      ? ` · Traitée le ${this.formatDate(dateTraitement)}`
       : '';
 
     ecrireDocumentImpression(fenetre, {
