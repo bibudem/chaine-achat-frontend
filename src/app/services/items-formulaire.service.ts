@@ -58,6 +58,8 @@ export interface Item {
   nombre_titres_inclus?: number;
   nombre_utilisateurs?: string;
   lien_plateforme?: string;
+  acq_responsable_nom?: string;
+  description_plateforme?: string;
   format_pret_numerique?: string;
 
   // tbl_modification_ccol

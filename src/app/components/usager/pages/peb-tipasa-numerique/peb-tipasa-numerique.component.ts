@@ -19,7 +19,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
   success          = false;
   error            = false;
   isLoading        = false;
-  showElectronique = true;
   showImprime      = false;
   editId:  number | null = null;
   /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
@@ -88,21 +87,21 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       nom:              [{ value: nom, disabled: true },      Validators.required],
       statut:           [statut],
       courriel:         [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
-      bibliotheque:     ['',           Validators.required],
-      fonds_budgetaire: ['',           [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
-      priorite_demande: ['Régulier',   Validators.required],
+      bibliotheque:     ['PEB',        Validators.required],
+      fonds_budgetaire: ['MO-093',     [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      priorite_demande: ['Urgent',     Validators.required],
       titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
       isbn_issn:          ['', [Validators.required, this.isbnValidator]],
       date_publication:   [''],
-      categorie_document: ['', Validators.required],
-      gobi_vu_format_numerique: ['', Validators.required],
+      categorie_document: ['Monographie', Validators.required],
+      gobi_vu_format_numerique:   ['', Validators.required],
+      gobi_version_moins_365_usd: ["Ne s'applique pas"],
       reference_tipasa:         [''],
       format_support:            ['Électronique', Validators.required],
       creation_notice_dtdm:      [false],
       localisation_emplacement:  [''],
-      personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
       devise_originale:      ['',   Validators.required],
       devise_autre_precision: [''],
       prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
@@ -114,7 +113,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
     });
 
     this.form.get('format_support')!.valueChanges.subscribe(val => {
-      this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
       this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
       this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
     });
@@ -157,10 +155,10 @@ export class PebTipasaNumeriqueComponent implements OnInit {
           date_publication:           bd.date_publication,
           categorie_document:         bd.categorie_document,
           gobi_vu_format_numerique:   sd.gobi_vu_format_numerique,
+          gobi_version_moins_365_usd: sd.gobi_version_moins_365_usd,
           reference_tipasa:           sd.reference_tipasa,
           creation_notice_dtdm:       bd.creation_notice_dtdm,
           localisation_emplacement:   bd.localisation_emplacement,
-          personne_a_aviser_courriel: bd.personne_a_aviser_courriel,
           devise_originale:           deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
           devise_autre_precision:     deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
           prix_devise_originale:      bd.prix_devise_originale,
@@ -231,16 +229,19 @@ export class PebTipasaNumeriqueComponent implements OnInit {
     this.submitted        = false;
     this.success          = false;
     this.error            = false;
-    this.showElectronique = true;
     this.showImprime      = false;
     this.form.reset({
       // form.reset() efface aussi les champs désactivés (nom/courriel) s'ils ne sont pas
       // explicitement fournis ici — on les réinjecte depuis l'authentification.
       nom:                   `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
       courriel:              sessionStorage.getItem('courrielAdmin') ?? '',
-      priorite_demande:     'Régulier',
+      bibliotheque:         'PEB',
+      priorite_demande:     'Urgent',
+      categorie_document:   'Monographie',
+      fonds_budgetaire:     'MO-093',
       format_support:       'Électronique',
       creation_notice_dtdm: false,
+      gobi_version_moins_365_usd: "Ne s'applique pas",
       statut_bibliotheque:  'Saisie en cours - En attente',
     });
   }
@@ -271,7 +272,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
         format_support:             v.format_support,
         localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
         creation_notice_dtdm:       v.creation_notice_dtdm,
-        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         prix_cad:                   v.prix_cad,
         devise_originale:           this.deviseAEnvoyer(v),
         prix_devise_originale:      v.prix_devise_originale,
@@ -285,7 +285,7 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       specificData: {
         reference_tipasa:           v.reference_tipasa,
         gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
-        gobi_version_moins_365_usd: "Ne s'applique pas",
+        gobi_version_moins_365_usd: v.gobi_vu_format_numerique === 'Oui' ? v.gobi_version_moins_365_usd : "Ne s'applique pas",
         acq_responsable_courriel:   null,
       },
     };
@@ -336,7 +336,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
         format_support:             v.format_support,
         localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
         creation_notice_dtdm:       v.creation_notice_dtdm,
-        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         prix_cad:                   v.prix_cad,
         devise_originale:           this.deviseAEnvoyer(v),
         prix_devise_originale:      v.prix_devise_originale,
@@ -350,7 +349,7 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       specificData: {
         reference_tipasa:           v.reference_tipasa,
         gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
-        gobi_version_moins_365_usd: "Ne s'applique pas",
+        gobi_version_moins_365_usd: v.gobi_vu_format_numerique === 'Oui' ? v.gobi_version_moins_365_usd : "Ne s'applique pas",
         acq_responsable_courriel:   null,
       },
     };

@@ -318,7 +318,7 @@ export class ItemFormulaireComponent implements OnInit {
     return this.fb.group({
       formulaire_type: [null, Validators.required],
       date_creation: [''],
-      priorite_demande: ['Régulier'],
+      priorite_demande: ['Urgent'],
       titre_document: ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre: ['', Validators.maxLength(500)],
       isbn_issn: ['', [Validators.required, Validators.maxLength(50)]],
@@ -335,6 +335,8 @@ export class ItemFormulaireComponent implements OnInit {
       nombre_titres_inclus: [null],
       nombre_utilisateurs: [''],
       lien_plateforme: [''],
+      acq_responsable_nom: ['', Validators.maxLength(255)],
+      description_plateforme: ['', Validators.maxLength(255)],
       format_pret_numerique: [''],
       categorie_document: ['', Validators.required],
       format_support: ['', Validators.required],
@@ -758,6 +760,8 @@ export class ItemFormulaireComponent implements OnInit {
       nombre_titres_inclus: formData.nombre_titres_inclus,
       nombre_utilisateurs: formData.nombre_utilisateurs,
       lien_plateforme: formData.lien_plateforme,
+      acq_responsable_nom: formData.acq_responsable_nom,
+      description_plateforme: formData.description_plateforme,
       format_pret_numerique: formData.format_pret_numerique,
       ...(repartition ? { fonds_repartition: repartition } : {}),
     };

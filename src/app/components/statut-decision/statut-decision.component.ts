@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 const CHAMPS_ACQ_LECTURE_SEULE_TDM = [
   'statut_acq', 'suivi_acq', 'note_acq', 'creation_notice_dtdm',
   'bordereau_imprime', 'categorie_document', 'format_support',
+  'lien_plateforme', 'acq_responsable_nom', 'description_plateforme',
 ];
 
 @Component({
@@ -88,6 +89,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       note_interne_dtdm:    [''],
       // Devenu un select (Vide/Complété) — plus de validateur de longueur nécessaire.
       catalogue:            [''],
+      // PEB Tipasa numérique uniquement.
+      lien_plateforme:        [''],
+      acq_responsable_nom:    [''],
+      description_plateforme: [''],
     });
 
     if (this.readOnlyAcq) {
@@ -223,6 +228,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       note_interne_dtdm:    data.note_interne_dtdm || '',
       catalogue:            data.catalogue || '',
       bordereau_imprime:    data.bordereau_imprime || 'Non',
+      lien_plateforme:        data.lien_plateforme || '',
+      acq_responsable_nom:    data.acq_responsable_nom || '',
+      description_plateforme: data.description_plateforme || '',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -295,6 +303,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       nombre_utilisateurs:            f(bd.nombre_utilisateurs,'nombre_utilisateurs'),
       format_pret_numerique:          f(bd.format_pret_numerique,'format_pret_numerique'),
       lien_plateforme:                f(bd.lien_plateforme, 'lien_plateforme'),
+      acq_responsable_nom:            f(bd.acq_responsable_nom, 'acq_responsable_nom'),
+      description_plateforme:         f(bd.description_plateforme, 'description_plateforme'),
       personne_a_aviser_nom:          f(bd.personne_a_aviser_nom,'personne_a_aviser_nom'),
       personne_a_aviser_courriel:     f(bd.personne_a_aviser_courriel,'personne_a_aviser_courriel'),
       usager_aviser_reservation:      bd.usager_aviser_reservation || flat.usager_aviser_reservation || sd.usager_aviser_reservation,
@@ -346,6 +356,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       note_interne_dtdm:    this.item.note_interne_dtdm || '',
       catalogue:            this.item.catalogue || '',
       bordereau_imprime:    (this.item as any).bordereau_imprime || 'Non',
+      lien_plateforme:        this.item.lien_plateforme || '',
+      acq_responsable_nom:    (this.item as any).acq_responsable_nom || '',
+      description_plateforme: (this.item as any).description_plateforme || '',
     }, { emitEvent: false });
     this.buildNotifTargets();
   }
@@ -362,6 +375,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       'fonds_budgetaire', 'fonds_sn_projet', 'periode_couverte',
       'source_information', 'prix_cad', 'devise_originale', 'prix_devise_originale',
       'nombre_titres_inclus', 'nombre_utilisateurs', 'lien_plateforme',
+      'acq_responsable_nom', 'description_plateforme',
       'format_pret_numerique', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
       'note_commentaire'
     ];
@@ -487,6 +501,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const bordereau_imprime = (this.isNouvelAchat || this.isSuggestion)
       ? (this.form.get('bordereau_imprime')?.value || null)
       : null;
+    // Décision ACQ — PEB Tipasa numérique uniquement.
+    const lien_plateforme        = this.isPebTipasa ? (this.form.get('lien_plateforme')?.value || null)        : null;
+    const acq_responsable_nom    = this.isPebTipasa ? (this.form.get('acq_responsable_nom')?.value || null)    : null;
+    const description_plateforme = this.isPebTipasa ? (this.form.get('description_plateforme')?.value || null) : null;
 
     const specificDataBase = this.buildSpecificData();
     const specificData = bordereau_imprime != null
@@ -499,6 +517,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
           {
             item_id: this.itemId, statut_acq, suivi_acq, note_acq, creation_notice_dtdm,
             categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue,
+            lien_plateforme, acq_responsable_nom, description_plateforme,
             // Requis par le backend pour router specificData (ex. bordereau_imprime) vers
             // la bonne table spécifique (tbl_nouvel_achat_unique / tbl_suggestion_achat, etc.).
             formulaire_type: this.item?.formulaire_type,
@@ -508,7 +527,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         )
       : this.http.post<{ success: boolean; message?: string }>(
           `${environment.apiUrl}/items/add`,
-          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
+          { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue, lien_plateforme, acq_responsable_nom, description_plateforme, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
           this.httpOptions
         );
 

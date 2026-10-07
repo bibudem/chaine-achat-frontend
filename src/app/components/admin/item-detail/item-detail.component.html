@@ -529,6 +529,18 @@
                     <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
                   </div>
                 </div>
+                <div class="col-md-4" *ngIf="item.acq_responsable_nom">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-formulaire.acq-responsable-nom' | translate }}</span>
+                    <span class="itd-field__value">{{ item.acq_responsable_nom }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.description_plateforme">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-formulaire.description-plateforme' | translate }}</span>
+                    <span class="itd-field__value">{{ item.description_plateforme }}</span>
+                  </div>
+                </div>
               </ng-container>
 
               <!-- Requête ACQ -->

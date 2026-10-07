@@ -205,6 +205,40 @@
               </div>
             </div>
 
+            <!-- PEB Tipasa numérique uniquement -->
+            <div class="row mb-3" *ngIf="isPebTipasa">
+              <div class="col-md-4">
+                <label for="acq_responsable_nom" class="form-label fw-semibold">
+                  {{ 'item-formulaire.acq-responsable-nom' | translate }}
+                </label>
+                <input id="acq_responsable_nom" type="text" formControlName="acq_responsable_nom"
+                       class="form-control">
+                <small class="text-muted">
+                  <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.acq-responsable-nom-info' | translate }}
+                </small>
+              </div>
+              <div class="col-md-4">
+                <label for="lien_plateforme" class="form-label fw-semibold">
+                  {{ 'item-formulaire.lien-plateforme' | translate }}
+                </label>
+                <input id="lien_plateforme" type="url" formControlName="lien_plateforme"
+                       class="form-control" placeholder="https://...">
+                <small class="text-muted">
+                  <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.lien-plateforme-info' | translate }}
+                </small>
+              </div>
+              <div class="col-md-4">
+                <label for="description_plateforme" class="form-label fw-semibold">
+                  {{ 'item-formulaire.description-plateforme' | translate }}
+                </label>
+                <input id="description_plateforme" type="text" formControlName="description_plateforme"
+                       class="form-control">
+                <small class="text-muted">
+                  <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.description-plateforme-info' | translate }}
+                </small>
+              </div>
+            </div>
+
             <!-- Note ACQ — toujours visible, juste avant la section TDM -->
             <div class="mb-4">
               <label for="note_acq" class="form-label fw-semibold">
@@ -533,6 +567,8 @@
                 <tr *ngIf="item.gobi_vu_format_numerique"><th>{{ 'acq-decision.col-gobi-numerique' | translate }}</th><td>{{ item.gobi_vu_format_numerique }}</td></tr>
                 <tr *ngIf="item.gobi_version_moins_365_usd"><th>{{ 'acq-decision.col-gobi-365' | translate }}</th><td>{{ item.gobi_version_moins_365_usd }}</td></tr>
                 <tr *ngIf="item.reference_tipasa"><th>{{ 'acq-decision.col-reference-tipasa' | translate }}</th><td>{{ item.reference_tipasa }}</td></tr>
+                <tr *ngIf="item.acq_responsable_nom"><th>{{ 'item-formulaire.acq-responsable-nom' | translate }}</th><td>{{ item.acq_responsable_nom }}</td></tr>
+                <tr *ngIf="item.description_plateforme"><th>{{ 'item-formulaire.description-plateforme' | translate }}</th><td>{{ item.description_plateforme }}</td></tr>
               </ng-container>
 
               <ng-container *ngIf="isAccessibilite">

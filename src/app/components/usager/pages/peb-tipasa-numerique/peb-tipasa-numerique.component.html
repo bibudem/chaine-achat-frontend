@@ -132,7 +132,8 @@
 
           <div class="col-md-3">
             <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
-            <input type="date" formControlName="date_publication" class="form-control">
+            <input type="text" formControlName="date_publication" class="form-control"
+                   placeholder="AAAA ou AAAA-MM-JJ">
           </div>
 
           <div class="col-md-3">
@@ -165,6 +166,15 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-peb-tipasa.gobi-required' | translate }}
             </div>
             <small class="form-text">{{ 'form-peb-tipasa.gobi-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md-4" *ngIf="form.get('gobi_vu_format_numerique')?.value === 'Oui'">
+            <label class="form-label">{{ 'form-peb-tipasa.gobi-365' | translate }}</label>
+            <select formControlName="gobi_version_moins_365_usd" class="form-select">
+              <option value="Ne s'applique pas">Ne s'applique pas</option>
+              <option value="Oui">Oui</option>
+              <option value="Non">Non</option>
+            </select>
           </div>
 
           <div class="col-md-5">
@@ -231,24 +241,6 @@
             <label class="form-label">{{ 'forms-usager.localisation' | translate }}</label>
             <input type="text" formControlName="localisation_emplacement" class="form-control"
                    [placeholder]="'forms-usager.localisation-placeholder' | translate">
-          </div>
-
-          <!-- Champs électroniques -->
-          <div class="col-12" *ngIf="showElectronique">
-            <div class="electronique-fields">
-              <div class="row g-3">
-                <div class="col-md-12">
-                  <label class="form-label">{{ 'forms-usager.personne-aviser-courriel' | translate }}</label>
-                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
-                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
-                         placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
-                    <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
-                  </div>
-                  <small class="form-text">{{ 'forms-usager.personne-aviser-hint' | translate }}</small>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
