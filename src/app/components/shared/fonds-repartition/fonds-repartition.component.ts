@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService, TauxRates } from '../../../services/config.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
@@ -21,11 +21,14 @@ import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionD
   templateUrl: './fonds-repartition.component.html',
   styleUrls: ['./fonds-repartition.component.css']
 })
-export class FondsRepartitionComponent implements OnInit, OnChanges {
+export class FondsRepartitionComponent implements OnInit {
   @Input() fondsArray!: FormArray;
   @Input() submitted = false;
   /** Quand false (brouillon), aucune ligne de répartition n'est obligatoire — voir
-   *  la validation conditionnelle selon Statut de la demande dans le formulaire parent. */
+   *  la validation conditionnelle selon Statut de la demande dans le formulaire parent.
+   *  Les formulaires parents réappliquent eux-mêmes `appliquerValidation()` après tout
+   *  reconstruction du FormArray (chargement d'une demande, réinitialisation) : cet
+   *  @Input ne sert qu'à la ligne ajoutée localement par `ajouter()`. */
   @Input() exigeTousLesChamps = true;
 
   devises = new ListeChoixOptions().devisesOptions;
@@ -38,21 +41,17 @@ export class FondsRepartitionComponent implements OnInit, OnChanges {
       this.tauxRates = rates;
       this.lignes.forEach(l => this.convertirPrix(l));
     });
-    this.appliquerValidationToutesLignes();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['exigeTousLesChamps'] && !changes['exigeTousLesChamps'].firstChange) {
-      this.appliquerValidationToutesLignes();
-    }
-  }
-
-  private appliquerValidationToutesLignes(): void {
-    this.lignes.forEach(l => this.appliquerValidationLigne(l));
   }
 
   private appliquerValidationLigne(ligne: FormGroup): void {
-    const exige = this.exigeTousLesChamps;
+    FondsRepartitionComponent.appliquerValidation(ligne, this.exigeTousLesChamps);
+  }
+
+  /** Source unique de la logique de validation conditionnelle d'une ligne — appelée par
+   *  l'instance (ajout d'une ligne) et directement par les formulaires parents après
+   *  toute reconstruction du FormArray (chargement d'une demande, réinitialisation),
+   *  puisque ces reconstructions ne passent pas par cette instance de composant. */
+  static appliquerValidation(ligne: FormGroup, exige: boolean): void {
     const champs: { nom: string; validators: any[] }[] = [
       { nom: 'devise_originale',      validators: [] },
       { nom: 'prix_devise_originale', validators: [Validators.min(0.01)] },
@@ -66,7 +65,15 @@ export class FondsRepartitionComponent implements OnInit, OnChanges {
       ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
       ctrl.updateValueAndValidity({ emitEvent: false });
     });
-    this.updateDeviseAutreValidator(ligne);
+    const autre = ligne.get('devise_autre_precision');
+    if (autre) {
+      if (ligne.get('devise_originale')?.value === 'Autre') {
+        autre.setValidators(exige ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
+      } else {
+        autre.clearValidators();
+      }
+      autre.updateValueAndValidity({ emitEvent: false });
+    }
   }
 
   get lignes(): FormGroup[] {
@@ -104,20 +111,9 @@ export class FondsRepartitionComponent implements OnInit, OnChanges {
     if (result != null) ligne.get('prix_cad')?.setValue(result, { emitEvent: false });
   }
 
-  private updateDeviseAutreValidator(ligne: FormGroup): void {
-    const ctrl = ligne.get('devise_autre_precision');
-    if (!ctrl) return;
-    if (ligne.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators(this.exigeTousLesChamps ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
-    } else {
-      ctrl.clearValidators();
-    }
-    ctrl.updateValueAndValidity({ emitEvent: false });
-  }
-
   onDeviseChange(ligne: FormGroup): void {
     ligne.get('prix_cad')?.setValue(null, { emitEvent: false });
-    this.updateDeviseAutreValidator(ligne);
+    this.appliquerValidationLigne(ligne);
     this.convertirPrix(ligne);
   }
 

@@ -160,6 +160,7 @@ export class ModificationCcolComponent implements OnInit {
     });
 
     this.majValidationFormatSupport();
+    this.fondsRepartitionArray.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, exige));
   }
 
   private majValidationFormatSupport(): void {
@@ -288,6 +289,7 @@ export class ModificationCcolComponent implements OnInit {
         pourcentage:            l.pourcentage != null ? Number(l.pourcentage) : 100,
       }));
     });
+    array.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, this.exigeTousLesChamps));
   }
 
   isInvalid(field: string): boolean {
@@ -325,6 +327,7 @@ export class ModificationCcolComponent implements OnInit {
 
     this.derniereTitre        = v.titre_document;
     this.derniereBibliotheque = v.bibliotheque;
+    const totalPrixCad        = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
 
     const payload = {
       baseData: {
@@ -347,7 +350,9 @@ export class ModificationCcolComponent implements OnInit {
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
-        prix_cad:                 repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
+        // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
+        prix_cad:                 totalPrixCad > 0 ? totalPrixCad : null,
         devise_originale:         repartition[0]?.devise_originale || '',
         prix_devise_originale:    repartition[0]?.prix_devise_originale ?? null,
         periode_couverte:         v.periode_couverte,
@@ -398,6 +403,7 @@ export class ModificationCcolComponent implements OnInit {
     this.isLoading = true;
     const v = this.form.getRawValue();
     const repartition = this.repartitionAEnvoyer(v);
+    const totalPrixCad = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
     const payload = {
       baseData: {
         formulaire_type:          'Modification et CCOL',
@@ -419,7 +425,9 @@ export class ModificationCcolComponent implements OnInit {
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
         catalogue:                v.catalogue,
-        prix_cad:                 repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
+        // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
+        prix_cad:                 totalPrixCad > 0 ? totalPrixCad : null,
         devise_originale:         repartition[0]?.devise_originale || '',
         prix_devise_originale:    repartition[0]?.prix_devise_originale ?? null,
         periode_couverte:         v.periode_couverte,

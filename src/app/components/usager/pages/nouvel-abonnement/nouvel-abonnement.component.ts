@@ -163,6 +163,7 @@ export class NouvelAbonnementComponent implements OnInit {
     });
 
     this.majValidationFormatSupport();
+    this.fondsRepartitionArray.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, exige));
   }
 
   private majValidationFormatSupport(): void {
@@ -293,6 +294,7 @@ export class NouvelAbonnementComponent implements OnInit {
         pourcentage:            l.pourcentage != null ? Number(l.pourcentage) : 100,
       }));
     });
+    arr.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, this.exigeTousLesChamps));
   }
 
   isInvalid(field: string): boolean {
@@ -331,7 +333,10 @@ export class NouvelAbonnementComponent implements OnInit {
 
     this.derniereTitre        = v.titre_document;
     this.derniereBibliotheque = v.bibliotheque;
-    this.dernierPrixCAD       = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
+    const totalPrixCad        = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
+    // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
+    // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
+    this.dernierPrixCAD       = totalPrixCad > 0 ? totalPrixCad : null;
 
     const payload = {
       baseData: {
@@ -400,6 +405,7 @@ export class NouvelAbonnementComponent implements OnInit {
     this.isLoading = true;
     const v = this.form.getRawValue();
     const repartition = this.repartitionAEnvoyer(v);
+    const totalPrixCad = repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0);
     const payload = {
       baseData: {
         formulaire_type:            'Nouvel abonnement',
@@ -416,7 +422,9 @@ export class NouvelAbonnementComponent implements OnInit {
         nombre_utilisateurs:        this.showElectronique ? v.nombre_utilisateurs : null,
         lien_plateforme:            this.showElectronique ? v.lien_plateforme : null,
         personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
-        prix_cad:                   repartition.reduce((s, l) => s + (Number(l.prix_cad) || 0), 0),
+        // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
+        // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
+        prix_cad:                   totalPrixCad > 0 ? totalPrixCad : null,
         devise_originale:           repartition[0]?.devise_originale || '',
         prix_devise_originale:      repartition[0]?.prix_devise_originale ?? null,
         fonds_budgetaire:           repartition[0]?.fonds_budgetaire || '',
