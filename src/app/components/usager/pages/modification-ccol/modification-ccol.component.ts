@@ -124,22 +124,11 @@ export class ModificationCcolComponent implements OnInit {
       bibliotheque_note_interne:    ['', Validators.maxLength(1000)],
     });
 
-    this.form.get('format_support')!.valueChanges.subscribe(val => {
-      this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
-      this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
-      const lien   = this.form.get('lien_plateforme')!;
-      const aviser = this.form.get('usager_aviser_activation')!;
-      this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
-      if (this.showElectronique) {
-        lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
-        aviser.enable();
-      } else {
-        lien.clearValidators();
-        aviser.disable();
-      }
-      lien.updateValueAndValidity();
-      aviser.updateValueAndValidity();
-    });
+    this.form.get('format_support')!.valueChanges.subscribe(() => this.majValidationFormatSupport());
+
+    this.form.get('statut_bibliotheque')!.valueChanges.subscribe(() => this.appliquerValidationConditionnelle());
+
+    this.appliquerValidationConditionnelle();
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -147,6 +136,49 @@ export class ModificationCcolComponent implements OnInit {
         this.loadDemande(this.editId);
       }
     });
+  }
+
+  get exigeTousLesChamps(): boolean {
+    return this.form.get('statut_bibliotheque')?.value === 'Soumettre aux ACQ';
+  }
+
+  private appliquerValidationConditionnelle(): void {
+    const exige = this.exigeTousLesChamps;
+    const simples: { nom: string; validators: any[] }[] = [
+      { nom: 'titre_document',     validators: [Validators.maxLength(500)] },
+      { nom: 'editeur',            validators: [Validators.maxLength(300)] },
+      { nom: 'isbn_issn',          validators: [this.isbnValidator] },
+      { nom: 'categorie_document', validators: [] },
+      { nom: 'precision_demande',  validators: [] },
+      { nom: 'format_support',     validators: [] },
+      { nom: 'source_information', validators: [Validators.pattern('https?://.+')] },
+    ];
+    simples.forEach(({ nom, validators }) => {
+      const ctrl = this.form.get(nom)!;
+      ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.majValidationFormatSupport();
+  }
+
+  private majValidationFormatSupport(): void {
+    const val   = this.form.get('format_support')!.value;
+    const exige = this.exigeTousLesChamps;
+    this.showElectronique = val === 'Électronique' || val === 'Imprimé et électronique';
+    this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
+    const lien   = this.form.get('lien_plateforme')!;
+    const aviser = this.form.get('usager_aviser_activation')!;
+    this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
+    if (this.showElectronique) {
+      lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
+      aviser.enable();
+    } else {
+      lien.clearValidators();
+      aviser.disable();
+    }
+    lien.updateValueAndValidity({ emitEvent: false });
+    aviser.updateValueAndValidity({ emitEvent: false });
   }
 
   private loadDemande(id: number): void {

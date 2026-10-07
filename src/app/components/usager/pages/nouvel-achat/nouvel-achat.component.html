@@ -98,7 +98,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
                    placeholder="Titre complet du document">
@@ -114,7 +114,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'form-nouvel-achat.auteur-editeur' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-nouvel-achat.auteur-editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
                    placeholder="Nom de l'auteur ou maison d'édition">
@@ -124,7 +124,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    placeholder="Ex: 9782070360024"
@@ -136,7 +136,7 @@
           </div>
 
           <div class="col-md">
-            <label class="form-label required">{{ 'forms-usager.date-publication' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="text" formControlName="date_publication" class="form-control"
                    [class.is-invalid]="isInvalid('date_publication')"
                    [placeholder]="'form-nouvel-achat.date-placeholder' | translate">
@@ -146,7 +146,7 @@
           </div>
 
           <div class="col-md">
-            <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -158,7 +158,7 @@
           </div>
 
           <div class="col-md">
-            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
                    placeholder="https://...">
@@ -178,7 +178,7 @@
           </div>
 
           <div class="col-md">
-            <label class="form-label required">{{ 'form-nouvel-achat.quantite' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-nouvel-achat.quantite' | translate }}</label>
             <input type="number" formControlName="quantite" class="form-control"
                    [class.is-invalid]="isInvalid('quantite')"
                    min="1" step="1" placeholder="1">
@@ -199,7 +199,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.format-support' | translate }}</label>
             <div class="format-toggle">
               <div class="format-toggle-btn"
                    [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
@@ -269,7 +269,7 @@
                   </select>
                 </div>
                 <div class="col-md-3">
-                  <label class="form-label required">{{ 'forms-usager.lien-plateforme' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.lien-plateforme' | translate }}</label>
                   <input type="url" formControlName="lien_plateforme" class="form-control"
                          [class.is-invalid]="isInvalid('lien_plateforme')"
                          placeholder="https://...">
@@ -290,7 +290,7 @@
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted"></app-fonds-repartition>
+          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted" [exigeTousLesChamps]="exigeTousLesChamps"></app-fonds-repartition>
 
           <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
@@ -334,7 +334,7 @@
             <div class="reserve-cours-fields">
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label required">{{ 'form-nouvel-achat.sigle-cours' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-nouvel-achat.sigle-cours' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_sigle" class="form-control"
                          [class.is-invalid]="isInvalid('reserve_cours_sigle')"
                          [placeholder]="'form-nouvel-achat.sigle-placeholder' | translate">
@@ -343,7 +343,7 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label required">{{ 'form-nouvel-achat.session' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-nouvel-achat.session' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_session" class="form-control"
                          [class.is-invalid]="isInvalid('reserve_cours_session')"
                          [placeholder]="'form-nouvel-achat.session-placeholder' | translate">
@@ -352,7 +352,7 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label required">{{ 'form-nouvel-achat.enseignant' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-nouvel-achat.enseignant' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_enseignant" class="form-control"
                          [class.is-invalid]="isInvalid('reserve_cours_enseignant')"
                          placeholder="Nom de l'enseignant">

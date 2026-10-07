@@ -96,7 +96,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
                    placeholder="Titre complet du document ou de l'abonnement">
@@ -112,7 +112,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.editeur' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
                    [placeholder]="'form-modification-ccol.editeur-placeholder' | translate">
@@ -122,7 +122,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    placeholder="Ex : 9782070360024"
@@ -139,7 +139,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -151,7 +151,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
                    placeholder="https://...">
@@ -169,7 +169,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'form-modification-ccol.type-demande' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-modification-ccol.type-demande' | translate }}</label>
             <select formControlName="precision_demande" class="form-select"
                     [class.is-invalid]="isInvalid('precision_demande')">
               <option value="">{{ 'form-modification-ccol.sel-type-demande' | translate }}</option>
@@ -214,7 +214,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-8">
-            <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.format-support' | translate }}</label>
             <div class="format-toggle">
               <div class="format-toggle-btn"
                    [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
@@ -266,7 +266,7 @@
             <div class="electronique-fields">
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label required">{{ 'forms-usager.lien-plateforme' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.lien-plateforme' | translate }}</label>
                   <input type="url" formControlName="lien_plateforme" class="form-control"
                          [class.is-invalid]="isInvalid('lien_plateforme')"
                          placeholder="https://...">
@@ -315,7 +315,7 @@
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted"></app-fonds-repartition>
+          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted" [exigeTousLesChamps]="exigeTousLesChamps"></app-fonds-repartition>
 
           <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>

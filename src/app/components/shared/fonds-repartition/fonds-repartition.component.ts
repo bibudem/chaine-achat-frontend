@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService, TauxRates } from '../../../services/config.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
@@ -21,9 +21,12 @@ import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionD
   templateUrl: './fonds-repartition.component.html',
   styleUrls: ['./fonds-repartition.component.css']
 })
-export class FondsRepartitionComponent implements OnInit {
+export class FondsRepartitionComponent implements OnInit, OnChanges {
   @Input() fondsArray!: FormArray;
   @Input() submitted = false;
+  /** Quand false (brouillon), aucune ligne de répartition n'est obligatoire — voir
+   *  la validation conditionnelle selon Statut de la demande dans le formulaire parent. */
+  @Input() exigeTousLesChamps = true;
 
   devises = new ListeChoixOptions().devisesOptions;
   tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
@@ -35,6 +38,35 @@ export class FondsRepartitionComponent implements OnInit {
       this.tauxRates = rates;
       this.lignes.forEach(l => this.convertirPrix(l));
     });
+    this.appliquerValidationToutesLignes();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['exigeTousLesChamps'] && !changes['exigeTousLesChamps'].firstChange) {
+      this.appliquerValidationToutesLignes();
+    }
+  }
+
+  private appliquerValidationToutesLignes(): void {
+    this.lignes.forEach(l => this.appliquerValidationLigne(l));
+  }
+
+  private appliquerValidationLigne(ligne: FormGroup): void {
+    const exige = this.exigeTousLesChamps;
+    const champs: { nom: string; validators: any[] }[] = [
+      { nom: 'devise_originale',      validators: [] },
+      { nom: 'prix_devise_originale', validators: [Validators.min(0.01)] },
+      { nom: 'prix_cad',              validators: [Validators.min(0.01)] },
+      { nom: 'fonds_budgetaire',      validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
+      { nom: 'pourcentage',           validators: [Validators.min(0.01), Validators.max(100)] },
+    ];
+    champs.forEach(({ nom, validators }) => {
+      const ctrl = ligne.get(nom);
+      if (!ctrl) return;
+      ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+    this.updateDeviseAutreValidator(ligne);
   }
 
   get lignes(): FormGroup[] {
@@ -76,7 +108,7 @@ export class FondsRepartitionComponent implements OnInit {
     const ctrl = ligne.get('devise_autre_precision');
     if (!ctrl) return;
     if (ligne.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
+      ctrl.setValidators(this.exigeTousLesChamps ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
     } else {
       ctrl.clearValidators();
     }
@@ -97,7 +129,9 @@ export class FondsRepartitionComponent implements OnInit {
     if (this.lignes.length === 1) {
       this.fondsArray.at(0).get('pourcentage')?.setValue(null);
     }
-    this.fondsArray.push(FondsRepartitionComponent.creerLigne({ pourcentage: null }));
+    const ligne = FondsRepartitionComponent.creerLigne({ pourcentage: null });
+    this.fondsArray.push(ligne);
+    this.appliquerValidationLigne(ligne);
   }
 
   retirer(i: number): void {

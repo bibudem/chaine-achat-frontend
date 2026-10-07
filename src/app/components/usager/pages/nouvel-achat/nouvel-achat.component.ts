@@ -135,44 +135,13 @@ export class NouvelAchatComponent implements OnInit {
       }
     });
 
-    this.form.get('mettreReserve')!.valueChanges.subscribe(val => {
-      this.showReserveCours = val;
-      const sigle      = this.form.get('reserve_cours_sigle')!;
-      const session    = this.form.get('reserve_cours_session')!;
-      const enseignant = this.form.get('reserve_cours_enseignant')!;
-      if (val) {
-        sigle.enable();      sigle.setValidators([Validators.required, Validators.pattern('^[A-Z]{3,4}[0-9]{4}$')]);
-        session.enable();    session.setValidators([Validators.required]);
-        enseignant.enable(); enseignant.setValidators([Validators.required]);
-      } else {
-        sigle.disable();      sigle.clearValidators();
-        session.disable();    session.clearValidators();
-        enseignant.disable(); enseignant.clearValidators();
-      }
-      sigle.updateValueAndValidity();
-      session.updateValueAndValidity();
-      enseignant.updateValueAndValidity();
-    });
+    this.form.get('mettreReserve')!.valueChanges.subscribe(() => this.majValidationMettreReserve());
 
-    this.form.get('format_support')!.valueChanges.subscribe(val => {
-      this.showElectronique      = val === 'Électronique';
-      this.showAviserReservation = val === 'Imprimé/support physique';
-      const lien      = this.form.get('lien_plateforme')!;
-      const aviserRes = this.form.get('aviser_reservation')!;
-      const aviserAct = this.form.get('aviser_activation')!;
-      if (this.showElectronique) {
-        lien.setValidators([Validators.required, Validators.pattern('https?://.+')]);
-        aviserAct.enable();
-        aviserRes.disable();
-      } else {
-        lien.clearValidators();
-        aviserAct.disable();
-        aviserRes.enable();
-      }
-      lien.updateValueAndValidity();
-      aviserRes.updateValueAndValidity();
-      aviserAct.updateValueAndValidity();
-    });
+    this.form.get('format_support')!.valueChanges.subscribe(() => this.majValidationFormatSupport());
+
+    this.form.get('statut_bibliotheque')!.valueChanges.subscribe(() => this.appliquerValidationConditionnelle());
+
+    this.appliquerValidationConditionnelle();
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -180,6 +149,78 @@ export class NouvelAchatComponent implements OnInit {
         this.loadDemande(this.editId);
       }
     });
+  }
+
+  get exigeTousLesChamps(): boolean {
+    return this.form.get('statut_bibliotheque')?.value === 'Soumettre aux ACQ';
+  }
+
+  private appliquerValidationConditionnelle(): void {
+    const exige = this.exigeTousLesChamps;
+    const simples: { nom: string; validators: any[] }[] = [
+      { nom: 'titre_document',     validators: [Validators.maxLength(500)] },
+      { nom: 'editeur',            validators: [Validators.maxLength(300)] },
+      { nom: 'isbn_issn',          validators: [this.isbnValidator] },
+      { nom: 'date_publication',   validators: [] },
+      { nom: 'source_information', validators: [Validators.pattern('https?://.+')] },
+      { nom: 'categorie_document', validators: [] },
+      { nom: 'format_support',     validators: [] },
+      { nom: 'quantite',           validators: [Validators.min(1)] },
+    ];
+    simples.forEach(({ nom, validators }) => {
+      const ctrl = this.form.get(nom)!;
+      ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.majValidationMettreReserve();
+    this.majValidationFormatSupport();
+  }
+
+  private majValidationMettreReserve(): void {
+    const val        = this.form.get('mettreReserve')!.value;
+    const exige       = this.exigeTousLesChamps;
+    this.showReserveCours = val;
+    const sigle      = this.form.get('reserve_cours_sigle')!;
+    const session    = this.form.get('reserve_cours_session')!;
+    const enseignant = this.form.get('reserve_cours_enseignant')!;
+    if (val) {
+      sigle.enable();
+      sigle.setValidators(exige ? [Validators.required, Validators.pattern('^[A-Z]{3,4}[0-9]{4}$')] : [Validators.pattern('^[A-Z]{3,4}[0-9]{4}$')]);
+      session.enable();
+      session.setValidators(exige ? [Validators.required] : []);
+      enseignant.enable();
+      enseignant.setValidators(exige ? [Validators.required] : []);
+    } else {
+      sigle.disable();      sigle.clearValidators();
+      session.disable();    session.clearValidators();
+      enseignant.disable(); enseignant.clearValidators();
+    }
+    sigle.updateValueAndValidity({ emitEvent: false });
+    session.updateValueAndValidity({ emitEvent: false });
+    enseignant.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private majValidationFormatSupport(): void {
+    const val   = this.form.get('format_support')!.value;
+    const exige = this.exigeTousLesChamps;
+    this.showElectronique      = val === 'Électronique';
+    this.showAviserReservation = val === 'Imprimé/support physique';
+    const lien      = this.form.get('lien_plateforme')!;
+    const aviserRes = this.form.get('aviser_reservation')!;
+    const aviserAct = this.form.get('aviser_activation')!;
+    if (this.showElectronique) {
+      lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
+      aviserAct.enable();
+      aviserRes.disable();
+    } else {
+      lien.clearValidators();
+      aviserAct.disable();
+      aviserRes.enable();
+    }
+    lien.updateValueAndValidity({ emitEvent: false });
+    aviserRes.updateValueAndValidity({ emitEvent: false });
+    aviserAct.updateValueAndValidity({ emitEvent: false });
   }
 
   private loadDemande(id: number): void {

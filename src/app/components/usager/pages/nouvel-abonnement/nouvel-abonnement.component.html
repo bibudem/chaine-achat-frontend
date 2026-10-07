@@ -96,7 +96,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
                    placeholder="Titre complet de la ressource">
@@ -112,7 +112,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'form-abonnement.editeur-fournisseur' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-abonnement.editeur-fournisseur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
                    placeholder="Nom de l'éditeur ou du fournisseur">
@@ -122,7 +122,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    placeholder="Ex: 00280836"
@@ -134,7 +134,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -162,7 +162,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'form-abonnement.date-debut' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-abonnement.date-debut' | translate }}</label>
             <input type="date" formControlName="date_debut_abonnement" class="form-control"
                    [class.is-invalid]="isInvalid('date_debut_abonnement')">
             <div *ngIf="isInvalid('date_debut_abonnement')" class="invalid-feedback">
@@ -187,7 +187,7 @@
         <div class="row g-3">
           <!-- Format toggle -->
           <div class="col-md-8">
-            <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.format-support' | translate }}</label>
             <div class="format-toggle">
               <div class="format-toggle-btn"
                    [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
@@ -247,7 +247,7 @@
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label required">{{ 'forms-usager.lien-plateforme' | translate }}</label>
+                  <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.lien-plateforme' | translate }}</label>
                   <input type="url" formControlName="lien_plateforme" class="form-control"
                          [class.is-invalid]="isInvalid('lien_plateforme')"
                          placeholder="https://...">
@@ -278,7 +278,7 @@
           <i class="fas fa-dollar-sign"></i>{{ 'forms-usager.section-finances' | translate }}
         </h2>
         <div class="row g-3">
-          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted"></app-fonds-repartition>
+          <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted" [exigeTousLesChamps]="exigeTousLesChamps"></app-fonds-repartition>
 
           <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
@@ -309,7 +309,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-12">
-            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
                    placeholder="https://...">
