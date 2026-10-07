@@ -29,7 +29,8 @@ const CHAMPS_COMMUNS_IMPORT = new Set<string>([
   'note_commentaire', 'creation_notice_dtdm', 'note_dtdm', 'note_interne_dtdm',
   'statut_bibliotheque', 'statut_acq', 'suivi_acq', 'note_acq', 'bibliotheque_note_interne',
   'format_pret_numerique', 'catalogue',
-  'personne_a_aviser', 'personne_a_aviser_nom', 'personne_a_aviser_courriel'
+  'personne_a_aviser', 'personne_a_aviser_nom', 'personne_a_aviser_courriel',
+  'acq_responsable_nom', 'description_plateforme'
 ]);
 
 @Component({
