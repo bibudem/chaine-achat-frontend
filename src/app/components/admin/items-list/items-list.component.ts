@@ -236,9 +236,6 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       annee:                 this.selectedAnnee          || undefined,
       priorite_demande:      this.selectedPriorite       || undefined,
       import_log_id:         this.selectedImportLogId    || undefined,
-      // Profil TDM : restreint systématiquement aux items routés vers le TDM (Création de
-      // notice TDM = Oui) — imposé par le rôle, pas un filtre que l'utilisateur peut lever.
-      creation_notice_dtdm:  this.authService.isTdm ? true : undefined,
       sort:                  this.sortColumn,
       order:                 this.sortDirection
     }).subscribe({

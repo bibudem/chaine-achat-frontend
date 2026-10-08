@@ -10,6 +10,9 @@
       <p class="uh-header__sub">
         Portail de gestion des acquisitions — Bibliothèques UdeM
       </p>
+      <p class="uh-header__profil" *ngIf="profilDescription">
+        <i class="bi bi-info-circle"></i>{{ profilDescription }}
+      </p>
     </div>
 
     <!-- ── Chip : Taux de change (lecture seule, sans gestion) — réservé à l'Employé,
@@ -60,8 +63,9 @@
     </div>
   </div>
 
-  <!-- ── Mes demandes : tableau de bord unifié (accès + répartition par statut) ──────────── -->
-  <div class="uh-dashboard">
+  <!-- ── Mes demandes : tableau de bord unifié (accès + répartition par statut) — profils
+       sans accès au tri (Employe/Usager) ──────────── -->
+  <div class="uh-dashboard" *ngIf="!authService.canTrier && !authService.isTdm">
     <a routerLink="/usager/profil" class="uh-dashboard__header">
       <span class="uh-dashboard__icon"><i class="bi bi-clock-history"></i></span>
       <span class="uh-dashboard__text">
@@ -109,6 +113,53 @@
         <i class="bi bi-chevron-right uh-dstat__arrow"></i>
       </a>
     </div>
+  </div>
+
+  <!-- ── Mes demandes + Tri des suggestions (TechDoc/Admin/SuperAdmin) ou + Total à trier de
+       l'équipe (TDM) : une seule rangée, deux colonnes, même gabarit, sans répartition par
+       statut (plus compact), chaque accès avec sa propre couleur (thème du projet). -->
+  <div class="uh-combo" *ngIf="authService.canTrier || authService.isTdm">
+    <a routerLink="/usager/profil" class="uh-combo__col">
+      <span class="uh-combo__icon uh-combo__icon--demandes"><i class="bi bi-clock-history"></i></span>
+      <span class="uh-combo__text">
+        <span class="uh-combo__title">{{ 'usager-home.combo-demandes-titre' | translate }}</span>
+        <span class="uh-combo__desc">{{ 'usager-home.combo-demandes-desc' | translate }}</span>
+      </span>
+      <span class="uh-combo__cta uh-combo__cta--demandes">
+        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
+      </span>
+    </a>
+    <div class="uh-combo__sep-v"></div>
+
+    <a *ngIf="authService.canTrier" routerLink="/usager/tri" class="uh-combo__col">
+      <span class="uh-combo__icon uh-combo__icon--tri"><i class="bi bi-bell-fill"></i></span>
+      <span class="uh-combo__text">
+        <span class="uh-combo__title">
+          {{ 'usager-home.combo-tri-titre' | translate }}
+          <span class="uh-tri-badge" *ngIf="aTrier > 0">{{ aTrier > 99 ? '99+' : aTrier }}</span>
+        </span>
+        <span class="uh-combo__desc">{{ 'usager-home.combo-tri-desc' | translate }}</span>
+      </span>
+      <span class="uh-combo__cta uh-combo__cta--tri">
+        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
+      </span>
+    </a>
+
+    <!-- TDM : total d'items routés vers l'équipe (creation_notice_dtdm), pas personnel —
+         même file que tdm-items.component.ts / tdm-decision.component.ts. -->
+    <a *ngIf="authService.isTdm" routerLink="/usager/tdm" class="uh-combo__col">
+      <span class="uh-combo__icon uh-combo__icon--tri"><i class="bi bi-inbox-fill"></i></span>
+      <span class="uh-combo__text">
+        <span class="uh-combo__title">
+          {{ 'usager-home.combo-tdm-titre' | translate }}
+          <span class="uh-tri-badge" *ngIf="totalTdmAssignees">{{ (totalTdmAssignees || 0) > 99 ? '99+' : totalTdmAssignees }}</span>
+        </span>
+        <span class="uh-combo__desc">{{ 'usager-home.combo-tdm-desc' | translate }}</span>
+      </span>
+      <span class="uh-combo__cta uh-combo__cta--tri">
+        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
+      </span>
+    </a>
   </div>
 
   <!-- ── Corps : deux colonnes alignées ──────────────────────────── -->

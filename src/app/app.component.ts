@@ -47,7 +47,8 @@ export class AppComponent implements OnInit {
    *  classe `usager-route` (qui cache app-header/app-menu, voir css_udem.css) reste figée sur
    *  celle du tout premier chargement : un F5 la recalcule, une navigation SPA non. */
   private updateRouteFlags(url: string): void {
-    this.isEmbedRoute  = url.startsWith('/suggestion-public');
+    // Fenêtre de connexion (popup) et retour Azure : même shell nu, rien à y afficher d'autre.
+    this.isEmbedRoute  = url.startsWith('/suggestion-public') || url.startsWith('/auth-popup') || url.startsWith('/auth-callback');
     this.isUsagerRoute = url.startsWith('/usager') || url.startsWith('/login') || this.isEmbedRoute;
     this.isLoginRoute  = url.startsWith('/login');
     document.documentElement.classList.toggle('usager-route', this.isUsagerRoute);

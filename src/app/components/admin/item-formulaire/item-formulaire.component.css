@@ -48,6 +48,38 @@ form.submitting {
 h5 i.bi { color: var(--primary-blue); }
 
 /* =============================================
+   TECHDOC TRI — case « transmise en bibliothèque »
+   ============================================= */
+.itf-techdoc-transmise {
+  padding: .9rem 1.1rem;
+  background: #f8f9fb;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: background-color .15s, border-color .15s;
+}
+.itf-techdoc-transmise .form-check-input {
+  width: 2.4em;
+  cursor: pointer;
+}
+.itf-techdoc-transmise .form-check-label {
+  cursor: pointer;
+  margin-left: .4rem;
+}
+
+/* Coché : mise en évidence franche — vert succès, pas juste un interrupteur discret. */
+.itf-techdoc-transmise--actif {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+.itf-techdoc-transmise--actif .form-check-input {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+.itf-techdoc-transmise--actif .form-check-label {
+  color: #166534;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 768px) {

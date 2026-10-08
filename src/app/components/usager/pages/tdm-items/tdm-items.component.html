@@ -1,0 +1,117 @@
+<div class="ts-page">
+
+  <!-- ── Navigation ───────────────────────────────────── -->
+  <nav class="ts-nav">
+    <div class="ts-nav__inner">
+      <a routerLink="/usager" class="ts-nav__back"><i class="bi bi-arrow-left"></i> {{ 'tri-suggestions-page.retour' | translate }}</a>
+      <span class="ts-nav__breadcrumb">
+        <a routerLink="/usager" class="ts-nav__crumb-link">{{ 'tri-suggestions-page.breadcrumb-portail' | translate }}</a>
+        <i class="bi bi-chevron-right ts-nav__sep"></i>
+        <span>{{ 'tdm-items-page.titre' | translate }}</span>
+      </span>
+    </div>
+  </nav>
+
+  <div class="ts-body">
+
+    <h1 class="ts-title">{{ 'tdm-items-page.titre' | translate }}</h1>
+    <p class="ts-subtitle">
+      {{ 'tdm-items-page.sous-titre' | translate }}
+    </p>
+
+    <!-- Messages -->
+    <div *ngIf="errorMessage" class="alert alert-warning alert-dismissible d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+      <button type="button" class="btn-close ms-auto" (click)="errorMessage = ''" [attr.aria-label]="'tri-suggestions-page.fermer' | translate"></button>
+    </div>
+
+    <!-- Filtres -->
+    <form class="ts-filters" (ngSubmit)="rechercher()">
+      <div class="ts-filters__search">
+        <i class="bi bi-search"></i>
+        <input type="search" class="form-control form-control-sm" name="recherche" [(ngModel)]="recherche"
+               [placeholder]="'tdm-items-page.recherche-placeholder' | translate"
+               [attr.aria-label]="'tri-suggestions-page.recherche-aria' | translate">
+      </div>
+      <select class="form-select form-select-sm ts-filters__select"
+              name="statut" [(ngModel)]="statutFiltre" (change)="rechercher()"
+              [attr.aria-label]="'tri-suggestions-page.statut-aria' | translate">
+        <option value="">{{ 'tdm-items-page.statut-tous' | translate }}</option>
+        <option value="attente">{{ 'tdm-items-page.statut-attente' | translate }}</option>
+        <option value="urgentes">{{ 'tdm-items-page.statut-urgentes' | translate }}</option>
+      </select>
+      <button type="submit" class="btn btn-sm btn-outline-primary">{{ 'tri-suggestions-page.btn-rechercher' | translate }}</button>
+    </form>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="ts-state">
+      <div class="spinner-border text-secondary" style="width:1.5rem;height:1.5rem;"></div>
+      <span>{{ 'tri-suggestions-page.chargement' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading">
+
+      <!-- Vide -->
+      <div *ngIf="!items.length" class="ts-empty">
+        <i class="bi bi-inbox"></i>
+        <p>{{ 'tdm-items-page.vide' | translate }}</p>
+      </div>
+
+      <!-- Liste -->
+      <div *ngIf="items.length" class="ts-table-wrap">
+        <div class="table-responsive">
+          <table class="table table-sm ts-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'tri-suggestions-page.th-document' | translate }}</th>
+                <th>{{ 'tdm-items-page.th-bibliotheque' | translate }}</th>
+                <th>{{ 'tdm-items-page.th-priorite' | translate }}</th>
+                <th>{{ 'tdm-items-page.th-statut' | translate }}</th>
+                <th>{{ 'tdm-items-page.th-recu-le' | translate }}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td class="text-nowrap ts-muted small">#{{ item.item_id }}</td>
+                <td>
+                  <div class="fw-semibold">{{ titre(item) }}</div>
+                  <div class="ts-muted small" *ngIf="item.isbn_issn">{{ item.isbn_issn }}</div>
+                </td>
+                <td class="small">{{ item.bibliotheque || '—' }}</td>
+                <td class="small">{{ item.priorite_demande || '—' }}</td>
+                <td class="ts-col-decision">
+                  <span class="ts-badge" [ngClass]="enAttente(item) ? 'ts-badge--attente' : 'ts-badge--traitee'">
+                    {{ statutLabel(item) }}
+                  </span>
+                </td>
+                <td class="text-nowrap small">{{ item.date_creation | date:'d MMM y' }}</td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-primary text-nowrap"
+                     [routerLink]="['/usager/tdm', item.item_id]">
+                    {{ 'tdm-items-page.btn-traiter' | translate }}
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="total > LIMITE" class="pagination-wrapper d-flex justify-content-between align-items-center">
+          <div class="text-muted small">{{ offset + 1 }}–{{ finPage }} {{ 'tri-suggestions-page.pagination-sur' | translate }} {{ total }}</div>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="offset === 0">
+              <button type="button" class="page-link" (click)="pagePrecedente()"><i class="bi bi-chevron-left"></i></button>
+            </li>
+            <li class="page-item" [class.disabled]="finPage >= total">
+              <button type="button" class="page-link" (click)="pageSuivante()"><i class="bi bi-chevron-right"></i></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

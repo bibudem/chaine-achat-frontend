@@ -75,3 +75,23 @@
   background: linear-gradient(135deg, var(--suggest-mid), var(--suggest-dark));
   box-shadow: 0 4px 16px rgba(200, 135, 42, 0.28);
 }
+
+/* ── Connexion UdeM (popup) et session active ── */
+.embed-login {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.25rem;
+  background: #f8f9fb;
+}
+.embed-login p { color: #374151; font-size: .9rem; }
+
+.embed-session {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  font-size: .85rem;
+  color: #374151;
+  margin-bottom: 1rem;
+}

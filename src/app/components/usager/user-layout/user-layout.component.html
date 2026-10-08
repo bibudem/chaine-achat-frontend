@@ -11,6 +11,14 @@
     <!-- Droite -->
     <div class="ul-right">
 
+      <!-- Tri des suggestions publiques (équipe TechDoc) -->
+      <button *ngIf="authService.canTrier" class="ul-forms__btn ul-tri__btn" (click)="triSuggestions()"
+              title="Tri des suggestions publiques"
+              [attr.aria-label]="'Tri des suggestions publiques' + (aTrier ? ' — ' + aTrier + ' en attente' : '')">
+        <i class="bi bi-bell-fill"></i>
+        <span *ngIf="aTrier" class="ul-tri__count">{{ aTrier > 99 ? '99+' : aTrier }}</span>
+      </button>
+
       <!-- Formulaires -->
       <div class="ul-forms" [class.ul-forms--open]="formsOpen">
         <button class="ul-forms__btn" (click)="toggleForms($event)" [title]="'header.formulaires' | translate">
@@ -77,7 +85,7 @@
             </div>
           </div>
           <div class="ul-user__body">
-            <button *ngIf="authService.isAdmin || authService.isTdm || authService.isEmploye" class="ul-user__item" (click)="retourGestion()">
+            <button *ngIf="authService.isAdmin || authService.isTdm || authService.isEmploye || authService.isTechDoc" class="ul-user__item" (click)="retourGestion()">
               <i class="bi bi-speedometer2 ul-user__item-icon"></i>
               <span>{{ 'user-layout.espace-gestion' | translate }}</span>
               <i class="bi bi-chevron-right ul-user__item-arrow"></i>

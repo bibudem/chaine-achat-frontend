@@ -28,6 +28,11 @@ export class ItemFormulaireComponent implements OnInit {
   submitted = false;
   activeTab = 'base';
 
+  /** Donnée brute reçue du backend (hors formulaire) — sert uniquement à afficher des
+   *  informations en lecture seule non éditables ici, ex. le tri par l'équipe TechDoc
+   *  (tri_statut/tri_commentaire/tri_par_nom/tri_date, voir le template). */
+  item: Item | null = null;
+
   options = new ListeChoixOptions();
   selectedFormulaireType: string | null = null;
 
@@ -177,7 +182,10 @@ export class ItemFormulaireComponent implements OnInit {
     const isSaisie = (statut ?? '').startsWith('Saisie en cours');
     // Fonds partagés (Nouvel achat unique / Nouvel abonnement / Modification et CCOL) :
     // ces 4 champs plats sont remplacés par fonds_repartition (voir app-fonds-repartition),
-    // qui gère lui-même sa propre validation par ligne — on les laisse optionnels ici.
+    // qui gère lui-même sa propre validation par ligne — on les laisse optionnels ici. Pour
+    // Suggestion d'achat, Prix/Devise/Prix-devise sont saisis dans l'onglet Décision ACQ (pas
+    // Informations de base, voir le template) mais suivent la même règle de validation que
+    // les autres types — aucun traitement spécial requis ici.
     ['prix_cad', 'devise_originale', 'prix_devise_originale', 'fonds_budgetaire'].forEach(field => {
       const ctrl = this.itemForm.get(field);
       if (!ctrl) return;
@@ -403,6 +411,7 @@ export class ItemFormulaireComponent implements OnInit {
       usager_nom: ['', Validators.maxLength(200)],
       note_usager: [''],
       techdoc_suggestion_transmise: [false],
+      techdoc_tri_notes: [''],
       acq_raison_annulation: [''],
       acq_isbn: ['', Validators.maxLength(50)],
 
@@ -449,6 +458,18 @@ export class ItemFormulaireComponent implements OnInit {
         this.itemForm.get('usager_faculte')?.setValidators([Validators.required, Validators.maxLength(255)]);
         this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
         this.itemForm.get('bibliothecaire_disciplinaire')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
+        // Fonds budgétaire par défaut pour une nouvelle Suggestion d'achat — jamais en
+        // édition (ne pas écraser une valeur déjà choisie) ni si déjà renseigné. Différé d'un
+        // tick : app-fonds-budgetaire-select vient d'apparaître dans le DOM (*ngIf) au moment
+        // même de ce changement de type — son ControlValueAccessor n'est pas encore lié tant
+        // qu'Angular n'a pas traversé ce cycle de détection de changements, donc un setValue()
+        // synchrone ici arrive avant que writeValue() ne puisse s'appliquer à la vue.
+        if (!this.isEditMode) {
+          setTimeout(() => {
+            const fondsCtrl = this.itemForm.get('fonds_budgetaire');
+            if (fondsCtrl && !fondsCtrl.value) fondsCtrl.setValue('MO-094');
+          });
+        }
         break;
       default:
         break;
@@ -508,7 +529,7 @@ export class ItemFormulaireComponent implements OnInit {
       'usager_statut', 'usager_faculte', 'usager_courriel',
       'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
       'date_requise_cours', 'auteur',
-      'usager_nom', 'note_usager', 'techdoc_suggestion_transmise', 'acq_raison_annulation', 'acq_isbn',
+      'usager_nom', 'note_usager', 'techdoc_suggestion_transmise', 'techdoc_tri_notes', 'acq_raison_annulation', 'acq_isbn',
       // Partagés
       'format_pret_numerique',
       // Nouvel achat unique
@@ -547,6 +568,8 @@ export class ItemFormulaireComponent implements OnInit {
     this.itemService.consulter(this.itemId).subscribe({
       next: (response: ApiResponse<Item>) => {
         if (response.success && response.data) {
+          this.item = response.data;
+
           // Normalise les noms de type hérités (formulaires usager vs admin)
           const typeAliases: Record<string, string> = {
             'Requête ACQ':           'Requête ACQ Accessibilité',
@@ -841,6 +864,7 @@ export class ItemFormulaireComponent implements OnInit {
           usager_nom:                   formData.usager_nom,
           note_usager:                  formData.note_usager,
           techdoc_suggestion_transmise: formData.techdoc_suggestion_transmise,
+          techdoc_tri_notes:            formData.techdoc_tri_notes,
           acq_raison_annulation:        formData.acq_raison_annulation,
           acq_isbn:                     formData.acq_isbn,
         };

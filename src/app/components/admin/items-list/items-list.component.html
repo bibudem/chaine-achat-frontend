@@ -271,7 +271,9 @@
                       <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button *ngIf="authService.canAccessDecision" class="item-action-btn item-action-btn--decision"
+                      <!-- Décision ACQ : Admin/SuperAdmin uniquement — le TDM traite ses items
+                           depuis le portail usager (/usager/tdm), pas depuis l'espace système. -->
+                      <button *ngIf="authService.isAdmin" class="item-action-btn item-action-btn--decision"
                               [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
@@ -307,7 +309,7 @@
                   <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button *ngIf="authService.canAccessDecision" class="item-action-btn item-action-btn--decision"
+                  <button *ngIf="authService.isAdmin" class="item-action-btn item-action-btn--decision"
                           [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>

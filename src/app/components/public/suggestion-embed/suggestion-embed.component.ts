@@ -1,20 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReponsesService } from '../../../services/reponses.service';
+import { AuthService } from '../../../services/auth.service';
 
 /**
  * Formulaire public de suggestion d'achat — autonome, sans en-tête ni pied de page de
- * l'application, sans authentification pour l'instant, destiné à être intégré via <iframe>
- * sur un site public externe. Route : /suggestion-public (racine, pas sous /usager — voir
- * app-routing.module.ts), sans AuthGuard.
+ * l'application, destiné à être intégré via <iframe> sur le site des Bibliothèques. Route :
+ * /suggestion-public (racine, pas sous /usager — voir app-routing.module.ts). Seule page
+ * accessible à la communauté UdeM (rôle Usager).
  *
- * Cloné de usager/pages/suggestion-public/suggestion-public.component.ts, avec les
- * adaptations nécessaires à l'absence de session, et les champs alignés sur le formulaire de
- * référence externe (fourni par l'usagère) :
- *  - Nom/courriel du demandeur : champs éditables (au lieu de pré-remplis/désactivés depuis
- *    sessionStorage, qui n'existe pas hors session authentifiée).
- *  - Pas de mode édition (paramètre ?id=) : usage public à sens unique, il n'y a pas de
- *    « mes demandes » accessible sans compte pour revenir modifier un envoi.
+ * Connexion UdeM obligatoire, mais pas d'AuthGuard : sa redirection vers /login ne marcherait
+ * pas dans l'iframe (Microsoft refuse de s'y afficher). Le composant affiche un écran de
+ * connexion qui ouvre Azure AD dans une popup (AuthService.loginWithPopup).
+ *
+ * La suggestion envoyée entre dans la file de tri de l'équipe TechDoc (/usager/tri) — pas
+ * directement aux ACQ. Le demandeur est avisé par courriel de la décision de l'équipe.
+ *
+ * Cloné de usager/pages/suggestion-public/suggestion-public.component.ts, avec les champs
+ * alignés sur le formulaire de référence externe (fourni par l'usagère) :
+ *  - Nom/courriel du demandeur : pré-remplis et verrouillés depuis la session ; le backend
+ *    les reprend de toute façon du JWT (POST /reponses/suggestion-publique).
+ *  - Pas de mode édition (paramètre ?id=) : usage public à sens unique, la communauté UdeM
+ *    n'a pas accès à « Mes demandes » pour revenir modifier un envoi.
  *  - Section « Bibliothèque » (statut de la demande, note interne, pièces déjà envoyées)
  *    retirée : ce sont des contrôles internes au personnel, pas destinés au grand public.
  *    La demande est toujours soumise avec statut_bibliotheque = « Saisie en cours - En
@@ -24,15 +32,14 @@ import { ReponsesService } from '../../../services/reponses.service';
  *  - Priorité, bibliothèque cible et bibliothécaire disciplinaire : retirés du formulaire
  *    public (absents du formulaire de référence) — assignés par les ACQ à la révision
  *    interne plutôt que choisis par le grand public.
- *  - « Aviser à la réception » retiré (le formulaire de référence n'a qu'une seule question
- *    de réservation, « Réserver le document à son arrivée »).
+ *  - « Aviser à la réception » : pas de question distincte posée ici (le formulaire de
+ *    référence n'a qu'une seule question de réservation, « Réserver le document à son
+ *    arrivée »), mais toujours envoyé à `true` — la politique est que l'usager et le/la
+ *    bibliothécaire disciplinaire sont systématiquement avisés à la réception.
  *  - Pièce jointe retirée : absente du formulaire de référence, pas de champ correspondant
  *    ici.
  *  - Écran de confirmation affiché sur place plutôt qu'une redirection vers /usager/profil,
- *    qui n'a pas de sens hors session/iframe.
- *
- * TODO auth : quand une authentification sera ajoutée à ce formulaire public, réévaluer si
- * nom/courriel doivent redevenir pré-remplis/verrouillés depuis l'identité authentifiée.
+ *    inaccessible à la communauté UdeM.
  */
 @Component({
   selector: 'app-suggestion-embed',
@@ -47,21 +54,30 @@ export class SuggestionEmbedComponent implements OnInit {
   isLoading      = false;
   showSigleCours = false;
 
+  /** Session UdeM active dans cet iframe. */
+  connecte          = false;
+  connexionEnCours  = false;
+  popupBloquee      = false;
+  readonly urlPleinePage = '/suggestion-public';
+
   typesDocument: string[] = ['Livre', 'Périodique', 'Document audiovisuel', 'Base de données', 'Autre'];
 
   constructor(
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
+    public  authService: AuthService,
   ) {}
 
   ngOnInit(): void {
+    this.connecte = this.authService.isLoggedIn;
     this.form = this.fb.group({
-      nom:                          ['', Validators.required],
-      courriel:                     ['', [Validators.required, Validators.email]],
+      nom:                          [{ value: '', disabled: true }],
+      courriel:                     [{ value: '', disabled: true }],
       statut:                       ['', Validators.required],
       usager_faculte:               ['', Validators.required],
       type_document:                ['', Validators.required],
       titre_document:               ['', Validators.required],
+      sous_titre:                   [''],
       auteur:                       ['', Validators.required],
       editeur:                      [''],
       edition:                      [''],
@@ -86,6 +102,40 @@ export class SuggestionEmbedComponent implements OnInit {
       toggle('reserve_cours_session');
       toggle('reserve_cours_enseignant');
     });
+
+    this.remplirIdentite();
+  }
+
+  private remplirIdentite(): void {
+    this.form.patchValue({
+      nom:      `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+      courriel: sessionStorage.getItem('courrielAdmin') ?? '',
+    });
+  }
+
+  async seConnecter(): Promise<void> {
+    this.popupBloquee = false;
+    this.connexionEnCours = true;
+    const ok = await this.authService.loginWithPopup();
+    this.connexionEnCours = false;
+    if (!ok) {
+      // Popup bloquée par le navigateur (ou échec de validation du token).
+      this.popupBloquee = true;
+      return;
+    }
+    this.connecte = true;
+    this.remplirIdentite();
+  }
+
+  seDeconnecter(): void {
+    this.authService.logout();
+  }
+
+  nouvelleSuggestion(): void {
+    this.success = false;
+    this.submitted = false;
+    this.form.reset({ aviser_reservation: false, reserve_cours: false });
+    this.remplirIdentite();
   }
 
   // Le formulaire de référence n'a qu'un seul champ « Année de publication ou source Internet
@@ -146,6 +196,7 @@ export class SuggestionEmbedComponent implements OnInit {
       bibliothecaire_disciplinaire: null,
       categorie_document:           v.type_document,
       titre_document:               v.titre_document,
+      sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
       editeur:                      v.editeur,
       date_publication:             v.date_publication,
@@ -154,8 +205,11 @@ export class SuggestionEmbedComponent implements OnInit {
       format_support:               null,
       note_usager:                  noteAvecEdition,
       aviser_reservation:           v.aviser_reservation,
-      // Pas de champ « Aviser à la réception » distinct dans le formulaire de référence.
-      aviser_reception:             false,
+      // Pas de champ « Aviser à la réception » distinct dans le formulaire de référence —
+      // mais la politique est désormais que l'usager et le/la bibliothécaire disciplinaire
+      // sont TOUJOURS avisés à la réception (voir suggestion-public.component.ts, même
+      // changement), donc true même si la question n'est pas posée ici.
+      aviser_reception:             true,
       date_requise_cours:           v.date_requise_cours || null,
       reserve_cours:                v.reserve_cours,
       reserve_cours_sigle:          v.reserve_cours ? v.reserve_cours_sigle      : null,
@@ -173,10 +227,15 @@ export class SuggestionEmbedComponent implements OnInit {
     };
 
     this.reponsesService
-      .envoyerSuggestionPublique({ nom: v.nom, courriel: v.courriel, statut: v.statut }, reponses)
+      .envoyerSuggestionPublique(v.statut, reponses)
       .subscribe({
         next: () => { this.isLoading = false; this.success = true; },
-        error: () => { this.isLoading = false; this.error = true; }
+        error: (err: HttpErrorResponse) => {
+          this.isLoading = false;
+          // Session expirée : on redemande la connexion, la saisie reste dans le formulaire.
+          if (err.status === 401) { this.connecte = false; return; }
+          this.error = true;
+        }
       });
   }
 }

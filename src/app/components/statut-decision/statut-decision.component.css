@@ -209,6 +209,19 @@
   line-height:    1.3;
 }
 
+/* ── Tri par l'équipe TechDoc (suggestion publique) — bloc inséré dans l'onglet ACQ,
+   pas en bandeau pleine largeur (voir statut-decision.component.html). ───────────── */
+.sd-tri-info {
+  display: flex; align-items: flex-start; gap: .6rem;
+  padding: .7rem 1rem;
+  border-radius: 8px;
+  background: #f1f5f9; color: #475569;
+  font-size: .85rem;
+}
+.sd-tri-info__icon { font-size: 1rem; margin-top: .1rem; flex-shrink: 0; }
+.sd-tri-info__body { line-height: 1.4; }
+.sd-tri-info__comment { font-style: italic; margin-top: .2rem; }
+
 /* ── Statut — champ principal ───────────────────────────────── */
 .sd-statut-block {
   padding: 0;

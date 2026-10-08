@@ -203,6 +203,35 @@
           "name": "SMTP account"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tri-decision",
+        "options": {}
+      },
+      "id": "ec30652d-da9b-49c5-bb08-2fdcc92cf441",
+      "name": "WH — Décision tri",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        3360
+      ],
+      "webhookId": "b1e45810-ccbb-4f44-9183-1c32df1b5904"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== ⚙️ CONFIGURATION — MODIFIER ICI POUR LA MIGRATION EN PRODUCTION =====\nvar FROM_EMAIL = 'chaine-achat@bib.umontreal.ca';\n// =============================================================================\n\n// Courriel au demandeur (communauté UdeM) après le tri de sa suggestion publique par\n// l'équipe TechDoc — appelé par le backend (PUT /reponses/:id/tri).\nfunction esc(v) {\n  return String(v == null ? '' : v)\n    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');\n}\n\nvar inp         = $input.first().json;\nvar d           = inp.body || inp;\nvar accepte     = d.decision === 'accepte';\nvar userEmail   = d.usager_courriel || '';\nvar userNom     = esc(d.usager_nom || 'Madame/Monsieur');\nvar titre       = d.titre_document || '—';\nvar auteur      = d.auteur ? esc(d.auteur) : null;\nvar commentaire = d.commentaire ? esc(d.commentaire).split(String.fromCharCode(10)).join('<br>') : null;\nvar c           = accepte ? '#1B6B50' : '#9B1C1C';\n\nvar titreCourriel = accepte\n  ? 'Votre suggestion d’achat a été retenue'\n  : 'Votre suggestion d’achat n’a pas été retenue';\nvar message = accepte\n  ? 'Merci pour votre suggestion. Elle a été retenue par l’équipe des Bibliothèques et sera transmise au Service des acquisitions. Vous serez avisé·e de la suite par courriel.'\n  : 'Merci pour votre suggestion. Après examen, l’équipe des Bibliothèques ne l’a pas retenue. Vous trouverez ci-dessous la raison de cette décision.';\n\nfunction ligne(label, valeur, derniere) {\n  return \"<tr><td style='padding:13px 18px;\" + (derniere ? '' : 'border-bottom:1px solid #eaedf0;') + \"background:#f8f9fa'>\" +\n    \"<p style='margin:0 0 3px;color:#607386;font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:500'>\" + label + \"</p>\" +\n    \"<p style='margin:0;color:#343a40;font-size:13px;font-weight:500'>\" + valeur + \"</p></td></tr>\";\n}\n\nvar lignes = [ligne('Document suggéré', esc(titre), false) ];\nif (auteur) lignes.push(ligne('Auteur', auteur, false));\nlignes.push(ligne('Décision', \"<span style='color:\" + c + \"'>\" + (accepte ? 'Retenue' : 'Non retenue') + \"</span>\", !commentaire));\nif (commentaire) lignes.push(ligne('Commentaire de l’équipe', \"<span style='font-weight:400'>\" + commentaire + \"</span>\", true));\n\nvar html =\n  \"<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>\" + titreCourriel + \"</title></head>\" +\n  \"<body style='margin:0;padding:0;background:#f0f2f5;font-family:Segoe UI,Arial,sans-serif'>\" +\n  \"<table width='100%' cellpadding='0' cellspacing='0' style='background:#f0f2f5;padding:32px 16px'><tr><td align='center'>\" +\n  \"<table width='620' cellpadding='0' cellspacing='0' style='max-width:620px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)'>\" +\n  \"<tr><td style='background:#1E2631;padding:28px 36px 0;border-bottom:4px solid \" + c + \"'>\" +\n  \"<p style='margin:0 0 5px;color:rgba(255,255,255,.50);font-size:10px;text-transform:uppercase;letter-spacing:1.4px'>Bibliothèques — Université de Montréal</p>\" +\n  \"<h1 style='margin:0 0 20px;color:#fff;font-size:20px;font-weight:600'>\" + titreCourriel + \"</h1>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='padding:26px 36px 8px'>\" +\n  \"<p style='margin:0 0 4px;color:#343a40;font-size:14px;line-height:1.6'>Bonjour <strong>\" + userNom + \"</strong>,</p>\" +\n  \"<p style='margin:0 0 22px;color:#607386;font-size:13px;line-height:1.6'>\" + message + \"</p>\" +\n  \"<table width='100%' cellpadding='0' cellspacing='0' style='border:1px solid #eaedf0;border-radius:8px;overflow:hidden;margin-bottom:22px'>\" +\n  lignes.join('') +\n  \"</table>\" +\n  \"<p style='margin:0 0 24px;color:#9DABB9;font-size:12px;line-height:1.6'>Pour toute question, veuillez contacter votre bibliothèque.</p>\" +\n  \"</td></tr>\" +\n  \"<tr><td style='background:#f8f9fa;padding:12px 36px;text-align:center;border-top:1px solid #eaedf0'>\" +\n  \"<p style='margin:0;font-size:11px;color:#9DABB9'>Bibliothèques — Université de Montréal &nbsp;&middot;&nbsp; Système de gestion des acquisitions<br>Ce courriel est généré automatiquement.</p>\" +\n  \"</td></tr></table></td></tr></table></body></html>\";\n\nreturn [{ json: {\n  FROM_EMAIL: FROM_EMAIL,\n  userEmail: userEmail,\n  emailSubject: '[Bibliothèques UdeM] ' + titreCourriel + ' — ' + String(titre).substring(0, 50),\n  emailHtml: html\n} }];"
+      },
+      "id": "1916499e-6592-4d3a-b80f-d0d644888e1d",
+      "name": "⚙️ Email Tri",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        3360
+      ]
     }
   ],
   "connections": {
@@ -295,6 +324,28 @@
       ]
     },
     "⚙️ Email Usager": {
+      "main": [
+        [
+          {
+            "node": "Envoyer email — Usager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WH — Décision tri": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Email Tri",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Email Tri": {
       "main": [
         [
           {

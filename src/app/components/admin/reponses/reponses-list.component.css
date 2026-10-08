@@ -130,6 +130,15 @@
   max-width: 100%;
   overflow: hidden; text-overflow: ellipsis;
 }
+/* Suggestion publique refusée par l'équipe de tri (TechDoc) — historique, lecture seule */
+.rl-tri-refuse {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .7rem; font-weight: 600;
+  padding: .18rem .5rem; border-radius: 5px;
+  background: #fee2e2; color: #991b1b;
+  white-space: nowrap;
+}
+
 /* Suivi ACQ — texte + icône, sans fond coloré */
 .rl-suivi-text {
   display: inline-flex;

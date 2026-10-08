@@ -129,6 +129,22 @@
   margin: 0;
 }
 
+/* Description du rôle courant — petite puce (même langage visuel que la chip Taux de
+   change à droite), plus engageante qu'une simple ligne de texte gris. */
+.uh-header__profil {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin: .5rem 0 0;
+  padding: .3rem .7rem;
+  background: var(--extra-light-blue, #E5F0F8);
+  color: var(--secondary-blue, #00407F);
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 500;
+}
+.uh-header__profil i { font-size: .78rem; flex-shrink: 0; }
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CORPS — 2 COLONNES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -247,6 +263,24 @@
   margin: 0;
 }
 
+.uh-tri-badge {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #dc2626;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  vertical-align: middle;
+  margin-left: .4rem;
+}
+
 .uh-dashboard__desc {
   font-size: .8rem;
   color: #94a3b8;
@@ -275,6 +309,105 @@
   background: linear-gradient(135deg, #0072db 0%, #00478f 55%, #0d1650 100%);
 }
 .uh-dashboard__header:hover .uh-dashboard__cta i { transform: translateX(3px); }
+
+/* ── Mes demandes + Tri : section combinée (TechDoc/Admin/SuperAdmin) ──────────
+   Une seule rangée, deux colonnes côte à côte séparées par un filet vertical — plus
+   compact qu'une boîte par accès, couleurs à plat (pas de dégradé) reprises du thème
+   du projet (--secondary-blue / --acq-mid, voir css_udem.css). */
+.uh-combo {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  background: #fff;
+  border: 1.5px solid #e0e7ef;
+  border-radius: 14px;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  transition: box-shadow .2s;
+}
+.uh-combo:hover { box-shadow: 0 4px 16px rgba(0,64,127,.08); }
+
+.uh-combo__col {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .7rem .9rem;
+  text-decoration: none;
+  transition: background .15s;
+}
+.uh-combo__col:hover { text-decoration: none; background: #f7f9fc; }
+
+.uh-combo__sep-v { width: 1px; background: #eef2f7; flex-shrink: 0; }
+
+.uh-combo__icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .95rem;
+  flex-shrink: 0;
+}
+.uh-combo__icon--demandes { background: var(--extra-light-blue, #E5F0F8); color: var(--secondary-blue, #00407F); }
+.uh-combo__icon--tri      { background: var(--warning-light, #fee1de); color: var(--warning-orange, #F04E24); }
+
+.uh-combo__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+}
+
+.uh-combo__title {
+  font-size: .7rem;
+  font-weight: 600;
+  color: #607386;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uh-combo__desc {
+  font-size: .74rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uh-combo__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  color: #fff;
+  border-radius: 14px;
+  padding: .4rem .8rem;
+  font-size: .78rem;
+  font-weight: 500;
+  transition: opacity .15s ease;
+}
+.uh-combo__cta--demandes { background: var(--secondary-blue, #00407F); }
+.uh-combo__cta--tri      { background: var(--warning-orange, #F04E24); }
+.uh-combo__cta i { transition: transform .15s ease; }
+.uh-combo__col:hover .uh-combo__cta { opacity: .85; }
+.uh-combo__col:hover .uh-combo__cta i { transform: translateX(3px); }
+
+@media (max-width: 575px) {
+  .uh-combo { flex-direction: column; }
+  .uh-combo__sep-v { width: 100%; height: 1px; }
+  .uh-combo__col { padding: .75rem 1rem; }
+  .uh-combo__desc { display: none; }
+}
 
 /* Rangée de statistiques — chips séparées par des filets, pas des cartes empilées */
 .uh-dashboard__stats {

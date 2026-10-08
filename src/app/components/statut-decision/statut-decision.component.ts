@@ -341,6 +341,13 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       verification_caeb:              sd.verification_caeb,
       verification_sqla:              sd.verification_sqla,
       verification_emma:              sd.verification_emma,
+      // Tri par l'équipe TechDoc (suggestion publique) — déjà sur r (SELECT r.* dans
+      // ReponsesModel.findById), simple passthrough.
+      tri_statut:                     r.tri_statut,
+      tri_commentaire:                r.tri_commentaire,
+      tri_par:                        r.tri_par,
+      tri_par_nom:                    r.tri_par_nom,
+      tri_date:                       r.tri_date,
     } as Item;
     const acq = this.applyAcqDefaults(
       statutBibliotheque, undefined, undefined,

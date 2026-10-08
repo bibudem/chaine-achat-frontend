@@ -128,10 +128,9 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       LIGNE 1 — STAT CARDS (Admin uniquement — le profil TDM voit à la place
-       la section "Mon activité", ci-dessous dans LIGNE 2)
+       LIGNE 1 — STAT CARDS — même vue pour Admin/TDM/Employé/TechDoc
   ══════════════════════════════════════════════ -->
-  <div class="db-stats" *ngIf="!authService.isTdm">
+  <div class="db-stats">
 
     <div class="sc sc--blue sc--clickable" (click)="navigateToItemsListe()">
       <div class="sc__top">
@@ -239,84 +238,7 @@
 
     </div>
 
-    <!-- ══ TDM — Mon activité : compteurs + graphique restreints à sa propre file
-         (creation_notice_dtdm = true), voir loadTdmStats/loadTdmLibraryBreakdown. ══ -->
-    <div class="col-12 col-sm-6 col-xl-8 db-col-tdm-activity" *ngIf="authService.isTdm">
-      <div class="panel panel--tdm-activity">
-        <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.mon-activite' | translate }}</span>
-        </div>
-        <div class="panel__body">
-          <p class="db-tdm-desc">{{ 'accueil.mon-activite-desc' | translate }}</p>
-
-          <div class="tdm-stat-row" (click)="navigateToTdmTotal()">
-            <div class="tdm-stat-row__icon tdm-stat-row__icon--blue"><i class="bi bi-inbox-fill"></i></div>
-            <div class="tdm-stat-row__body">
-              <span class="tdm-stat-row__name">{{ 'accueil.tdm-total-nom' | translate }}</span>
-              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-total-desc' | translate }}</span>
-            </div>
-            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmAssignees || 0) }}</span>
-            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
-          </div>
-
-          <div class="tdm-stat-row" (click)="navigateToTdmEnAttente()">
-            <div class="tdm-stat-row__icon tdm-stat-row__icon--amber"><i class="bi bi-hourglass-split"></i></div>
-            <div class="tdm-stat-row__body">
-              <span class="tdm-stat-row__name">{{ 'accueil.tdm-attente-nom' | translate }}</span>
-              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-attente-desc' | translate }}</span>
-            </div>
-            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmEnAttente || 0) }}</span>
-            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
-          </div>
-
-          <div class="tdm-stat-row" (click)="navigateToTdmUrgentes()">
-            <div class="tdm-stat-row__icon tdm-stat-row__icon--orange"><i class="bi bi-exclamation-triangle"></i></div>
-            <div class="tdm-stat-row__body">
-              <span class="tdm-stat-row__name">{{ 'accueil.tdm-urgentes-nom' | translate }}</span>
-              <span class="tdm-stat-row__desc">{{ 'accueil.tdm-urgentes-desc' | translate }}</span>
-            </div>
-            <span class="tdm-stat-row__value">{{ isLoadingTdmStats ? '—' : formatNumber(totalTdmUrgentes || 0) }}</span>
-            <i class="bi bi-chevron-right tdm-stat-row__arrow"></i>
-          </div>
-
-          <div class="panel__section-divider"></div>
-          <p class="panel__section-label">{{ 'accueil.tdm-par-bibliotheque' | translate }}</p>
-
-          <div *ngIf="isLoadingTdmLibrary" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
-          </div>
-
-          <ng-container *ngIf="!isLoadingTdmLibrary && tdmLibraryBreakdown.length > 0">
-            <div class="type-seg-bar">
-              <div *ngFor="let lib of tdmLibraryBreakdown; let i = index"
-                   class="type-seg-bar__slice"
-                   [style.background]="getBibColor(i)"
-                   [style.width.%]="lib.percentage"
-                   [title]="lib.bibliotheque + ' — ' + lib.percentage + '%'">
-              </div>
-            </div>
-            <div class="type-legend">
-              <div *ngFor="let lib of tdmLibraryBreakdown; let i = index" class="type-legend__row">
-                <span class="type-legend__dot" [style.background]="getBibColor(i)"></span>
-                <span class="type-legend__name">{{ lib.bibliotheque }}</span>
-                <div class="type-legend__track">
-                  <div class="type-legend__fill" [style.background]="getBibColor(i)" [style.width.%]="lib.percentage"></div>
-                </div>
-                <span class="type-legend__pct">{{ lib.percentage }}%</span>
-                <span class="type-legend__cnt">{{ formatNumber(lib.count) }}</span>
-              </div>
-            </div>
-          </ng-container>
-
-          <p *ngIf="!isLoadingTdmLibrary && tdmLibraryBreakdown.length === 0" class="db-empty">
-            {{ 'accueil.aucune-donnee' | translate }}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ COL centre (Admin uniquement) ══ -->
-    <ng-container *ngIf="!authService.isTdm">
+    <!-- ══ COL centre ══ -->
     <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-right">
       <!-- Rangée 1 : Répartition par type -->
       <div class="panel panel--types mb-3 flex-grow-1">
@@ -476,7 +398,6 @@
       </div>
 
     </div>
-    </ng-container>
 
   </div><!-- /db-panels -->
 

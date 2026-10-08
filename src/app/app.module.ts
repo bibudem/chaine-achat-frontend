@@ -27,6 +27,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
 import { AccueilComponent } from './components/admin/accueil/accueil.component';
+import { TdmItemsComponent } from './components/usager/pages/tdm-items/tdm-items.component';
+import { TdmDecisionComponent } from './components/usager/pages/tdm-decision/tdm-decision.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
@@ -76,6 +78,8 @@ import { FondsRepartitionComponent } from './components/shared/fonds-repartition
 import { FondsBudgetaireSelectComponent } from './components/shared/fonds-budgetaire-select/fonds-budgetaire-select.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
+import { AuthPopupComponent } from './components/auth-popup/auth-popup.component';
+import { TriSuggestionsComponent } from './components/usager/pages/tri-suggestions/tri-suggestions.component';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
 import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
 import { FondsBudgetairesComponent } from './components/configuration/fonds-budgetaires/fonds-budgetaires.component';
@@ -88,6 +92,8 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     FooterComponent,
     MenuComponent,
     AccueilComponent,
+    TdmItemsComponent,
+    TdmDecisionComponent,
     LoginComponent,
     AuthCallbackComponent,
     PageNotFoundComponent,
@@ -123,6 +129,8 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     FondsBudgetaireSelectComponent,
     PieceJointeUploaderComponent,
     SuggestionEmbedComponent,
+    AuthPopupComponent,
+    TriSuggestionsComponent,
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,

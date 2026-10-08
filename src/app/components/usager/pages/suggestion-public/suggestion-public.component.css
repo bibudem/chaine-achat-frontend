@@ -116,3 +116,27 @@
   margin-bottom: 0.6rem;
   border-bottom: 1px solid #e9ecef;
 }
+
+/* ── TechDoc Tri — case « transmise en bibliothèque » ─────────────────── */
+.fsp-techdoc-transmise {
+  padding: .9rem 1.1rem;
+  background: #f8f9fb;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: background-color .15s, border-color .15s;
+}
+.fsp-techdoc-transmise .form-check-input { cursor: pointer; }
+.fsp-techdoc-transmise .form-check-label { cursor: pointer; }
+
+/* Coché : mise en évidence franche — vert succès, pas juste un interrupteur discret. */
+.fsp-techdoc-transmise--actif {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+.fsp-techdoc-transmise--actif .form-check-input {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+.fsp-techdoc-transmise--actif .form-check-label {
+  color: #166534;
+}

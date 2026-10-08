@@ -1,0 +1,68 @@
+/* Même gabarit visuel que « Tri des suggestions » (tri-suggestions.component.css) — classes
+   dupliquées ici (vue encapsulation Angular), pour une présentation cohérente entre les files
+   de traitement du portail usager. */
+.ts-page { min-height: 100vh; background: #fff; }
+
+/* ── Navigation ── */
+.ts-nav { background: #fff; border-bottom: 1px solid #f0f4f8; padding: .6rem 1.5rem; }
+.ts-nav__inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.ts-nav__back {
+  font-size: .81rem; font-weight: 500; color: #374151; text-decoration: none;
+  display: flex; align-items: center; gap: .35rem;
+  background: #f8f9fb; border: 1.5px solid #e0e7ef; border-radius: 8px;
+  padding: .32rem .8rem; white-space: nowrap;
+}
+.ts-nav__back:hover { background: #e8eef5; border-color: #c5d3e0; color: #0B113A; text-decoration: none; }
+.ts-nav__breadcrumb { display: flex; align-items: center; gap: .4rem; font-size: .79rem; color: #94a3b8; }
+.ts-nav__crumb-link { color: #607386; text-decoration: none; }
+.ts-nav__crumb-link:hover { color: #00407F; text-decoration: underline; }
+.ts-nav__sep { font-size: .65rem; opacity: .5; }
+
+/* ── Corps ── */
+.ts-body { max-width: 960px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+.ts-title    { font-size: 1.25rem; font-weight: 700; color: #0B113A; margin: 0 0 .35rem; }
+.ts-subtitle { font-size: .85rem; color: #607386; margin: 0 0 1.1rem; }
+.ts-pre      { white-space: pre-line; }
+
+/* ── États ── */
+.ts-state {
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+  padding: 3rem 1rem; color: #607386; font-size: .9rem;
+}
+
+/* ── Carte item ── */
+.ts-card {
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  padding: 1rem 1.1rem;
+}
+.ts-card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .75rem; }
+.ts-card__title  { font-size: 1rem; font-weight: 700; color: #0B113A; margin: 0; }
+.ts-card__author { font-size: .82rem; color: #607386; margin: .15rem 0 0; }
+
+.ts-badge {
+  display: inline-block; padding: .22rem .5rem; border-radius: 5px;
+  font-size: .73rem; font-weight: 600; white-space: nowrap;
+}
+.ts-badge--attente { background: #fef3c7; color: #92400e; }
+.ts-badge--traitee { background: #dcfce7; color: #166534; }
+
+.ts-fields {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: .55rem 1.25rem; margin: 0 0 .9rem;
+}
+.ts-fields dt { font-size: .68rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; }
+.ts-fields dd { font-size: .84rem; color: #1f2937; margin: 0; overflow-wrap: anywhere; }
+.ts-fields__wide { grid-column: 1 / -1; }
+
+/* ── Champs TDM ── */
+.ts-decision { border-top: 1px solid #e2e8f0; padding-top: .8rem; }
+.ts-tdm-fields {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .9rem;
+}
+.ts-tdm-fields__col .form-label { font-size: .8rem; font-weight: 600; color: #374151; }
+.ts-decision__actions { margin-top: 1rem; display: flex; justify-content: flex-end; }

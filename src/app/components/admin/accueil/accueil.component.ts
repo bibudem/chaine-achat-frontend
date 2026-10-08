@@ -47,19 +47,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
   totalItemsSysteme: number | null = null;
   isLoadingTotalItems = true;
 
-  /** Profil TDM : « Mon activité » — compteurs restreints aux demandes qui lui sont
-   *  routées (creation_notice_dtdm = true), mêmes filtres que les cartes Admin. */
-  totalTdmAssignees: number | null = null;
-  totalTdmEnAttente: number | null = null;
-  totalTdmUrgentes:  number | null = null;
-  isLoadingTdmStats = true;
-
-  /** Profil TDM : répartition de sa file par bibliothèque, pour le graphique de « Mon
-   *  activité ». Pas d'agrégat serveur filtré par creation_notice_dtdm (voir home.service) —
-   *  calculé côté client à partir de sa liste complète (voir loadTdmLibraryBreakdown). */
-  tdmLibraryBreakdown: { bibliotheque: string; count: number; percentage: number }[] = [];
-  isLoadingTdmLibrary = true;
-
   /* ─── Panneau aide ─── */
   showHelpPanel = false;
 
@@ -192,17 +179,11 @@ export class AccueilComponent implements OnInit, OnDestroy {
     this.loadTauxActuels();
     this.loadTypeCounts();
 
-    // Le profil TDM ne voit que "Types de formulaire" et "Mon activité" (compteurs +
-    // graphique restreints à sa file) — inutile de charger les statistiques globales
-    // réservées à l'Admin.
-    if (this.authService.isTdm) {
-      this.loadTdmStats();
-      this.loadTdmLibraryBreakdown();
-    } else {
-      this.loadAllData();
-      this.loadTotalEnAttente();
-      this.loadTotalItemsSysteme();
-    }
+    // Même tableau de bord pour Admin/TDM/Employé/TechDoc — la vue « Mon activité » propre au
+    // TDM vit maintenant dans le portail usager (voir usager-home.component.html), pas ici.
+    this.loadAllData();
+    this.loadTotalEnAttente();
+    this.loadTotalItemsSysteme();
   }
 
   ngOnDestroy(): void {
@@ -355,77 +336,6 @@ export class AccueilComponent implements OnInit, OnDestroy {
       error: ()  => { this.totalItemsSysteme = null;           this.isLoadingTotalItems = false; }
     });
     this.subs.add(sub);
-  }
-
-  /** Profil TDM : les 3 compteurs de « Mon activité », restreints à sa file (creation_notice_dtdm
-   *  = true) — mêmes filtres que les cartes Admin (Total / En attente / Urgentes), 3 requêtes
-   *  légères (limit=1, seul le total nous intéresse). */
-  private loadTdmStats(): void {
-    this.isLoadingTdmStats = true;
-    const sub = forkJoin({
-      total: this.itemService.getAll({ limit: 1, creation_notice_dtdm: true }),
-      enAttente: this.itemService.getAll({
-        limit: 1, creation_notice_dtdm: true,
-        statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
-      }),
-      urgentes: this.itemService.getAll({
-        limit: 1, creation_notice_dtdm: true, priorite_demande: 'Urgent',
-        statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
-      }),
-    }).subscribe({
-      next: ({ total, enAttente, urgentes }) => {
-        this.totalTdmAssignees = total.total     ?? 0;
-        this.totalTdmEnAttente = enAttente.total ?? 0;
-        this.totalTdmUrgentes  = urgentes.total  ?? 0;
-        this.isLoadingTdmStats = false;
-      },
-      error: () => { this.isLoadingTdmStats = false; }
-    });
-    this.subs.add(sub);
-  }
-
-  /** Profil TDM : répartition de sa file par bibliothèque (graphique de « Mon activité »).
-   *  Aucun endpoint serveur n'agrège par bibliothèque en filtrant par creation_notice_dtdm
-   *  (voir home.service.ts) — on récupère donc sa liste complète et on agrège côté client.
-   *  Une file TDM reste d'une taille raisonnable (quelques centaines d'items au plus), donc
-   *  ce coût reste négligeable ; à revoir si ça change. */
-  private loadTdmLibraryBreakdown(): void {
-    this.isLoadingTdmLibrary = true;
-    const sub = this.itemService.getAll({ creation_notice_dtdm: true, limit: 500 }).subscribe({
-      next: res => {
-        const items  = Array.isArray(res.data) ? res.data : [];
-        const counts = new Map<string, number>();
-        for (const item of items) {
-          const bib = item.bibliotheque?.trim() || 'Non spécifiée';
-          counts.set(bib, (counts.get(bib) ?? 0) + 1);
-        }
-        const total = items.length;
-        this.tdmLibraryBreakdown = Array.from(counts, ([bibliotheque, count]) => ({
-          bibliotheque, count, percentage: total ? Math.round((count / total) * 100) : 0
-        })).sort((a, b) => b.count - a.count);
-        this.isLoadingTdmLibrary = false;
-      },
-      error: () => { this.tdmLibraryBreakdown = []; this.isLoadingTdmLibrary = false; }
-    });
-    this.subs.add(sub);
-  }
-
-  /** Carte « Total assignées » (TDM) → liste des items (déjà scopée à sa file par items-list
-   *  lui-même, voir items-list.component.ts). */
-  navigateToTdmTotal(): void {
-    this.router.navigate(['/items']);
-  }
-
-  navigateToTdmEnAttente(): void {
-    this.router.navigate(['/items'], {
-      queryParams: { statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
-    });
-  }
-
-  navigateToTdmUrgentes(): void {
-    this.router.navigate(['/items'], {
-      queryParams: { priorite_demande: 'Urgent', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
-    });
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

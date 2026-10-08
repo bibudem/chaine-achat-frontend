@@ -29,11 +29,14 @@
         <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
           <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
-        <button *ngIf="authService.canAccessDecision" class="btn btn-outline-success btn-sm"
+        <!-- Décision ACQ / TDM — Choix de notice : Admin/SuperAdmin uniquement ici. Le TDM
+             traite ses items depuis le portail usager (/usager/tdm), pas depuis l'espace
+             système ; Employé/TechDoc n'ont de toute façon jamais eu ces boutons. -->
+        <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
-        <button *ngIf="authService.canAccessDecision && item.creation_notice_dtdm != null"
+        <button *ngIf="authService.isAdmin && item.creation_notice_dtdm != null"
                 class="btn btn-outline-success btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tdm'}">
           <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
@@ -641,12 +644,6 @@
                     <span class="itd-field__value">{{ val(item.auteur) }}</span>
                   </div>
                 </div>
-                <div class="col-md-4" *ngIf="item.acq_isbn">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.isbn-suggestion' | translate }}</span>
-                    <span class="itd-field__value font-monospace">{{ val(item.acq_isbn) }}</span>
-                  </div>
-                </div>
                 <div class="col-md-4" *ngIf="item.date_requise_cours">
                   <div class="itd-field">
                     <span class="itd-field__label">{{ 'item-detail.requis-cours' | translate }}</span>
@@ -708,20 +705,6 @@
                     </span>
                   </div>
                 </div>
-                <div class="col-md-4" *ngIf="item.acq_responsable_courriel">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.acq-responsable' | translate }}</span>
-                    <span class="itd-field__value">{{ val(item.acq_responsable_courriel) }}</span>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.suggestion-techdoc' | translate }}</span>
-                    <span class="badge" [ngClass]="item.techdoc_suggestion_transmise ? 'bg-success' : 'bg-secondary'">
-                      {{ item.techdoc_suggestion_transmise ? ('item-detail.oui' | translate) : ('item-detail.non' | translate) }}
-                    </span>
-                  </div>
-                </div>
                 <div class="col-md-4" *ngIf="item.usager_nom">
                   <div class="itd-field">
                     <span class="itd-field__label">{{ 'item-detail.nom-usager' | translate }}</span>
@@ -734,14 +717,44 @@
                     <span class="itd-note">{{ item.note_usager }}</span>
                   </div>
                 </div>
-                <div class="col-12" *ngIf="item.acq_raison_annulation">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.raison-annulation' | translate }}</span>
-                    <span class="itd-note">{{ item.acq_raison_annulation }}</span>
-                  </div>
-                </div>
               </ng-container>
 
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section : Tri par l'équipe TechDoc (suggestion publique uniquement — voir
+             tbl_reponses.tri_*, jointes par item_id_cree dans consulterItems). ── -->
+        <div class="itd-card" *ngIf="item.tri_statut">
+          <div class="itd-card__header">
+            <i class="bi bi-inboxes me-2"></i>{{ 'item-detail.section-tri-techdoc' | translate }}
+          </div>
+          <div class="itd-card__body">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.tri-statut' | translate }}</span>
+                  <span class="badge bg-success">{{ 'item-detail.tri-acceptee' | translate }}</span>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="item.tri_par_nom || item.tri_par">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.tri-par' | translate }}</span>
+                  <span class="itd-field__value">{{ val(item.tri_par_nom || item.tri_par) }}</span>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="item.tri_date">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.tri-date' | translate }}</span>
+                  <span class="itd-field__value">{{ item.tri_date | date:'yyyy-MM-dd HH:mm' }}</span>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="item.tri_commentaire">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.tri-commentaire' | translate }}</span>
+                  <span class="itd-note">{{ item.tri_commentaire }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

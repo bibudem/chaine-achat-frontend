@@ -126,6 +126,17 @@
             <!-- ════════ ONGLET : DÉCISION ACQ ════════ -->
             <div class="tab-pane" [class.show]="activeTab === 'acq'" [class.active]="activeTab === 'acq'">
 
+            <!-- ── Tri par l'équipe TechDoc (suggestion publique uniquement) ── -->
+            <div class="sd-tri-info mb-4" *ngIf="item && item.tri_statut">
+              <i class="bi bi-inboxes sd-tri-info__icon"></i>
+              <div class="sd-tri-info__body">
+                <strong>{{ 'item-detail.section-tri-techdoc' | translate }}</strong>
+                <span *ngIf="item.tri_par_nom || item.tri_par"> — {{ item.tri_par_nom || item.tri_par }}</span>
+                <span *ngIf="item.tri_date"> · {{ item.tri_date | date:'d MMM y' }}</span>
+                <div class="sd-tri-info__comment" *ngIf="item.tri_commentaire">« {{ item.tri_commentaire }} »</div>
+              </div>
+            </div>
+
             <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique, Suggestion) + Bordereau imprimé (Nouvel achat unique, Suggestion) -->
             <div class="row g-3 mb-4">
               <div class="col-md">

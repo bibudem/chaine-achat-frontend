@@ -1,0 +1,102 @@
+<div class="ts-page">
+
+  <!-- ── Navigation ───────────────────────────────────── -->
+  <nav class="ts-nav">
+    <div class="ts-nav__inner">
+      <a routerLink="/usager/tdm" class="ts-nav__back"><i class="bi bi-arrow-left"></i> {{ 'tdm-decision-page.retour' | translate }}</a>
+      <span class="ts-nav__breadcrumb">
+        <a routerLink="/usager" class="ts-nav__crumb-link">{{ 'tri-suggestions-page.breadcrumb-portail' | translate }}</a>
+        <i class="bi bi-chevron-right ts-nav__sep"></i>
+        <a routerLink="/usager/tdm" class="ts-nav__crumb-link">{{ 'tdm-decision-page.mes-items' | translate }}</a>
+        <i class="bi bi-chevron-right ts-nav__sep"></i>
+        <span>#{{ itemId }}</span>
+      </span>
+    </div>
+  </nav>
+
+  <div class="ts-body">
+
+    <h1 class="ts-title">{{ 'tdm-decision-page.titre' | translate }}</h1>
+    <p class="ts-subtitle">{{ 'tdm-decision-page.sous-titre' | translate }}</p>
+
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>{{ successMessage }}</span>
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-warning alert-dismissible d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+      <button type="button" class="btn-close ms-auto" (click)="errorMessage = ''" [attr.aria-label]="'tri-suggestions-page.fermer' | translate"></button>
+    </div>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="ts-state">
+      <div class="spinner-border text-secondary" style="width:1.5rem;height:1.5rem;"></div>
+      <span>{{ 'tri-suggestions-page.chargement' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading && item">
+      <article class="ts-card">
+
+        <header class="ts-card__head">
+          <div>
+            <h2 class="ts-card__title">{{ titre() }}</h2>
+            <p class="ts-card__author" *ngIf="item.sous_titre">{{ item.sous_titre }}</p>
+          </div>
+          <span class="ts-badge" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
+            {{ formulaireTypeLabel(item.formulaire_type) }}
+          </span>
+        </header>
+
+        <!-- Détail -->
+        <dl class="ts-fields">
+          <div><dt>{{ 'tdm-decision-page.champ-demandeur' | translate }}</dt><dd>{{ item.demandeur || '—' }}</dd></div>
+          <div *ngIf="item.usager_courriel"><dt>{{ 'tdm-decision-page.champ-courriel' | translate }}</dt><dd>{{ item.usager_courriel }}</dd></div>
+          <div><dt>{{ 'tdm-decision-page.champ-bibliotheque' | translate }}</dt><dd>{{ item.bibliotheque || '—' }}</dd></div>
+          <div *ngIf="item.priorite_demande"><dt>{{ 'tdm-decision-page.champ-priorite' | translate }}</dt><dd>{{ item.priorite_demande }}</dd></div>
+          <div *ngIf="item.isbn_issn"><dt>{{ 'tdm-decision-page.champ-isbn' | translate }}</dt><dd>{{ item.isbn_issn }}</dd></div>
+          <div *ngIf="item.editeur"><dt>{{ 'tdm-decision-page.champ-editeur' | translate }}</dt><dd>{{ item.editeur }}</dd></div>
+          <div *ngIf="item.date_publication"><dt>{{ 'tdm-decision-page.champ-date-publication' | translate }}</dt><dd>{{ item.date_publication }}</dd></div>
+          <div *ngIf="item.categorie_document"><dt>{{ 'tdm-decision-page.champ-categorie' | translate }}</dt><dd>{{ item.categorie_document }}</dd></div>
+          <div *ngIf="item.format_support"><dt>{{ 'tdm-decision-page.champ-format-support' | translate }}</dt><dd>{{ item.format_support }}</dd></div>
+          <div *ngIf="item.date_creation"><dt>{{ 'tdm-decision-page.champ-recu-le' | translate }}</dt><dd>{{ item.date_creation | date:'d MMM y' }}</dd></div>
+          <div *ngIf="item.note_commentaire" class="ts-fields__wide"><dt>{{ 'tdm-decision-page.champ-note-bibliotheque' | translate }}</dt><dd class="ts-pre">{{ item.note_commentaire }}</dd></div>
+        </dl>
+
+        <!-- Champs TDM -->
+        <div class="ts-decision">
+          <ng-container *ngIf="item.creation_notice_dtdm; else aucuneNotice">
+            <div class="ts-tdm-fields">
+              <div class="ts-tdm-fields__col">
+                <label class="form-label" for="note_dtdm">{{ 'item-formulaire.note-dtdm' | translate }}</label>
+                <textarea id="note_dtdm" class="form-control" rows="2" [(ngModel)]="note_dtdm" [disabled]="submitting"></textarea>
+              </div>
+              <div class="ts-tdm-fields__col">
+                <label class="form-label" for="note_interne_dtdm">{{ 'item-formulaire.note-interne-dtdm' | translate }}</label>
+                <textarea id="note_interne_dtdm" class="form-control" rows="2" [(ngModel)]="note_interne_dtdm" [disabled]="submitting"></textarea>
+              </div>
+              <div class="ts-tdm-fields__col">
+                <label class="form-label" for="catalogue">{{ 'item-formulaire.suivi-catalogage' | translate }}</label>
+                <select id="catalogue" class="form-select" [(ngModel)]="catalogue" [disabled]="submitting">
+                  <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
+                  <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ts-decision__actions">
+              <button type="button" class="btn btn-sm btn-success" [disabled]="submitting" (click)="enregistrer()">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                {{ 'tdm-decision-page.btn-enregistrer' | translate }}
+              </button>
+            </div>
+          </ng-container>
+          <ng-template #aucuneNotice>
+            <p class="text-muted fst-italic mb-0">{{ 'tdm-decision.aucune-notice' | translate }}</p>
+          </ng-template>
+        </div>
+      </article>
+    </ng-container>
+  </div>
+</div>

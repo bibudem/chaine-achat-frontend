@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface SuggestionPayload {
@@ -41,6 +41,13 @@ export interface Reponse {
    *  ReponsesModel.findAll/findById (backend) et canSupprimer (reponses-list.component.ts). */
   item_existe?: boolean;
   item_statut_bibliotheque?: string | null;
+  /** Suggestion publique refusée par l'équipe de tri (TechDoc) — voir reponses.service.ts
+   *  getTri/deciderTri. 'a_trier'/'accepte' n'arrivent jamais ici : findAll (backend) ne les
+   *  inclut que pour garder un historique des refus, visible par Admin/SuperAdmin. */
+  tri_statut?: 'refuse' | null;
+  tri_commentaire?: string | null;
+  tri_par_nom?: string | null;
+  tri_date?: string | null;
 }
 
 export interface DemandeUsager {
@@ -76,6 +83,28 @@ export interface DemandePublique {
   statut_bibliotheque: string | null;
   statut_acq: string | null;
   suivi_acq: string | null;
+}
+
+/** Décision de l'équipe TechDoc sur une suggestion publique. */
+export type TriDecision = 'accepte' | 'refuse';
+
+/** Suggestion publique (communauté UdeM) dans la file de tri ou son historique. */
+export interface SuggestionTri {
+  id:                  number;
+  dateA:               string;
+  usager_nom:          string;
+  usager_courriel:     string;
+  usager_statut:       string | null;
+  reponses:            Record<string, any>;
+  tri_statut:          'a_trier' | TriDecision;
+  tri_commentaire:     string | null;
+  tri_par:             string | null;
+  tri_par_nom:         string | null;
+  tri_date:            string | null;
+  item_id_cree:        number | null;
+  statut_bibliotheque: string | null;
+  suivi_acq:           string | null;
+  statut_acq:          string | null;
 }
 
 export interface PaginatedResponse {
@@ -122,26 +151,59 @@ export class ReponsesService {
   }
 
   // ──────────────────────────────────────────────────────────
-  // SUGGESTION D'ACHAT — formulaire public embarqué (iframe, sans authentification)
+  // SUGGESTION D'ACHAT — formulaire public embarqué (iframe, communauté UdeM connectée)
   // Composant : public/suggestion-embed/suggestion-embed.component.ts
-  // Route     : POST /reponses/suggestion (même endpoint que ci-dessus)
-  // Contrairement à envoyerSuggestion(), l'identité ne vient pas de sessionStorage (il n'y a
-  // pas de session ici) mais directement des champs remplis dans le formulaire.
+  // Route     : POST /reponses/suggestion-publique
+  // Le nom et le courriel du demandeur sont pris côté backend dans le JWT, pas ici. La
+  // demande entre dans la file de tri de l'équipe TechDoc (voir getTri / deciderTri).
   // ──────────────────────────────────────────────────────────
-  envoyerSuggestionPublique(
-    identite: { nom: string; courriel: string; statut: string },
-    reponses: Record<string, any>
-  ): Observable<any> {
-    const body: SuggestionPayload = {
-      type_formulaire: "Suggestion d'achat - Usager",
-      usager_nom:      identite.nom,
-      usager_courriel: identite.courriel,
-      usager_statut:   identite.statut,
-      reponses
-    };
+  envoyerSuggestionPublique(usager_statut: string, reponses: Record<string, any>): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/suggestion`, body, this.httpOptions)
+      .post(`${this.baseUrl}/suggestion-publique`, { usager_statut, reponses }, this.httpOptions)
       .pipe(catchError(this.handleError('envoyerSuggestionPublique')));
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // TRI DES SUGGESTIONS PUBLIQUES (équipe TechDoc)
+  // Composant : usager/pages/tri-suggestions/tri-suggestions.component.ts
+  // Routes    : GET /reponses/tri, PUT /reponses/:id/tri
+  // ──────────────────────────────────────────────────────────
+  getTri(opts: {
+    statut?: 'a_trier' | 'a_completer' | 'soumise' | 'refuse';
+    search?: string;
+    limit?: number; offset?: number;
+  } = {}): Observable<{ data: SuggestionTri[]; total: number; a_trier: number }> {
+    const params: Record<string, string> = {
+      limit:  String(opts.limit  ?? 20),
+      offset: String(opts.offset ?? 0),
+    };
+    if (opts.statut) params['statut'] = opts.statut;
+    if (opts.search) params['search'] = opts.search;
+
+    return this.http
+      .get<{ data: SuggestionTri[]; total: number; a_trier: number }>(`${this.baseUrl}/tri`, { params })
+      .pipe(
+        map(res => ({
+          ...res,
+          data: res.data.map(r => ({
+            ...r,
+            reponses: typeof r.reponses === 'string' ? JSON.parse(r.reponses) : (r.reponses ?? {}),
+          })),
+        })),
+        catchError(this.handleError('getTri'))
+      );
+  }
+
+  /** Nombre de suggestions en attente de tri (pastille du menu). */
+  compterATrier(): Observable<number> {
+    return this.getTri({ statut: 'a_trier', limit: 1 }).pipe(map(res => res.a_trier));
+  }
+
+  /** 409 si un autre membre de l'équipe a déjà traité la suggestion (message dans error.error). */
+  deciderTri(id: number, decision: TriDecision, commentaire: string | null): Observable<{ success: boolean }> {
+    return this.http
+      .put<{ success: boolean }>(`${this.baseUrl}/${id}/tri`, { decision, commentaire }, this.httpOptions)
+      .pipe(catchError(this.handleError('deciderTri')));
   }
 
   // ──────────────────────────────────────────────────────────

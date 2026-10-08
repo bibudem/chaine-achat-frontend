@@ -243,6 +243,8 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     if (reponse.statut_approbation === 'approuve' || reponse.statut_approbation === 'refuse') {
       return false;
     }
+    // Refusée par l'équipe de tri (TechDoc) : conservée en historique, jamais supprimable ici.
+    if (reponse.tri_statut === 'refuse') return false;
     return !(reponse.item_existe && reponse.item_statut_bibliotheque === 'Soumettre aux ACQ');
   }
 

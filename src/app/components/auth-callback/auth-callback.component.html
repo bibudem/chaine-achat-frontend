@@ -1,8 +1,11 @@
 <div class="auth-callback">
-  <ng-container *ngIf="!erreur; else erreurTpl">
-    <div class="spinner-border" role="status"></div>
-    <p>{{ 'login-page.connexion-en-cours' | translate }}</p>
-  </ng-container>
+  <p *ngIf="popupTerminee; else enCours">Connexion réussie. Vous pouvez fermer cette fenêtre.</p>
+  <ng-template #enCours>
+    <ng-container *ngIf="!erreur; else erreurTpl">
+      <div class="spinner-border" role="status"></div>
+      <p>{{ 'login-page.connexion-en-cours' | translate }}</p>
+    </ng-container>
+  </ng-template>
   <ng-template #erreurTpl>
     <p>{{ 'login-page.acces-refuse' | translate }}</p>
   </ng-template>

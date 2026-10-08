@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
+import { ReponsesService } from '../../../services/reponses.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -13,6 +15,8 @@ export class UserLayoutComponent implements OnInit {
   initiales = '';
   userOpen  = false;
   formsOpen = false;
+  /** Suggestions publiques en attente de tri (pastille du bouton « Tri ») — équipe TechDoc. */
+  aTrier    = 0;
 
   currentLang: string = localStorage.getItem('lang') ?? 'fr';
   currentYear: number = new Date().getFullYear();
@@ -20,7 +24,8 @@ export class UserLayoutComponent implements OnInit {
   constructor(
     public  authService: AuthService,
     private translate:   TranslateService,
-    private router:      Router
+    private router:      Router,
+    private reponsesService: ReponsesService
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +34,25 @@ export class UserLayoutComponent implements OnInit {
     this.userName  = `${prenom} ${nom}`.trim();
     this.initiales = `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase();
     this.translate.use(this.currentLang);
+
+    if (this.authService.canTrier) {
+      this.rafraichirATrier();
+      // Rafraîchie à chaque navigation : le compteur baisse dès qu'une suggestion est triée.
+      this.router.events.pipe(filter(e => e instanceof NavigationEnd))
+        .subscribe(() => this.rafraichirATrier());
+    }
+  }
+
+  private rafraichirATrier(): void {
+    this.reponsesService.compterATrier().subscribe({
+      next: n => this.aTrier = n,
+      error: () => {}   // non bloquant : la pastille reste simplement à sa dernière valeur
+    });
+  }
+
+  triSuggestions(): void {
+    this.userOpen = false;
+    this.router.navigate(['/usager/tri']);
   }
 
   toggleUser(event: Event): void {
@@ -66,8 +90,9 @@ export class UserLayoutComponent implements OnInit {
     this.router.navigate(['/usager']);
   }
 
-  /** Admin/TDM/Employé — accès à l'interface de gestion (voir header.component.ts,
-   *  accederEspaceUsager : simple navigation, la session reste la même). */
+  /** Admin/TDM/Employé/TechDoc — accès à l'interface de gestion (en lecture seule pour
+   *  Employé/TechDoc, voir canEdit/EditGuard) — voir header.component.ts,
+   *  accederEspaceUsager : simple navigation, la session reste la même. */
   retourGestion(): void {
     this.userOpen = false;
     this.router.navigate(['/accueil']);

@@ -122,6 +122,9 @@
                 <span class="badge-type" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
                   {{ formulaireTypeLabel(reponse.type_formulaire) }}
                 </span>
+                <span *ngIf="reponse.tri_statut === 'refuse'" class="rl-tri-refuse" [title]="reponse.tri_commentaire || ''">
+                  <i class="bi bi-x-octagon-fill"></i> {{ 'reponses.badge-tri-refusee' | translate }}
+                </span>
                 <div *ngIf="reponse.suivi_acq" class="rl-suivi-text" [title]="reponse.suivi_acq">
                   <i class="bi" [ngClass]="getSuiviIcon(reponse.suivi_acq)"></i>
                   {{ reponse.suivi_acq }}
@@ -238,11 +241,24 @@
                   </span>
                 </div>
 
+                <!-- Alerte suggestion refusée par l'équipe de tri (TechDoc) — historique -->
+                <div *ngIf="expandedReponse.tri_statut === 'refuse'"
+                     class="alert alert-secondary d-flex align-items-center gap-2 mx-3 mb-2 py-2"
+                     role="alert">
+                  <i class="bi bi-x-octagon-fill flex-shrink-0"></i>
+                  <span>
+                    <strong>{{ 'reponses.tri-refusee-titre' | translate }}</strong>
+                    <ng-container *ngIf="expandedReponse.tri_par_nom"> — {{ 'reponses.tri-refusee-par' | translate: { nom: expandedReponse.tri_par_nom } }}</ng-container>
+                    <ng-container *ngIf="expandedReponse.tri_date"> {{ 'reponses.tri-refusee-le' | translate: { date: formatDateTime(expandedReponse.tri_date) } }}</ng-container>.
+                    <div *ngIf="expandedReponse.tri_commentaire" class="fst-italic mt-1">« {{ expandedReponse.tri_commentaire }} »</div>
+                  </span>
+                </div>
+
                 <!-- Pied panneau -->
                 <div class="panel-footer">
 
                   <!-- Bannière ACQ : visible uniquement quand la demande est verrouillée -->
-                  <div *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && !canDecisionAcq(expandedReponse)"
+                  <div *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && expandedReponse.tri_statut !== 'refuse' && !canDecisionAcq(expandedReponse)"
                        class="pf-acq-banner">
                     <i class="bi bi-lock-fill pf-acq-banner__icon"></i>
                     <div class="pf-acq-banner__body">
@@ -262,7 +278,7 @@
                       <i class="bi bi-x me-1"></i>Fermer
                     </button>
                     <div class="pf-actions">
-                      <button *ngIf="expandedReponse.statut_approbation !== 'item_supprime'"
+                      <button *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && expandedReponse.tri_statut !== 'refuse'"
                               class="pf-btn pf-btn--acq"
                               [class.pf-btn--acq--ready]="canDecisionAcq(expandedReponse)"
                               (click)="ouvrirDecisionAcq()"

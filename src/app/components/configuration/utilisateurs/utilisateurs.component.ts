@@ -13,7 +13,7 @@ export class UtilisateursComponent implements OnInit {
 
   // 'Usager' (communauté UdeM) est auto-provisionné au premier login Azure AD, jamais créé
   // manuellement ici — voir auth/callback.js (backend).
-  readonly roles: UserRole[] = ['SuperAdmin', 'Admin', 'TDM', 'Employe'];
+  readonly roles: UserRole[] = ['SuperAdmin', 'Admin', 'TDM', 'TechDoc', 'Employe'];
 
   /** "Employé" ne s'affiche qu'ici — la valeur stockée/comparée reste 'Employe' (sans
    *  accent), comme les autres rôles. */

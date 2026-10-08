@@ -19,6 +19,15 @@ export class SuggestionPublicComponent implements OnInit {
   showSigleCours   = false;
   editId: number | null = null;
 
+  /** Suggestion publique acceptée par l'équipe TechDoc (/usager/tri), ouverte ici avec
+   *  ?id=&tri=1 pour être complétée puis soumise aux ACQ. Le demandeur reste la personne de
+   *  la communauté UdeM qui l'a envoyée (c'est elle qui sera avisée de la décision ACQ), pas
+   *  le membre de l'équipe connecté. */
+  triMode = false;
+  private demandeurOrigine: { nom: string; courriel: string } | null = null;
+  /** Type de document choisi sur le formulaire public — pas de champ ici, on le conserve. */
+  private categorieDocumentOrigine: string | null = null;
+
   derniereTitre    = '';
   derniereCourriel = '';
 
@@ -87,6 +96,7 @@ export class SuggestionPublicComponent implements OnInit {
       bibliotheque:                 ['',       Validators.required],
       bibliothecaire_disciplinaire: ['',        [Validators.required, Validators.email]],
       titre_document:               ['', Validators.required],
+      sous_titre:                   [''],
       auteur:                       ['', Validators.required],
       editeur:                      [''],
       date_publication:             [''],
@@ -94,7 +104,11 @@ export class SuggestionPublicComponent implements OnInit {
       isbn_issn:                    ['', [Validators.required, this.isbnValidator]],
       note_usager:                  [''],
       aviser_reservation:           [false],
-      aviser_reception:             [false],
+      // Toujours activé : le demandeur et le/la bibliothécaire disciplinaire sont
+      // systématiquement avisés à la réception d'une suggestion d'achat — pas un choix de
+      // l'usager (voir formulaire_Suggestion d'achats usagers_2026-09-28.pdf, section
+      // Réservation).
+      aviser_reception:             [{ value: true, disabled: true }],
       date_requise_cours:           [''],
       reserve_cours:                [false],
       reserve_cours_sigle:          [{ value: '', disabled: true }],
@@ -102,6 +116,10 @@ export class SuggestionPublicComponent implements OnInit {
       reserve_cours_enseignant:     [{ value: '', disabled: true }],
       statut_bibliotheque:          ['Saisie en cours - En attente'],
       bibliotheque_note_interne:             ['', Validators.maxLength(1000)],
+      // Onglet « TechDoc Tri » (voir item-formulaire.component.ts, même champs) — réservé à
+      // l'usage des technicien(ne)s responsables du tri des suggestions d'achat.
+      techdoc_suggestion_transmise: [false],
+      techdoc_tri_notes:            [''],
     });
 
     this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
@@ -115,6 +133,7 @@ export class SuggestionPublicComponent implements OnInit {
     });
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
+      this.triMode = params['tri'] === '1' && !!params['id'];
       if (params['id']) {
         this.editId = +params['id'];
         this.loadDemande(this.editId);
@@ -125,7 +144,17 @@ export class SuggestionPublicComponent implements OnInit {
   private loadDemande(id: number): void {
     this.reponsesService.getReponseById(id).subscribe({
       next: (row) => {
+        if (this.triMode && row.tri_statut !== 'accepte') {
+          // Pas (ou plus) une suggestion publique acceptée — rien à compléter ici.
+          this.router.navigate(['/usager/tri']);
+          return;
+        }
         const d = row.reponses ?? {};
+        if (this.triMode) {
+          this.demandeurOrigine         = { nom: row.usager_nom ?? '', courriel: row.usager_courriel ?? '' };
+          this.categorieDocumentOrigine = d.categorie_document ?? null;
+          this.form.patchValue({ nom: this.demandeurOrigine.nom, courriel: this.demandeurOrigine.courriel });
+        }
         if (d.reserve_cours) this.form.get('reserve_cours')!.setValue(d.reserve_cours);
         this.form.patchValue({
           usager_nom:                   d.usager_nom,
@@ -135,6 +164,7 @@ export class SuggestionPublicComponent implements OnInit {
           priorite_demande:             d.priorite_demande,
           bibliothecaire_disciplinaire: d.bibliothecaire_disciplinaire,
           titre_document:               d.titre_document,
+          sous_titre:                   d.sous_titre,
           auteur:                       d.auteur,
           editeur:                      d.editeur,
           date_publication:             d.date_publication,
@@ -142,13 +172,15 @@ export class SuggestionPublicComponent implements OnInit {
           isbn_issn:                    d.isbn_issn,
           note_usager:                  d.note_usager,
           aviser_reservation:           d.aviser_reservation,
-          aviser_reception:             d.aviser_reception,
+          // aviser_reception : pas repris depuis d — toujours true, voir le form group.
           date_requise_cours:           d.date_requise_cours,
           reserve_cours_sigle:          d.reserve_cours_sigle,
           reserve_cours_session:        d.reserve_cours_session,
           reserve_cours_enseignant:     d.reserve_cours_enseignant,
           statut_bibliotheque:          d.statut_bibliotheque,
           bibliotheque_note_interne:             d.bibliotheque_note_interne,
+          techdoc_suggestion_transmise: d.techdoc_suggestion_transmise,
+          techdoc_tri_notes:            d.techdoc_tri_notes,
         });
       }
     });
@@ -183,14 +215,15 @@ export class SuggestionPublicComponent implements OnInit {
     this.form.reset({
       // form.reset() efface aussi les champs désactivés (nom/courriel) s'ils ne sont pas
       // explicitement fournis ici — on les réinjecte depuis l'authentification.
-      nom:                  `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
-      courriel:             sessionStorage.getItem('courrielAdmin') ?? '',
+      nom:                  this.demandeurOrigine?.nom      ?? `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim(),
+      courriel:             this.demandeurOrigine?.courriel ?? sessionStorage.getItem('courrielAdmin') ?? '',
       priorite_demande:    'Urgent',
       copieCourriel:       true,
       aviser_reservation:  false,
-      aviser_reception:    false,
+      aviser_reception:    true,
       reserve_cours:       false,
       statut_bibliotheque: 'Saisie en cours - En attente',
+      techdoc_suggestion_transmise: false,
     });
   }
 
@@ -214,9 +247,11 @@ export class SuggestionPublicComponent implements OnInit {
       bibliotheque:                 v.bibliotheque,
       bibliothecaire_disciplinaire: v.bibliothecaire_disciplinaire,
       // Type de document et Format/Support : retirés du formulaire usager — champs
-      // complétés par les ACQ (section « ACQ : Suivi de la demande »).
-      categorie_document:           null,
+      // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
+      // suggestion publique en a un, qu'on conserve (voir triMode).
+      categorie_document:           this.triMode ? this.categorieDocumentOrigine : null,
       titre_document:               v.titre_document,
+      sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
       editeur:                      v.editeur,
       date_publication:             v.date_publication,
@@ -233,7 +268,8 @@ export class SuggestionPublicComponent implements OnInit {
       reserve_cours_enseignant:     v.reserve_cours ? v.reserve_cours_enseignant : null,
       bordereau_imprime:            'Non',
       acq_responsable_courriel:     null,
-      techdoc_suggestion_transmise: false,
+      techdoc_suggestion_transmise: v.techdoc_suggestion_transmise,
+      techdoc_tri_notes:            v.techdoc_tri_notes,
       acq_raison_annulation:        null,
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque,
@@ -262,7 +298,7 @@ export class SuggestionPublicComponent implements OnInit {
     const message = echecPieceJointe
       ? "Votre demande a été soumise avec succès, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
       : 'Votre demande a été soumise avec succès.';
-    this.router.navigate(['/usager/profil'], { state: { message } });
+    this.naviguerVersListe(message);
   }
 
   onSave(): void {
@@ -280,9 +316,11 @@ export class SuggestionPublicComponent implements OnInit {
       bibliotheque:                 v.bibliotheque,
       bibliothecaire_disciplinaire: v.bibliothecaire_disciplinaire,
       // Type de document et Format/Support : retirés du formulaire usager — champs
-      // complétés par les ACQ (section « ACQ : Suivi de la demande »).
-      categorie_document:           null,
+      // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
+      // suggestion publique en a un, qu'on conserve (voir triMode).
+      categorie_document:           this.triMode ? this.categorieDocumentOrigine : null,
       titre_document:               v.titre_document,
+      sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
       editeur:                      v.editeur,
       date_publication:             v.date_publication,
@@ -299,7 +337,8 @@ export class SuggestionPublicComponent implements OnInit {
       reserve_cours_enseignant:     v.reserve_cours ? v.reserve_cours_enseignant : null,
       bordereau_imprime:            'Non',
       acq_responsable_courriel:     null,
-      techdoc_suggestion_transmise: false,
+      techdoc_suggestion_transmise: v.techdoc_suggestion_transmise,
+      techdoc_tri_notes:            v.techdoc_tri_notes,
       acq_raison_annulation:        null,
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque || 'Saisie en cours - En attente',
@@ -326,6 +365,16 @@ export class SuggestionPublicComponent implements OnInit {
     const message = echecPieceJointe
       ? "Vos informations ont été enregistrées, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
       : 'Vos informations ont été enregistrées.';
-    this.router.navigate(['/usager/profil'], { state: { message } });
+    this.naviguerVersListe(message);
+  }
+
+  /** Retour à « Mes demandes », ou à l'historique de l'équipe pour une suggestion publique
+   *  (elle n'apparaît pas dans « Mes demandes » : le demandeur est la personne d'origine). */
+  private naviguerVersListe(message: string): void {
+    if (this.triMode) {
+      this.router.navigate(['/usager/tri'], { queryParams: { onglet: 'historique' }, state: { message } });
+    } else {
+      this.router.navigate(['/usager/profil'], { state: { message } });
+    }
   }
 }

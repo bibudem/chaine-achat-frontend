@@ -1,9 +1,44 @@
 <!-- ============================================================
-     app-suggestion-embed — Suggestion d'achat (formulaire public, sans authentification,
+     app-suggestion-embed — Suggestion d'achat (formulaire public, communauté UdeM connectée,
      destiné à être intégré via <iframe> — pas d'en-tête/pied de page de l'application).
      ============================================================ -->
 
-<div class="form-page form-page--embed" *ngIf="!success">
+<!-- ══ CONNEXION ══════════════════════════════════════════════ -->
+<div class="form-page form-page--embed" *ngIf="!connecte">
+  <div class="form-container">
+    <div class="form-header">
+      <div class="form-header__icon">
+        <i class="bi bi-lightbulb"></i>
+      </div>
+      <div>
+        <h1 class="form-header__title">{{ 'form-suggestion.titre' | translate }}</h1>
+        <p class="form-header__subtitle mt-neg-20">
+          Ce formulaire est réservé à la communauté de l'Université de Montréal.
+        </p>
+      </div>
+    </div>
+
+    <div class="embed-login">
+      <p>Connectez-vous avec votre compte UdeM pour suggérer un achat aux Bibliothèques.
+         Une fenêtre de connexion va s'ouvrir.</p>
+      <button type="button" class="btn btn-primary" (click)="seConnecter()">
+        <span *ngIf="connexionEnCours" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        <i *ngIf="!connexionEnCours" class="bi bi-box-arrow-in-right me-1"></i>
+        {{ connexionEnCours ? 'Connexion en cours…' : 'Se connecter avec mon compte UdeM' }}
+      </button>
+      <p *ngIf="connexionEnCours" class="form-text mt-2 mb-0">
+        Terminez la connexion dans la fenêtre qui s'est ouverte. Vous ne la voyez pas&nbsp;?
+        Cliquez de nouveau sur le bouton.
+      </p>
+      <div *ngIf="popupBloquee" class="alert alert-warning mt-3 mb-0" role="alert">
+        La fenêtre de connexion n'a pas pu s'ouvrir. Autorisez les fenêtres contextuelles pour ce
+        site, ou <a [href]="urlPleinePage" target="_blank" rel="noopener">ouvrez le formulaire dans un nouvel onglet</a>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-page form-page--embed" *ngIf="connecte && !success">
 
   <div class="form-container">
 
@@ -18,6 +53,12 @@
           {{ 'form-suggestion.sous-titre' | translate }}
         </p>
       </div>
+    </div>
+
+    <!-- ══ SESSION ═════════════════════════════════════════ -->
+    <div class="embed-session">
+      <span><i class="bi bi-person-check me-1"></i>Connecté·e : <strong>{{ form.get('nom')?.value }}</strong></span>
+      <button type="button" class="btn btn-link btn-sm p-0" (click)="seDeconnecter()">Se déconnecter</button>
     </div>
 
     <!-- ══ NOTICE ══════════════════════════════════════════ -->
@@ -57,13 +98,8 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.nom' | translate }}</label>
-            <input type="text" formControlName="nom" class="form-control"
-                   [class.is-invalid]="submitted && f['nom'].invalid"
-                   [placeholder]="'forms-usager.nom-demandeur' | translate">
-            <div *ngIf="submitted && f['nom'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
-            </div>
+            <label class="form-label">{{ 'forms-usager.nom' | translate }}</label>
+            <input type="text" formControlName="nom" class="form-control">
           </div>
 
           <div class="col-md-6">
@@ -96,13 +132,8 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.courriel' | translate }}</label>
-            <input type="email" formControlName="courriel" class="form-control"
-                   [class.is-invalid]="submitted && f['courriel'].invalid"
-                   [placeholder]="'forms-usager.courriel-placeholder' | translate">
-            <div *ngIf="submitted && f['courriel'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-invalide' | translate }}
-            </div>
+            <label class="form-label">{{ 'forms-usager.courriel' | translate }}</label>
+            <input type="email" formControlName="courriel" class="form-control">
           </div>
         </div>
       </div>
@@ -133,6 +164,12 @@
             <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">{{ 'forms-usager.sous-titre' | translate }}</label>
+            <input type="text" formControlName="sous_titre" class="form-control"
+                   [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
           <div class="col-md-4">
@@ -290,7 +327,7 @@
 </div>
 
 <!-- ══ CONFIRMATION ══════════════════════════════════════════ -->
-<div class="form-page form-page--embed" *ngIf="success">
+<div class="form-page form-page--embed" *ngIf="connecte && success">
   <div class="form-container">
     <div class="confirmation-screen">
       <div class="confirmation-icon confirmation-icon--suggestion">
@@ -299,7 +336,11 @@
       <h2 class="confirmation-title">Suggestion envoyée</h2>
       <p class="confirmation-message">
         Merci ! Votre suggestion d'achat a bien été transmise à la bibliothèque.
+        Vous recevrez un courriel lorsqu'elle aura été examinée.
       </p>
+      <button type="button" class="btn btn-outline-primary mt-2" (click)="nouvelleSuggestion()">
+        Envoyer une autre suggestion
+      </button>
     </div>
   </div>
 </div>

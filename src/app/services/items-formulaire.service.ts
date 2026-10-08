@@ -42,6 +42,17 @@ export interface Item {
   date_modification?: string;
   utilisateur_modification?: string;
 
+  /** Tri par l'équipe TechDoc (suggestion publique uniquement) — joints depuis
+   *  tbl_reponses.tri_* par item_id_cree, voir controllers/items.js consulterItems. Présents
+   *  seulement si l'item provient du formulaire public /suggestion-public (voir
+   *  ReponsesModel.createSuggestionPublique) ; absents pour une Suggestion d'achat saisie
+   *  directement en interne. */
+  tri_statut?:      'accepte' | 'refuse' | null;
+  tri_commentaire?: string | null;
+  tri_par?:         string | null;
+  tri_par_nom?:     string | null;
+  tri_date?:        string | null;
+
   // Champs tbl_items — ressource électronique
   prix_cad?: number;
   // FIX: devise_originale est VARCHAR(10) en DB → stocker le code court (CAD, USD, EUR, GBP)
@@ -114,6 +125,9 @@ export interface Item {
   usager_nom?: string;
   note_usager?: string;
   techdoc_suggestion_transmise?: boolean;
+  /** Notes libres de l'équipe TechDoc — onglet « TechDoc Tri » (distinct de tri_commentaire,
+   *  le commentaire envoyé au demandeur lors de la décision de tri). */
+  techdoc_tri_notes?: string | null;
   acq_raison_annulation?: string;
   acq_isbn?: string;
 

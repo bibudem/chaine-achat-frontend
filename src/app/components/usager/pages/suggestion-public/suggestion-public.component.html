@@ -6,11 +6,15 @@
 
   <!-- ══ NAVIGATION ═══════════════════════════════════════ -->
   <nav class="form-nav">
-    <a routerLink="/usager" class="form-nav__back">
+    <a [routerLink]="triMode ? '/usager/tri' : '/usager'" class="form-nav__back">
       <i class="bi bi-arrow-left"></i> Retour
     </a>
     <span class="form-nav__breadcrumb">
       <a routerLink="/usager" class="form-nav__crumb-link">Portail acquisitions</a>
+      <ng-container *ngIf="triMode">
+        <i class="bi bi-chevron-right form-nav__sep"></i>
+        <a routerLink="/usager/tri" class="form-nav__crumb-link">Tri des suggestions publiques</a>
+      </ng-container>
       <i class="bi bi-chevron-right form-nav__sep"></i>
       <span class="form-nav__crumb-current">Suggestion d'achat</span>
     </span>
@@ -31,8 +35,20 @@
       </div>
     </div>
 
+    <!-- ══ SUGGESTION PUBLIQUE ACCEPTÉE (équipe TechDoc) ══════ -->
+    <div *ngIf="triMode" class="alert alert-info mb-3">
+      <i class="bi bi-funnel-fill me-2"></i>
+      <div>
+        <strong>Suggestion publique acceptée.</strong>
+        Complétez les champs manquants (priorité, bibliothèque, bibliothécaire disciplinaire, ISBN…).
+        Elle reste en brouillon tant que le statut n'est pas « Soumettre aux ACQ » : vous pouvez
+        l'enregistrer et la reprendre plus tard depuis l'historique de l'équipe. Le demandeur
+        d'origine sera avisé de la décision des ACQ.
+      </div>
+    </div>
+
     <!-- ══ NOTICE ══════════════════════════════════════════ -->
-    <div class="alert alert-warning mb-3">
+    <div *ngIf="!triMode" class="alert alert-warning mb-3">
       <i class="fas fa-lightbulb me-2"></i>
       <div>
         <strong>{{ 'form-suggestion.notice-titre' | translate }}</strong>
@@ -191,6 +207,12 @@
             <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">{{ 'forms-usager.sous-titre' | translate }}</label>
+            <input type="text" formControlName="sous_titre" class="form-control"
+                   [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
           <div class="col-md-4">
@@ -356,6 +378,35 @@
             </label>
             <textarea formControlName="bibliotheque_note_interne" class="form-control" rows="4"
                       placeholder="Note interne de la bibliothèque…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION — TECHDOC TRI (réservée à l'usage des technicien(ne)s responsables du tri
+           des suggestions d'achat — voir item-formulaire.component.html, même champs) -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="bi bi-inboxes"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+        </h2>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="fsp-techdoc-transmise"
+                 [class.fsp-techdoc-transmise--actif]="f['techdoc_suggestion_transmise'].value">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox"
+                       formControlName="techdoc_suggestion_transmise"
+                       id="techdocTransmiseCheck" role="switch">
+                <label class="form-check-label fw-semibold" for="techdocTransmiseCheck">
+                  <i class="fas fa-check-circle me-1" *ngIf="f['techdoc_suggestion_transmise'].value"></i>
+                  {{ 'item-formulaire.transmis-techdoc' | translate }}
+                </label>
+              </div>
+              <small class="form-text d-block mt-1">{{ 'item-formulaire.transmis-techdoc-hint' | translate }}</small>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
+            <textarea formControlName="techdoc_tri_notes" class="form-control" rows="4"></textarea>
           </div>
         </div>
       </div>

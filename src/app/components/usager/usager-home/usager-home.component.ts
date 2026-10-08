@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
 import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
 import { AuthService } from '../../../services/auth.service';
+import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 
@@ -26,6 +27,14 @@ export class UsagerHomeComponent implements OnInit {
   demandes: DemandeUsager[] = [];
   totalDemandes: number | null = null;
   loadingDemandes = true;
+
+  /** Suggestions publiques en attente de tri — équipe TechDoc (voir user-layout, pastille
+   *  du header, même compteur). */
+  aTrier = 0;
+
+  /** Profil TDM : total d'items routés vers l'équipe (tbl_items.creation_notice_dtdm = true),
+   *  affiché dans la colonne « Total à trier » du combo (voir .uh-combo au template). */
+  totalTdmAssignees: number | null = null;
 
   // Taux de change en vigueur aujourd'hui (lecture seule — gestion complète côté admin).
   tauxActuels: TauxPeriode | null = null;
@@ -57,6 +66,7 @@ export class UsagerHomeComponent implements OnInit {
   constructor(
     private reponsesService: ReponsesService,
     private tauxDevisesService: TauxDevisesService,
+    private itemService: ItemFormulaireService,
     public authService: AuthService,
   ) {}
 
@@ -68,7 +78,36 @@ export class UsagerHomeComponent implements OnInit {
     return (p + n).toUpperCase() || '?';
   }
 
+  /** Courte description de ce que ce rôle peut faire ici, affichée sous le titre de la
+   *  plateforme — repère rapide pour un profil qui jongle entre plusieurs espaces
+   *  (Admin/TDM accèdent aussi à l'espace usager, voir "Retour gestion"). */
+  private readonly DESCRIPTIONS_PROFIL: Record<string, string> = {
+    SuperAdmin: "Accès complet : gestion des comptes et des accès, en plus de tout ce que voit le Service des acquisitions.",
+    Admin:      "Vous consultez l'espace usager avec votre accès Service des acquisitions — tableau de bord et gestion des demandes dans Espace de gestion.",
+    TDM:        'Vous traitez ici les items qui vous sont routés (création de notice) — catalogage et suivi ACQ.',
+    TechDoc:    "Équipe de tri : traitez les suggestions soumises par la communauté UdeM et consultez l'historique de l'équipe.",
+    Employe:    'Personnel des bibliothèques : soumettez vos demandes d\'acquisition et suivez leur traitement.',
+    Usager:     "Communauté UdeM : soumettez une suggestion d'achat et suivez son traitement.",
+  };
+
+  get profilDescription(): string {
+    return this.DESCRIPTIONS_PROFIL[this.authService.role ?? ''] ?? '';
+  }
+
   ngOnInit(): void {
+    // Profil TDM : le combo (voir .uh-combo au template) montre « Mes demandes » (sans
+    // compteur, comme pour TechDoc) + « Total à trier » restreint à l'équipe (creation_notice_
+    // dtdm) — pas le tableau de bord générique « Mes demandes » ci-dessous, dont la
+    // répartition par statut ne concerne que ses propres soumissions.
+    if (this.authService.isTdm) {
+      this.loadingDemandes = false;
+      this.itemService.getAll({ limit: 1, creation_notice_dtdm: true }).subscribe({
+        next:  res => { this.totalTdmAssignees = res.total ?? 0; },
+        error: ()  => { this.totalTdmAssignees = null; }
+      });
+      return;
+    }
+
     const email = sessionStorage.getItem('courrielAdmin') ?? '';
     if (!email) { this.loadingDemandes = false; return; }
 
@@ -87,6 +126,13 @@ export class UsagerHomeComponent implements OnInit {
       this.tauxDevisesService.getActuelle().subscribe({
         next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
         error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
+      });
+    }
+
+    if (this.authService.canTrier) {
+      this.reponsesService.compterATrier().subscribe({
+        next:  n => this.aTrier = n,
+        error: () => {}   // non bloquant : la carte reste affichée sans compteur
       });
     }
   }

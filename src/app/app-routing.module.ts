@@ -31,6 +31,12 @@ import { StaffGuard } from './services/staff-guard.service';
 import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
+import { AuthPopupComponent } from './components/auth-popup/auth-popup.component';
+import { TriSuggestionsComponent } from './components/usager/pages/tri-suggestions/tri-suggestions.component';
+import { TriGuard } from './services/tri-guard.service';
+import { TdmItemsComponent } from './components/usager/pages/tdm-items/tdm-items.component';
+import { TdmDecisionComponent } from './components/usager/pages/tdm-decision/tdm-decision.component';
+import { TdmGuard } from './services/tdm-guard.service';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
 import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
 import { FondsBudgetairesComponent } from './components/configuration/fonds-budgetaires/fonds-budgetaires.component';
@@ -38,6 +44,9 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
 
 const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
+  // Fenêtre de connexion ouverte par le formulaire public embarqué en iframe (Microsoft refuse
+  // de s'afficher dans un iframe) — voir AuthService.loginWithPopup.
+  { path: 'auth-popup', component: AuthPopupComponent },
   { path: '', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
@@ -70,11 +79,19 @@ const routes: Routes = [
       { path: 'nouvel-abonnement', component: NouvelAbonnementComponent },
       { path: 'peb-tipasa-numerique', component: PebTipasaNumeriqueComponent },
       { path: 'profil',              component: UsagerProfilComponent },
+      // Équipe TechDoc : tri des suggestions publiques + historique partagé de l'équipe.
+      { path: 'tri',                 component: TriSuggestionsComponent, canActivate: [TriGuard] },
+      // Profil TDM : items routés (creation_notice_dtdm) à traiter directement depuis le portail.
+      { path: 'tdm',                 component: TdmItemsComponent, canActivate: [TdmGuard] },
+      // Traitement d'un item TDM — vue dédiée (pas le formulaire /statut-decision au complet,
+      // voir tdm-decision.component.ts), même gabarit que « Tri des suggestions ».
+      { path: 'tdm/:id',             component: TdmDecisionComponent, canActivate: [TdmGuard] },
     ]
   },
-  // Formulaire public embarqué (iframe sur un site externe) : ni en-tête/pied de page (pas
-  // sous UserLayoutComponent), ni AuthGuard (pas d'authentification pour l'instant — voir
-  // suggestion-embed.component.ts).
+  // Formulaire public embarqué (iframe sur le site des Bibliothèques) : ni en-tête/pied de page
+  // (pas sous UserLayoutComponent). Seule page accessible à la communauté UdeM (rôle Usager).
+  // Pas d'AuthGuard : la redirection vers /login ne fonctionnerait pas dans l'iframe — le
+  // composant demande lui-même la connexion, dans une popup (voir suggestion-embed.component.ts).
   { path: 'suggestion-public', component: SuggestionEmbedComponent },
   { path: 'page-not-found', component: PageNotFoundComponent  },
   { path: 'not-user', component: NotUserComponent },

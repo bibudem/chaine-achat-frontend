@@ -287,3 +287,21 @@
 }
 .ul-footer__link:hover { color: #64748b; text-decoration: underline; }
 .ul-footer__sep { color: #cbd5e1; }
+
+/* ── Bouton « Tri des suggestions publiques » (équipe TechDoc) ── */
+.ul-tri__btn { position: relative; }
+.ul-tri__count {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: #dc2626;
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}

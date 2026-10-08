@@ -1,0 +1,105 @@
+/* Même gabarit visuel que « Tri des suggestions » (tri-suggestions.component.css) — classes
+   dupliquées ici (vue encapsulation Angular), pour une présentation cohérente entre les deux
+   files de traitement du portail usager. */
+.ts-page { min-height: 100vh; background: #fff; }
+
+/* ── Navigation ── */
+.ts-nav { background: #fff; border-bottom: 1px solid #f0f4f8; padding: .6rem 1.5rem; }
+.ts-nav__inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.ts-nav__back {
+  font-size: .81rem; font-weight: 500; color: #374151; text-decoration: none;
+  display: flex; align-items: center; gap: .35rem;
+  background: #f8f9fb; border: 1.5px solid #e0e7ef; border-radius: 8px;
+  padding: .32rem .8rem; white-space: nowrap;
+}
+.ts-nav__back:hover { background: #e8eef5; border-color: #c5d3e0; color: #0B113A; text-decoration: none; }
+.ts-nav__breadcrumb { display: flex; align-items: center; gap: .4rem; font-size: .79rem; color: #94a3b8; }
+.ts-nav__crumb-link { color: #607386; text-decoration: none; }
+.ts-nav__crumb-link:hover { color: #00407F; text-decoration: underline; }
+.ts-nav__sep { font-size: .65rem; opacity: .5; }
+
+/* ── Corps ── */
+.ts-body { max-width: 960px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+.ts-title    { font-size: 1.25rem; font-weight: 700; color: #0B113A; margin: 0 0 .35rem; }
+.ts-subtitle { font-size: .85rem; color: #607386; margin: 0 0 1.1rem; }
+.ts-muted    { color: #607386; }
+
+/* ── Filtres ── */
+.ts-filters { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+.ts-filters__search { position: relative; flex: 1 1 260px; }
+.ts-filters__search .bi {
+  position: absolute; left: .65rem; top: 50%; transform: translateY(-50%);
+  color: #94a3b8; font-size: .8rem;
+  pointer-events: none;
+}
+.ts-filters__search input,
+.ts-filters__select,
+.ts-filters .btn {
+  box-sizing: border-box !important;
+  height: 2.6rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: .85rem;
+  line-height: 2.2rem !important;
+}
+.ts-filters__search input { padding-left: 2.1rem !important; }
+.ts-filters__select { width: auto; min-width: 190px; padding-right: 2rem; }
+.ts-filters .btn { padding-left: 1.1rem; padding-right: 1.1rem; white-space: nowrap; }
+
+/* ── États ── */
+.ts-state, .ts-empty {
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+  padding: 3rem 1rem; color: #607386; font-size: .9rem;
+}
+.ts-empty { flex-direction: column; gap: .4rem; }
+.ts-empty .bi { font-size: 1.8rem; color: #A0AEC0; }
+.ts-empty p { margin: 0; }
+
+/* ── Liste (même visuel que la liste des demandes — items-list.component.css) ── */
+.ts-table-wrap {
+  background:    #fff;
+  border:        1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow:    0 1px 4px rgba(0,0,0,.05);
+  overflow:      hidden;
+}
+.ts-table { margin: 0; width: 100%; border-collapse: collapse; }
+.ts-table th {
+  background:      #f8fafc;
+  border-bottom:   1.5px solid #e2e8f0;
+  color:           #64748b;
+  font-size:       .7rem;
+  font-weight:     700;
+  text-transform:  uppercase;
+  letter-spacing:  .06em;
+  white-space:     nowrap;
+  vertical-align:  middle;
+}
+.ts-table td, .ts-table th { padding: .6rem .65rem; }
+.ts-table td {
+  vertical-align: top;
+  font-size:      .82rem;
+  color:          #334155;
+  border-bottom:  1px solid #f1f5f9;
+}
+.ts-table tbody tr:last-of-type td { border-bottom: none; }
+.ts-table tbody tr:hover td { background: #f8fafc; }
+.ts-table td.text-nowrap { white-space: nowrap; vertical-align: middle; }
+
+.ts-col-decision { max-width: 220px; }
+
+.ts-badge {
+  display: inline-block; margin: 0; padding: .22rem .5rem; border-radius: 5px;
+  font-size: .73rem; font-weight: 600; white-space: nowrap; line-height: 1.3;
+}
+.ts-badge--attente  { background: #fef3c7; color: #92400e; }
+.ts-badge--traitee  { background: #e0e7ff; color: #3730a3; white-space: normal; border-radius: 10px; max-width: 220px; }
+
+.pagination-wrapper { border-top: 1px solid #f1f5f9; }
+
+@media (max-width: 576px) {
+  .ts-nav__breadcrumb { display: none; }
+}

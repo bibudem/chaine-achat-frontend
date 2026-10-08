@@ -58,6 +58,14 @@
           <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
         </button>
       </li>
+      <!-- TechDoc Tri : pour toute Suggestion d'achat, pas seulement celles venues du circuit
+           public (voir item.tri_statut, affiché en lecture seule à l'intérieur si présent). -->
+      <li class="nav-item" role="presentation" *ngIf="isSuggestionAchat()">
+        <button class="nav-link" [class.active]="activeTab === 'tri-techdoc'"
+                type="button" (click)="setActiveTab('tri-techdoc')">
+          <i class="bi bi-inboxes me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+        </button>
+      </li>
     </ul>
 
     <!-- Contenu des onglets -->
@@ -137,7 +145,7 @@
               <div class="invalid-feedback" *ngIf="hasError('editeur', 'required')">{{ 'item-formulaire.editeur-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.isbn-issn' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="isbn_issn"
@@ -150,12 +158,21 @@
               </small>
             </div>
           </div>
-          <div class="col-md-3"
+          <div class="col-md-2"
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.date-publication' | translate }}</label>
               <input type="text" class="form-control" formControlName="date_publication"
                      [placeholder]="'item-formulaire.date-publication-placeholder' | translate">
+            </div>
+          </div>
+          <div class="col-md-2" *ngIf="isSuggestionAchat()">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.auteur' | translate }} <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="auteur"
+                     [class.is-invalid]="isInvalid('auteur')"
+                     [placeholder]="'item-formulaire.auteur-placeholder' | translate">
+              <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">{{ 'item-formulaire.auteur-required' | translate }}</div>
             </div>
           </div>
         </div>
@@ -291,7 +308,9 @@
         <!-- Rangée 4 : Finances -->
         <div class="row">
 
-          <ng-container *ngIf="!gereFondsPartages">
+          <!-- Prix total / Devise / Prix (devise originale) : saisis par les ACQ (onglet
+               Décision ACQ), pas ici, pour Suggestion d'achat. -->
+          <ng-container *ngIf="!gereFondsPartages && !isSuggestionAchat()">
             <div class="col-md-2">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.devise' | translate }} <span class="text-danger" *ngIf="financeFieldsRequired">*</span></label>
@@ -905,31 +924,15 @@
           </div>
 
           <div class="row">
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.auteur' | translate }}</label>
-                <input type="text" class="form-control" formControlName="auteur"
-                       [class.is-invalid]="isInvalid('auteur')"
-                       [placeholder]="'item-formulaire.auteur-placeholder' | translate">
-                <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">{{ 'item-formulaire.auteur-required' | translate }}</div>
-              </div>
-            </div>
-            <div class="col-md-2">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.requis-cours' | translate }}</label>
                 <input type="date" class="form-control" formControlName="date_requise_cours">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
               <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.isbn-suggestion' | translate }}</label>
-                <input type="text" class="form-control" formControlName="acq_isbn"
-                       [placeholder]="'item-formulaire.isbn-placeholder' | translate">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.statut' | translate }}</label>
+                <label class="form-label"><span class="text-danger">*</span> {{ 'form-suggestion.categorie-usager' | translate }}</label>
                 <select class="form-select form-control" formControlName="usager_statut"
                         [class.is-invalid]="isInvalid('usager_statut')">
                   <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
@@ -979,10 +982,10 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.notes-usager' | translate }}</label>
-                <textarea class="form-control" formControlName="note_usager" rows="2"
+                <textarea class="form-control" formControlName="note_usager" rows="5"
                           [placeholder]="'item-formulaire.notes-usager-placeholder' | translate"></textarea>
               </div>
             </div>
@@ -1004,20 +1007,10 @@
                        placeholder="Ex: INFO-4200">
               </div>
             </div>
-            <div class="col-md ml-4">
-              <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.transmis-techdoc' | translate }}</label>
-                <div class="form-check mt-1 ml-4">
-                  <input class="form-check-input" type="checkbox" formControlName="techdoc_suggestion_transmise"
-                         id="techdoc_suggestion_transmise">
-                  <label class="form-check-label" for="techdoc_suggestion_transmise">{{ 'item-formulaire.oui' | translate }}</label>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-8">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.bibliothecaire-disc' | translate }}</label>
                 <input type="email" class="form-control" formControlName="bibliothecaire_disciplinaire"
@@ -1027,15 +1020,6 @@
                   <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</ng-container>
                   <ng-container *ngIf="hasError('bibliothecaire_disciplinaire', 'email')">{{ 'item-formulaire.courriel-invalide-msg' | translate }}</ng-container>
                 </div>
-              </div>
-            </div>
-             <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.courriel-acq' | translate }}</label>
-                <input type="email" class="form-control" formControlName="acq_responsable_courriel"
-                       [class.is-invalid]="isInvalid('acq_responsable_courriel')"
-                       placeholder="prenom.nom@umontreal.ca">
-                <div class="invalid-feedback" *ngIf="hasError('acq_responsable_courriel', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
               </div>
             </div>
             <div class="col-md-2">
@@ -1058,15 +1042,6 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-12">
-              <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.raison-annulation' | translate }}</label>
-                <textarea class="form-control" formControlName="acq_raison_annulation" rows="2"
-                          [placeholder]="'item-formulaire.raison-placeholder' | translate"></textarea>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div><!-- fin tab-content spécifiques -->
@@ -1132,19 +1107,62 @@
           </div>
         </div>
 
-        <!-- Type de document + Format/Support — Suggestion d'achat uniquement (retirés du
-             formulaire usager pour ce type, à compléter par les ACQ) -->
+        <!-- Prix total / Devise / Prix (devise originale) — Suggestion d'achat uniquement,
+             saisis par les ACQ (retirés de l'onglet Informations de base, voir D). -->
         <div class="row" *ngIf="isSuggestionAchat()">
-          <div class="col-md-6">
+          <div class="col-md-2">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.categorie-document' | translate }}</label>
-              <select class="form-select form-control" formControlName="categorie_document">
-                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
-                <option *ngFor="let cat of options.categorieDocumentOptions" [value]="cat">{{ cat }}</option>
+              <label class="form-label">{{ 'item-formulaire.devise' | translate }}</label>
+              <select class="form-select form-control" formControlName="devise_originale">
+                <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+                <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
               </select>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-2" *ngIf="itemForm.get('devise_originale')?.value === 'Autre'">
+            <div class="mb-3">
+              <label class="form-label">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+              <input type="text" class="form-control" formControlName="devise_autre_precision"
+                     [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.prix-devise' | translate }}</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" formControlName="prix_devise_originale"
+                       min="0" step="0.01" placeholder="0,00">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.prix-cad' | translate }}</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" formControlName="prix_cad"
+                       min="0" step="0.01" placeholder="0,00" [readonly]="deviseConvertible">
+              </div>
+              <small class="form-text" *ngIf="itemForm.get('devise_originale')?.value">
+                {{ deviseConvertible ? ('forms-usager.calcule-auto' | translate) : ('forms-usager.prix-cad-hint' | translate) }}
+              </small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.raison-annulation' | translate }}</label>
+              <select class="form-select form-control" formControlName="acq_raison_annulation">
+                <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                <option value="Non disponible pour l'achat">{{ 'item-formulaire.raison-non-disponible' | translate }}</option>
+                <option value="Prix > 500 CAD">{{ 'item-formulaire.raison-prix-500' | translate }}</option>
+                <option value="Titre déjà en collection">{{ 'item-formulaire.raison-deja-collection' | translate }}</option>
+                <option value="À paraître">{{ 'item-formulaire.raison-a-paraitre' | translate }}</option>
+                <option value="Voir Acquisitions : Note / Commentaire">{{ 'item-formulaire.raison-voir-note' | translate }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.type-traitement' | translate }}</label>
               <select class="form-select form-control" formControlName="format_support">
@@ -1153,6 +1171,19 @@
                 <option value="Électronique">Électronique</option>
                 <option value="Imprimé et électronique">Imprimé et électronique</option>
               </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Type de traitement + Raison d'annulation — Suggestion d'achat uniquement -->
+        <div class="row" *ngIf="isSuggestionAchat()">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.acq-responsable-nom' | translate }}</label>
+              <input type="text" class="form-control" formControlName="acq_responsable_nom">
+              <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.acq-responsable-nom-info' | translate }}
+              </small>
             </div>
           </div>
         </div>
@@ -1243,6 +1274,83 @@
         </ng-template>
 
       </div><!-- fin tab-content tdm-choix-notice -->
+
+      <!-- ========== ONGLET : TECHDOC TRI (Suggestion d'achat) ========== -->
+      <div class="tab-pane" *ngIf="isSuggestionAchat()"
+           [class.show]="activeTab === 'tri-techdoc'" [class.active]="activeTab === 'tri-techdoc'">
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <h5 class="mb-3 pb-2 border-bottom">
+              <i class="bi bi-inboxes me-2"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+            </h5>
+          </div>
+        </div>
+
+        <!-- Historique de tri par l'équipe TechDoc (lecture seule) — uniquement si la
+             suggestion vient du circuit public /suggestion-public (voir item.tri_statut,
+             joint depuis tbl_reponses par item_id_cree — consulterItems backend). -->
+        <ng-container *ngIf="item as i">
+          <div class="row g-3" *ngIf="i.tri_statut">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-detail.tri-statut' | translate }}</label>
+                <div><span class="badge bg-success">{{ 'item-detail.tri-acceptee' | translate }}</span></div>
+              </div>
+            </div>
+            <div class="col-md-4" *ngIf="i.tri_par_nom || i.tri_par">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-detail.tri-par' | translate }}</label>
+                <div>{{ i.tri_par_nom || i.tri_par }}</div>
+              </div>
+            </div>
+            <div class="col-md-4" *ngIf="i.tri_date">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-detail.tri-date' | translate }}</label>
+                <div>{{ i.tri_date | date:'d MMM y, HH:mm' }}</div>
+              </div>
+            </div>
+            <div class="col-12" *ngIf="i.tri_commentaire">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-detail.tri-commentaire' | translate }}</label>
+                <div class="fst-italic">« {{ i.tri_commentaire }} »</div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="i.tri_statut">
+            <div class="col-12"><hr></div>
+          </div>
+        </ng-container>
+
+        <!-- Suivi propre à l'équipe TechDoc — pour toute Suggestion d'achat -->
+        <div class="row">
+          <div class="col-12">
+            <div class="itf-techdoc-transmise mb-4"
+                 [class.itf-techdoc-transmise--actif]="itemForm.get('techdoc_suggestion_transmise')?.value">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" role="switch" formControlName="techdoc_suggestion_transmise"
+                       id="techdoc_suggestion_transmise">
+                <label class="form-check-label fw-semibold" for="techdoc_suggestion_transmise">
+                  {{ 'item-formulaire.transmis-techdoc' | translate }}
+                </label>
+              </div>
+              <small class="text-muted d-block mt-1">
+                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.transmis-techdoc-hint' | translate }}
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="form-label">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
+              <textarea class="form-control" formControlName="techdoc_tri_notes" rows="8"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- fin tab-content tri-techdoc -->
 
     </div>
 
