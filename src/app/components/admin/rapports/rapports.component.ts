@@ -49,7 +49,7 @@ const CHAMPS_PAR_TYPE: Record<string, string[]> = {
   "Suggestion d'achat - Usager": [
     'auteur', 'usager_nom', 'usager_statut', 'usager_faculte', 'usager_courriel',
     'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
-    'date_requise_cours', 'note_usager',
+    'date_requise_cours', 'note_usager', 'techdoc_tri_notes',
     'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime'
   ]
 };

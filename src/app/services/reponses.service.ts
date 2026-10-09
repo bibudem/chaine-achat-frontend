@@ -104,6 +104,7 @@ export interface SuggestionTri {
   item_id_cree:        number | null;
   statut_bibliotheque: string | null;
   suivi_acq:           string | null;
+  note_acq:            string | null;
   statut_acq:          string | null;
 }
 
@@ -199,10 +200,20 @@ export class ReponsesService {
     return this.getTri({ statut: 'a_trier', limit: 1 }).pipe(map(res => res.a_trier));
   }
 
-  /** 409 si un autre membre de l'équipe a déjà traité la suggestion (message dans error.error). */
-  deciderTri(id: number, decision: TriDecision, commentaire: string | null): Observable<{ success: boolean }> {
+  /** 409 si un autre membre de l'équipe a déjà traité la suggestion (message dans error.error).
+   *  techdocSuggestionTransmise/techdocTriNotes : suivi interne de l'équipe TechDoc, saisi en
+   *  même temps que la décision — reporté dans tbl_reponses.reponses (voir decisionTri côté
+   *  backend), repris automatiquement si la suggestion est ensuite matérialisée en item. */
+  deciderTri(
+    id: number, decision: TriDecision, commentaire: string | null,
+    techdocSuggestionTransmise = false, techdocTriNotes: string | null = null,
+  ): Observable<{ success: boolean }> {
     return this.http
-      .put<{ success: boolean }>(`${this.baseUrl}/${id}/tri`, { decision, commentaire }, this.httpOptions)
+      .put<{ success: boolean }>(`${this.baseUrl}/${id}/tri`, {
+        decision, commentaire,
+        techdoc_suggestion_transmise: techdocSuggestionTransmise,
+        techdoc_tri_notes:            techdocTriNotes,
+      }, this.httpOptions)
       .pipe(catchError(this.handleError('deciderTri')));
   }
 

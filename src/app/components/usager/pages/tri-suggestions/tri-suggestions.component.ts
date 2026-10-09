@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { ReponsesService, SuggestionTri, TriDecision } from '../../../../services/reponses.service';
 import { estAcqEnAttenteDefaut } from '../../../../lib/DemandeStatut';
+import { construireLignesDetail } from '../../../../lib/DemandeDetailFields';
 
 type StatutFiltre = '' | 'a_trier' | 'a_completer' | 'soumise' | 'refuse';
 
@@ -13,6 +14,11 @@ interface DecisionSaisie {
   commentaire: string;
   envoiEnCours: boolean;
   erreur:      string;
+  /** Suivi interne de l'équipe TechDoc, saisi en même temps que la décision — voir
+   *  item-formulaire.component.ts, mêmes champs (techdoc_suggestion_transmise/
+   *  techdoc_tri_notes), repris automatiquement si la suggestion est ensuite matérialisée. */
+  techdocSuggestionTransmise: boolean;
+  techdocTriNotes: string;
 }
 
 /**
@@ -82,7 +88,11 @@ export class TriSuggestionsComponent implements OnInit {
         this.expandedId = null;
         this.decisions = {};
         for (const s of res.data) {
-          this.decisions[s.id] = { choix: null, commentaire: '', envoiEnCours: false, erreur: '' };
+          this.decisions[s.id] = {
+            choix: null, commentaire: '', envoiEnCours: false, erreur: '',
+            techdocSuggestionTransmise: !!s.reponses?.['techdoc_suggestion_transmise'],
+            techdocTriNotes: s.reponses?.['techdoc_tri_notes'] ?? '',
+          };
         }
         this.loading = false;
       },
@@ -98,7 +108,9 @@ export class TriSuggestionsComponent implements OnInit {
     this.charger();
   }
 
-  /** Déplie/replie la saisie de décision d'une suggestion « à trier ». */
+  /** Déplie/replie le détail complet d'une ligne (toutes les données soumises, plus la
+   *  décision ACQ si la suggestion a été matérialisée en item) — et, pour une suggestion
+   *  « à trier », la saisie de la décision de tri. */
   toggleDecision(s: SuggestionTri): void {
     this.expandedId = this.expandedId === s.id ? null : s.id;
   }
@@ -118,7 +130,10 @@ export class TriSuggestionsComponent implements OnInit {
 
     d.envoiEnCours = true;
     d.erreur = '';
-    this.reponsesService.deciderTri(s.id, d.choix, commentaire || null).subscribe({
+    this.reponsesService.deciderTri(
+      s.id, d.choix, commentaire || null,
+      d.techdocSuggestionTransmise, d.techdocTriNotes.trim() || null,
+    ).subscribe({
       next: () => {
         if (d.choix === 'accepte') {
           // La suggestion acceptée se complète dans le formulaire interne, au rythme de
@@ -143,12 +158,17 @@ export class TriSuggestionsComponent implements OnInit {
     });
   }
 
-  completer(s: SuggestionTri): void {
-    this.router.navigate(['/usager/suggestion-bib'], { queryParams: { id: s.id, tri: 1 } });
-  }
-
   titre(s: SuggestionTri): string {
     return s.reponses?.['titre_document'] || this.t('sans-titre');
+  }
+
+  /** Détail complet des champs soumis (toutes les données du formulaire public), même
+   *  logique label/valeur que le détail dépliable de « Mes demandes » (usager-profil) — pour
+   *  que les deux vues restent cohérentes. Les réponses sont déjà à plat ici (pas de
+   *  baseData/specificData imbriqués, contrairement à l'item une fois matérialisé), donc
+   *  aucun appel réseau n'est nécessaire. */
+  detailLignes(s: SuggestionTri): { label: string; value: string }[] {
+    return construireLignesDetail(s.reponses ?? {});
   }
 
   /** Date de tri si déjà décidée, sinon date de réception de la suggestion. */

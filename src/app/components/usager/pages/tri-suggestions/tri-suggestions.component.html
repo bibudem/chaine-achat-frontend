@@ -96,48 +96,33 @@
                     <div class="ts-muted small">{{ s.usager_courriel }}</div>
                   </td>
                   <td class="ts-col-decision">
-                    <div class="ts-badges">
-                      <span class="ts-badge" [ngClass]="statutInfo(s).classe">{{ statutInfo(s).libelle }}</span>
-                    </div>
+                    <span class="ts-badge" [ngClass]="statutInfo(s).classe">{{ statutInfo(s).libelle }}</span>
                   </td>
                   <td class="ts-pre small">{{ s.tri_commentaire || '—' }}</td>
                   <td class="small">{{ s.tri_par_nom || s.tri_par || '—' }}</td>
                   <td class="text-end">
-                    <button *ngIf="s.tri_statut === 'a_trier'" type="button" class="btn btn-sm btn-outline-primary text-nowrap"
-                            (click)="toggleDecision(s)">
-                      {{ (expandedId === s.id ? 'tri-suggestions-page.btn-fermer' : 'tri-suggestions-page.btn-decider') | translate }}
-                    </button>
-                    <button *ngIf="estACompleter(s)" type="button" class="btn btn-sm btn-outline-primary text-nowrap" (click)="completer(s)">
+                    <a *ngIf="estACompleter(s)"
+                       [routerLink]="['/usager/suggestion-bib']" [queryParams]="{ id: s.id, tri: 1 }"
+                       class="btn btn-sm btn-outline-primary text-nowrap me-1">
                       {{ 'tri-suggestions-page.btn-completer' | translate }}
+                    </a>
+                    <button type="button" class="ts-btn-detail-icon" [class.active]="expandedId === s.id" (click)="toggleDecision(s)"
+                            [title]="(expandedId === s.id ? 'tri-suggestions-page.btn-fermer' : (s.tri_statut === 'a_trier' ? 'tri-suggestions-page.btn-decider' : 'tri-suggestions-page.btn-details')) | translate">
+                      <i class="bi" [ngClass]="expandedId === s.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
                     </button>
                   </td>
                 </tr>
 
-                <!-- Décision dépliée (saisie Oui/Non + commentaire) -->
+                <!-- Détails dépliés (tous les champs soumis, en lecture seule) + décision ACQ si
+                     matérialisée + saisie de la décision de tri (suggestions « à trier ») -->
                 <tr *ngIf="expandedId === s.id" class="ts-decision-row">
                   <td colspan="7">
-                    <dl class="ts-fields">
-                      <div><dt>{{ 'tri-suggestions-page.champ-demandeur' | translate }}</dt><dd>{{ s.usager_nom }} <span class="ts-muted">· {{ s.usager_courriel }}</span></dd></div>
-                      <div *ngIf="s.usager_statut"><dt>{{ 'tri-suggestions-page.champ-statut' | translate }}</dt><dd>{{ s.usager_statut }}</dd></div>
-                      <div *ngIf="s.reponses['usager_faculte']"><dt>{{ 'tri-suggestions-page.champ-faculte' | translate }}</dt><dd>{{ s.reponses['usager_faculte'] }}</dd></div>
-                      <div *ngIf="s.reponses['categorie_document']"><dt>{{ 'tri-suggestions-page.champ-type-document' | translate }}</dt><dd>{{ s.reponses['categorie_document'] }}</dd></div>
-                      <div *ngIf="s.reponses['editeur']"><dt>{{ 'tri-suggestions-page.champ-editeur' | translate }}</dt><dd>{{ s.reponses['editeur'] }}</dd></div>
-                      <div *ngIf="s.reponses['date_publication']"><dt>{{ 'tri-suggestions-page.champ-date-publication' | translate }}</dt><dd>{{ s.reponses['date_publication'] }}</dd></div>
-                      <div *ngIf="s.reponses['isbn_issn']"><dt>{{ 'tri-suggestions-page.champ-isbn' | translate }}</dt><dd>{{ s.reponses['isbn_issn'] }}</dd></div>
-                      <div *ngIf="s.reponses['source_information']">
-                        <dt>{{ 'tri-suggestions-page.champ-source' | translate }}</dt>
-                        <dd><a [href]="s.reponses['source_information']" target="_blank" rel="noopener">{{ s.reponses['source_information'] }}</a></dd>
-                      </div>
-                      <div *ngIf="s.reponses['reserve_cours']">
-                        <dt>{{ 'tri-suggestions-page.champ-reserve-cours' | translate }}</dt>
-                        <dd>{{ s.reponses['reserve_cours_sigle'] }} · {{ s.reponses['reserve_cours_session'] }} · {{ s.reponses['reserve_cours_enseignant'] }}</dd>
-                      </div>
-                      <div *ngIf="s.reponses['date_requise_cours']"><dt>{{ 'tri-suggestions-page.champ-requis-pour-le' | translate }}</dt><dd>{{ s.reponses['date_requise_cours'] | date:'d MMM y' }}</dd></div>
-                      <div *ngIf="s.reponses['aviser_reservation']"><dt>{{ 'tri-suggestions-page.champ-reservation' | translate }}</dt><dd>{{ 'tri-suggestions-page.val-reserver-document' | translate }}</dd></div>
-                      <div *ngIf="s.reponses['note_usager']" class="ts-fields__wide"><dt>{{ 'tri-suggestions-page.champ-note-demandeur' | translate }}</dt><dd class="ts-pre">{{ s.reponses['note_usager'] }}</dd></div>
-                    </dl>
-
-                    <div class="ts-decision" *ngIf="decisions[s.id] as d">
+                    <!-- Décision de tri — question d'abord, puis le suivi TechDoc et le
+                         commentaire regroupés dans la même carte (voir item-formulaire.component.ts,
+                         mêmes champs techdoc_suggestion_transmise/techdoc_tri_notes, repris
+                         automatiquement si la suggestion est ensuite matérialisée en item). -->
+                    <ng-container *ngIf="s.tri_statut === 'a_trier' && decisions[s.id] as d">
+                    <div class="ts-decision-card">
                       <fieldset class="ts-decision__choice">
                         <legend>{{ 'tri-suggestions-page.decision-legend' | translate }}</legend>
                         <div class="form-check form-check-inline">
@@ -151,6 +136,25 @@
                           <label class="form-check-label" [for]="'non-' + s.id">{{ 'tri-suggestions-page.non' | translate }}</label>
                         </div>
                       </fieldset>
+
+                      <div class="ts-techdoc-row">
+                        <div class="ts-techdoc-switch" [class.ts-techdoc-switch--actif]="d.techdocSuggestionTransmise">
+                          <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" role="switch"
+                                   [id]="'techdoc-transmise-' + s.id"
+                                   [(ngModel)]="d.techdocSuggestionTransmise" [disabled]="d.envoiEnCours">
+                            <label class="form-check-label fw-semibold" [for]="'techdoc-transmise-' + s.id">
+                              {{ 'item-formulaire.transmis-techdoc' | translate }}
+                            </label>
+                          </div>
+                          <small class="form-text d-block mt-1">{{ 'item-formulaire.transmis-techdoc-hint' | translate }}</small>
+                        </div>
+                        <div class="ts-techdoc-notes">
+                          <label class="form-label" [for]="'techdoc-notes-' + s.id">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
+                          <textarea class="form-control" rows="2" [id]="'techdoc-notes-' + s.id"
+                                    [(ngModel)]="d.techdocTriNotes" [disabled]="d.envoiEnCours"></textarea>
+                        </div>
+                      </div>
 
                       <div *ngIf="d.choix" class="ts-decision__comment">
                         <label class="form-label" [for]="'commentaire-' + s.id">
@@ -175,6 +179,25 @@
                           <span *ngIf="d.envoiEnCours" class="spinner-border spinner-border-sm me-1"></span>
                           {{ (d.choix === 'accepte' ? 'tri-suggestions-page.btn-accepter' : 'tri-suggestions-page.btn-refuser') | translate }}
                         </button>
+                      </div>
+                    </div>
+                    </ng-container>
+
+                    <dl class="ts-details__grid">
+                      <ng-container *ngFor="let item of detailLignes(s)">
+                        <dt>{{ item.label }}</dt><dd>{{ item.value }}</dd>
+                      </ng-container>
+                    </dl>
+
+                    <div class="ts-acq-block" *ngIf="s.statut_acq || s.suivi_acq">
+                      <span class="ts-acq-block__label">{{ 'tri-suggestions-page.acq-titre' | translate }}</span>
+                      <div class="ts-acq-item" *ngIf="s.statut_acq">
+                        <span class="ts-acq-item__key">{{ 'tri-suggestions-page.acq-statut' | translate }}</span>
+                        <span class="ts-acq-item__val">{{ s.statut_acq }}</span>
+                      </div>
+                      <div class="ts-acq-item" *ngIf="s.suivi_acq">
+                        <span class="ts-acq-item__key">{{ 'tri-suggestions-page.acq-suivi' | translate }}</span>
+                        <span class="ts-acq-item__val">{{ s.suivi_acq }}</span>
                       </div>
                     </div>
                   </td>

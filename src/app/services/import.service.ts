@@ -331,6 +331,7 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'aviser_reception',             required: false, example: 'Oui' },
       { name: 'note_usager',                  required: false, example: 'Besoin urgent pour le cours' },
       { name: 'techdoc_suggestion_transmise', required: false, example: 'Oui' },
+      { name: 'techdoc_tri_notes',            required: false, example: 'Vérifié, transmis à la bibliothèque' },
       { name: 'acq_responsable_courriel',     required: false, example: 'prenom.nom@umontreal.ca' },
       { name: 'acq_raison_annulation',        required: false, example: 'Déjà en collection' },
       { name: 'statut_bibliotheque',          required: false, example: 'Soumettre aux ACQ' },
