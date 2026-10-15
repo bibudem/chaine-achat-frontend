@@ -50,6 +50,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     label: string;
     icon: string;
     email: string;
+    /** Nom utilisé dans la salutation du courriel (« Bonjour … »), si connu. */
+    nom?: string | null;
     description: string;
     selected: boolean;
   }> = [];
@@ -277,6 +279,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       date_creation:                  r.dateA,
       demandeur:                      r.usager_nom,
       usager_courriel:                r.usager_courriel,
+      reponse_id:                     r.id,
+      saisie_par_nom:                 r.usager_nom,
+      saisie_par_courriel:            r.usager_courriel,
       usager_statut:                  r.usager_statut,
       titre_document:                 bd.titre_document    || flat.titre_document    || sd.titre_document || '—',
       sous_titre:                     f(bd.sous_titre,      'sous_titre'),
@@ -571,23 +576,29 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     this.notifTargets = [];
     if (!this.item) return;
 
-    const hasReservation = (this.isNouvelAchat || this.isNouvelAbonnement)
-                           && !!this.item.usager_aviser_reservation;
+    // Destinataire principal, coché par défaut : la personne qui a saisi la demande (session au
+    // moment de l'envoi du formulaire). Les autres personnes à aviser restent proposées, mais
+    // non cochées — à cocher au besoin.
+    const saisieCourriel = this.item.saisie_par_courriel || this.item.usager_courriel;
+    if (saisieCourriel) {
+      this.notifTargets.push({
+        key: 'saisie', label: 'Personne ayant saisi la demande', icon: 'bi-person-fill',
+        email: saisieCourriel,
+        nom: this.item.saisie_par_nom || this.item.demandeur,
+        description: 'Informer de la fin du traitement de la demande',
+        selected: true
+      });
+    }
 
-    // Priorité : Aviser réservation si disponible, sinon courriel demandeur
+    const hasReservation = (this.isNouvelAchat || this.isNouvelAbonnement)
+                           && !!this.item.usager_aviser_reservation
+                           && this.item.usager_aviser_reservation !== saisieCourriel;
     if (hasReservation) {
       this.notifTargets.push({
         key: 'reservation', label: 'Aviser — Réservation', icon: 'bi-bookmark-fill',
         email: this.item.usager_aviser_reservation!,
         description: 'Notifier lors de la mise en réservation',
-        selected: true
-      });
-    } else if (this.item.usager_courriel) {
-      this.notifTargets.push({
-        key: 'usager', label: 'Demandeur', icon: 'bi-person-fill',
-        email: this.item.usager_courriel,
-        description: 'Informer le demandeur du statut de sa demande',
-        selected: true
+        selected: false
       });
     }
 
@@ -598,7 +609,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         key: 'activation', label: 'Aviser — Activation', icon: 'bi-lightning-fill',
         email: this.item.usager_aviser_activation,
         description: 'Notifier lors de l\'activation de la ressource',
-        selected: true
+        selected: false
       });
     }
 
@@ -608,7 +619,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         key: 'personne', label: 'Personne à aviser', icon: 'bi-person-badge-fill',
         email: this.item.personne_a_aviser_courriel,
         description: 'Responsable à notifier lors de l\'activation',
-        selected: true
+        selected: false
       });
     }
   }
@@ -621,14 +632,19 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const selected = this.notifTargets.filter(t => t.selected);
     selected.forEach(target => {
       const payload = {
-        reponse_id:          this.reponseId,
+        reponse_id:          this.reponseId ?? this.item?.reponse_id ?? null,
+        // Numéro de référence affiché dans le courriel (numéro de l'item).
+        item_id:             this.itemId,
         suivi_acq,
         note_acq,
         usager_courriel:     target.email,
-        usager_nom:          this.item?.demandeur,
+        usager_nom:          target.nom || null,
         titre_document:      this.item?.titre_document,
         type_formulaire:     this.item?.formulaire_type,
-        notif_role:          target.label
+        notif_role:          target.label,
+        // Adresse de l'application : le workflow n8n en déduit l'environnement (local ou
+        // production) et ses adresses — même rôle que app_url envoyé par le backend.
+        app_url:             window.location.origin
       };
       this.http
         .post(`${environment.n8nWebhookUrl}/statut-decision`, payload, this.httpOptions)

@@ -52,6 +52,12 @@ export interface Item {
   tri_par?:         string | null;
   tri_par_nom?:     string | null;
   tri_date?:        string | null;
+  /** Personne qui a saisi la demande (session au moment de l'envoi du formulaire, tbl_reponses) :
+   *  destinataire du courriel de fin de traitement. Absents pour un item sans réponse d'origine
+   *  (ex. import en lot). */
+  reponse_id?:          number | null;
+  saisie_par_nom?:      string | null;
+  saisie_par_courriel?: string | null;
 
   // Champs tbl_items — ressource électronique
   prix_cad?: number;
