@@ -1,4 +1,41 @@
 /* =============================================
+   TYPOGRAPHIE UdeM (guide de la marque)
+   Figtree : police principale. Lora : police secondaire (titres de niveau 2 et 3).
+   Texte : XL 20 px · L 18 px · normal 16 px · label 14 px.
+   Titres (écran / mobile) : 40/28 · 32/24 · 24/20 · 20/18 · 18/16 · 16/14 px.
+   Appliquée à l'espace usager (CSS de ses composants + formulaires usager ci-dessous) ;
+   l'interface admin garde ses propres tailles.
+   ============================================= */
+:root {
+  --typo-police:            'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --typo-police-secondaire: 'Lora', Georgia, 'Times New Roman', serif;
+
+  --typo-label:    0.875rem;  /* 14 px */
+  --typo-texte:    1rem;      /* 16 px */
+  --typo-texte-l:  1.125rem;  /* 18 px */
+  --typo-texte-xl: 1.25rem;   /* 20 px */
+
+  --typo-titre-1:  2.5rem;    /* 40 px */
+  --typo-titre-2:  2rem;      /* 32 px */
+  --typo-titre-3:  1.5rem;    /* 24 px */
+  --typo-titre-4:  1.25rem;   /* 20 px */
+  --typo-titre-5:  1.125rem;  /* 18 px */
+  --typo-titre-6:  1rem;      /* 16 px */
+
+  --typo-titre-graisse: 600;  /* graisse de tous les titres */
+}
+@media (max-width: 576px) {
+  :root {
+    --typo-titre-1: 1.75rem;  /* 28 px */
+    --typo-titre-2: 1.5rem;   /* 24 px */
+    --typo-titre-3: 1.25rem;  /* 20 px */
+    --typo-titre-4: 1.125rem; /* 18 px */
+    --typo-titre-5: 1rem;     /* 16 px */
+    --typo-titre-6: 0.875rem; /* 14 px */
+  }
+}
+
+/* =============================================
    VARIABLES DE COULEURS DU DASHBOARD
    ============================================= */
 :root {
@@ -2069,7 +2106,7 @@ body.sidebar-open { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  font-size: .81rem;
+  font-size: var(--typo-texte);
   font-weight: 600;
   text-decoration: none;
   padding: .32rem .75rem;
@@ -2091,7 +2128,7 @@ body.sidebar-open { overflow: hidden; }
   display: flex;
   align-items: center;
   gap: .3rem;
-  font-size: .77rem;
+  font-size: var(--typo-label);
   color: #9ca3af;
 }
 .form-nav__crumb-link {
@@ -2099,7 +2136,7 @@ body.sidebar-open { overflow: hidden; }
   text-decoration: none;
 }
 .form-nav__crumb-link:hover { color: #0B113A; text-decoration: none; }
-.form-nav__sep { font-size: .62rem; }
+.form-nav__sep { font-size: 0.75rem; }
 .form-nav__crumb-current { color: #374151; font-weight: 500; }
 
 @media (max-width: 575px) {
@@ -2126,21 +2163,22 @@ body.sidebar-open { overflow: hidden; }
   display:         flex;
   align-items:     center;
   justify-content: center;
-  font-size:       1rem;
+  font-size:       1.125rem;
   flex-shrink:     0;
   background:      #0B113A;
   color:           #fff;
   /* background overridé dans chaque composant */
 }
 .form-header__title {
-  font-size:   1rem;
-  font-weight: 700;
+  font-size:   var(--typo-titre-5);
+  font-weight: var(--typo-titre-graisse);
   margin:      0;
   color:       #0B113A;
   line-height: 1.15;
+  font-family: var(--typo-police);
 }
 .form-header__subtitle {
-  font-size: 0.76rem;
+  font-size: var(--typo-label);
   margin:    0;
   color:     #607386;
   opacity:   1;
@@ -2188,9 +2226,9 @@ body.sidebar-open { overflow: hidden; }
 
 /* Titre de section (border-bottom couleur d'accent définie dans le composant) */
 .form-section__title {
-  font-family:    'Figtree', sans-serif;
-  font-size:      0.75rem;
-  font-weight:    700;
+  font-family: var(--typo-police);
+  font-size:      0.875rem;
+  font-weight: var(--typo-titre-graisse);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color:          var(--primary-blue);
@@ -2200,7 +2238,7 @@ body.sidebar-open { overflow: hidden; }
   align-items:    center;
   gap:            8px;
 }
-.form-section__title i { font-size: 0.9rem; }
+.form-section__title i { font-size: 1rem; }
 
 /* Astérisque champ obligatoire */
 .form-label.required::after { content: ' *'; color: var(--warning-orange); }
@@ -2350,11 +2388,22 @@ body.sidebar-open { overflow: hidden; }
   .btn-format { font-size: 0.8rem; padding: 7px 12px; }
 }
 @media (max-width: 480px) {
-  .form-header__title    { font-size: 1.05rem; }
+  .form-header__title    { font-size: var(--typo-titre-5);
+  font-family: var(--typo-police);
+  font-weight: var(--typo-titre-graisse); }
   .form-header__subtitle { display: none; }
   .form-actions          { flex-direction: column-reverse; }
   .form-actions .btn     { width: 100%; justify-content: center; }
 }
+
+/* Espace usager (html.usager-route, posé par AppComponent) : libellés, aides et textes
+   indicatifs des champs agrandis pour la lisibilité — jetons de la typographie UdeM
+   (voir TYPOGRAPHIE UdeM en tête de fichier). Les règles globales ci-dessus restent inchangées
+   pour l'interface admin. :where() garde la spécificité basse : un style propre à un
+   composant usager garde la priorité. */
+:where(html.usager-route) .form-label                { font-size: var(--typo-label); }
+:where(html.usager-route) .form-text                 { font-size: var(--typo-label); }
+:where(html.usager-route) .form-control::placeholder { font-size: var(--typo-texte); }
 
 /* ============================================================
    ÉCRAN DE CONFIRMATION
@@ -2513,3 +2562,17 @@ body.sidebar-open { overflow: hidden; }
   .confirmation-detail__label { min-width: unset; }
   .confirmation-actions .btn { width: 100%; justify-content: center; }
 }
+
+/* Espace usager — lisibilité (voir aussi les libellés de formulaire, section FORMULAIRES USAGER). */
+/* Écran de confirmation : aussi utilisé par la page de décision ACQ (admin), donc agrandi
+   seulement dans l'espace usager. */
+:where(html.usager-route) .confirmation-icon          { font-size: 2rem; }
+:where(html.usager-route) .confirmation-title         { font-size: var(--typo-titre-3); font-family: var(--typo-police-secondaire); }
+:where(html.usager-route) .confirmation-message       { font-size: var(--typo-texte-l); }
+:where(html.usager-route) .confirmation-detail__label { font-size: var(--typo-label); }
+:where(html.usager-route) .confirmation-detail__value { font-size: var(--typo-texte); }
+/* Paragraphes : le thème de base fixe line-height: 1.3rem (≈ 1,25 fois le texte une fois
+   agrandi) — interligne relatif plus confortable dans l'espace usager. */
+:where(html.usager-route) p { line-height: 1.6; }
+/* Titre de l'écran de confirmation (partagé avec la page de décision ACQ) : graisse des titres. */
+:where(html.usager-route) .confirmation-title { font-weight: var(--typo-titre-graisse); }

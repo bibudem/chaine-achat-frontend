@@ -83,7 +83,7 @@
   padding: 1.25rem;
   background: #f8f9fb;
 }
-.embed-login p { color: #374151; font-size: .9rem; }
+.embed-login p { color: #374151; font-size: var(--typo-texte); }
 
 .embed-session {
   display: flex;
@@ -91,7 +91,7 @@
   align-items: center;
   justify-content: space-between;
   gap: .5rem;
-  font-size: .85rem;
+  font-size: var(--typo-texte);
   color: #374151;
   margin-bottom: 1rem;
 }

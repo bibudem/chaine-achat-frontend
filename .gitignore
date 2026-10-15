@@ -48,3 +48,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+# Workflows n8n (exports locaux, contiennent des adresses et des données de test) — non versionnés
+/n8n

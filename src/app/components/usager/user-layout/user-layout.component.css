@@ -20,7 +20,7 @@
 }
 .ul-logo__text {
   color: rgba(255,255,255,0.85);
-  font-size: 0.875rem;
+  font-size: var(--typo-texte);
   font-weight: 500;
   letter-spacing: 0.01em;
   display: none;
@@ -46,14 +46,14 @@
 }
 .ul-lang__icon {
   color: rgba(255,255,255,0.6);
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   margin-right: 4px;
 }
 .ul-lang__btn {
   background: none;
   border: none;
   color: rgba(255,255,255,0.55);
-  font-size: 0.75rem;
+  font-size: var(--typo-label);
   font-weight: 700;
   letter-spacing: 0.06em;
   padding: 2px 6px;
@@ -68,7 +68,7 @@
 }
 .ul-lang__sep {
   color: rgba(255,255,255,0.25);
-  font-size: 0.7rem;
+  font-size: 0.8125rem;
   user-select: none;
 }
 
@@ -85,7 +85,7 @@
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%;
   color: #fff;
-  font-size: 1rem;
+  font-size: var(--typo-texte-l);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -112,8 +112,8 @@
   padding: 0.75rem 1rem;
   background: #f8fafc;
   border-bottom: 1px solid #e2e8f0;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--typo-texte);
+  font-weight: 500;
   color: #1e293b;
 }
 
@@ -121,7 +121,7 @@
 
 .ul-forms__group-label {
   padding: 0.6rem 1rem 0.3rem;
-  font-size: 0.72rem;
+  font-size: var(--typo-label);
   font-weight: 600;
   color: #94a3b8;
   text-transform: uppercase;
@@ -139,7 +139,7 @@
   background: none;
   border: none;
   padding: 0.55rem 1rem;
-  font-size: 0.85rem;
+  font-size: var(--typo-texte);
   color: #334155;
   cursor: pointer;
   text-align: left;
@@ -155,7 +155,7 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   flex-shrink: 0;
 }
 .ul-forms__item-icon--achat         { background: var(--achat-dark); }
@@ -166,7 +166,7 @@
 .ul-forms__item-icon--suggest       { background: var(--suggest-mid); }
 
 .ul-forms__item-label { flex: 1; min-width: 0; }
-.ul-forms__item-arrow { font-size: 0.7rem; color: #cbd5e1; flex-shrink: 0; }
+.ul-forms__item-arrow { font-size: 0.8125rem; color: #cbd5e1; flex-shrink: 0; }
 
 /* ── Menu utilisateur ── */
 .ul-user { position: relative; }
@@ -181,7 +181,7 @@
   padding: 4px 10px 4px 4px;
   color: #fff;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--typo-texte);
   transition: background 0.15s;
 }
 .ul-user__btn:hover,
@@ -193,7 +193,7 @@
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -203,12 +203,12 @@
 .ul-user__avatar--lg {
   width: 38px;
   height: 38px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   background: #1e2a6e;
   color: #fff;
 }
 .ul-user__name  { font-weight: 500; }
-.ul-user__caret { font-size: 0.7rem; opacity: 0.7; }
+.ul-user__caret { font-size: 0.8125rem; opacity: 0.7; }
 
 /* Panel dropdown */
 .ul-user__panel {
@@ -233,12 +233,12 @@
   border-bottom: 1px solid #e2e8f0;
 }
 .ul-user__fullname {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--typo-texte);
+  font-weight: 500;
   color: #1e293b;
 }
 .ul-user__role {
-  font-size: 0.75rem;
+  font-size: var(--typo-label);
   color: #64748b;
 }
 
@@ -252,15 +252,15 @@
   background: none;
   border: none;
   padding: 0.6rem 1rem;
-  font-size: 0.875rem;
+  font-size: var(--typo-texte);
   color: #334155;
   cursor: pointer;
   text-align: left;
   transition: background 0.12s;
 }
 .ul-user__item:hover { background: #f1f5f9; }
-.ul-user__item-icon  { font-size: 1rem; color: #64748b; }
-.ul-user__item-arrow { font-size: 0.7rem; color: #cbd5e1; margin-left: auto; }
+.ul-user__item-icon  { font-size: 1.125rem; color: #64748b; }
+.ul-user__item-arrow { font-size: 0.8125rem; color: #cbd5e1; margin-left: auto; }
 
 /* ── Footer ── */
 .ul-footer {
@@ -273,7 +273,7 @@
   padding: 1rem 1.5rem;
   border-top: 1px solid #eef1f6;
   color: #94a3b8;
-  font-size: 0.75rem;
+  font-size: var(--typo-label);
   text-align: center;
 }
 .ul-footer__title {
@@ -300,7 +300,7 @@
   border-radius: 9px;
   background: #dc2626;
   color: #fff;
-  font-size: .65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   line-height: 18px;
   text-align: center;
