@@ -6,7 +6,7 @@
 /* ── Navigation ── */
 .ts-nav { background: #fff; border-bottom: 1px solid #f0f4f8; padding: .6rem 1.5rem; }
 .ts-nav__inner {
-  max-width: 960px; margin: 0 auto;
+  max-width: 1240px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
 .ts-nav__back {
@@ -22,7 +22,7 @@
 .ts-nav__sep { font-size: 0.75rem; opacity: .5; }
 
 /* ── Corps ── */
-.ts-body { max-width: 960px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+.ts-body { max-width: 1240px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
 .ts-title    { font-size: var(--typo-titre-3); font-weight: var(--typo-titre-graisse); color: #0B113A; margin: 0 0 .35rem;
   font-family: var(--typo-police-secondaire); }
 .ts-subtitle { font-size: var(--typo-texte); color: #607386; margin: 0 0 1.1rem; }

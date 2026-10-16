@@ -172,6 +172,8 @@ export class ReponsesService {
   getTri(opts: {
     statut?: 'a_trier' | 'a_completer' | 'soumise' | 'refuse';
     search?: string;
+    /** Tri sur la date affichée ; absent = ordre par priorité (à trier d'abord). */
+    ordre?: 'date_desc' | 'date_asc';
     limit?: number; offset?: number;
   } = {}): Observable<{ data: SuggestionTri[]; total: number; a_trier: number }> {
     const params: Record<string, string> = {
@@ -180,6 +182,7 @@ export class ReponsesService {
     };
     if (opts.statut) params['statut'] = opts.statut;
     if (opts.search) params['search'] = opts.search;
+    if (opts.ordre)  params['ordre']  = opts.ordre;
 
     return this.http
       .get<{ data: SuggestionTri[]; total: number; a_trier: number }>(`${this.baseUrl}/tri`, { params })

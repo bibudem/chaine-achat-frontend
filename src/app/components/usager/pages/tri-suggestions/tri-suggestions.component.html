@@ -74,49 +74,62 @@
           <table class="table table-sm ts-table">
             <thead>
               <tr>
-                <th>{{ 'tri-suggestions-page.th-triee-le' | translate }}</th>
+                <th class="ts-col-date" [attr.aria-sort]="ariaSortDate">
+                  <button type="button" class="ts-sort" [class.ts-sort--actif]="ordreDate" (click)="basculerOrdreDate()"
+                          [title]="('tri-suggestions-page.ordre-' + (ordreDate || 'defaut')) | translate">
+                    {{ 'tri-suggestions-page.th-triee-le' | translate }}
+                    <i class="bi" aria-hidden="true"
+                       [ngClass]="ordreDate === 'date_desc' ? 'bi-arrow-down' : ordreDate === 'date_asc' ? 'bi-arrow-up' : 'bi-arrow-down-up'"></i>
+                  </button>
+                </th>
                 <th>{{ 'tri-suggestions-page.th-document' | translate }}</th>
                 <th>{{ 'tri-suggestions-page.champ-demandeur' | translate }}</th>
                 <th>{{ 'tri-suggestions-page.th-decision' | translate }}</th>
                 <th>{{ 'tri-suggestions-page.th-commentaire' | translate }}</th>
-                <th>{{ 'tri-suggestions-page.th-par' | translate }}</th>
-                <th></th>
+                <th class="ts-col-actions"></th>
               </tr>
             </thead>
             <tbody>
               <ng-container *ngFor="let s of suggestions">
                 <tr>
-                  <td class="text-nowrap">{{ dateAffichee(s) | date:'d MMM y' }}</td>
-                  <td>
-                    <div class="fw-semibold">{{ titre(s) }}</div>
-                    <div class="ts-muted small" *ngIf="s.reponses['auteur']">{{ s.reponses['auteur'] }}</div>
+                  <td class="text-nowrap ts-col-date" [title]="dateAffichee(s) | date:'d MMMM y'">{{ dateAffichee(s) | date:'dd/MM/yy' }}</td>
+                  <td class="ts-col-doc">
+                    <div class="ts-trunc fw-semibold" [title]="titre(s)">{{ titre(s) }}</div>
+                    <div class="ts-trunc ts-muted ts-sub" *ngIf="s.reponses['auteur']" [title]="s.reponses['auteur']">{{ s.reponses['auteur'] }}</div>
                   </td>
-                  <td>
-                    <div>{{ s.usager_nom }}</div>
-                    <div class="ts-muted small">{{ s.usager_courriel }}</div>
+                  <td class="ts-col-demandeur">
+                    <div class="ts-trunc" [title]="s.usager_nom">{{ s.usager_nom }}</div>
+                    <div class="ts-trunc ts-muted ts-sub" [title]="s.usager_courriel">{{ s.usager_courriel }}</div>
                   </td>
                   <td class="ts-col-decision">
                     <span class="ts-badge" [ngClass]="statutInfo(s).classe">{{ statutInfo(s).libelle }}</span>
+                    <div class="ts-trunc ts-muted ts-sub ts-par" *ngIf="s.tri_par_nom || s.tri_par"
+                         [title]="('tri-suggestions-page.th-par' | translate) + ' ' + (s.tri_par_nom || s.tri_par)">
+                      <i class="bi bi-person" aria-hidden="true"></i>{{ s.tri_par_nom || s.tri_par }}
+                    </div>
                   </td>
-                  <td class="ts-pre small">{{ s.tri_commentaire || '—' }}</td>
-                  <td class="small">{{ s.tri_par_nom || s.tri_par || '—' }}</td>
-                  <td class="text-end">
-                    <a *ngIf="estACompleter(s)"
-                       [routerLink]="['/usager/suggestion-bib']" [queryParams]="{ id: s.id, tri: 1 }"
-                       class="btn btn-sm btn-outline-primary text-nowrap me-1">
-                      {{ 'tri-suggestions-page.btn-completer' | translate }}
-                    </a>
-                    <button type="button" class="ts-btn-detail-icon" [class.active]="expandedId === s.id" (click)="toggleDecision(s)"
-                            [title]="(expandedId === s.id ? 'tri-suggestions-page.btn-fermer' : (s.tri_statut === 'a_trier' ? 'tri-suggestions-page.btn-decider' : 'tri-suggestions-page.btn-details')) | translate">
-                      <i class="bi" [ngClass]="expandedId === s.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                    </button>
+                  <td class="ts-col-commentaire">
+                    <div class="ts-clamp" [title]="s.tri_commentaire || ''">{{ s.tri_commentaire || '—' }}</div>
+                  </td>
+                  <td class="ts-col-actions">
+                    <div class="ts-actions">
+                      <a *ngIf="estACompleter(s)"
+                         [routerLink]="['/usager/suggestion-bib']" [queryParams]="{ id: s.id, tri: 1 }"
+                         class="ts-btn-completer">
+                        <i class="bi bi-pencil-square" aria-hidden="true"></i>{{ 'tri-suggestions-page.btn-completer' | translate }}
+                      </a>
+                      <button type="button" class="ts-btn-detail-icon" [class.active]="expandedId === s.id" (click)="toggleDecision(s)"
+                              [title]="(expandedId === s.id ? 'tri-suggestions-page.btn-fermer' : (s.tri_statut === 'a_trier' ? 'tri-suggestions-page.btn-decider' : 'tri-suggestions-page.btn-details')) | translate">
+                        <i class="bi" [ngClass]="expandedId === s.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
 
                 <!-- Détails dépliés (tous les champs soumis, en lecture seule) + décision ACQ si
                      matérialisée + saisie de la décision de tri (suggestions « à trier ») -->
                 <tr *ngIf="expandedId === s.id" class="ts-decision-row">
-                  <td colspan="7">
+                  <td colspan="6">
                     <!-- Décision de tri — question d'abord, puis le suivi TechDoc et le
                          commentaire regroupés dans la même carte (voir item-formulaire.component.ts,
                          mêmes champs techdoc_suggestion_transmise/techdoc_tri_notes, repris

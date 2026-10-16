@@ -7,6 +7,8 @@ import { estAcqEnAttenteDefaut } from '../../../../lib/DemandeStatut';
 import { construireLignesDetail } from '../../../../lib/DemandeDetailFields';
 
 type StatutFiltre = '' | 'a_trier' | 'a_completer' | 'soumise' | 'refuse';
+/** '' = ordre par défaut (priorité : à trier d'abord). */
+type OrdreDate = '' | 'date_desc' | 'date_asc';
 
 /** État de la décision en cours de saisie pour une suggestion « À trier » dépliée. */
 interface DecisionSaisie {
@@ -52,6 +54,7 @@ export class TriSuggestionsComponent implements OnInit {
 
   recherche = '';
   statutFiltre: StatutFiltre = '';
+  ordreDate: OrdreDate = '';
 
   /** Ligne « à trier » actuellement dépliée pour saisie de la décision (une à la fois). */
   expandedId: number | null = null;
@@ -78,6 +81,7 @@ export class TriSuggestionsComponent implements OnInit {
     this.reponsesService.getTri({
       statut: this.statutFiltre || undefined,
       search: this.recherche.trim() || undefined,
+      ordre:  this.ordreDate || undefined,
       limit:  this.LIMITE,
       offset: this.offset,
     }).subscribe({
@@ -106,6 +110,20 @@ export class TriSuggestionsComponent implements OnInit {
   rechercher(): void {
     this.offset = 0;
     this.charger();
+  }
+
+  /** Clic sur l'en-tête de date : plus récentes → plus anciennes → ordre par défaut. */
+  basculerOrdreDate(): void {
+    this.ordreDate = this.ordreDate === '' ? 'date_desc'
+                   : this.ordreDate === 'date_desc' ? 'date_asc'
+                   : '';
+    this.rechercher();
+  }
+
+  get ariaSortDate(): 'descending' | 'ascending' | 'none' {
+    return this.ordreDate === 'date_desc' ? 'descending'
+         : this.ordreDate === 'date_asc'  ? 'ascending'
+         : 'none';
   }
 
   /** Déplie/replie le détail complet d'une ligne (toutes les données soumises, plus la
