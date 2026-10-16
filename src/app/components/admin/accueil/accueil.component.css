@@ -371,6 +371,18 @@
 .priority-donut__label { font-size: 0.72rem; color: var(--text-gray, #607386); }
 
 .priority-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+/* Donut ACQ : centrer verticalement une légende qui déborde coupait ses premières lignes
+   (inaccessibles au défilement). Le donut reste fixe ; seule la légende défile, et
+   « safe center » la ramène en haut quand elle dépasse la hauteur du panneau. */
+.panel__body--donut { overflow: hidden; min-height: 0; }
+.panel__body--donut .priority-legend {
+  align-self: stretch;
+  min-height: 0;
+  overflow-y: auto;
+  justify-content: safe center;
+  padding-right: 4px;
+}
 .priority-legend__item {
   display: flex; align-items: center;
   font-family: 'Figtree', sans-serif; font-size: 0.8rem;
