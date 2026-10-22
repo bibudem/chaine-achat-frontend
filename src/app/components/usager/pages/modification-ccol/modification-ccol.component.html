@@ -66,7 +66,7 @@
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
-              <option value="">{{ 'forms-usager.sel-bibliotheque' | translate }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let b of bibliotheques" [value]="b">{{ b }}</option>
             </select>
             <div *ngIf="isInvalid('bibliotheque')" class="invalid-feedback">
@@ -172,7 +172,7 @@
             <label class="form-label" [class.required]="exigeTousLesChamps">{{ 'form-modification-ccol.type-demande' | translate }}</label>
             <select formControlName="precision_demande" class="form-select"
                     [class.is-invalid]="isInvalid('precision_demande')">
-              <option value="">{{ 'form-modification-ccol.sel-type-demande' | translate }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let p of precisionsDemande" [value]="p">{{ p }}</option>
             </select>
             <div *ngIf="isInvalid('precision_demande')" class="invalid-feedback">
@@ -348,8 +348,8 @@
           <div class="col-md-6">
             <label class="form-label">Statut de la demande</label>
             <select formControlName="statut_bibliotheque" class="form-select">
-              <option value="">— Sélectionner —</option>
-              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
+              <option *ngFor="let s of statusOptions" [value]="s.valeur">{{ s.libelle }}</option>
             </select>
             <small class="form-text">
               <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.

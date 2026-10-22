@@ -67,8 +67,6 @@
 
 /* ── Notes d'aide sous les champs ─────────────────────────── */
 .form-text {
-  font-size: var(--typo-label);
-  color: var(--text-gray);
   margin-top: 0.3rem;
 }
 

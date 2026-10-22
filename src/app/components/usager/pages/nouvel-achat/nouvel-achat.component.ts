@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
-import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
+import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
@@ -43,14 +43,7 @@ export class NouvelAchatComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
-  statusOptions: string[] = [
-    'Saisie en cours - En attente',
-    'Saisie en cours – À valider ou compléter',
-    'Saisie en cours – Annuler',
-    'Saisie en cours - Publication à paraître',
-    'À autoriser en bibliothèque',
-    'Soumettre aux ACQ',
-  ];
+  statusOptions = STATUTS_BIBLIOTHEQUE;
 
   derniereTitre: string = '';
   derniereBibliotheque: string = '';

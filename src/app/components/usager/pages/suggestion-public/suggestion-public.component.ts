@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
+import { STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-suggestion-public',
@@ -57,14 +58,7 @@ export class SuggestionPublicComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
-  statusOptions: string[] = [
-    'Saisie en cours - En attente',
-    'Saisie en cours – À valider ou compléter',
-    'Saisie en cours – Annuler',
-    'Saisie en cours - Publication à paraître',
-    'À autoriser en bibliothèque',
-    'Soumettre aux ACQ',
-  ];
+  statusOptions = STATUTS_BIBLIOTHEQUE;
 
   constructor(
     private fb: FormBuilder,

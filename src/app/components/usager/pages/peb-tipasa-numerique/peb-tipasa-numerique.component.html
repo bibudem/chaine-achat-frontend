@@ -66,7 +66,7 @@
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
-              <option value="">{{ 'forms-usager.sel-bibliotheque' | translate }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let b of bibliotheques" [value]="b">{{ b }}</option>
             </select>
             <div *ngIf="isInvalid('bibliotheque')" class="invalid-feedback">
@@ -255,7 +255,7 @@
             <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
-              <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
             </select>
             <div *ngIf="isInvalid('devise_originale')" class="invalid-feedback">
@@ -334,8 +334,8 @@
           <div class="col-md-6">
             <label class="form-label">Statut de la demande</label>
             <select formControlName="statut_bibliotheque" class="form-select">
-              <option value="">— Sélectionner —</option>
-              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
+              <option *ngFor="let s of statusOptions" [value]="s.valeur">{{ s.libelle }}</option>
             </select>
             <small class="form-text">
               <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.

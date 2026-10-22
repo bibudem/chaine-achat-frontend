@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { ConfigService, TauxRates } from '../../../../services/config.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
-import { ListeChoixOptions } from '../../../../lib/ListeChoixOptions';
+import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
 
 @Component({
@@ -50,14 +50,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
   devises = new ListeChoixOptions().devisesOptions;
 
-  statusOptions: string[] = [
-    'Saisie en cours - En attente',
-    'Saisie en cours – À valider ou compléter',
-    'Saisie en cours – Annuler',
-    'Saisie en cours - Publication à paraître',
-    'À autoriser en bibliothèque',
-    'Soumettre aux ACQ',
-  ];
+  statusOptions = STATUTS_BIBLIOTHEQUE;
 
   derniereTitre        = '';
   derniereBibliotheque = '';

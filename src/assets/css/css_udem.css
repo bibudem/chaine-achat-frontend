@@ -10,6 +10,8 @@
   --typo-police:            'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --typo-police-secondaire: 'Lora', Georgia, 'Times New Roman', serif;
 
+  --typo-aide:     0.75rem;   /* 12 px — textes d'aide sous les champs */
+  --couleur-aide:  #66788a;   /* gris des textes d'aide : le plus pâle qui garde un contraste AA (4,5:1) sur blanc */
   --typo-label:    0.875rem;  /* 14 px */
   --typo-texte:    1rem;      /* 16 px */
   --typo-texte-l:  1.125rem;  /* 18 px */
@@ -2401,9 +2403,15 @@ body.sidebar-open { overflow: hidden; }
    (voir TYPOGRAPHIE UdeM en tête de fichier). Les règles globales ci-dessus restent inchangées
    pour l'interface admin. :where() garde la spécificité basse : un style propre à un
    composant usager garde la priorité. */
-:where(html.usager-route) .form-label                { font-size: var(--typo-label); }
-:where(html.usager-route) .form-text                 { font-size: var(--typo-label); }
-:where(html.usager-route) .form-control::placeholder { font-size: var(--typo-texte); }
+/* Libellés en casse de phrase (« Titre du document ») plutôt qu'en majuscules ; placeholders
+   plus petits que le texte saisi, pour les distinguer d'une valeur réelle. */
+:where(html.usager-route) .form-label {
+  font-size: var(--typo-label);
+  text-transform: none;
+  letter-spacing: normal;
+}
+:where(html.usager-route) .form-text                 { font-size: var(--typo-aide); color: var(--couleur-aide); }
+:where(html.usager-route) .form-control::placeholder { font-size: var(--typo-label); }
 
 /* ============================================================
    ÉCRAN DE CONFIRMATION

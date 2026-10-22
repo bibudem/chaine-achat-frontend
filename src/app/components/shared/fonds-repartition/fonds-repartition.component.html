@@ -6,7 +6,7 @@
     <select formControlName="devise_originale" class="form-select"
             [class.is-invalid]="isInvalid(lignes[0], 'devise_originale')"
             (change)="onDeviseChange(lignes[0])">
-      <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+      <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
       <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
     </select>
     <div *ngIf="isInvalid(lignes[0], 'devise_originale')" class="invalid-feedback">
@@ -84,7 +84,7 @@
       <select formControlName="devise_originale" class="form-select"
               [class.is-invalid]="isInvalid(ligne, 'devise_originale')"
               (change)="onDeviseChange(ligne)">
-        <option value="">{{ 'forms-usager.sel-devise' | translate }}</option>
+        <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
         <option *ngFor="let d of devises" [value]="d.code">{{ d.label }}</option>
       </select>
       <div *ngIf="isInvalid(ligne, 'devise_originale')" class="invalid-feedback">

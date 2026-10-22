@@ -9,6 +9,22 @@ export const FORMULAIRE_TYPE_LABELS: Record<string, string> = {
   'Requête ACQ Accessibilité': 'Accessibilité',
 };
 
+// Statut de la demande côté bibliothèque (menu « Statut de la demande » des formulaires).
+// `valeur` = texte stocké en BD et comparé tel quel par le backend (ex. 'Saisie en cours -
+// En attente') : ne pas le modifier. `libelle` = affichage, séparateur uniformisé en
+// demi-cadratin (« – »).
+export const STATUTS_BIBLIOTHEQUE_VALEURS: readonly string[] = [
+  'Saisie en cours - En attente',
+  'Saisie en cours – À valider ou compléter',
+  'Saisie en cours – Annuler',
+  'Saisie en cours - Publication à paraître',
+  'À autoriser en bibliothèque',
+  'Soumettre aux ACQ',
+];
+
+export const STATUTS_BIBLIOTHEQUE: readonly { valeur: string; libelle: string }[] =
+  STATUTS_BIBLIOTHEQUE_VALEURS.map(valeur => ({ valeur, libelle: valeur.replace(/ - /g, ' – ') }));
+
 export function formulaireTypeLabel(value: string | undefined | null): string {
   if (!value) return '';
   return FORMULAIRE_TYPE_LABELS[value] || value;
@@ -48,14 +64,7 @@ export class ListeChoixOptions {
   ];
 
   // Options pour le statut (bibliothèque)
-statusOptions = [
-  'Saisie en cours - En attente',
-  'Saisie en cours – À valider ou compléter',
-  'Saisie en cours – Annuler',
-  'Saisie en cours - Publication à paraître',
-  'À autoriser en bibliothèque',
-  'Soumettre aux ACQ'
-];
+  statusOptions = [...STATUTS_BIBLIOTHEQUE_VALEURS];
 
 
   // Options pour la priorité
