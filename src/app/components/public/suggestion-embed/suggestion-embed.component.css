@@ -85,13 +85,61 @@
 }
 .embed-login p { color: #374151; font-size: var(--typo-texte); }
 
+.embed-login__titre {
+  font-weight: var(--typo-titre-graisse);
+  color: #0B113A;
+  margin-bottom: .35rem;
+}
+
+/* Session : une ligne discrète alignée à droite, sans icône. */
 .embed-session {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-  font-size: var(--typo-texte);
-  color: #374151;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: .4rem;
+  font-size: var(--typo-label);
+  color: #607386;
+  padding-bottom: .6rem;
   margin-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
 }
+.embed-session strong { color: #1f2937; font-weight: 600; }
+.embed-session__sep { color: #cbd5e1; }
+.embed-session__deconnexion {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #00407F;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.embed-session__deconnexion:hover,
+.embed-session__deconnexion:focus-visible { color: #0B113A; }
+
+/* « À noter » : encadré sobre — fond neutre, filet de couleur à gauche. */
+.embed-notice {
+  background: #f8f9fb;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid var(--suggest-mid);
+  border-radius: 8px;
+  padding: .9rem 1.1rem;
+  margin-bottom: 1.25rem;
+  font-size: var(--typo-label);
+  color: #374151;
+  line-height: 1.55;
+}
+.embed-notice__titre {
+  font-size: var(--typo-label);
+  font-weight: var(--typo-titre-graisse);
+  color: #0B113A;
+  margin: 0 0 .4rem;
+}
+.embed-notice ol { margin: 0; padding-left: 1.25rem; }
+.embed-notice li + li { margin-top: .2rem; }
+.embed-notice a { color: #00407F; }
+
+/* Hauteur mesurée pour l'iframe (voir envoyerHauteur) : le composant est un bloc. */
+:host { display: block; }

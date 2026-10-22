@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReponsesService } from '../../../services/reponses.service';
@@ -46,8 +46,15 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './suggestion-embed.component.html',
   styleUrls: ['./suggestion-embed.component.css']
 })
-export class SuggestionEmbedComponent implements OnInit {
+export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
+
+  /** Affiché dans un <iframe> (site des Bibliothèques) : la page hôte porte déjà le titre du
+   *  formulaire — pas d'en-tête ici — et ajuste la hauteur de l'iframe à celle du contenu
+   *  (voir envoyerHauteur), pour éviter une barre de défilement interne. */
+  readonly estEmbarque = (() => { try { return window.self !== window.top; } catch { return true; } })();
+  private observateurHauteur?: ResizeObserver;
+  private derniereHauteur = 0;
   submitted      = false;
   success        = false;
   error          = false;
@@ -66,7 +73,31 @@ export class SuggestionEmbedComponent implements OnInit {
     private fb: FormBuilder,
     private reponsesService: ReponsesService,
     public  authService: AuthService,
+    private hote: ElementRef<HTMLElement>,
   ) {}
+
+  ngAfterViewInit(): void {
+    if (!this.estEmbarque || typeof ResizeObserver === 'undefined') return;
+    // Hauteur du contenu du composant (pas du document : html/body ont height: 100%, qui
+    // suivrait la hauteur de l'iframe elle-même et ne diminuerait jamais).
+    this.observateurHauteur = new ResizeObserver(() => this.envoyerHauteur());
+    this.observateurHauteur.observe(this.hote.nativeElement);
+    this.envoyerHauteur();
+  }
+
+  ngOnDestroy(): void {
+    this.observateurHauteur?.disconnect();
+  }
+
+  /** Message à la page hôte : { type: 'chaine-achat:hauteur', hauteur } — la page hôte règle
+   *  la hauteur de l'iframe (script fourni avec le code d'intégration). Ne contient aucune
+   *  donnée personnelle, d'où la cible '*' (l'adresse du site hôte n'est pas connue ici). */
+  private envoyerHauteur(): void {
+    const hauteur = Math.ceil(this.hote.nativeElement.getBoundingClientRect().height);
+    if (!hauteur || hauteur === this.derniereHauteur) return;
+    this.derniereHauteur = hauteur;
+    window.parent.postMessage({ type: 'chaine-achat:hauteur', hauteur }, '*');
+  }
 
   ngOnInit(): void {
     this.connecte = this.authService.isLoggedIn;

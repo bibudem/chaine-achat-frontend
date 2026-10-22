@@ -6,7 +6,7 @@
 <!-- ══ CONNEXION ══════════════════════════════════════════════ -->
 <div class="form-page form-page--embed" *ngIf="!connecte">
   <div class="form-container">
-    <div class="form-header">
+    <div class="form-header" *ngIf="!estEmbarque">
       <div class="form-header__icon">
         <i class="bi bi-lightbulb"></i>
       </div>
@@ -19,6 +19,7 @@
     </div>
 
     <div class="embed-login">
+      <p class="embed-login__titre">Ce formulaire est réservé à la communauté de l'Université de Montréal.</p>
       <p>Connectez-vous avec votre compte UdeM pour suggérer un achat aux Bibliothèques.
          Une fenêtre de connexion va s'ouvrir.</p>
       <button type="button" class="btn btn-primary" (click)="seConnecter()">
@@ -43,7 +44,7 @@
   <div class="form-container">
 
     <!-- ══ EN-TÊTE ══════════════════════════════════════════ -->
-    <div class="form-header">
+    <div class="form-header" *ngIf="!estEmbarque">
       <div class="form-header__icon">
         <i class="bi bi-lightbulb"></i>
       </div>
@@ -57,16 +58,16 @@
 
     <!-- ══ SESSION ═════════════════════════════════════════ -->
     <div class="embed-session">
-      <span><i class="bi bi-person-check me-1"></i>Connecté·e : <strong>{{ form.get('nom')?.value }}</strong></span>
-      <button type="button" class="btn btn-link btn-sm p-0" (click)="seDeconnecter()">Se déconnecter</button>
+      <span>Connecté·e en tant que <strong>{{ form.get('nom')?.value }}</strong></span>
+      <span class="embed-session__sep" aria-hidden="true">·</span>
+      <button type="button" class="embed-session__deconnexion" (click)="seDeconnecter()">Se déconnecter</button>
     </div>
 
     <!-- ══ NOTICE ══════════════════════════════════════════ -->
-    <div class="alert alert-warning mb-3">
-      <i class="fas fa-lightbulb me-2"></i>
+    <div class="embed-notice">
       <div>
-        <strong>{{ 'form-suggestion.notice-titre' | translate }}</strong>
-        <ol class="mt-2 mb-0">
+        <p class="embed-notice__titre">{{ 'form-suggestion.notice-titre' | translate }}</p>
+        <ol>
           <li>
             {{ 'form-suggestion.notice-1' | translate }}
             <a href="https://umontreal.on.worldcat.org/discovery?lang=fr" target="_blank">
