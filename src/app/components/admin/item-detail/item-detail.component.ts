@@ -53,6 +53,14 @@ export class ItemDetailComponent implements OnInit {
     });
   }
 
+  /** Bouton « TechDoc Tri » (étape du tri d'une suggestion d'achat, en lecture seule sur la
+   *  page de décision) : Admin, TDM et TechDoc, et seulement pour une suggestion d'achat (seul
+   *  type concerné par le tri — même règle qu'isSuggestionAchat() dans item-formulaire). */
+  get peutVoirTri(): boolean {
+    return (this.authService.isAdmin || this.authService.isTdm || this.authService.isTechDoc)
+        && this.item?.formulaire_type === "Suggestion d'achat - Usager";
+  }
+
   onEdit(): void   { this.router.navigate(['/items', this.itemId]); }
   onReturn(): void { this.location.back(); }
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReponsesService } from '../../../services/reponses.service';
 import { AuthService } from '../../../services/auth.service';
+import { STATUT_SUGGESTION_RECUE } from '../../../lib/ListeChoixOptions';
 
 /**
  * Formulaire public de suggestion d'achat — autonome, sans en-tête ni pied de page de
@@ -251,9 +252,9 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
       techdoc_suggestion_transmise: false,
       acq_raison_annulation:        null,
       acq_isbn:                     null,
-      // Pas de contrôle de statut exposé publiquement — la demande attend une révision
-      // interne avant d'être formellement soumise aux ACQ (voir commentaire d'en-tête).
-      statut_bibliotheque:          'Saisie en cours - En attente',
+      // Pas de contrôle de statut exposé publiquement : « Suggestion d’achat reçue », en attente
+      // du tri par l'équipe TechDoc avant d'être formellement soumise aux ACQ (voir l'en-tête).
+      statut_bibliotheque:          STATUT_SUGGESTION_RECUE,
       bibliotheque_note_interne:    null,
     };
 

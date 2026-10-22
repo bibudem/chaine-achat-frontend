@@ -250,6 +250,12 @@ export class ItemFormulaireService {
     return this.getById(id);
   }
 
+  /** Étape de fin « Suggestion d'achat transmise en bibliothèque » (onglet TechDoc Tri, Admin/SuperAdmin). */
+  majTechdocTransmise(id: number, transmise: boolean): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.url}/${id}/techdoc-transmise`,
+      { techdoc_suggestion_transmise: transmise }, this.httpOptions);
+  }
+
   update(item: any): Observable<ApiResponse<Item>> {
     if (!item.item_id) {
       return throwError(() => new Error("ID de l'item manquant pour la mise à jour"));

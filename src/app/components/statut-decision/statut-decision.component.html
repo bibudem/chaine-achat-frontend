@@ -107,14 +107,22 @@
             <!-- Navigation par onglets — Décision ACQ / TDM – Choix de notice (voir
                  item-formulaire.component.html pour le même pattern). -->
             <ul class="nav nav-tabs mb-3" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button type="button" class="nav-link" [class.active]="activeTab === 'acq'"
+              <!-- TechDoc Tri : étape du tri d'une suggestion d'achat, en lecture seule (Admin,
+                   TDM, TechDoc — voir voirOngletTri). Seul onglet visible pour TechDoc. -->
+              <li class="nav-item" role="presentation" *ngIf="voirOngletTri">
+                <button type="button" class="nav-link" [class.active]="ongletActif === 'tri'"
+                        (click)="setActiveTab('tri')">
+                  <i class="bi bi-funnel me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+                </button>
+              </li>
+              <li class="nav-item" role="presentation" *ngIf="!techDocSeul">
+                <button type="button" class="nav-link" [class.active]="ongletActif === 'acq'"
                         (click)="setActiveTab('acq')">
                   <i class="bi bi-clipboard-check me-1"></i>{{ 'acq-decision.section-decision' | translate }}
                 </button>
               </li>
-              <li class="nav-item" role="presentation">
-                <button type="button" class="nav-link" [class.active]="activeTab === 'tdm'"
+              <li class="nav-item" role="presentation" *ngIf="!techDocSeul">
+                <button type="button" class="nav-link" [class.active]="ongletActif === 'tdm'"
                         (click)="setActiveTab('tdm')">
                   <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
                 </button>
@@ -123,19 +131,59 @@
 
             <div class="tab-content">
 
-            <!-- ════════ ONGLET : DÉCISION ACQ ════════ -->
-            <div class="tab-pane" [class.show]="activeTab === 'acq'" [class.active]="activeTab === 'acq'">
+            <!-- ════════ ONGLET : TECHDOC TRI — mode visualisation (champs désactivés) ════════ -->
+            <div class="tab-pane" *ngIf="voirOngletTri"
+                 [class.show]="ongletActif === 'tri'" [class.active]="ongletActif === 'tri'">
 
-            <!-- ── Tri par l'équipe TechDoc (suggestion publique uniquement) ── -->
-            <div class="sd-tri-info mb-4" *ngIf="item && item.tri_statut">
-              <i class="bi bi-inboxes sd-tri-info__icon"></i>
-              <div class="sd-tri-info__body">
-                <strong>{{ 'item-detail.section-tri-techdoc' | translate }}</strong>
-                <span *ngIf="item.tri_par_nom || item.tri_par"> — {{ item.tri_par_nom || item.tri_par }}</span>
-                <span *ngIf="item.tri_date"> · {{ item.tri_date | date:'d MMM y' }}</span>
-                <div class="sd-tri-info__comment" *ngIf="item.tri_commentaire">« {{ item.tri_commentaire }} »</div>
+              <!-- Décision de tri (tbl_reponses.tri_*) -->
+              <div class="sd-tri-decision mb-4"
+                   [class.sd-tri-decision--accepte]="item?.tri_statut === 'accepte'"
+                   [class.sd-tri-decision--refuse]="item?.tri_statut === 'refuse'">
+                <i class="bi me-2"
+                   [class.bi-check-circle-fill]="item?.tri_statut === 'accepte'"
+                   [class.bi-x-circle-fill]="item?.tri_statut === 'refuse'"
+                   [class.bi-hourglass-split]="!item?.tri_statut"></i>
+                <div>
+                  <strong>
+                    {{ item?.tri_statut === 'accepte' ? 'Suggestion acceptée'
+                       : item?.tri_statut === 'refuse' ? 'Suggestion refusée' : 'Aucune décision de tri enregistrée' }}
+                  </strong>
+                  <span *ngIf="item?.tri_par_nom || item?.tri_par"> — {{ item?.tri_par_nom || item?.tri_par }}</span>
+                  <span *ngIf="item?.tri_date"> · {{ item?.tri_date | date:'d MMM y, HH:mm' }}</span>
+                  <div class="sd-tri-decision__comment" *ngIf="item?.tri_commentaire">
+                    Commentaire au demandeur : « {{ item?.tri_commentaire }} »
+                  </div>
+                </div>
               </div>
-            </div>
+
+              <h3 class="sd-tri-titre sd-tri-titre--section">
+                <i class="bi bi-funnel me-2"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+              </h3>
+              <div class="sd-tri-transmise" [class.sd-tri-transmise--actif]="item?.techdoc_suggestion_transmise">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" role="switch" id="sd-tri-transmise"
+                         [checked]="!!item?.techdoc_suggestion_transmise"
+                         [disabled]="!peutModifierTransmise || enregistrementTransmise"
+                         (change)="basculerTransmise($event)">
+                  <label class="form-check-label" for="sd-tri-transmise">
+                    {{ 'item-formulaire.transmis-techdoc' | translate }}
+                  </label>
+                  <span *ngIf="enregistrementTransmise" class="spinner-border spinner-border-sm ms-2" role="status"></span>
+                </div>
+                <small class="text-danger d-block mt-1" *ngIf="erreurTransmise">
+                  <i class="bi bi-exclamation-triangle me-1"></i>{{ erreurTransmise }}
+                </small>
+                <small class="text-muted d-block mt-1">
+                  <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.transmis-techdoc-hint' | translate }}
+                </small>
+              </div>
+              <label class="form-label mt-3" for="sd-tri-notes">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
+              <textarea id="sd-tri-notes" class="form-control sd-tri-lecture" rows="4" disabled
+                        [value]="item?.techdoc_tri_notes || ''"></textarea>
+            </div><!-- /tab-pane tri -->
+
+            <!-- ════════ ONGLET : DÉCISION ACQ ════════ -->
+            <div class="tab-pane" [class.show]="ongletActif === 'acq'" [class.active]="ongletActif === 'acq'">
 
             <!-- Suivi ACQ + Statut ACQ + Création de notice TDM (Nouvel achat unique, Nouvel abonnement, Modification CCOL, PEB Tipasa numérique, Suggestion) + Bordereau imprimé (Nouvel achat unique, Suggestion) -->
             <div class="row g-3 mb-4">
@@ -250,6 +298,15 @@
               </div>
             </div>
 
+            <!-- Note interne de la bibliothèque — lecture seule, contexte pour le suivi ACQ -->
+            <div class="mb-4">
+              <label for="sd-acq-note-interne-bib" class="form-label fw-semibold">
+                {{ 'item-formulaire.note-interne' | translate }}
+              </label>
+              <textarea id="sd-acq-note-interne-bib" class="form-control sd-tri-lecture" rows="3" disabled
+                        [value]="item?.bibliotheque_note_interne || ''"></textarea>
+            </div>
+
             <!-- Note ACQ — toujours visible, juste avant la section TDM -->
             <div class="mb-4">
               <label for="note_acq" class="form-label fw-semibold">
@@ -267,7 +324,7 @@
 
             <!-- ════════ ONGLET : TDM – CHOIX DE NOTICE — visible uniquement si Création de
                  notice TDM = Oui ════════ -->
-            <div class="tab-pane" [class.show]="activeTab === 'tdm'" [class.active]="activeTab === 'tdm'">
+            <div class="tab-pane" [class.show]="ongletActif === 'tdm'" [class.active]="ongletActif === 'tdm'">
               <ng-container *ngIf="form.get('creation_notice_dtdm')?.value === true; else aucuneNoticeTdm">
                 <div class="row g-3 mb-4">
                   <div class="col-md-4">
@@ -304,7 +361,7 @@
 
             <!-- Aperçu + Notifications côte à côte — la décision/notification ACQ ne concerne
                  pas le TDM, qui n'a accès qu'en lecture à ces champs. -->
-            <div class="row g-3 align-items-stretch" *ngIf="!readOnlyAcq">
+            <div class="row g-3 align-items-stretch" *ngIf="!readOnlyAcq && ongletActif === 'acq'">
               <div class="col-md-6"
                    *ngIf="notifTargets.length > 0 && form.get('suivi_acq')?.value">
                 <div class="sd-email-preview h-100">
@@ -365,7 +422,8 @@
           </div><!-- /p-4 -->
 
           <!-- Actions -->
-          <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 py-3 px-4">
+          <!-- Onglet TechDoc Tri en lecture seule : rien à enregistrer. -->
+          <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 py-3 px-4" *ngIf="ongletActif !== 'tri'">
             <button type="button" class="btn acq-btn-outline"
                     [disabled]="submitting || form.invalid"
                     (click)="submitForm(false)">
@@ -377,7 +435,7 @@
                 {{ 'acq-decision.enregistrement' | translate }}
               </span>
             </button>
-            <button type="button" class="btn acq-btn-primary" *ngIf="!readOnlyAcq"
+            <button type="button" class="btn acq-btn-primary" *ngIf="!readOnlyAcq && ongletActif === 'acq'"
                     [disabled]="submitting || form.invalid || !hasNotifEmail"
                     [title]="!hasNotifEmail ? 'Aucun courriel usager enregistré pour cette demande' : ''"
                     (click)="submitForm(true)">
@@ -498,6 +556,8 @@
                 </td>
               </tr>
               <tr *ngIf="item.statut_bibliotheque"><th>{{ 'acq-decision.col-statut-bib' | translate }}</th><td>{{ item.statut_bibliotheque }}</td></tr>
+              <tr *ngIf="item.bibliotheque_note_interne"><th>{{ 'item-formulaire.note-interne' | translate }}</th><td class="fst-italic text-muted">{{ item.bibliotheque_note_interne }}</td></tr>
+              <tr *ngIf="item.saisie_par_nom && item.saisie_par_nom !== item.demandeur"><th>Saisie par</th><td>{{ item.saisie_par_nom }}<span *ngIf="item.saisie_par_courriel" class="d-block text-muted small">{{ item.saisie_par_courriel }}</span></td></tr>
               <tr *ngIf="item.date_creation"><th>{{ 'acq-decision.col-date-soumission' | translate }}</th><td>{{ item.date_creation | date:'yyyy-MM-dd HH:mm' }}</td></tr>
               <tr *ngIf="item.projet_special"><th>{{ 'acq-decision.col-projet-special-bib' | translate }}</th><td>{{ item.projet_special }}</td></tr>
 
@@ -512,6 +572,14 @@
                 <tr *ngIf="item.aviser_reservation"><th>{{ 'acq-decision.col-reserver-arrivee' | translate }}</th><td>{{ 'item-formulaire.oui' | translate }}</td></tr>
                 <tr *ngIf="item.aviser_reception"><th>{{ 'acq-decision.col-aviser-reception-bool' | translate }}</th><td>{{ 'item-formulaire.oui' | translate }}</td></tr>
                 <tr *ngIf="item.acq_isbn"><th>{{ 'acq-decision.col-isbn-acq' | translate }}</th><td>{{ item.acq_isbn }}</td></tr>
+                <tr *ngIf="item.reserve_cours">
+                  <th>{{ 'acq-decision.col-reserve-cours' | translate }}</th>
+                  <td>
+                    {{ item.reserve_cours_sigle || '—' }}
+                    <span *ngIf="item.reserve_cours_session"> — {{ item.reserve_cours_session }}</span>
+                    <span *ngIf="item.reserve_cours_enseignant" class="d-block text-muted small">{{ item.reserve_cours_enseignant }}</span>
+                  </td>
+                </tr>
                 <tr *ngIf="item.acq_raison_annulation"><th>{{ 'acq-decision.col-raison-annulation' | translate }}</th><td>{{ item.acq_raison_annulation }}</td></tr>
               </ng-container>
 
@@ -600,9 +668,14 @@
 
               <tr *ngIf="item.note_commentaire"><th>{{ 'acq-decision.col-note-commentaire' | translate }}</th><td class="fst-italic text-muted">{{ item.note_commentaire }}</td></tr>
               <tr *ngIf="isSuggestion && item.note_usager"><th>{{ 'acq-decision.col-note-usager' | translate }}</th><td class="fst-italic text-muted">{{ item.note_usager }}</td></tr>
+              <tr *ngIf="item.date_modification"><th>Dernière modification</th><td>{{ item.date_modification | date:'yyyy-MM-dd HH:mm' }}<span *ngIf="item.utilisateur_modification"> — {{ item.utilisateur_modification }}</span></td></tr>
 
             </tbody>
           </table>
+          <div class="px-3 py-3 border-top">
+            <app-piece-jointe-gestion [itemId]="itemId" [reponseId]="itemId ? null : reponseId" [readonlyMode]="true">
+            </app-piece-jointe-gestion>
+          </div>
         </div>
 
         <div class="modal-footer">

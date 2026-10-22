@@ -29,6 +29,12 @@
         <button class="btn btn-outline-secondary btn-sm" (click)="onReturn()">
           <i class="bi bi-arrow-left"></i> {{ 'item-detail.retour' | translate }}
         </button>
+        <!-- TechDoc Tri : étape du tri d'une suggestion d'achat, en lecture seule — Admin, TDM
+             et TechDoc (voir peutVoirTri). Ouvre la page de décision sur l'onglet « TechDoc Tri ». -->
+        <button *ngIf="peutVoirTri" type="button" class="btn btn-outline-secondary btn-sm"
+                [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tri'}">
+          <i class="bi bi-funnel me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+        </button>
         <!-- Décision ACQ / TDM — Choix de notice : Admin/SuperAdmin uniquement ici. Le TDM
              traite ses items depuis le portail usager (/usager/tdm), pas depuis l'espace
              système ; Employé/TechDoc n'ont de toute façon jamais eu ces boutons. -->
@@ -37,7 +43,7 @@
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
         <button *ngIf="authService.isAdmin && item.creation_notice_dtdm != null"
-                class="btn btn-outline-success btn-sm"
+                class="btn btn-outline-secondary btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tdm'}">
           <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
         </button>

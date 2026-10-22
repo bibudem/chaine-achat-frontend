@@ -25,6 +25,17 @@ export const STATUTS_BIBLIOTHEQUE_VALEURS: readonly string[] = [
 export const STATUTS_BIBLIOTHEQUE: readonly { valeur: string; libelle: string }[] =
   STATUTS_BIBLIOTHEQUE_VALEURS.map(valeur => ({ valeur, libelle: valeur.replace(/ - /g, ' – ') }));
 
+// Statut par défaut d'une suggestion envoyée par la communauté UdeM (/suggestion-public) —
+// même valeur imposée par le backend (ReponsesController.createSuggestionPublique). Propre à
+// la suggestion d'achat : proposé seulement dans le formulaire de suggestion (complétion par
+// l'équipe TechDoc) et dans la fiche d'item admin, pas dans les 5 autres formulaires.
+export const STATUT_SUGGESTION_RECUE = 'Suggestion d’achat reçue';
+
+export const STATUTS_BIBLIOTHEQUE_SUGGESTION: readonly { valeur: string; libelle: string }[] = [
+  { valeur: STATUT_SUGGESTION_RECUE, libelle: STATUT_SUGGESTION_RECUE },
+  ...STATUTS_BIBLIOTHEQUE,
+];
+
 export function formulaireTypeLabel(value: string | undefined | null): string {
   if (!value) return '';
   return FORMULAIRE_TYPE_LABELS[value] || value;
@@ -63,8 +74,9 @@ export class ListeChoixOptions {
     { label: 'Autre',                       code: 'Autre' }
   ];
 
-  // Options pour le statut (bibliothèque)
-  statusOptions = [...STATUTS_BIBLIOTHEQUE_VALEURS];
+  // Options pour le statut (bibliothèque) — fiche d'item admin, tous types confondus : inclut
+  // le statut des suggestions publiques pour qu'un item qui le porte s'affiche correctement.
+  statusOptions = [STATUT_SUGGESTION_RECUE, ...STATUTS_BIBLIOTHEQUE_VALEURS];
 
 
   // Options pour la priorité

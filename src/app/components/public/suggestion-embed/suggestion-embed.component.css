@@ -8,7 +8,10 @@
 .form-page--embed {
   min-height: 0;
   background: transparent;
-  padding: 1rem 0;
+  padding: 1rem 1.5rem;
+}
+@media (max-width: 576px) {
+  .form-page--embed { padding: 1rem .75rem; }
 }
 
 /* ── En-tête clair ─────────────────────────────────────────── */

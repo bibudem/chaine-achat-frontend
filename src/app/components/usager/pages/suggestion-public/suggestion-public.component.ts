@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
-import { STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
+import { STATUTS_BIBLIOTHEQUE_SUGGESTION } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-suggestion-public',
@@ -58,7 +58,9 @@ export class SuggestionPublicComponent implements OnInit {
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
-  statusOptions = STATUTS_BIBLIOTHEQUE;
+  // Inclut « Suggestion d’achat reçue » (statut des suggestions publiques, que l'équipe TechDoc
+  // complète ici) — voir STATUTS_BIBLIOTHEQUE_SUGGESTION.
+  statusOptions = STATUTS_BIBLIOTHEQUE_SUGGESTION;
 
   constructor(
     private fb: FormBuilder,

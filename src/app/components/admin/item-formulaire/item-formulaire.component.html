@@ -46,6 +46,15 @@
           {{ 'item-formulaire.onglet-specifique' | translate }}
         </button>
       </li>
+      <!-- TechDoc Tri : pour toute Suggestion d'achat, pas seulement celles venues du circuit
+           public (voir item.tri_statut, affiché en lecture seule à l'intérieur si présent).
+           Ordre des étapes : Tri → ACQ → TDM (même ordre que statut-decision). -->
+      <li class="nav-item" role="presentation" *ngIf="isSuggestionAchat()">
+        <button class="nav-link" [class.active]="activeTab === 'tri-techdoc'"
+                type="button" (click)="setActiveTab('tri-techdoc')">
+          <i class="bi bi-funnel me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+        </button>
+      </li>
       <li class="nav-item" role="presentation" *ngIf="selectedFormulaireType && showDecisionAcqTab">
         <button class="nav-link" [class.active]="activeTab === 'acq-decision'"
                 type="button" (click)="setActiveTab('acq-decision')">
@@ -56,14 +65,6 @@
         <button class="nav-link" [class.active]="activeTab === 'tdm-choix-notice'"
                 type="button" (click)="setActiveTab('tdm-choix-notice')">
           <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
-        </button>
-      </li>
-      <!-- TechDoc Tri : pour toute Suggestion d'achat, pas seulement celles venues du circuit
-           public (voir item.tri_statut, affiché en lecture seule à l'intérieur si présent). -->
-      <li class="nav-item" role="presentation" *ngIf="isSuggestionAchat()">
-        <button class="nav-link" [class.active]="activeTab === 'tri-techdoc'"
-                type="button" (click)="setActiveTab('tri-techdoc')">
-          <i class="bi bi-inboxes me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
         </button>
       </li>
     </ul>

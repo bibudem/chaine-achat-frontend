@@ -37,10 +37,70 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   emailSent = false;
   options = new ListeChoixOptions();
-  /** Onglet affiché — « acq » (Décision ACQ) ou « tdm » (TDM – Choix de notice), piloté par
-   *  ?tab= (voir item-detail.component.ts, bouton "TDM – Choix de notice"). */
-  activeTab: 'acq' | 'tdm' = 'acq';
-  setActiveTab(tab: 'acq' | 'tdm'): void { this.activeTab = tab; }
+  /** Onglet demandé — « tri » (TechDoc Tri), « acq » (Décision ACQ) ou « tdm » (TDM – Choix de
+   *  notice), piloté par ?tab= (voir item-detail.component.html, boutons de la barre
+   *  d'actions). L'onglet réellement affiché est ongletActif (règles d'accès ci-dessous). */
+  activeTab: 'tri' | 'acq' | 'tdm' = 'acq';
+  setActiveTab(tab: 'tri' | 'acq' | 'tdm'): void { this.activeTab = tab; }
+
+  /** Onglet « TechDoc Tri » (étape du tri d'une suggestion d'achat, en lecture seule) :
+   *  Admin, TDM et TechDoc, pour une suggestion d'achat seulement. */
+  get voirOngletTri(): boolean {
+    return (this.authService.isAdmin || this.authService.isTdm || this.authService.isTechDoc)
+        && this.isSuggestion;
+  }
+  /** TechDoc : accès à l'onglet de tri uniquement (ni décision ACQ, ni TDM, ni enregistrement). */
+  get techDocSeul(): boolean { return this.authService.isTechDoc; }
+
+  get ongletActif(): 'tri' | 'acq' | 'tdm' {
+    if (this.techDocSeul) return 'tri';
+    if (this.activeTab === 'tri' && !this.voirOngletTri) return 'acq';
+    return this.activeTab;
+  }
+
+  /** Valeur stockée → libellé (séparateur uniformisé « – », comme les menus de statut). */
+  /** « Suggestion d'achat transmise en bibliothèque » = étape de fin de la suggestion :
+   *  modifiable par Admin/SuperAdmin seulement (isAdmin inclut SuperAdmin), lecture seule ailleurs. */
+  get peutModifierTransmise(): boolean { return this.authService.isAdmin; }
+
+  enregistrementTransmise = false;
+  erreurTransmise: string | null = null;
+
+  basculerTransmise(event: Event): void {
+    const input     = event.target as HTMLInputElement;
+    const transmise = input.checked;
+    const precedent = !!this.item?.techdoc_suggestion_transmise;
+    if (!this.item || this.enregistrementTransmise) { input.checked = precedent; return; }
+
+    // Item matérialisé → tbl_suggestion_achat ; sinon la réponse d'origine (tbl_reponses.reponses).
+    const appel$ = this.itemId
+      ? this.itemService.majTechdocTransmise(this.itemId, transmise)
+      : this.reponseId
+        ? this.reponsesService.majTechdocTransmise(this.reponseId, transmise)
+        : null;
+    if (!appel$) { input.checked = precedent; return; }
+
+    this.enregistrementTransmise = true;
+    this.erreurTransmise = null;
+    this.item.techdoc_suggestion_transmise = transmise;
+    appel$.subscribe({
+      next: (res: any) => {
+        this.enregistrementTransmise = false;
+        if (!res?.success) this.annulerTransmise(input, precedent);
+      },
+      error: () => {
+        this.enregistrementTransmise = false;
+        this.annulerTransmise(input, precedent);
+      }
+    });
+  }
+
+  private annulerTransmise(input: HTMLInputElement, precedent: boolean): void {
+    if (this.item) this.item.techdoc_suggestion_transmise = precedent;
+    input.checked = precedent;
+    this.erreurTransmise = "La modification n'a pas pu être enregistrée. Réessayez.";
+  }
+
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
   itemExisteDansItems = false;
@@ -116,7 +176,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       const legacyIdParam  = Number(params.get('id'))         || null; // compat ancien lien
       const itemIdParam    = Number(params.get('item_id'))    || null; // import / reponse-created
 
-      this.activeTab = params.get('tab') === 'tdm' ? 'tdm' : 'acq';
+      const tab = params.get('tab');
+      this.activeTab = tab === 'tdm' ? 'tdm' : tab === 'tri' ? 'tri' : 'acq';
 
       this.reponseId           = null;
       this.itemId              = null;
@@ -326,10 +387,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       quantite:                       sd.quantite,
       projets_speciaux:               sd.projets_speciaux,
       type_monographie:               sd.type_monographie    || bd.type_monographie,
-      reserve_cours:                  sd.reserve_cours,
-      reserve_cours_sigle:            sd.reserve_cours_sigle,
-      reserve_cours_session:          sd.reserve_cours_session,
-      reserve_cours_enseignant:       sd.reserve_cours_enseignant,
+      reserve_cours:                  sd.reserve_cours ?? flat.reserve_cours,
+      reserve_cours_sigle:            sd.reserve_cours_sigle || flat.reserve_cours_sigle,
+      reserve_cours_session:          sd.reserve_cours_session || flat.reserve_cours_session,
+      reserve_cours_enseignant:       sd.reserve_cours_enseignant || flat.reserve_cours_enseignant,
       bordereau_imprime:              sd.bordereau_imprime,
       precision_demande:              sd.precision_demande,
       numero_oclc:                    sd.numero_oclc,
@@ -353,6 +414,12 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       tri_par:                        r.tri_par,
       tri_par_nom:                    r.tri_par_nom,
       tri_date:                       r.tri_date,
+      // Suivi TechDoc saisi avec la décision de tri — reporté dans tbl_reponses.reponses
+      // (voir decisionTri, controllers/reponses.js) tant que l'item n'est pas créé.
+      usager_nom:                     flat.usager_nom || sd.usager_nom || r.usager_nom,
+      bibliotheque_note_interne:      f(bd.bibliotheque_note_interne, 'bibliotheque_note_interne'),
+      techdoc_suggestion_transmise:   flat.techdoc_suggestion_transmise ?? sd.techdoc_suggestion_transmise,
+      techdoc_tri_notes:              flat.techdoc_tri_notes || sd.techdoc_tri_notes,
     } as Item;
     const acq = this.applyAcqDefaults(
       statutBibliotheque, undefined, undefined,
