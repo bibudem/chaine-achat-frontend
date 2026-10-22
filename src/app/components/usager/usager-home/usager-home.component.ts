@@ -120,9 +120,9 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
-    // Taux de change réservé à l'Employé (personnel des bibliothèques) — non pertinent pour
-    // le reste de la communauté UdeM (rôle Usager).
-    if (this.authService.isEmploye) {
+    // Taux sécurisé (lecture seule) pour le personnel des bibliothèques (Employé, TechDoc) —
+    // non pertinent pour le reste de la communauté UdeM (rôle Usager).
+    if (this.authService.isUsagerSpace) {
       this.tauxDevisesService.getActuelle().subscribe({
         next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
         error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }

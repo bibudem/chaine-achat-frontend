@@ -19,7 +19,13 @@
   margin-bottom: 1.25rem;
 }
 
-.uh-header__taux { margin-left: auto; }
+/* Puce du taux sécurisé USD : à droite de l'en-tête, alignée sur la ligne « Bonjour », en
+   format réduit. */
+.uh-header__taux { margin-left: auto; align-self: flex-start; padding: 4px 8px 4px 6px; gap: 6px; }
+.uh-header__taux .info-chip__clickable { gap: 6px; }
+.uh-header__taux .info-chip__icon  { width: 22px; height: 22px; font-size: .75rem; border-radius: 5px; }
+.uh-header__taux .info-chip__label { font-size: .75rem; }
+.uh-header__taux .info-chip__val--lg { font-size: var(--typo-label); letter-spacing: 0; }
 
 /* ── Chip : Taux de change (lecture seule) ── */
 .info-chip {

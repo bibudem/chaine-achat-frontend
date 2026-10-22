@@ -229,9 +229,9 @@ export class FaqComponent {
     },
     {
       question: 'Où consulter les taux de change utilisés pour la conversion ?',
-      answerHtml: `Sur l'accueil du portail, l'encadré <strong>Taux de change</strong> (en haut de la page) affiche la période en vigueur et le taux du dollar américain. Cliquez dessus pour voir le détail de toutes les devises.
+      answerHtml: `Sur l'accueil du portail, l'encadré <strong>Taux sécurisé USD</strong>, en haut à droite, affiche le taux du dollar américain pour la période en vigueur (lecture seule). Cliquez dessus pour voir le détail de toutes les devises.
         <br><br>Ce sont ces taux qui servent au calcul automatique du <strong>Prix en CAD</strong> dans les formulaires.`,
-      answer: '', open: false, roles: ['Employe']
+      answer: '', open: false, roles: DEMANDEURS
     },
     {
       question: 'Comment joindre un fichier à ma demande ?',

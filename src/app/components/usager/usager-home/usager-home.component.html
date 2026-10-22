@@ -15,16 +15,16 @@
       </p>
     </div>
 
-    <!-- ── Chip : Taux de change (lecture seule, sans gestion) — réservé à l'Employé,
-         pas pertinent pour le reste de la communauté UdeM (rôle Usager). ── -->
-    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" *ngIf="authService.isEmploye" [class.info-chip--open]="showTauxDetail">
+    <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — personnel des
+         bibliothèques (Employé, TechDoc), à droite de l'en-tête. ── -->
+    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" *ngIf="authService.isUsagerSpace" [class.info-chip--open]="showTauxDetail">
       <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
         <div class="info-chip__icon">
           <i class="bi bi-currency-exchange"></i>
         </div>
         <div class="info-chip__body">
           <span class="info-chip__label">
-            {{ 'accueil.taux-change' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
+            {{ 'accueil.taux-securise-usd' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
             <i class="bi tdv-chevron" [class.bi-chevron-down]="!showTauxDetail" [class.bi-chevron-up]="showTauxDetail"></i>
           </span>
           <span class="info-chip__val info-chip__val--lg" *ngIf="tauxActuels?.taux?.['USD'] as usd; else pasDeTauxPrincipal">
