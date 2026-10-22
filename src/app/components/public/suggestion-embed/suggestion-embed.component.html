@@ -13,27 +13,25 @@
       <div>
         <h1 class="form-header__title">{{ 'form-suggestion.titre' | translate }}</h1>
         <p class="form-header__subtitle mt-neg-20">
-          Ce formulaire est réservé à la communauté de l'Université de Montréal.
+          {{ 'form-suggestion.embed-reserve-communaute' | translate }}
         </p>
       </div>
     </div>
 
     <div class="embed-login">
-      <p class="embed-login__titre">Ce formulaire est réservé à la communauté de l'Université de Montréal.</p>
-      <p>Connectez-vous avec votre compte UdeM pour suggérer un achat aux Bibliothèques.
-         Une fenêtre de connexion va s'ouvrir.</p>
+      <p class="embed-login__titre">{{ 'form-suggestion.embed-reserve-communaute' | translate }}</p>
+      <p>{{ 'form-suggestion.embed-connexion-texte' | translate }}</p>
       <button type="button" class="btn btn-primary" (click)="seConnecter()">
         <span *ngIf="connexionEnCours" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
         <i *ngIf="!connexionEnCours" class="bi bi-box-arrow-in-right me-1"></i>
-        {{ connexionEnCours ? 'Connexion en cours…' : 'Se connecter avec mon compte UdeM' }}
+        {{ (connexionEnCours ? 'form-suggestion.embed-connexion-en-cours' : 'form-suggestion.embed-btn-connexion') | translate }}
       </button>
       <p *ngIf="connexionEnCours" class="form-text mt-2 mb-0">
-        Terminez la connexion dans la fenêtre qui s'est ouverte. Vous ne la voyez pas&nbsp;?
-        Cliquez de nouveau sur le bouton.
+        {{ 'form-suggestion.embed-connexion-aide' | translate }}
       </p>
       <div *ngIf="popupBloquee" class="alert alert-warning mt-3 mb-0" role="alert">
-        La fenêtre de connexion n'a pas pu s'ouvrir. Autorisez les fenêtres contextuelles pour ce
-        site, ou <a [href]="urlPleinePage" target="_blank" rel="noopener">ouvrez le formulaire dans un nouvel onglet</a>.
+        {{ 'form-suggestion.embed-popup-bloquee' | translate }}
+        <a [href]="urlPleinePage" target="_blank" rel="noopener">{{ 'form-suggestion.embed-popup-lien' | translate }}</a>.
       </div>
     </div>
   </div>
@@ -58,9 +56,9 @@
 
     <!-- ══ SESSION ═════════════════════════════════════════ -->
     <div class="embed-session">
-      <span>Connecté·e en tant que <strong>{{ form.get('nom')?.value }}</strong></span>
+      <span>{{ 'form-suggestion.embed-connecte-en-tant-que' | translate }} <strong>{{ form.get('nom')?.value }}</strong></span>
       <span class="embed-session__sep" aria-hidden="true">·</span>
-      <button type="button" class="embed-session__deconnexion" (click)="seDeconnecter()">Se déconnecter</button>
+      <button type="button" class="embed-session__deconnexion" (click)="seDeconnecter()">{{ 'form-suggestion.embed-deconnexion' | translate }}</button>
     </div>
 
     <!-- ══ NOTICE ══════════════════════════════════════════ -->
@@ -108,14 +106,7 @@
             <select formControlName="statut" class="form-select"
                     [class.is-invalid]="submitted && f['statut'].invalid">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
-              <option value="Étudiant 1er cycle">Étudiant 1er cycle</option>
-              <option value="Étudiant 2e cycle">Étudiant 2e cycle</option>
-              <option value="Étudiant 3e cycle">Étudiant 3e cycle</option>
-              <option value="Professeur">Professeur</option>
-              <option value="Chargé de cours">Chargé de cours</option>
-              <option value="Chercheur">Chercheur</option>
-              <option value="Personnel">Personnel</option>
-              <option value="Autre">Autre</option>
+              <option *ngFor="let s of statutsUsager" [value]="s.valeur">{{ s.cle | translate }}</option>
             </select>
             <div *ngIf="submitted && f['statut'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
@@ -126,7 +117,7 @@
             <label class="form-label required">{{ 'form-suggestion.faculte' | translate }}</label>
             <input type="text" formControlName="usager_faculte" class="form-control"
                    [class.is-invalid]="submitted && f['usager_faculte'].invalid"
-                   placeholder="Ex : Faculté des sciences">
+                   [placeholder]="'form-suggestion.faculte-placeholder' | translate">
             <div *ngIf="submitted && f['usager_faculte'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
@@ -150,7 +141,7 @@
             <select formControlName="type_document" class="form-select"
                     [class.is-invalid]="submitted && f['type_document'].invalid">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
-              <option *ngFor="let t of typesDocument" [value]="t">{{ t }}</option>
+              <option *ngFor="let t of typesDocument" [value]="t.valeur">{{ t.cle | translate }}</option>
             </select>
             <div *ngIf="submitted && f['type_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
@@ -161,7 +152,7 @@
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="submitted && f['titre_document'].invalid"
-                   placeholder="Titre complet du document suggéré">
+                   [placeholder]="'form-suggestion.titre-placeholder' | translate">
             <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
@@ -206,7 +197,7 @@
             <label class="form-label required">{{ 'form-suggestion.source-internet' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="(submitted && f['source_information'].invalid) || (submitted && form.hasError('anneeOuSourceRequis'))"
-                   placeholder="https://...">
+                   [placeholder]="'form-suggestion.source-placeholder' | translate">
             <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.source-invalid' | translate }}
             </div>
@@ -223,7 +214,7 @@
             <label class="form-label">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="submitted && f['isbn_issn'].invalid"
-                   placeholder="Ex : 9782070360024"
+                   [placeholder]="'form-suggestion.isbn-placeholder' | translate"
                    (input)="stripDashes($event)">
             <div *ngIf="submitted && f['isbn_issn'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
@@ -288,17 +279,17 @@
                 <div class="col-md-4">
                   <label class="form-label">{{ 'form-suggestion.sigle-cours' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_sigle" class="form-control"
-                         placeholder="Ex : INF1234">
+                         [placeholder]="'form-suggestion.sigle-placeholder' | translate">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label">{{ 'form-suggestion.session' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_session" class="form-control"
-                         placeholder="Ex : Automne 2025">
+                         [placeholder]="'form-suggestion.session-placeholder' | translate">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label">{{ 'form-suggestion.enseignant' | translate }}</label>
                   <input type="text" formControlName="reserve_cours_enseignant" class="form-control"
-                         placeholder="Prénom Nom">
+                         [placeholder]="'form-suggestion.enseignant-placeholder' | translate">
                 </div>
               </div>
             </div>
@@ -309,9 +300,9 @@
       <!-- ERREUR -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible mt-3" role="alert">
         <i class="fas fa-exclamation-circle me-2"></i>
-        Une erreur est survenue. Veuillez réessayer ou contacter
+        {{ 'form-suggestion.erreur-envoi' | translate }}
         <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
-        <button type="button" class="btn-close" (click)="error = false" aria-label="Fermer"></button>
+        <button type="button" class="btn-close" (click)="error = false" [attr.aria-label]="'form-suggestion.fermer' | translate"></button>
       </div>
 
       <!-- BOUTON -->
@@ -334,13 +325,12 @@
       <div class="confirmation-icon confirmation-icon--suggestion">
         <i class="bi bi-check-lg"></i>
       </div>
-      <h2 class="confirmation-title">Suggestion envoyée</h2>
+      <h2 class="confirmation-title">{{ 'form-suggestion.embed-confirmation-titre' | translate }}</h2>
       <p class="confirmation-message">
-        Merci ! Votre suggestion d'achat a bien été transmise à la bibliothèque.
-        Vous recevrez un courriel lorsqu'elle aura été examinée.
+        {{ 'form-suggestion.embed-confirmation-message' | translate }}
       </p>
       <button type="button" class="btn btn-outline-primary mt-2" (click)="nouvelleSuggestion()">
-        Envoyer une autre suggestion
+        {{ 'form-suggestion.embed-nouvelle-suggestion' | translate }}
       </button>
     </div>
   </div>

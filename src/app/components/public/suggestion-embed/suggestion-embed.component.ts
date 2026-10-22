@@ -68,7 +68,25 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
   popupBloquee      = false;
   readonly urlPleinePage = '/suggestion-public';
 
-  typesDocument: string[] = ['Livre', 'Périodique', 'Document audiovisuel', 'Base de données', 'Autre'];
+  /** `valeur` est enregistrée telle quelle en base (inchangée) ; seul le libellé est traduit. */
+  readonly statutsUsager: { valeur: string; cle: string }[] = [
+    { valeur: 'Étudiant 1er cycle', cle: 'form-suggestion.statut-etudiant-1' },
+    { valeur: 'Étudiant 2e cycle',  cle: 'form-suggestion.statut-etudiant-2' },
+    { valeur: 'Étudiant 3e cycle',  cle: 'form-suggestion.statut-etudiant-3' },
+    { valeur: 'Professeur',         cle: 'form-suggestion.statut-professeur' },
+    { valeur: 'Chargé de cours',    cle: 'form-suggestion.statut-charge-cours' },
+    { valeur: 'Chercheur',          cle: 'form-suggestion.statut-chercheur' },
+    { valeur: 'Personnel',          cle: 'form-suggestion.statut-personnel' },
+    { valeur: 'Autre',              cle: 'form-suggestion.statut-autre' },
+  ];
+
+  readonly typesDocument: { valeur: string; cle: string }[] = [
+    { valeur: 'Livre',                cle: 'form-suggestion.type-livre' },
+    { valeur: 'Périodique',           cle: 'form-suggestion.type-periodique' },
+    { valeur: 'Document audiovisuel', cle: 'form-suggestion.type-audiovisuel' },
+    { valeur: 'Base de données',      cle: 'form-suggestion.type-base-donnees' },
+    { valeur: 'Autre',                cle: 'form-suggestion.type-autre' },
+  ];
 
   constructor(
     private fb: FormBuilder,
