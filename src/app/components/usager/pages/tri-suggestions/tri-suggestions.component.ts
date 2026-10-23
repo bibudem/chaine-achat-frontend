@@ -32,8 +32,8 @@ interface DecisionSaisie {
  * soumises aux ACQ, puis refusées). Décider une suggestion « à trier » se fait en dépliant
  * sa ligne : Oui → la demande s'ouvre dans le formulaire de suggestion interne
  * (/usager/suggestion-bib?id=&tri=1), à compléter puis à soumettre aux ACQ quand l'équipe le
- * décide. Non → commentaire obligatoire. Dans les deux cas le demandeur reçoit un courriel
- * avec le commentaire (backend → n8n /tri-decision).
+ * décide, sans courriel au demandeur (les ACQ sont avisés à la soumission). Non → commentaire
+ * obligatoire, transmis tout de suite au demandeur par courriel (backend → n8n /tri-decision).
  * « Mes demandes » (/usager/profil) : les demandes saisies par le membre lui-même.
  */
 @Component({

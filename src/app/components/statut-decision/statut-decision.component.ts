@@ -697,6 +697,9 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
 
   private notifyN8nDecision(suivi_acq: string, note_acq: string | null): void {
     const selected = this.notifTargets.filter(t => t.selected);
+    // Suggestion publique acceptée au tri : l'équipe de tri reçoit aussi la confirmation de fin
+    // de traitement — une seule fois, avec le courriel au demandeur (cible 'saisie').
+    const suggestionTriee = this.item?.tri_statut === 'accepte';
     selected.forEach(target => {
       const payload = {
         reponse_id:          this.reponseId ?? this.item?.reponse_id ?? null,
@@ -709,6 +712,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         titre_document:      this.item?.titre_document,
         type_formulaire:     this.item?.formulaire_type,
         notif_role:          target.label,
+        aviser_equipe_tri:   suggestionTriee && target.key === 'saisie',
+        tri_par:             this.item?.tri_par || null,
         // Adresse de l'application : le workflow n8n en déduit l'environnement (local ou
         // production) et ses adresses — même rôle que app_url envoyé par le backend.
         app_url:             window.location.origin
