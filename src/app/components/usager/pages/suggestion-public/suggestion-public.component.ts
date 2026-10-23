@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
+import { AuthService } from '../../../../services/auth.service';
 import { STATUTS_BIBLIOTHEQUE_SUGGESTION } from '../../../../lib/ListeChoixOptions';
 
 @Component({
@@ -25,6 +26,11 @@ export class SuggestionPublicComponent implements OnInit {
    *  la communauté UdeM qui l'a envoyée (c'est elle qui sera avisée de la décision ACQ), pas
    *  le membre de l'équipe connecté. */
   triMode = false;
+  /** Suggestion publique ouverte par un autre rôle que l'équipe de tri ou un Admin : lecture
+   *  seule (le backend refuse aussi la modification, voir patchReponses). */
+  get lectureSeule(): boolean { return this.triMode && !this.authService.canTrier; }
+  /** Section « TechDoc Tri » : modifiable par l'équipe de tri seulement. */
+  get peutSuiviTri(): boolean { return this.authService.canSuiviTri; }
   private demandeurOrigine: { nom: string; courriel: string } | null = null;
   /** Type de document choisi sur le formulaire public — pas de champ ici, on le conserve. */
   private categorieDocumentOrigine: string | null = null;
@@ -67,8 +73,19 @@ export class SuggestionPublicComponent implements OnInit {
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
     private router: Router,
-    private bibliothequesService: BibliothequesService
+    private bibliothequesService: BibliothequesService,
+    private authService: AuthService
   ) {}
+
+  /** Applique les droits après le chargement : tout en lecture seule, ou seulement la section
+   *  « TechDoc Tri » (getRawValue conserve les valeurs des champs désactivés). */
+  private appliquerDroits(): void {
+    if (this.lectureSeule) { this.form.disable(); return; }
+    if (!this.peutSuiviTri) {
+      this.form.get('techdoc_suggestion_transmise')!.disable();
+      this.form.get('techdoc_tri_notes')!.disable();
+    }
+  }
 
   ngOnInit(): void {
     const nom      = `${sessionStorage.getItem('prenomAdmin') ?? ''} ${sessionStorage.getItem('nomAdmin') ?? ''}`.trim();
@@ -134,6 +151,7 @@ export class SuggestionPublicComponent implements OnInit {
         this.editId = +params['id'];
         this.loadDemande(this.editId);
       }
+      this.appliquerDroits();
     });
   }
 
@@ -178,6 +196,8 @@ export class SuggestionPublicComponent implements OnInit {
           techdoc_suggestion_transmise: d.techdoc_suggestion_transmise,
           techdoc_tri_notes:            d.techdoc_tri_notes,
         });
+        // reserve_cours réactive ses sous-champs au chargement : on réapplique les droits.
+        this.appliquerDroits();
       }
     });
   }
@@ -224,6 +244,7 @@ export class SuggestionPublicComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.lectureSeule) return;
     this.submitted = true;
     if (this.form.invalid) return;
 
@@ -298,6 +319,7 @@ export class SuggestionPublicComponent implements OnInit {
   }
 
   onSave(): void {
+    if (this.lectureSeule) return;
     this.submitted = true;
     if (this.form.invalid) return;
     this.isLoading = true;

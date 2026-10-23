@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { ReponsesService, SuggestionTri, TriDecision } from '../../../../services/reponses.service';
+import { AuthService } from '../../../../services/auth.service';
 import { estAcqEnAttenteDefaut } from '../../../../lib/DemandeStatut';
 import { construireLignesDetail } from '../../../../lib/DemandeDetailFields';
 
@@ -63,8 +64,12 @@ export class TriSuggestionsComponent implements OnInit {
   constructor(
     private reponsesService: ReponsesService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: AuthService
   ) {}
+
+  /** Champs « TechDoc Tri » : équipe de tri seulement (lecture seule pour l'Admin en supervision). */
+  get peutSuiviTri(): boolean { return this.authService.canSuiviTri; }
 
   private t(key: string, params?: object): string {
     return this.translate.instant(`tri-suggestions-page.${key}`, params);

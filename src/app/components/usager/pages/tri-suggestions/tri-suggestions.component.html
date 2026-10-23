@@ -155,7 +155,7 @@
                           <div class="form-check form-switch mb-0">
                             <input class="form-check-input" type="checkbox" role="switch"
                                    [id]="'techdoc-transmise-' + s.id"
-                                   [(ngModel)]="d.techdocSuggestionTransmise" [disabled]="d.envoiEnCours">
+                                   [(ngModel)]="d.techdocSuggestionTransmise" [disabled]="d.envoiEnCours || !peutSuiviTri">
                             <label class="form-check-label fw-semibold" [for]="'techdoc-transmise-' + s.id">
                               {{ 'item-formulaire.transmis-techdoc' | translate }}
                             </label>
@@ -165,7 +165,7 @@
                         <div class="ts-techdoc-notes">
                           <label class="form-label" [for]="'techdoc-notes-' + s.id">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
                           <textarea class="form-control" rows="2" [id]="'techdoc-notes-' + s.id"
-                                    [(ngModel)]="d.techdocTriNotes" [disabled]="d.envoiEnCours"></textarea>
+                                    [(ngModel)]="d.techdocTriNotes" [disabled]="d.envoiEnCours || !peutSuiviTri"></textarea>
                         </div>
                       </div>
 

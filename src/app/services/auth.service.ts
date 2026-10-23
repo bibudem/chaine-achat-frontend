@@ -166,6 +166,10 @@ export class AuthService {
    *  l'équipe TechDoc, plus Admin/SuperAdmin pour la supervision. */
   get canTrier(): boolean       { return this.isTechDoc || this.isAdmin; }
 
+  /** Champs « TechDoc Tri » d'une suggestion (transmise en bibliothèque, notes) : l'équipe de
+   *  tri seulement — le SuperAdmin hérite de tous les accès ; lecture seule pour l'Admin. */
+  get canSuiviTri(): boolean    { return this.isTechDoc || this.isSuperAdmin; }
+
   /** Seul l'Administrateur (et le SuperAdmin) peut créer / modifier / supprimer des items. */
   get canEdit(): boolean        { return this.isAdmin; }
 

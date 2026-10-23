@@ -36,7 +36,15 @@
     </div>
 
     <!-- ══ SUGGESTION PUBLIQUE ACCEPTÉE (équipe TechDoc) ══════ -->
-    <div *ngIf="triMode" class="alert alert-info mb-3">
+    <div *ngIf="lectureSeule" class="alert alert-secondary mb-3">
+      <i class="bi bi-eye me-2"></i>
+      <div>
+        <strong>Lecture seule.</strong>
+        Seules l'équipe de tri et les Admin peuvent compléter cette suggestion publique et la soumettre aux ACQ.
+      </div>
+    </div>
+
+    <div *ngIf="triMode && !lectureSeule" class="alert alert-info mb-3">
       <i class="bi bi-funnel-fill me-2"></i>
       <div>
         <strong>Suggestion publique acceptée.</strong>
@@ -388,6 +396,7 @@
         <h2 class="form-section__title">
           <i class="bi bi-inboxes"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
         </h2>
+        <p *ngIf="!peutSuiviTri && !lectureSeule" class="form-text mt-0">Réservé à l'équipe de tri (lecture seule).</p>
         <div class="row g-3">
           <div class="col-12">
             <div class="fsp-techdoc-transmise"
@@ -420,7 +429,7 @@
       </div>
 
       <!-- BOUTONS -->
-      <div class="form-actions">
+      <div class="form-actions" *ngIf="!lectureSeule">
         <button type="button" class="btn btn-outline-primary" (click)="onSave()"
                 [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
