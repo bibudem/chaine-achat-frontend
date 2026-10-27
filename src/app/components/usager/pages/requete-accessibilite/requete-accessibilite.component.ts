@@ -118,7 +118,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
       format_support:             ['Électronique'],
       nombre_utilisateurs:        ['Accès illimité'],
       format_pret_numerique:      ["Ne s'applique pas"],
-      personne_a_aviser_courriel: [{ value: '', disabled: true }, Validators.email],
       devise_originale:      ['',   Validators.required],
       devise_autre_precision: [''],
       prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
@@ -179,7 +178,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
           verification_sqla:                sd.verification_sqla,
           verification_emma:                sd.verification_emma,
           format_pret_numerique:            bd.format_pret_numerique,
-          personne_a_aviser_courriel:       bd.personne_a_aviser_courriel,
           devise_originale:                 deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
           devise_autre_precision:           deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
           prix_devise_originale:            bd.prix_devise_originale,
@@ -245,10 +243,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
       estImprime ? 'Imprimé/support physique' : 'Électronique',
       { emitEvent: false }
     );
-
-    const aviser = this.form.get('personne_a_aviser_courriel')!;
-    estElectronique ? aviser.enable() : aviser.disable();
-    aviser.updateValueAndValidity({ emitEvent: false });
 
     const devise   = this.form.get('devise_originale')!;
     const prixOrig = this.form.get('prix_devise_originale')!;
@@ -333,7 +327,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
       baseData: {
         formulaire_type:            'Requête ACQ Accessibilité',
         demandeur:                  v.nom,
-        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         bibliotheque:               v.bibliotheque,
         fonds_budgetaire:           v.fonds_budgetaire,
         priorite_demande:           v.priorite_demande,
@@ -407,7 +400,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
       baseData: {
         formulaire_type:            'Requête ACQ Accessibilité',
         demandeur:                  v.nom,
-        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         bibliotheque:               v.bibliotheque,
         fonds_budgetaire:           v.fonds_budgetaire,
         priorite_demande:           v.priorite_demande,

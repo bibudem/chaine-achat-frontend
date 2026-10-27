@@ -224,22 +224,6 @@
             </div>
           </div>
 
-          <div class="col-12" *ngIf="showElectronique">
-            <div class="electronique-fields">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">{{ 'form-accessibilite.courriel-aviser' | translate }}</label>
-                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
-                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
-                         placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
-                    <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
-                  </div>
-                  <small class="form-text">{{ 'form-accessibilite.courriel-aviser-hint' | translate }}</small>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
