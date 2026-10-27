@@ -15,9 +15,9 @@
       </p>
     </div>
 
-    <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — personnel des
-         bibliothèques (Employé, TechDoc), à droite de l'en-tête. ── -->
-    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" *ngIf="authService.isUsagerSpace" [class.info-chip--open]="showTauxDetail">
+    <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — tous les profils du
+         portail (Employé, TechDoc, TDM, Admin, SuperAdmin), à droite de l'en-tête. ── -->
+    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" *ngIf="voirTaux" [class.info-chip--open]="showTauxDetail">
       <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
         <div class="info-chip__icon">
           <i class="bi bi-currency-exchange"></i>
@@ -59,6 +59,10 @@
         <ng-template #pasDeTauxListe>
           <p class="text-muted small fst-italic mb-0">{{ 'accueil.aucun-taux' | translate }}</p>
         </ng-template>
+
+        <a *ngIf="authService.isAdmin" routerLink="/configuration/taux-change" class="info-chip__manage-link">
+          <i class="bi bi-sliders2 me-1"></i>{{ 'accueil.gerer-taux' | translate }}
+        </a>
       </div>
     </div>
   </div>

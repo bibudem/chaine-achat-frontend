@@ -739,3 +739,16 @@
   color: #64748b;
   transform: translateX(3px);
 }
+
+/* Lien « Gérer les taux » (Admin) — même style que l'accueil admin */
+.info-chip__manage-link {
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.76rem; font-weight: 600;
+  color: var(--primary-blue, #0057AC);
+  background: var(--extra-light-blue, #E5F0F8);
+  border-radius: 8px; padding: 7px 10px;
+  text-decoration: none; margin-top: 4px;
+  transition: background .15s;
+}
+.info-chip__manage-link:hover { background: var(--light-blue, #cfe3f5); color: var(--primary-blue, #0057AC); }

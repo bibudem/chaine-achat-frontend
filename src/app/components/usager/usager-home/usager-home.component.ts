@@ -94,6 +94,10 @@ export class UsagerHomeComponent implements OnInit {
     return this.DESCRIPTIONS_PROFIL[this.authService.role ?? ''] ?? '';
   }
 
+  /** Taux sécurisé : tous les profils du portail (Employé, TechDoc, TDM, Admin, SuperAdmin),
+   *  pas la communauté UdeM (rôle Usager), qui n'a accès qu'au formulaire public. */
+  get voirTaux(): boolean { return !this.authService.isUsager; }
+
   ngOnInit(): void {
     // Profil TDM : le combo (voir .uh-combo au template) montre « Mes demandes » (sans
     // compteur, comme pour TechDoc) + « Total à trier » restreint à l'équipe (creation_notice_
@@ -120,9 +124,9 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
-    // Taux sécurisé (lecture seule) pour le personnel des bibliothèques (Employé, TechDoc) —
+    // Taux sécurisé (lecture seule) pour tous les profils du portail, Admin compris —
     // non pertinent pour le reste de la communauté UdeM (rôle Usager).
-    if (this.authService.isUsagerSpace) {
+    if (this.voirTaux) {
       this.tauxDevisesService.getActuelle().subscribe({
         next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
         error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
