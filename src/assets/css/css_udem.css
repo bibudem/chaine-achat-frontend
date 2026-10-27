@@ -2244,6 +2244,8 @@ body.sidebar-open { overflow: hidden; }
 
 /* Astérisque champ obligatoire */
 .form-label.required::after { content: ' *'; color: var(--warning-orange); }
+/* Champ qui deviendra obligatoire à « Soumettre aux ACQ » : repérable dès le brouillon */
+.form-label.requis-soumission::after { content: ' (*)'; color: var(--text-gray); }
 
 /* Groupe input avec préfixe symbolique (ex : $) */
 .input-group .form-control { border-radius: 0 8px 8px 0 !important; }

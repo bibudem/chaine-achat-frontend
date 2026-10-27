@@ -2,7 +2,7 @@
      rangée Bootstrap que le reste d'"Informations financières" (voir :host display:contents). -->
 <ng-container *ngIf="!partage">
   <div class="col-md-3" [formGroup]="lignes[0]">
-    <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
+    <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise' | translate }}</label>
     <select formControlName="devise_originale" class="form-select"
             [class.is-invalid]="isInvalid(lignes[0], 'devise_originale')"
             (change)="onDeviseChange(lignes[0])">
@@ -15,7 +15,7 @@
   </div>
 
   <div class="col-md-3" *ngIf="lignes[0].get('devise_originale')?.value === 'Autre'" [formGroup]="lignes[0]">
-    <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+    <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise-autre-label' | translate }}</label>
     <input type="text" formControlName="devise_autre_precision" class="form-control"
            [class.is-invalid]="isInvalid(lignes[0], 'devise_autre_precision')"
            [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
@@ -25,7 +25,7 @@
   </div>
 
   <div class="col-md-3" [formGroup]="lignes[0]">
-    <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+    <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
     <div class="input-group">
       <span class="input-group-text">$</span>
       <input type="number" step="0.01" min="0.01" formControlName="prix_devise_originale"
@@ -38,7 +38,7 @@
   </div>
 
   <div class="col-md-3" [formGroup]="lignes[0]">
-    <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+    <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
     <div class="input-group">
       <span class="input-group-text">$</span>
       <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
@@ -55,7 +55,7 @@
   </div>
 
   <div class="col-md-3" [formGroup]="lignes[0]">
-    <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+    <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
     <div class="fr-fonds-inline">
       <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
              [invalid]="isInvalid(lignes[0], 'fonds_budgetaire')"></app-fonds-budgetaire-select>
@@ -80,7 +80,7 @@
     <i class="bi bi-cash-coin fr-ligne__icone" [title]="'Fonds ' + (i + 1)"></i>
 
     <div class="fr-champ fr-champ--devise">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.devise' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.devise' | translate }}</label>
       <select formControlName="devise_originale" class="form-select"
               [class.is-invalid]="isInvalid(ligne, 'devise_originale')"
               (change)="onDeviseChange(ligne)">
@@ -93,7 +93,7 @@
     </div>
 
     <div class="fr-champ fr-champ--devise-autre" *ngIf="ligne.get('devise_originale')?.value === 'Autre'">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.devise-autre-label' | translate }}</label>
       <input type="text" formControlName="devise_autre_precision" class="form-control"
              [class.is-invalid]="isInvalid(ligne, 'devise_autre_precision')"
              [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
@@ -103,7 +103,7 @@
     </div>
 
     <div class="fr-champ fr-champ--prix">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
       <div class="input-group">
         <span class="input-group-text">$</span>
         <input type="number" step="0.01" min="0.01" formControlName="prix_devise_originale"
@@ -116,7 +116,7 @@
     </div>
 
     <div class="fr-champ fr-champ--prixcad">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
       <div class="input-group">
         <span class="input-group-text">$</span>
         <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
@@ -130,7 +130,7 @@
     </div>
 
     <div class="fr-champ fr-champ--fonds">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
       <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
              [invalid]="isInvalid(ligne, 'fonds_budgetaire')"></app-fonds-budgetaire-select>
       <div *ngIf="isInvalid(ligne, 'fonds_budgetaire')" class="invalid-feedback d-block">
@@ -139,7 +139,7 @@
     </div>
 
     <div class="fr-champ fr-champ--pourcentage">
-      <label class="form-label required" *ngIf="i === 0">{{ 'forms-usager.pourcentage' | translate }}</label>
+      <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps" *ngIf="i === 0">{{ 'forms-usager.pourcentage' | translate }}</label>
       <div class="input-group">
         <input type="number" min="0.01" max="100" step="0.01"
                formControlName="pourcentage" class="form-control text-end"
