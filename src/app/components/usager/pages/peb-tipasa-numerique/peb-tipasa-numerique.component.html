@@ -12,7 +12,7 @@
     <span class="form-nav__breadcrumb">
       <a routerLink="/usager" class="form-nav__crumb-link">Portail acquisitions</a>
       <i class="bi bi-chevron-right form-nav__sep"></i>
-      <span class="form-nav__crumb-current">PEB Tipasa numérique</span>
+      <span class="form-nav__crumb-current">{{ 'form-peb-tipasa.titre' | translate }}</span>
     </span>
   </nav>
 
@@ -62,7 +62,16 @@
             <small class="form-text">{{ 'forms-usager.courriel-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-4">
+            <label class="form-label">{{ 'form-peb-tipasa.reference-tipasa' | translate }}</label>
+            <input type="text" formControlName="reference_tipasa" class="form-control"
+                   [placeholder]="'form-peb-tipasa.reference-tipasa-placeholder' | translate">
+            <small class="form-text">
+              <i class="fas fa-info-circle me-1"></i>{{ 'form-peb-tipasa.reference-tipasa-hint' | translate }}
+            </small>
+          </div>
+
+          <div class="col-md-4">
             <label class="form-label required">{{ 'forms-usager.bibliotheque' | translate }}</label>
             <select formControlName="bibliotheque" class="form-select"
                     [class.is-invalid]="isInvalid('bibliotheque')">
@@ -137,13 +146,6 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">{{ 'form-peb-tipasa.reference-tipasa' | translate }}</label>
-            <input type="text" formControlName="reference_tipasa" class="form-control"
-                   [placeholder]="'form-peb-tipasa.reference-tipasa-placeholder' | translate">
-            <small class="form-text">{{ 'form-peb-tipasa.reference-tipasa-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -154,8 +156,7 @@
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.categorie-required' | translate }}
             </div>
           </div>
-
-          <div class="col-md-4">
+          <div class="col-md">
             <label class="form-label required">{{ 'form-peb-tipasa.gobi-disponible' | translate }}</label>
             <select formControlName="gobi_vu_format_numerique" class="form-select"
                     [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
@@ -168,7 +169,7 @@
             <small class="form-text">{{ 'form-peb-tipasa.gobi-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-4" *ngIf="form.get('gobi_vu_format_numerique')?.value === 'Oui'">
+          <div class="col-md" *ngIf="form.get('gobi_vu_format_numerique')?.value === 'Oui'">
             <label class="form-label">{{ 'form-peb-tipasa.gobi-365' | translate }}</label>
             <select formControlName="gobi_version_moins_365_usd" class="form-select">
               <option value="Ne s'applique pas">Ne s'applique pas</option>
@@ -176,8 +177,7 @@
               <option value="Non">Non</option>
             </select>
           </div>
-
-          <div class="col-md-5">
+          <div class="col-md">
             <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
