@@ -209,6 +209,35 @@
 .col-date        { width: 10%; }
 .col-actions     { width: 12%; }
 
+/* Précision de la demande (Modification et CCOL), affichée sous le titre */
+.il-titre-precision { margin-top: 2px; color: #3a6ea5; white-space: normal; }
+.il-filter-precision { flex: 1 1 280px; min-width: 260px; max-width: 340px; }
+
+/* ── Filtre Fonds à choix multiples ── */
+.il-ms { position: relative; }
+.il-ms__trigger { min-width: 110px; text-align: left; }
+.il-ms__trigger--actif { border-color: #93c5fd; background-color: #eff6ff; }
+.il-ms__menu {
+  position: absolute; top: calc(100% + 4px); left: 0; z-index: 30;
+  width: 220px; padding: .5rem; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 6px 20px rgba(15, 23, 42, .12);
+}
+.il-ms__search {
+  width: 100%; padding: .3rem .5rem; margin-bottom: .4rem;
+  border: 1px solid #e2e8f0; border-radius: 6px; font-size: .82rem;
+}
+.il-ms__options { max-height: 220px; overflow-y: auto; }
+.il-ms__option {
+  display: flex; align-items: center; gap: .45rem;
+  padding: .25rem .3rem; border-radius: 4px; font-size: .82rem; cursor: pointer;
+}
+.il-ms__option:hover { background: #f1f5f9; }
+.il-ms__vide { padding: .3rem; font-size: .8rem; color: #94a3b8; }
+.il-ms__clear {
+  width: 100%; margin-top: .4rem; padding: .25rem; font-size: .78rem;
+  background: none; border: 1px solid #e2e8f0; border-radius: 6px; color: #475569;
+}
+
 /* Statut Bibliothèque / Statut ACQ / Suivi ACQ : libellés trop longs pour tenir sur une
    seule ligne dans leur colonne — au lieu de déborder sur la colonne voisine (nowrap
    hérité de .items-table thead th), on les laisse s'enrouler sur 2 lignes. */

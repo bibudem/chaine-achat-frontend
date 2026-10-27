@@ -8,13 +8,16 @@ import { DialogService } from '../../../services/dialog.service';
 import { AuthService } from '../../../services/auth.service';
 import { ReponsesService } from '../../../services/reponses.service';
 import { BibliothequesService } from '../../../services/bibliotheques.service';
+import { FondsBudgetairesService } from '../../../services/fonds-budgetaires.service';
 
 interface FavoriFilter {
   nom: string;
   searchTerm: string;
   selectedFormulaireType: string;
   selectedBibliotheque: string;
-  selectedFonds: string;
+  /** Ancien format (un seul fonds, texte libre) accepté à la relecture — voir versListeFonds. */
+  selectedFonds: string[] | string;
+  selectedPrecision?: string;
   selectedStatutAcq: string;
   selectedSuiviAcq: string;
   selectedAnnee: string;
@@ -37,8 +40,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   selectedStatutAcq      = '';
   selectedSuiviAcq       = '';
   selectedFormulaireType = '';
-  selectedFonds          = '';
+  /** Fonds choisis dans le filtre à choix multiples (vide = tous). */
+  selectedFonds: string[] = [];
   selectedPriorite       = '';
+  /** Précision de la demande (Modification et CCOL). */
+  selectedPrecision      = '';
   /** Année de date_creation ('' = toutes années). Pas de contrôle de filtre dédié dans la
    *  barre (jugé pas nécessaire ici) — comme selectedStatutBib, activé uniquement via le
    *  query param annee=YYYY (voir « Répartition par type », accueil.component.ts). */
@@ -69,6 +75,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedSuiviAcq:       this.selectedSuiviAcq,
       selectedFormulaireType: this.selectedFormulaireType,
       selectedFonds:          this.selectedFonds,
+      selectedPrecision:      this.selectedPrecision,
       selectedAnnee:          this.selectedAnnee,
       selectedPriorite:       this.selectedPriorite,
       currentPage:            this.currentPage,
@@ -88,7 +95,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedStatutAcq      = s.selectedStatutAcq      ?? '';
       this.selectedSuiviAcq       = s.selectedSuiviAcq       ?? '';
       this.selectedFormulaireType = s.selectedFormulaireType ?? '';
-      this.selectedFonds          = s.selectedFonds          ?? '';
+      this.selectedFonds          = this.versListeFonds(s.selectedFonds);
+      this.selectedPrecision      = s.selectedPrecision      ?? '';
       this.selectedAnnee          = s.selectedAnnee          ?? '';
       this.selectedPriorite       = s.selectedPriorite       ?? '';
       this.currentPage            = s.currentPage            ?? 1;
@@ -98,7 +106,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('document:click')
-  onDocumentClick(): void { this.showFavorisPanel = false; }
+  onDocumentClick(): void { this.showFavorisPanel = false; this.fondsOuvert = false; }
 
   get activeFiltersCount(): number {
     return [
@@ -107,7 +115,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedBibliotheque,
       this.selectedStatutAcq,
       this.selectedSuiviAcq,
-      this.selectedFonds,
+      this.selectedFonds.length ? 'fonds' : '',
+      this.filtrePrecisionVisible ? this.selectedPrecision : '',
       this.selectedAnnee,
       this.selectedPriorite,
       this.selectedImportLogId
@@ -132,6 +141,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
   bibliotheques: string[] = [];
 
+  /** Codes des fonds — voir Configuration > Fonds budgétaires. */
+  fondsOptions: string[] = [];
+  fondsOuvert    = false;
+  fondsRecherche = '';
+
   // Items présents dans la cloche de notifications (statut biblio "Soumettre aux ACQ" +
   // décision ACQ encore en attente) — sert à mettre en évidence leur ID dans la liste.
   pendingItemIds = new Set<number>();
@@ -146,12 +160,16 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     private dialogService:   DialogService,
     public  authService:     AuthService,
     private reponsesService: ReponsesService,
-    private bibliothequesService: BibliothequesService
+    private bibliothequesService: BibliothequesService,
+    private fondsService: FondsBudgetairesService
   ) {}
 
   ngOnInit(): void {
     this.bibliothequesService.getAll().subscribe(res => {
       this.bibliotheques = (res.data || []).map(b => b.nom);
+    });
+    this.fondsService.getAll().subscribe(res => {
+      this.fondsOptions = (res.data || []).map(f => f.code).sort();
     });
 
     this.lireDecisionParams();
@@ -175,7 +193,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedBibliotheque   = bibliothequeParam ?? '';
       this.selectedStatutBib      = '';
       this.selectedFormulaireType = typeParam         ?? '';
-      this.selectedFonds          = '';
+      this.selectedFonds          = [];
+      this.selectedPrecision      = '';
       this.selectedAnnee          = anneeParam        ?? '';
       this.selectedStatutAcq      = statutAcqParam    ?? '';
       this.selectedSuiviAcq       = suiviAcqParam     ?? '';
@@ -232,7 +251,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       statut_acq:            this.selectedStatutAcq      || undefined,
       suivi_acq:             this.selectedSuiviAcq       || undefined,
       formulaire_type:       this.selectedFormulaireType || undefined,
-      fonds_budgetaire:      this.selectedFonds          || undefined,
+      fonds_budgetaire:      this.selectedFonds.join(',') || undefined,
+      precision_demande:     (this.filtrePrecisionVisible && this.selectedPrecision) || undefined,
       annee:                 this.selectedAnnee          || undefined,
       priorite_demande:      this.selectedPriorite       || undefined,
       import_log_id:         this.selectedImportLogId    || undefined,
@@ -293,6 +313,18 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.loadItems();
   }
 
+  /** Précision de la demande : champ propre à Modification et CCOL — son filtre n'apparaît
+   *  que lorsque ce type est sélectionné. */
+  get filtrePrecisionVisible(): boolean {
+    return this.selectedFormulaireType === 'Modification et CCOL';
+  }
+
+  /** Changement de type : la précision ne s'applique plus si on quitte Modification et CCOL. */
+  onTypeChange(): void {
+    if (!this.filtrePrecisionVisible) this.selectedPrecision = '';
+    this.onFilterChange();
+  }
+
   resetFilters(): void {
     this.searchTerm             = '';
     this.selectedBibliotheque   = '';
@@ -300,7 +332,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedStatutAcq      = '';
     this.selectedSuiviAcq       = '';
     this.selectedFormulaireType = '';
-    this.selectedFonds          = '';
+    this.selectedFonds          = [];
+    this.selectedPrecision      = '';
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
     this.selectedImportLogId    = '';
@@ -317,6 +350,39 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedImportLogId = '';
     this.currentPage         = 1;
     this.loadItems();
+  }
+
+  // ── Filtre Fonds à choix multiples ──────────────────────────────
+
+  /** Fonds proposés dans le menu : la liste configurée, plus ceux déjà cochés qui n'y
+   *  seraient plus (ex. favori ancien), filtrés par la recherche du menu. */
+  get fondsFiltres(): string[] {
+    const tous = [...new Set([...this.selectedFonds, ...this.fondsOptions])];
+    const q = this.fondsRecherche.trim().toLowerCase();
+    return q ? tous.filter(f => f.toLowerCase().includes(q)) : tous;
+  }
+
+  get fondsLibelle(): string {
+    const n = this.selectedFonds.length;
+    return n === 0 ? 'Fonds' : n === 1 ? this.selectedFonds[0] : `${n} fonds`;
+  }
+
+  basculerFonds(code: string, coche: boolean): void {
+    this.selectedFonds = coche
+      ? [...this.selectedFonds, code]
+      : this.selectedFonds.filter(f => f !== code);
+    this.onFilterChange();
+  }
+
+  viderFonds(): void {
+    this.selectedFonds = [];
+    this.onFilterChange();
+  }
+
+  /** Accepte l'ancien format (texte libre, éventuellement séparé par des virgules). */
+  private versListeFonds(v: string[] | string | null | undefined): string[] {
+    if (Array.isArray(v)) return v;
+    return (v || '').split(',').map(f => f.trim()).filter(Boolean);
   }
 
   loadFavoris(): void {
@@ -338,7 +404,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       searchTerm:             this.searchTerm,
       selectedFormulaireType: this.selectedFormulaireType,
       selectedBibliotheque:   this.selectedBibliotheque,
-      selectedFonds:          this.selectedFonds,
+      selectedFonds:          [...this.selectedFonds],
+      selectedPrecision:      this.selectedPrecision,
       selectedStatutAcq:      this.selectedStatutAcq,
       selectedSuiviAcq:       this.selectedSuiviAcq,
       selectedAnnee:          this.selectedAnnee,
@@ -353,7 +420,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.searchTerm             = f.searchTerm;
     this.selectedFormulaireType = f.selectedFormulaireType;
     this.selectedBibliotheque   = f.selectedBibliotheque;
-    this.selectedFonds          = f.selectedFonds;
+    this.selectedFonds          = this.versListeFonds(f.selectedFonds);
+    this.selectedPrecision      = f.selectedPrecision ?? '';
     this.selectedStatutAcq      = f.selectedStatutAcq;
     this.selectedSuiviAcq       = f.selectedSuiviAcq;
     this.selectedAnnee          = f.selectedAnnee ?? '';

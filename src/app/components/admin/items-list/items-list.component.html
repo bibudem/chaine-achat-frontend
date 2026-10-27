@@ -45,9 +45,17 @@
 
     <span class="filterbar__sep"></span>
 
-    <select class="filterbar__select" [(ngModel)]="selectedFormulaireType" (change)="onFilterChange()">
+    <select class="filterbar__select" [(ngModel)]="selectedFormulaireType" (change)="onTypeChange()">
       <option value="">Type</option>
       <option *ngFor="let opt of options.formulaireTypeOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+
+    <!-- Précision de la demande : propre à Modification et CCOL, visible seulement quand ce type est choisi -->
+    <select *ngIf="filtrePrecisionVisible" class="filterbar__select il-filter-precision" [(ngModel)]="selectedPrecision" (change)="onFilterChange()"
+            [title]="selectedPrecision || ('items.precision-placeholder' | translate)"
+            [attr.aria-label]="'items.precision-placeholder' | translate">
+      <option value="">{{ 'items.precision-placeholder' | translate }}</option>
+      <option *ngFor="let p of options.precisionDemandeOptions" [value]="p">{{ p }}</option>
     </select>
 
     <select class="filterbar__select" [(ngModel)]="selectedBibliotheque" (change)="onFilterChange()">
@@ -60,11 +68,28 @@
       <option *ngFor="let p of options.prioriteOptions" [value]="p.value">{{ p.label }}</option>
     </select>
 
-    <input type="text" class="filterbar__input"
-           placeholder="Fonds…"
-           [(ngModel)]="selectedFonds"
-           (input)="onFilterChange()"
-           (keyup.enter)="onFilterChange()">
+    <!-- Fonds : choix multiples -->
+    <div class="il-ms" (click)="$event.stopPropagation()">
+      <button type="button" class="filterbar__select il-ms__trigger"
+              [class.il-ms__trigger--actif]="selectedFonds.length"
+              (click)="fondsOuvert = !fondsOuvert; showFavorisPanel = false">
+        {{ fondsLibelle }}
+      </button>
+      <div class="il-ms__menu" *ngIf="fondsOuvert">
+        <input type="text" class="il-ms__search" [(ngModel)]="fondsRecherche"
+               [placeholder]="'items.fonds-recherche' | translate">
+        <div class="il-ms__options">
+          <label class="il-ms__option" *ngFor="let code of fondsFiltres">
+            <input type="checkbox" [checked]="selectedFonds.includes(code)"
+                   (change)="basculerFonds(code, $any($event.target).checked)"> {{ code }}
+          </label>
+          <div *ngIf="!fondsFiltres.length" class="il-ms__vide">{{ 'items.fonds-aucun' | translate }}</div>
+        </div>
+        <button type="button" class="il-ms__clear" *ngIf="selectedFonds.length" (click)="viderFonds()">
+          {{ 'items.fonds-vider' | translate }}
+        </button>
+      </div>
+    </div>
 
     <select class="filterbar__select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
       <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
@@ -221,6 +246,10 @@
                     <div class="small text-muted" *ngIf="item.format_support">
                       {{ getFormatSupport(item.format_support) }}
                     </div>
+                    <div class="small il-titre-precision" *ngIf="item.precision_demande"
+                         [title]="'items.col-precision' | translate">
+                      <i class="bi bi-tag me-1"></i>{{ item.precision_demande }}
+                    </div>
                   </td>
                   <td class="col-type">
                     <span class="badge" [ngClass]="getTypeBadgeClass(item.formulaire_type)">
@@ -323,6 +352,10 @@
               </div>
               <div class="item-card__title">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
               <div class="item-card__body">
+                <div class="item-card__row" *ngIf="item.precision_demande">
+                  <span class="item-card__label">{{ 'items.col-precision' | translate }}</span>
+                  <span>{{ item.precision_demande }}</span>
+                </div>
                 <div class="item-card__row" *ngIf="item.bibliotheque">
                   <span class="item-card__label">{{ 'items.col-bib' | translate }}</span>
                   <span>{{ item.bibliotheque }}</span>
