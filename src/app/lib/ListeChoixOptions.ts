@@ -146,8 +146,7 @@ export class ListeChoixOptions {
     'En traitement',
     'Complétée',
     'Demande Annulée',
-    'Budget atteint',
-    'En cours'
+    'Budget atteint'
   ];
 
   // Options pour le suivi DIRCOL ACQ

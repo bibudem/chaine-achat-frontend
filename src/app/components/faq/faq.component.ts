@@ -36,7 +36,7 @@ export class FaqComponent {
       answerHtml: `Rendez-vous dans <strong>Registres → Demandes par forms</strong> pour voir les soumissions. Cliquez sur une ligne pour ouvrir la demande, puis lancez sa décision : vous arrivez sur la page de <strong>décision ACQ</strong>.
         <br><br>Deux champs distincts permettent de suivre la demande :
         <ul ${UL}>
-          <li><strong>Statut de la demande</strong> : En attente, En traitement, Complétée, Demande annulée, Budget atteint ou En cours</li>
+          <li><strong>Statut de la demande</strong> : En attente, En traitement, Complétée, Demande annulée ou Budget atteint</li>
           <li><strong>Suivi de la demande</strong> (obligatoire) : précise concrètement où en est la demande (commande créée, ressource activée, envoi en bibliothèque, etc.)</li>
         </ul>
         Ajoutez une note dans <strong>Acquisitions : Note / Commentaire</strong> au besoin, puis enregistrez.`,

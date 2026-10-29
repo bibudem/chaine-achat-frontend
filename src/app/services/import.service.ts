@@ -231,7 +231,7 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'lien_plateforme',             required: false, example: 'https://...' },
       { name: 'note_commentaire',            required: false, example: 'Délai urgent' },
       { name: 'statut_bibliotheque',         required: false, example: 'Soumettre aux ACQ' },
-      { name: 'statut_acq',                 required: false, example: 'En cours' },
+      { name: 'statut_acq',                 required: false, example: 'En traitement' },
       { name: 'suivi_acq',                  required: false, example: 'GOBI consulté' },
       { name: 'note_acq',                   required: false, example: '' },
       { name: 'creation_notice_dtdm',        required: false, example: 'Non' },
