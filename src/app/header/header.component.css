@@ -317,12 +317,12 @@
 .notif-voir-tout:hover { color: var(--primary-blue, #0b113a); }
 
 /* Couleurs sémantiques par type de réponse */
-.notif-type--achat   { background: var(--achat-dark,  #1B5E6E); }
-.notif-type--ccol    { background: var(--acq-dark,    #3730A3); }
-.notif-type--abo     { background: var(--type-vert,   #16A34A); }
-.notif-type--peb     { background: var(--type-cyan,   #0369A1); }
-.notif-type--acq     { background: var(--type-gray,   #37424D); }
-.notif-type--suggest { background: var(--suggest-mid, #C8872A); }
+.notif-type--achat   { background: var(--form-achat);   color: var(--form-texte); }
+.notif-type--ccol    { background: var(--form-ccol);    color: var(--form-texte); }
+.notif-type--abo     { background: var(--form-abo);     color: var(--form-texte); }
+.notif-type--peb     { background: var(--form-peb);     color: var(--form-texte); }
+.notif-type--acq     { background: var(--form-acces);   color: var(--form-texte); }
+.notif-type--suggest { background: var(--form-suggest); color: var(--form-texte); }
 
 
 /* ══════════════════════════════════════════════════════
@@ -337,12 +337,12 @@
 }
 
 /* Couleurs sémantiques par type de formulaire (partagées avec notif-type-*) */
-.preview-icon--achat         { background: var(--achat-dark)   !important; }
-.preview-icon--abonnement    { background: var(--type-vert)    !important; }
-.preview-icon--ccol          { background: var(--acq-dark)     !important; }
-.preview-icon--peb           { background: var(--type-cyan)    !important; }
-.preview-icon--accessibilite { background: var(--text-gray)    !important; }
-.preview-icon--suggest       { background: var(--suggest-mid)  !important; }
+.preview-icon--achat         { background: var(--form-achat)   !important; color: var(--form-texte) !important; }
+.preview-icon--abonnement    { background: var(--form-abo)     !important; color: var(--form-texte) !important; }
+.preview-icon--ccol          { background: var(--form-ccol)    !important; color: var(--form-texte) !important; }
+.preview-icon--peb           { background: var(--form-peb)     !important; color: var(--form-texte) !important; }
+.preview-icon--accessibilite { background: var(--form-acces)   !important; color: var(--form-texte) !important; }
+.preview-icon--suggest       { background: var(--form-suggest) !important; color: var(--form-texte) !important; }
 
 
 /* ══════════════════════════════════════════════════════

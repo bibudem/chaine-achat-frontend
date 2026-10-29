@@ -532,13 +532,14 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
 
   get typeHeaderColor(): string {
     const colors: Record<string, string> = {
-      'Nouvel achat unique':        '#1565c0',
-      'Modification et CCOL':       '#6a1b9a',
-      'Nouvel abonnement':          '#14532D',
-      'PEB Tipasa numérique':       '#e65100',
-      'Requête ACQ Accessibilité':  '#b71c1c',
+      'Nouvel achat unique':          'var(--form-achat)',
+      'Modification et CCOL':         'var(--form-ccol)',
+      'Nouvel abonnement':            'var(--form-abo)',
+      'PEB Tipasa numérique':         'var(--form-peb)',
+      'Requête ACQ Accessibilité':    'var(--form-acces)',
+      "Suggestion d'achat - Usager":  'var(--form-suggest)',
     };
-    return colors[this.formulaireType] || '#37474f';
+    return colors[this.formulaireType] || 'var(--light-gray)';
   }
 
   activeInfoTab: 'base' | 'details' = 'base';

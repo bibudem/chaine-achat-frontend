@@ -398,12 +398,12 @@
 ══════════════════════════════════════════════════════════ */
 /* Palette 6 types — Modification CCOL · Nouvel abonnement · Nouvel achat unique
    PEB Tipasa numérique · Requête ACQ · Suggestion d'achat                      */
-.tc-0    { background: var(--acq-dark); }       .tc-0-bg { background: var(--acq-dark); }       /* Indigo     — Modification CCOL       */
-.tc-1    { background: var(--type-vert); }      .tc-1-bg { background: var(--type-vert); }      /* Vert       — Nouvel abonnement       */
-.tc-2    { background: var(--achat-dark); }     .tc-2-bg { background: var(--achat-dark); }     /* Teal       — Nouvel achat unique     */
-.tc-3    { background: var(--type-cyan); }      .tc-3-bg { background: var(--type-cyan); }      /* Cyan       — PEB Tipasa numérique    */
-.tc-4    { background: var(--type-gray); }      .tc-4-bg { background: var(--type-gray); }      /* Gris foncé — Requête ACQ             */
-.tc-5    { background: var(--suggest-mid); }    .tc-5-bg { background: var(--suggest-mid); }    /* Ambre      — Suggestion d'achat      */
+.tc-0    { background: var(--form-ccol); }      .tc-0-bg { background: var(--form-ccol); }       /* Indigo     — Modification CCOL       */
+.tc-1    { background: var(--form-abo); }       .tc-1-bg { background: var(--form-abo); }      /* Vert       — Nouvel abonnement       */
+.tc-2    { background: var(--form-achat); }     .tc-2-bg { background: var(--form-achat); }     /* Teal       — Nouvel achat unique     */
+.tc-3    { background: var(--form-peb); }       .tc-3-bg { background: var(--form-peb); }      /* Cyan       — PEB Tipasa numérique    */
+.tc-4    { background: var(--form-acces); }     .tc-4-bg { background: var(--form-acces); }      /* Gris foncé — Requête ACQ             */
+.tc-5    { background: var(--form-suggest); }   .tc-5-bg { background: var(--form-suggest); }    /* Ambre      — Suggestion d'achat      */
 
 .type-seg-bar {
   display: flex; height: 10px;
@@ -1111,3 +1111,16 @@
   color: var(--secondary-blue);
   transform: translate(2px, -2px);
 }
+
+/* Charte d'accessibilité : icônes foncées sur les teintes claires des types */
+.tc-0-bg, .tc-1-bg, .tc-2-bg, .tc-3-bg, .tc-4-bg, .tc-5-bg { color: var(--form-texte); }
+
+/* Cartes Demandes en attente / Demandes urgentes : couleur pleine, texte foncé */
+.sc--amber  { background: var(--tdb-en-attente); }
+.sc--orange { background: var(--tdb-urgentes); }
+.sc--amber .sc__val,  .sc--orange .sc__val  { color: var(--form-texte); text-shadow: none; }
+.sc--amber .sc__lbl,  .sc--orange .sc__lbl,
+.sc--amber .sc__badge, .sc--orange .sc__badge { color: var(--form-texte); }
+.sc--amber .sc__badge, .sc--orange .sc__badge { background: rgba(255,255,255,.45); border-color: rgba(31,41,55,.15); }
+.sc--amber .sc__divider, .sc--orange .sc__divider { background: rgba(31,41,55,.15); }
+.sc--amber .sc__spark polyline, .sc--orange .sc__spark polyline { stroke: rgba(31,41,55,.55); }

@@ -15,7 +15,7 @@
           <div>
             <h1 class="h3 mb-1">{{ 'acq-decision.section-decision' | translate }}</h1>
             <p class="text-muted mb-0" *ngIf="item">
-              <i class="bi me-1" [ngClass]="typeIcon" [style.color]="typeHeaderColor"></i>
+              <i class="bi me-1 sd-type-pastille" [ngClass]="typeIcon" [style.background]="typeHeaderColor"></i>
               {{ formulaireTypeLabel(item.formulaire_type) }}
               <span class="mx-1">·</span>
               <span class="text-truncate" style="max-width:400px;display:inline-block;vertical-align:bottom">

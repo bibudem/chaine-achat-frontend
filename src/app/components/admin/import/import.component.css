@@ -105,7 +105,7 @@
 
 .imp-type-card__icon {
   font-size: 1.4rem;
-  color:     var(--imp-card-color, var(--import-blue));
+  color:     var(--form-texte);
 }
 
 .imp-type-card__label {

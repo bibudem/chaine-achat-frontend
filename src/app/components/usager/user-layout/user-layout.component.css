@@ -158,12 +158,12 @@
   font-size: 0.9375rem;
   flex-shrink: 0;
 }
-.ul-forms__item-icon--achat         { background: var(--achat-dark); }
-.ul-forms__item-icon--abonnement    { background: var(--type-vert); }
-.ul-forms__item-icon--ccol          { background: var(--acq-dark); }
-.ul-forms__item-icon--peb           { background: var(--type-cyan); }
-.ul-forms__item-icon--accessibilite { background: var(--text-gray); }
-.ul-forms__item-icon--suggest       { background: var(--suggest-mid); }
+.ul-forms__item-icon--achat         { background: var(--form-achat);   color: var(--form-texte); }
+.ul-forms__item-icon--abonnement    { background: var(--form-abo);     color: var(--form-texte); }
+.ul-forms__item-icon--ccol          { background: var(--form-ccol);    color: var(--form-texte); }
+.ul-forms__item-icon--peb           { background: var(--form-peb);     color: var(--form-texte); }
+.ul-forms__item-icon--accessibilite { background: var(--form-acces);   color: var(--form-texte); }
+.ul-forms__item-icon--suggest       { background: var(--form-suggest); color: var(--form-texte); }
 
 .ul-forms__item-label { flex: 1; min-width: 0; }
 .ul-forms__item-arrow { font-size: 0.8125rem; color: #cbd5e1; flex-shrink: 0; }

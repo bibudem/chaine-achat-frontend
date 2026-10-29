@@ -140,3 +140,6 @@
 .fsp-techdoc-transmise--actif .form-check-label {
   color: #166534;
 }
+
+/* Charte d'accessibilité : couleur du formulaire sur l'icône d'en-tête, icône foncée */
+.form-header__icon { background: var(--form-suggest); color: var(--form-texte); }

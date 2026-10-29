@@ -101,9 +101,8 @@
 
           <td>
             <span class="ilog-type-pill"
-                  [style.background]="typeColor(log.formulaire_type) + '18'"
-                  [style.color]="typeColor(log.formulaire_type)"
-                  [style.border-color]="typeColor(log.formulaire_type) + '40'">
+                  [style.background]="typeColor(log.formulaire_type)"
+                  style="color: var(--form-texte); border-color: rgba(31,41,55,.12)">
               {{ formulaireTypeLabel(log.formulaire_type) }}
             </span>
           </td>

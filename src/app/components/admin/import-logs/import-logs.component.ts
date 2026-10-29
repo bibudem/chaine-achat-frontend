@@ -144,12 +144,12 @@ export class ImportLogsComponent implements OnInit {
 
   typeColor(type: string): string {
     const t = (type ?? '').toLowerCase();
-    if (t.includes('suggestion'))  return '#C8872A';
-    if (t.includes('ccol'))        return '#3730A3';
-    if (t.includes('abonnement'))  return '#16A34A';
-    if (t.includes('peb'))         return '#0369A1';
-    if (t.includes('acq'))         return '#B91C1C';
-    if (t.includes('achat'))       return '#1B5E6E';
+    if (t.includes('suggestion'))  return '#F2E399';
+    if (t.includes('ccol'))        return '#D2C3E3';
+    if (t.includes('abonnement'))  return '#8FD8BE';
+    if (t.includes('peb'))         return '#B8DBFF';
+    if (t.includes('acq'))         return '#AEB5BF';
+    if (t.includes('achat'))       return '#9EBFF7';
     return '#0057AC';
   }
 

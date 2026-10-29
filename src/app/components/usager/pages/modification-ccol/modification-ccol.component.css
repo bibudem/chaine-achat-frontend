@@ -93,3 +93,6 @@
   margin-bottom: 0.6rem;
   border-bottom: 1px solid #e9ecef;
 }
+
+/* Charte d'accessibilité : couleur du formulaire sur l'icône d'en-tête, icône foncée */
+.form-header__icon { background: var(--form-ccol); color: var(--form-texte); }

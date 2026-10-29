@@ -507,3 +507,6 @@
 .sd-tri-decision .bi { margin-top: .1rem; }
 .sd-tri-decision__comment { font-style: italic; margin-top: .2rem; color: #374151; }
 
+/* Pastille du type de formulaire (charte d'accessibilité : teinte claire, icône foncée) */
+.sd-type-pastille { display: inline-flex; align-items: center; justify-content: center;
+  width: 1.6em; height: 1.6em; border-radius: 50%; color: var(--form-texte); font-size: .85em; }

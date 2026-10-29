@@ -689,11 +689,12 @@
   padding: .55rem .95rem;
   border-bottom: 1px solid #f0f4f8;
   text-decoration: none;
-  transition: background .15s, transform .15s;
+  transition: background .15s;
   cursor: pointer;
 }
 .uh-form-row:last-child { border-bottom: none; }
-.uh-form-row:hover { background: #f7f9fc; text-decoration: none; transform: translateX(3px); }
+/* Survol : changement de couleur seulement, sans déplacement */
+.uh-form-row:hover { background: #f7f9fc; text-decoration: none; }
 
 .uh-form-row__icon {
   width: 2.1rem;
@@ -704,9 +705,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: transform .15s;
 }
-.uh-form-row:hover .uh-form-row__icon { transform: scale(1.08); }
 
 .uh-form-row__text {
   flex: 1;
@@ -733,12 +732,9 @@
   color: #cbd5e1;
   font-size: 0.875rem;
   flex-shrink: 0;
-  transition: color .12s, transform .12s;
+  transition: color .12s;
 }
-.uh-form-row:hover .uh-form-row__arrow {
-  color: #64748b;
-  transform: translateX(3px);
-}
+.uh-form-row:hover .uh-form-row__arrow { color: #64748b; }
 
 /* Lien « Gérer les taux » (Admin) — même style que l'accueil admin */
 .info-chip__manage-link {

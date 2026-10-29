@@ -7,6 +7,20 @@
    l'interface admin garde ses propres tailles.
    ============================================= */
 :root {
+  /* ── Charte couleurs des formulaires (accessibilité / daltonisme) ──
+     Teintes claires : toujours avec un texte ou une icône foncé (--form-texte). */
+  --form-achat:   #9EBFF7;   /* Nouvel achat unique          */
+  --form-abo:     #8FD8BE;   /* Nouvel abonnement            */
+  --form-ccol:    #D2C3E3;   /* Modification et CCOL         */
+  --form-acces:   #AEB5BF;   /* Accessibilité                */
+  --form-suggest: #F2E399;   /* Suggestion d'achat - Usager  */
+  --form-peb:     #B8DBFF;   /* PEB numérique                */
+  --form-texte:   #1F2937;   /* texte / icône sur ces teintes */
+  --priorite-urgent: #D2C3E3;
+  --statut-soumis:   #4FD877;
+  --tdb-en-attente:  #EDAD34;
+  --tdb-urgentes:    #D2C3E3;
+
   --typo-police:            'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --typo-police-secondaire: 'Lora', Georgia, 'Times New Roman', serif;
 
@@ -1438,19 +1452,19 @@ select.typeahead, select.tt-query, select.tt-hint {
    future liste. Ne pas modifier les couleurs sans mettre à jour
    les 7 types dans toute l'application.
    ============================================= */
-.badge-type--ccol     { background: #EDE9FE; color: #312E81; border: 1px solid rgba(55,48,163,.3); }  /* Modif. CCOL — Indigo     */
-.badge-type--abo      { background: #DCFCE7; color: #14532D; border: 1px solid rgba(21,128,61,.25); } /* Nouvel abonnement — Vert émeraude */
-.badge-type--achat    { background: #D9F0EE; color: #1B5E6E; border: 1px solid rgba(42,144,134,.3); }  /* Achat unique — Teal     */
-.badge-type--peb      { background: #E0F2FE; color: #0C4A6E; border: 1px solid rgba(3,105,161,.3); }  /* PEB Tipasa — Sky        */
-.badge-type--acq      { background: #F4F5F7; color: #37424D; border: 1px solid rgba(55,66,77,.15); }  /* Requête ACQ — Gris foncé */
-.badge-type--suggest  { background: #FDF3E3; color: #7B4A15; border: 1px solid rgba(200,135,42,.3); }  /* Suggestion — Ambre      */
+.badge-type--ccol     { background: var(--form-ccol);    color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* Modification et CCOL */
+.badge-type--abo      { background: var(--form-abo);     color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* Nouvel abonnement */
+.badge-type--achat    { background: var(--form-achat);   color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* Nouvel achat unique */
+.badge-type--peb      { background: var(--form-peb);     color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* PEB numérique */
+.badge-type--acq      { background: var(--form-acces);   color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* Accessibilité */
+.badge-type--suggest  { background: var(--form-suggest); color: var(--form-texte); border: 1px solid rgba(31,41,55,.12); }  /* Suggestion d'achat - Usager */
 .badge-type--autre    { background: var(--light-gray);       color: var(--medium-gray); }               /* Autre — Neutre          */
 
 /* =============================================
    PRIORITÉ DE LA DEMANDE — texte coloré, pas de badge (trop chargé dans la liste des items)
    items-list, item-detail.
    ============================================= */
-.badge-priorite--urgent      { color: #B72600; } /* Urgent — Rouge-orangé */
+.badge-priorite--urgent      { background: var(--priorite-urgent); color: var(--form-texte); padding: 2px 8px; border-radius: 6px; font-weight: 600; } /* Urgent */
 .badge-priorite--prioritaire { }                 /* Prioritaire — couleur de texte par défaut */
 .badge-priorite--regulier    { }                 /* Régulier — couleur de texte par défaut */
 .badge-priorite--autre       { }                 /* Non spécifiée — couleur de texte par défaut */
@@ -2551,9 +2565,9 @@ body.sidebar-open { overflow: hidden; }
   border: 1px solid #607386dc;
 }
 .badge-statut-bib--soumis {
-  background: #e6f4ea;
-  color: #1e7e34;
-  border: 1px solid #1e7e34aa;
+  background: var(--statut-soumis);
+  color: var(--form-texte);
+  border: 1px solid rgba(31,41,55,.15);
 }
 
 .badge-statut-acq {
