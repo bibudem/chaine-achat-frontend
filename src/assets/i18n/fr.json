@@ -1283,6 +1283,8 @@
     "pourcentage": "Pourcentage",
     "fonds-ajouter": "Ajouter un fonds (fonds partagés)",
     "fonds-retirer": "Retirer ce fonds",
+    "pourcentage-auto": "Nombre entier ; la dernière ligne (ou l'avant-dernière) se complète automatiquement à 100 %",
+    "fonds-total-depasse": "Le total des pourcentages ne peut pas dépasser 100 %.",
     "fonds-total": "Total",
     "fonds-total-avertissement": "Le total des pourcentages devrait être 100 %.",
     "fonds-total-paye": "Total payé (CAD)",

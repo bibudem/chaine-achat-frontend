@@ -1351,6 +1351,8 @@
     "pourcentage": "Percentage",
     "fonds-ajouter": "Add a fund (shared funding)",
     "fonds-retirer": "Remove this fund",
+    "pourcentage-auto": "Whole number; the last line (or the one before) is completed to 100% automatically",
+    "fonds-total-depasse": "The total percentage cannot exceed 100%.",
     "fonds-total": "Total",
     "fonds-total-avertissement": "The percentages should add up to 100%.",
     "fonds-total-paye": "Total paid (CAD)",

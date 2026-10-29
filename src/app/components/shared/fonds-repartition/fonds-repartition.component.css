@@ -105,3 +105,6 @@
 }
 .fr-btn--ajouter { color: #198754; }
 .fr-btn:hover { opacity: .75; }
+
+/* Total des pourcentages > 100 % : erreur bloquante */
+.fr-hint--erreur { color: #b91c1c; }

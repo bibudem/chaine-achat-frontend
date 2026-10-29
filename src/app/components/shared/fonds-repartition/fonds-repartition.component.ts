@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ConfigService, TauxRates } from '../../../services/config.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionDevise';
@@ -8,9 +8,10 @@ import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionD
  * Répartition d'une demande entre plusieurs fonds budgétaires (fonds partagés) —
  * Nouvel achat unique, Nouvel abonnement, Modification et CCOL uniquement.
  * Chaque ligne est indépendante (sa propre devise/prix/prix CAD/fonds/pourcentage) ;
- * le montant total payé = la somme des prix CAD de toutes les lignes. Le pourcentage
- * n'est qu'une information de répartition budgétaire (non recalculée depuis les prix)
- * et son total n'affiche qu'un avertissement non bloquant s'il diffère de 100 %.
+ * le montant total payé = la somme des prix CAD de toutes les lignes. Dès qu'il y a
+ * plusieurs fonds, le pourcentage de chaque ligne est saisi à la main, en nombre entier
+ * (ex. 30 / 70) : la dernière ligne (ou l'avant-dernière) prend le complément à 100 (voir
+ * onPourcentageSaisi) ; le total ne peut pas dépasser 100 % (validateur totalMax100).
  * Avec une seule ligne (cas normal), le composant s'insère dans la même rangée
  * Bootstrap que le reste d'"Informations financières" (voir :host display:contents
  * dans le CSS) ; dès qu'un 2e fonds est ajouté, chaque ligne devient une rangée
@@ -37,10 +38,29 @@ export class FondsRepartitionComponent implements OnInit {
   constructor(private configService: ConfigService) {}
 
   ngOnInit(): void {
+    // Le parent vide/remplit toujours ce même FormArray (chargement, réinitialisation) :
+    // le validateur ajouté ici reste en place.
+    if (!this.fondsArray.hasValidator(FondsRepartitionComponent.totalMax100)) {
+      this.fondsArray.addValidators(FondsRepartitionComponent.totalMax100);
+      this.fondsArray.updateValueAndValidity();
+    }
     this.configService.getTauxRates().subscribe(rates => {
       this.tauxRates = rates;
       this.lignes.forEach(l => this.convertirPrix(l));
     });
+  }
+
+  /** Somme d'un champ numérique sur toutes les lignes, arrondie au centième. */
+  private static somme(lignes: AbstractControl[], champ: string): number {
+    const total = lignes.reduce((s, l) => s + (Number(l.get(champ)?.value) || 0), 0);
+    return Math.round(total * 100) / 100;
+  }
+
+  /** Total des pourcentages > 100 % (avec 2 fonds ou plus) : erreur bloquante. */
+  static totalMax100(control: AbstractControl): ValidationErrors | null {
+    const lignes = (control as FormArray).controls;
+    return lignes.length > 1 && FondsRepartitionComponent.somme(lignes, 'pourcentage') > 100
+      ? { totalPourcentageDepasse: true } : null;
   }
 
   private appliquerValidationLigne(ligne: FormGroup): void {
@@ -57,7 +77,7 @@ export class FondsRepartitionComponent implements OnInit {
       { nom: 'prix_devise_originale', validators: [Validators.min(0.01)] },
       { nom: 'prix_cad',              validators: [Validators.min(0.01)] },
       { nom: 'fonds_budgetaire',      validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
-      { nom: 'pourcentage',           validators: [Validators.min(0.01), Validators.max(100)] },
+      { nom: 'pourcentage',           validators: FondsRepartitionComponent.validateursPourcentage },
     ];
     champs.forEach(({ nom, validators }) => {
       const ctrl = ligne.get(nom);
@@ -87,17 +107,40 @@ export class FondsRepartitionComponent implements OnInit {
   }
 
   get sommePourcentage(): number {
-    return this.lignes.reduce((somme, l) => somme + (Number(l.get('pourcentage')?.value) || 0), 0);
+    return FondsRepartitionComponent.somme(this.lignes, 'pourcentage');
   }
 
   get sommeIncorrecte(): boolean {
-    return this.partage && Math.round(this.sommePourcentage * 100) / 100 !== 100;
+    return this.partage && this.sommePourcentage !== 100;
+  }
+
+  /** Total > 100 % : même règle que le validateur bloquant (totalMax100). */
+  get sommeDepasse(): boolean {
+    return this.fondsArray.hasError('totalPourcentageDepasse');
+  }
+
+  /** Pourcentage : nombre entier de 1 à 100. */
+  static readonly validateursPourcentage = [Validators.min(1), Validators.max(100), Validators.pattern(/^\d+$/)];
+
+  /** Saisie d'un pourcentage : une ligne « tampon » prend le complément pour que le total
+   *  fasse 100 — la dernière ligne, ou l'avant-dernière si c'est la dernière qu'on saisit
+   *  (2 fonds : 30 → 70 ; 3 fonds : 86 / 14 puis 1 sur la 3e → 86 / 13 / 1). Si les autres
+   *  lignes dépassent déjà 100, le tampon tombe à 0 et le total reste bloqué (totalMax100). */
+  onPourcentageSaisi(index: number): void {
+    if (!this.partage) return;
+    const valeur = this.lignes[index].get('pourcentage')?.value;
+    if (valeur === null || valeur === '' || isNaN(Number(valeur))) return;
+    const derniere = this.lignes.length - 1;
+    const tampon   = index === derniere ? derniere - 1 : derniere;
+    const autres   = this.lignes.reduce((s, l, i) =>
+      i === tampon ? s : s + (Math.round(Number(l.get('pourcentage')?.value)) || 0), 0);
+    this.lignes[tampon].get('pourcentage')?.setValue(Math.min(100, Math.max(0, 100 - autres)));
   }
 
   /** Montant total réellement payé — toujours la somme des prix CAD de chaque ligne
    *  (vaut simplement le prix de l'unique ligne quand il n'y a pas de partage). */
   get sommePrixCad(): number {
-    return this.lignes.reduce((somme, l) => somme + (Number(l.get('prix_cad')?.value) || 0), 0);
+    return FondsRepartitionComponent.somme(this.lignes, 'prix_cad');
   }
 
   deviseConvertible(ligne: FormGroup): boolean {
@@ -122,9 +165,6 @@ export class FondsRepartitionComponent implements OnInit {
   }
 
   ajouter(): void {
-    if (this.lignes.length === 1) {
-      this.fondsArray.at(0).get('pourcentage')?.setValue(null);
-    }
     const ligne = FondsRepartitionComponent.creerLigne({ pourcentage: null });
     this.fondsArray.push(ligne);
     this.appliquerValidationLigne(ligne);
@@ -165,7 +205,7 @@ export class FondsRepartitionComponent implements OnInit {
         Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')
       ]),
       pourcentage: new FormControl(data.pourcentage === undefined ? 100 : data.pourcentage, [
-        Validators.required, Validators.min(0.01), Validators.max(100)
+        Validators.required, ...FondsRepartitionComponent.validateursPourcentage
       ]),
     });
   }
