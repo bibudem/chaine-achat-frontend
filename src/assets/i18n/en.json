@@ -1221,6 +1221,27 @@
     "ajouter-demande": "Add a request"
   },
   "forms-usager": {
+    "portail-acquisitions": "Acquisitions portal",
+    "statut-demande": "Request status",
+    "statut-demande-hint": "Choose <strong>Soumettre aux ACQ</strong> to send the request.",
+    "piece-jointe": "Attachment (optional)",
+    "note-interne": "Internal note",
+    "note-interne-placeholder": "Library internal note…",
+    "fermer": "Close",
+    "priorite-regulier": "Regular",
+    "priorite-prioritaire": "Priority",
+    "priorite-urgent": "Urgent",
+    "oui": "Yes",
+    "non": "No",
+    "titre-placeholder": "Full title of the document",
+    "isbn-placeholder": "e.g. 9782070360024",
+    "nb-utilisateurs-placeholder": "e.g. 50",
+    "maison-edition-placeholder": "Publisher",
+    "source-info-hint": "URL where the information was found",
+    "msg-soumise": "Your request has been submitted.",
+    "msg-soumise-pj-echec": "Your request has been submitted, but the attachment could not be sent. You can try again by editing your request.",
+    "msg-enregistree": "Your information has been saved.",
+    "msg-enregistree-pj-echec": "Your information has been saved, but the attachment could not be sent. You can try again by editing your request.",
     "confirmation-soumise": "Request submitted!",
     "confirmation-requete-soumise": "Request submitted!",
     "confirmation-suggestion-envoyee": "Suggestion sent!",
@@ -1352,6 +1373,8 @@
     "personne-aviser-hint": "The user who made the original ILL request (optional)"
   },
   "form-nouvel-achat": {
+    "auteur-editeur-placeholder": "Author name or publisher",
+    "enseignant-placeholder": "Instructor name",
     "titre": "New one-time purchase",
     "sous-titre": "Form for one-time purchases without recurring fees",
     "confirmation-message": "Your purchase request has been forwarded to the Acquisitions team.",
@@ -1379,6 +1402,10 @@
     "lien-plateforme-hint": "e.g. EBSCO, Elsevier, Oxford, MUSE…"
   },
   "form-abonnement": {
+    "titre-placeholder": "Full title of the resource",
+    "editeur-placeholder": "Publisher or vendor name",
+    "issn-placeholder": "e.g. 00280836",
+    "periode-placeholder": "e.g. 2024 or 2020-2025",
     "titre": "New subscription",
     "sous-titre": "Request for subscription to a periodic or serial resource",
     "confirmation-message": "Your subscription request has been forwarded to the Acquisitions team.",
@@ -1396,6 +1423,11 @@
     "fonds-hint": "e.g. PE-001, AB-120"
   },
   "form-modification-ccol": {
+    "titre-placeholder": "Full title of the document or subscription",
+    "periode-placeholder": "e.g. 1996-2000",
+    "localisation-hint": "Shown when Format = Print",
+    "plateforme-hint": "e.g. EBSCO, Elsevier, Oxford…",
+    "nb-utilisateurs-hint": "Whole number ≥ 1",
     "titre": "Modification and CCOL",
     "sous-titre": "Subscription modifications, collection additions, and CCOL requests",
     "confirmation-message": "Your modification request has been forwarded to the Acquisitions team.",
@@ -1416,6 +1448,8 @@
     "periode-hint": "Specific to CCOL and Modification"
   },
   "form-peb-tipasa": {
+    "section-document": "Document and digital availability",
+    "titre-placeholder": "Full title of the e-book",
     "titre": "PEB digital",
     "sous-titre": "Request the purchase of documents arising from interlibrary loan requests. Exclusive to the PEB team.",
     "confirmation-message": "Your PEB digital request has been forwarded to the Acquisitions team.",
@@ -1465,6 +1499,12 @@
     "courriel-aviser-hint": "User email to notify (optional)"
   },
   "form-suggestion": {
+    "fil-tri": "Public suggestion triage",
+    "lecture-seule-titre": "Read only.",
+    "lecture-seule-texte": "Only the triage team and Admins can complete this public suggestion and submit it to Acquisitions.",
+    "acceptee-titre": "Public suggestion accepted.",
+    "acceptee-texte": "Fill in the missing fields (priority, library, subject librarian, ISBN…). It stays a draft until the status is « Soumettre aux ACQ »: you can save it and resume later from the team history. The original requester will be notified of the Acquisitions decision.",
+    "suivi-tri-lecture-seule": "Reserved for the triage team (read only).",
     "titre": "Purchase suggestion",
     "sous-titre": "Suggest a document you would like the libraries to acquire",
     "notice-titre": "Please note",

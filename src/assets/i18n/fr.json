@@ -1153,6 +1153,27 @@
     "ajouter-demande": "Ajouter une demande"
   },
   "forms-usager": {
+    "portail-acquisitions": "Portail acquisitions",
+    "statut-demande": "Statut de la demande",
+    "statut-demande-hint": "Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.",
+    "piece-jointe": "Pièce jointe (facultatif)",
+    "note-interne": "Note interne",
+    "note-interne-placeholder": "Note interne de la bibliothèque…",
+    "fermer": "Fermer",
+    "priorite-regulier": "Régulier",
+    "priorite-prioritaire": "Prioritaire",
+    "priorite-urgent": "Urgent",
+    "oui": "Oui",
+    "non": "Non",
+    "titre-placeholder": "Titre complet du document",
+    "isbn-placeholder": "Ex : 9782070360024",
+    "nb-utilisateurs-placeholder": "Ex : 50",
+    "maison-edition-placeholder": "Maison d'édition",
+    "source-info-hint": "URL où l'information a été trouvée",
+    "msg-soumise": "Votre demande a été soumise avec succès.",
+    "msg-soumise-pj-echec": "Votre demande a été soumise avec succès, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande.",
+    "msg-enregistree": "Vos informations ont été enregistrées.",
+    "msg-enregistree-pj-echec": "Vos informations ont été enregistrées, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande.",
     "confirmation-soumise": "Demande soumise !",
     "confirmation-requete-soumise": "Requête soumise !",
     "confirmation-suggestion-envoyee": "Suggestion envoyée !",
@@ -1284,6 +1305,8 @@
     "personne-aviser-hint": "L'usager qui a fait la demande PEB originale (optionnel)"
   },
   "form-nouvel-achat": {
+    "auteur-editeur-placeholder": "Nom de l'auteur ou maison d'édition",
+    "enseignant-placeholder": "Nom de l'enseignant",
     "titre": "Nouvel achat unique",
     "sous-titre": "Formulaire pour les achats ponctuels sans frais récurrents",
     "confirmation-message": "Votre demande d'achat a bien été transmise à l'équipe des Acquisitions.",
@@ -1311,6 +1334,10 @@
     "lien-plateforme-hint": "Ex : EBSCO, Elsevier, Oxford, MUSE…"
   },
   "form-abonnement": {
+    "titre-placeholder": "Titre complet de la ressource",
+    "editeur-placeholder": "Nom de l'éditeur ou du fournisseur",
+    "issn-placeholder": "Ex : 00280836",
+    "periode-placeholder": "Ex : 2024 ou 2020-2025",
     "titre": "Nouvel abonnement",
     "sous-titre": "Demande de souscription à une ressource périodique ou sérielle",
     "confirmation-message": "Votre demande d'abonnement a bien été transmise à l'équipe des Acquisitions.",
@@ -1328,6 +1355,11 @@
     "fonds-hint": "Ex : PE-001, AB-120"
   },
   "form-modification-ccol": {
+    "titre-placeholder": "Titre complet du document ou de l'abonnement",
+    "periode-placeholder": "Ex : 1996-2000",
+    "localisation-hint": "Visible si Format = Imprimé",
+    "plateforme-hint": "Ex : EBSCO, Elsevier, Oxford…",
+    "nb-utilisateurs-hint": "Entier ≥ 1",
     "titre": "Modification et CCOL",
     "sous-titre": "Modifications d'abonnements, compléments de collection et demandes CCOL",
     "confirmation-message": "Votre demande de modification a bien été transmise à l'équipe des Acquisitions.",
@@ -1348,6 +1380,8 @@
     "periode-hint": "Spécifique CCOL et Modification"
   },
   "form-peb-tipasa": {
+    "section-document": "Document et disponibilité numérique",
+    "titre-placeholder": "Titre complet du livre numérique",
     "titre": "PEB numérique",
     "sous-titre": "Demander l'achat de documents découlant de demandes de prêt entre bibliothèques. Exclusif à l'équipe du PEB.",
     "confirmation-message": "Votre demande PEB numérique a bien été transmise à l'équipe des Acquisitions.",
@@ -1416,6 +1450,12 @@
     "soumettre": "Soumettre"
   },
   "form-suggestion": {
+    "fil-tri": "Tri des suggestions publiques",
+    "lecture-seule-titre": "Lecture seule.",
+    "lecture-seule-texte": "Seules l'équipe de tri et les Admin peuvent compléter cette suggestion publique et la soumettre aux ACQ.",
+    "acceptee-titre": "Suggestion publique acceptée.",
+    "acceptee-texte": "Complétez les champs manquants (priorité, bibliothèque, bibliothécaire disciplinaire, ISBN…). Elle reste en brouillon tant que le statut n'est pas « Soumettre aux ACQ » : vous pouvez l'enregistrer et la reprendre plus tard depuis l'historique de l'équipe. Le demandeur d'origine sera avisé de la décision des ACQ.",
+    "suivi-tri-lecture-seule": "Réservé à l'équipe de tri (lecture seule).",
     "titre": "Suggestion d'achat",
     "sous-titre": "Proposez un document que vous souhaitez voir acquis par les bibliothèques",
     "notice-titre": "À noter",

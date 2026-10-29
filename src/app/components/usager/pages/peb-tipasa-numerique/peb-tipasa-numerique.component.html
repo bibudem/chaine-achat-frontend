@@ -7,10 +7,10 @@
   <!-- ══ NAVIGATION ═══════════════════════════════════════ -->
   <nav class="form-nav">
     <a routerLink="/usager" class="form-nav__back">
-      <i class="bi bi-arrow-left"></i> Retour
+      <i class="bi bi-arrow-left"></i> {{ 'btn-return' | translate }}
     </a>
     <span class="form-nav__breadcrumb">
-      <a routerLink="/usager" class="form-nav__crumb-link">Portail acquisitions</a>
+      <a routerLink="/usager" class="form-nav__crumb-link">{{ 'forms-usager.portail-acquisitions' | translate }}</a>
       <i class="bi bi-chevron-right form-nav__sep"></i>
       <span class="form-nav__crumb-current">{{ 'form-peb-tipasa.titre' | translate }}</span>
     </span>
@@ -101,7 +101,7 @@
       <!-- SECTION 2 — DOCUMENT ET DISPONIBILITÉ NUMÉRIQUE -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>Document et disponibilité numérique
+          <i class="fas fa-book-open"></i>{{ 'form-peb-tipasa.section-document' | translate }}
         </h2>
         <div class="row g-3">
 
@@ -109,7 +109,7 @@
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
-                   placeholder="Titre complet du livre numérique">
+                   [placeholder]="'form-peb-tipasa.titre-placeholder' | translate">
             <div *ngIf="isInvalid('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.titre-required' | translate }}
             </div>
@@ -124,14 +124,14 @@
           <div class="col-md-3">
             <label class="form-label">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
-                   placeholder="Maison d'édition">
+                   [placeholder]="'forms-usager.maison-edition-placeholder' | translate">
           </div>
 
           <div class="col-md-3">
             <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
-                   placeholder="Ex : 9782070360024"
+                   [placeholder]="'forms-usager.isbn-placeholder' | translate"
                    (input)="stripDashes($event)">
             <div *ngIf="isInvalid('isbn_issn')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
@@ -142,7 +142,7 @@
           <div class="col-md-3">
             <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="text" formControlName="date_publication" class="form-control"
-                   placeholder="AAAA ou AAAA-MM-JJ">
+                   [placeholder]="'form-nouvel-achat.date-placeholder' | translate">
           </div>
 
           <div class="col-md-3">
@@ -172,9 +172,9 @@
           <div class="col-md" *ngIf="form.get('gobi_vu_format_numerique')?.value === 'Oui'">
             <label class="form-label">{{ 'form-peb-tipasa.gobi-365' | translate }}</label>
             <select formControlName="gobi_version_moins_365_usd" class="form-select">
-              <option value="Ne s'applique pas">Ne s'applique pas</option>
-              <option value="Oui">Oui</option>
-              <option value="Non">Non</option>
+              <option value="Ne s'applique pas">{{ 'forms-usager.ne-sapplique-pas' | translate }}</option>
+              <option value="Oui">{{ 'forms-usager.oui' | translate }}</option>
+              <option value="Non">{{ 'forms-usager.non' | translate }}</option>
             </select>
           </div>
           <div class="col-md">
@@ -328,21 +328,21 @@
       <!-- SECTION — BIBLIOTHÈQUE -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-university"></i>Bibliothèque
+          <i class="fas fa-university"></i>{{ 'forms-usager.bibliotheque' | translate }}
         </h2>
         <div class="row g-3 align-items-start">
           <div class="col-md-6">
-            <label class="form-label">Statut de la demande</label>
+            <label class="form-label">{{ 'forms-usager.statut-demande' | translate }}</label>
             <select formControlName="statut_bibliotheque" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let s of statusOptions" [value]="s.valeur">{{ s.libelle }}</option>
             </select>
             <small class="form-text">
-              <i class="fas fa-info-circle me-1"></i>Choisissez <strong>Soumettre aux ACQ</strong> pour envoyer la demande.
+              <i class="fas fa-info-circle me-1"></i><span [innerHTML]="'forms-usager.statut-demande-hint' | translate"></span>
             </small>
           </div>
           <div class="col-md-6">
-            <label class="form-label mb-1"><i class="bi bi-paperclip me-1"></i>Pièce jointe (facultatif)</label>
+            <label class="form-label mb-1"><i class="bi bi-paperclip me-1"></i>{{ 'forms-usager.piece-jointe' | translate }}</label>
             <div class="pj-groupe">
               <app-piece-jointe-gestion *ngIf="editId" [reponseId]="editId" [readonlyMode]="true"></app-piece-jointe-gestion>
               <app-piece-jointe-uploader (filesChange)="onFichiersJointsChange($event)"></app-piece-jointe-uploader>
@@ -365,10 +365,10 @@
           </div>
           <div class="col-md-6">
             <label class="form-label">
-              <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>Note interne
+              <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>{{ 'forms-usager.note-interne' | translate }}
             </label>
             <textarea formControlName="bibliotheque_note_interne" class="form-control" rows="4"
-                      placeholder="Note interne de la bibliothèque…"></textarea>
+                      [placeholder]="'forms-usager.note-interne-placeholder' | translate"></textarea>
           </div>
         </div>
       </div>
@@ -376,9 +376,9 @@
       <!-- ERREUR -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible mt-3" role="alert">
         <i class="fas fa-exclamation-circle me-2"></i>
-        Une erreur est survenue. Veuillez réessayer ou contacter
+        {{ 'forms-usager.erreur-titre' | translate }} {{ 'forms-usager.erreur-contact' | translate }}
         <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
-        <button type="button" class="btn-close" (click)="error = false" aria-label="Fermer"></button>
+        <button type="button" class="btn-close" (click)="error = false" [attr.aria-label]="'forms-usager.fermer' | translate"></button>
       </div>
 
       <!-- BOUTONS -->
@@ -388,7 +388,7 @@
                 [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <i *ngIf="!isLoading" class="fas fa-save"></i>
-          Enregistrer
+          {{ 'btn-enregistrer' | translate }}
         </button>
         <button type="submit" class="btn btn-primary"
                 [disabled]="isLoading || form.get('statut_bibliotheque')?.value !== 'Soumettre aux ACQ'">

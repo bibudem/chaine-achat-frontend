@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -74,7 +75,8 @@ export class SuggestionPublicComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bibliothequesService: BibliothequesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {}
 
   /** Applique les droits après le chargement : tout en lecture seule, ou seulement la section
@@ -313,8 +315,8 @@ export class SuggestionPublicComponent implements OnInit {
 
   private naviguerApresSoumission(echecPieceJointe: boolean): void {
     const message = echecPieceJointe
-      ? "Votre demande a été soumise avec succès, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
-      : 'Votre demande a été soumise avec succès.';
+      ? this.translate.instant('forms-usager.msg-soumise-pj-echec')
+      : this.translate.instant('forms-usager.msg-soumise');
     this.naviguerVersListe(message);
   }
 
@@ -381,8 +383,8 @@ export class SuggestionPublicComponent implements OnInit {
 
   private naviguerApresEnregistrement(echecPieceJointe: boolean): void {
     const message = echecPieceJointe
-      ? "Vos informations ont été enregistrées, mais l'envoi de la pièce jointe a échoué. Vous pouvez réessayer en modifiant votre demande."
-      : 'Vos informations ont été enregistrées.';
+      ? this.translate.instant('forms-usager.msg-enregistree-pj-echec')
+      : this.translate.instant('forms-usager.msg-enregistree');
     this.naviguerVersListe(message);
   }
 
