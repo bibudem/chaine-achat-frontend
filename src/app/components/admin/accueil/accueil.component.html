@@ -191,214 +191,215 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       LIGNE 2 — PANELS  3 colonnes × 2 rangées
-       col gauche  : span 2 rangées (vue globale + top 5 + activité)
-       col centre  : rangée 1 donut  | rangée 2 répartition
-       col droite  : rangée 1 catalogue | rangée 2 statuts
+       LIGNE 2 — PANELS  (grille CSS, voir .db-grid dans accueil.component.css)
+       ≥ 1200 px : Types de formulaire (2 rangées) | Répartition par type | Statut/Suivi ACQ
+                                                    | Par bibliothèque     | Top 5 demandeurs
+       Chaque rangée a la même hauteur pour ses deux panneaux (alignement automatique).
+       768–1199 px : Types de formulaire pleine largeur, puis 2 colonnes. < 768 px : 1 colonne.
   ══════════════════════════════════════════════ -->
-  <div class="row g-3 db-panels">
+  <div class="db-grid">
 
-    <!-- ══ COL GAUCHE — grand panel ancré (2 rangées) ══ -->
-    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-left">
-      <!-- Rangée 1 : Catalogue des types -->
-      <div class="panel panel--catalog flex-grow-1">
-        <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.types-formulaire' | translate }}</span>
-          <span class="panel__sub">{{ allTypes.length }} {{ 'accueil.types' | translate }}</span>
-        </div>
-        <div class="panel__body panel__body--catalog">
-          <div *ngIf="isLoadingTypeCounts" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
-          </div>
-          <ng-container *ngIf="!isLoadingTypeCounts">
-            <ng-container *ngFor="let groupe of typeGroupes; let gi = index">
-              <div class="catalog-group-label" [class.catalog-group-label--first]="gi === 0">
-                {{ groupe.label }}
-              </div>
-              <div *ngFor="let type of groupe.types"
-                   class="catalog-row"
-                   [class.db-link-disabled]="!authService.canEdit"
-                   (click)="navigateToNouveau(type)"
-                   [title]="authService.canEdit ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
-                <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorKey(type) + '-bg'">
-                  <i [class]="getTypeIcon(type)"></i>
-                </div>
-                <div class="catalog-row__body">
-                  <span class="catalog-row__name">{{ formulaireTypeLabel(type) }}</span>
-                  <span class="catalog-row__desc">{{ typeDescriptions[type] }}</span>
-                </div>
-                <div class="catalog-row__meta">
-                  <i class="bi bi-arrow-right-short catalog-row__arrow"></i>
-                </div>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>
+    <!-- Types de formulaire -->
+    <section class="panel panel--catalog db-area--catalog" aria-labelledby="tdb-titre-types">
+      <div class="panel__head">
+        <h2 class="panel__title" id="tdb-titre-types">{{ 'accueil.types-formulaire' | translate }}</h2>
+        <span class="panel__sub">{{ allTypes.length }} {{ 'accueil.types' | translate }}</span>
       </div>
-
-    </div>
-
-    <!-- ══ COL centre ══ -->
-    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-right">
-      <!-- Rangée 1 : Répartition par type -->
-      <div class="panel panel--types mb-3 flex-grow-1">
-        <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.repartition-par-type' | translate }}</span>
-          <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
+      <div class="panel__body panel__body--catalog">
+        <div *ngIf="isLoadingTypeCounts" class="db-spinner">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
         </div>
-        <div class="panel__body">
-
-          <div *ngIf="isLoadingDashboard" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
-          </div>
-
-          <ng-container *ngIf="!isLoadingDashboard && byType.length > 0">
-            <div class="type-seg-bar">
-              <div *ngFor="let t of byType"
-                   class="type-seg-bar__slice"
-                   [class]="'tc-' + getTypeColorKey(t.formulaire_type)"
-                   [style.width.%]="t.percentage"
-                   [title]="formulaireTypeLabel(t.formulaire_type) + ' — ' + t.percentage + '%'">
-              </div>
+        <ng-container *ngIf="!isLoadingTypeCounts">
+          <ng-container *ngFor="let groupe of typeGroupes; let gi = index">
+            <div class="catalog-group-label" [class.catalog-group-label--first]="gi === 0">
+              {{ groupe.label }}
             </div>
-            <div class="type-legend">
-              <div *ngFor="let t of byType"
-                   class="type-legend__row type-legend__row--link"
-                   (click)="navigateToType(t.formulaire_type)"
-                   [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
-                <span class="type-legend__dot" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'"></span>
-                <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
-                <div class="type-legend__track">
-                  <div class="type-legend__fill" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
-                </div>
-                <span class="type-legend__pct">{{ t.percentage }}%</span>
-                <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>
+            <div *ngFor="let type of groupe.types"
+                 class="catalog-row"
+                 [class.db-link-disabled]="!authService.canEdit"
+                 [attr.role]="authService.canEdit ? 'button' : null"
+                 [attr.tabindex]="authService.canEdit ? 0 : null"
+                 (click)="navigateToNouveau(type)"
+                 (keydown.enter)="navigateToNouveau(type)"
+                 [title]="authService.canEdit ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
+              <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorKey(type) + '-bg'" aria-hidden="true">
+                <i [class]="getTypeIcon(type)"></i>
+              </div>
+              <div class="catalog-row__body">
+                <span class="catalog-row__name">{{ formulaireTypeLabel(type) }}</span>
+                <span class="catalog-row__desc">{{ typeDescriptions[type] }}</span>
+              </div>
+              <div class="catalog-row__meta" aria-hidden="true">
+                <i class="bi bi-arrow-right-short catalog-row__arrow"></i>
               </div>
             </div>
           </ng-container>
+        </ng-container>
+      </div>
+    </section>
 
-          <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
+    <!-- Répartition par type -->
+    <section class="panel panel--types db-area--types" aria-labelledby="tdb-titre-repartition">
+      <div class="panel__head">
+        <h2 class="panel__title" id="tdb-titre-repartition">{{ 'accueil.repartition-par-type' | translate }}</h2>
+        <button class="btn btn-link btn-sm p-0" (click)="navigateTo('/items')">{{ 'accueil.voir-tout' | translate }}</button>
+      </div>
+      <div class="panel__body">
+
+        <div *ngIf="isLoadingDashboard" class="db-spinner">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
+        </div>
+
+        <ng-container *ngIf="!isLoadingDashboard && byType.length > 0">
+          <div class="type-seg-bar" aria-hidden="true">
+            <div *ngFor="let t of byType"
+                 class="type-seg-bar__slice"
+                 [class]="'tc-' + getTypeColorKey(t.formulaire_type)"
+                 [style.width.%]="t.percentage"
+                 [title]="formulaireTypeLabel(t.formulaire_type) + ' — ' + t.percentage + '%'">
+            </div>
+          </div>
+          <div class="type-legend">
+            <div *ngFor="let t of byType"
+                 class="type-legend__row type-legend__row--link"
+                 role="button" tabindex="0"
+                 (click)="navigateToType(t.formulaire_type)"
+                 (keydown.enter)="navigateToType(t.formulaire_type)"
+                 [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
+              <span class="type-legend__dot" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'" aria-hidden="true"></span>
+              <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
+              <div class="type-legend__track" aria-hidden="true">
+                <div class="type-legend__fill" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
+              </div>
+              <span class="type-legend__pct">{{ t.percentage }}%</span>
+              <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <p *ngIf="!isLoadingDashboard && byType.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
+      </div>
+    </section>
+
+    <!-- Statut ACQ / Suivi ACQ (bascule) — état actuel de tous les items, pas limité à la
+         période sélectionnée (voir models/home.js, by_statut_acq/by_suivi_acq). -->
+    <section class="panel panel--priority db-area--acq" aria-labelledby="tdb-titre-acq">
+      <div class="panel__head">
+        <h2 class="panel__title" id="tdb-titre-acq">{{ (acqBreakdownField === 'statut' ? 'accueil.par-statut-acq' : 'accueil.par-suivi-acq') | translate }}</h2>
+        <div class="acq-toggle" role="group">
+          <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'statut'"
+                  [attr.aria-pressed]="acqBreakdownField === 'statut'"
+                  (click)="setAcqBreakdownField('statut')">{{ 'accueil.statut-acq' | translate }}</button>
+          <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'suivi'"
+                  [attr.aria-pressed]="acqBreakdownField === 'suivi'"
+                  (click)="setAcqBreakdownField('suivi')">{{ 'accueil.suivi-acq' | translate }}</button>
         </div>
       </div>
+      <div class="panel__body panel__body--donut">
 
-      <!-- Rangée 2 : Par bibliothèque -->
-      <div class="panel panel--biblio flex-grow-1">
-        <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.par-bibliotheque' | translate }}</span>
-          <span class="panel__sub" *ngIf="!isLoadingGraphs">{{ periodLabel }}</span>
+        <div *ngIf="isLoadingDashboard || isLoadingTotalItems" class="db-spinner">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
         </div>
-        <div class="panel__body">
 
-          <div *ngIf="isLoadingGraphs" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
+        <ng-container *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length > 0">
+          <div class="priority-donut" [style.background]="generateAcqDonutGradient()" aria-hidden="true">
+            <div class="priority-donut__inner">
+              <span class="priority-donut__total">{{ totalItemsSysteme }}</span>
+              <span class="priority-donut__label">{{ 'accueil.total' | translate }}</span>
+            </div>
           </div>
+          <div class="priority-legend">
+            <div class="priority-legend__item" *ngFor="let s of acqBreakdownItems; let i = index">
+              <span class="priority-legend__color" [style.background]="getBibColor(i)" aria-hidden="true"></span>
+              <span class="priority-legend__text">{{ s.label }}</span>
+              <span class="priority-legend__value">
+                {{ formatNumber(s.count) }}
+                <span class="priority-legend__pct">({{ calculatePercentage(s.count, totalItemsSysteme || 0) }}%)</span>
+              </span>
+            </div>
+          </div>
+        </ng-container>
 
-          <ng-container *ngIf="!isLoadingGraphs && libraryStats.length > 0">
-            <div *ngFor="let lib of libraryStats; let i = index" class="bib-row"
-                 [class.db-link-disabled]="lib.bibliotheque === 'Non spécifiée'"
-                 (click)="lib.bibliotheque !== 'Non spécifiée' && navigateToBibliotheque(lib.bibliotheque)"
-                 [title]="lib.bibliotheque === 'Non spécifiée' ? '' : ('Voir les demandes · ' + lib.bibliotheque)">
-              <div class="bib-gauge"
-                   [style.background]="'conic-gradient(' + getBibColor(i) + ' 0% ' + lib.percentage + '%, #E5F0F8 ' + lib.percentage + '% 100%)'">
-                <div class="bib-gauge__inner">
-                  <span class="bib-gauge__pct">{{ Math.round(lib.percentage) }}%</span>
+        <p *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length === 0" class="db-empty">{{ 'accueil.aucune-donnee-courte' | translate }}</p>
+      </div>
+    </section>
+
+    <!-- Par bibliothèque — liste limitée en hauteur, défilement interne accessible au clavier -->
+    <section class="panel panel--biblio db-area--biblio" aria-labelledby="tdb-titre-biblio">
+      <div class="panel__head">
+        <h2 class="panel__title" id="tdb-titre-biblio">{{ 'accueil.par-bibliotheque' | translate }}</h2>
+        <span class="panel__sub" *ngIf="!isLoadingGraphs">{{ periodLabel }}</span>
+      </div>
+      <div class="panel__body">
+
+        <div *ngIf="isLoadingGraphs" class="db-spinner">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
+        </div>
+
+        <div *ngIf="!isLoadingGraphs && libraryStats.length > 0" class="bib-list"
+             tabindex="0" role="region" [attr.aria-label]="'accueil.par-bibliotheque' | translate">
+          <div *ngFor="let lib of libraryStats; let i = index" class="bib-row"
+               [class.db-link-disabled]="lib.bibliotheque === 'Non spécifiée'"
+               [attr.role]="lib.bibliotheque === 'Non spécifiée' ? null : 'button'"
+               [attr.tabindex]="lib.bibliotheque === 'Non spécifiée' ? null : 0"
+               (click)="lib.bibliotheque !== 'Non spécifiée' && navigateToBibliotheque(lib.bibliotheque)"
+               (keydown.enter)="lib.bibliotheque !== 'Non spécifiée' && navigateToBibliotheque(lib.bibliotheque)"
+               [title]="lib.bibliotheque === 'Non spécifiée' ? '' : ('Voir les demandes · ' + lib.bibliotheque)">
+            <div class="bib-gauge" aria-hidden="true"
+                 [style.background]="'conic-gradient(' + getBibColor(i) + ' 0% ' + lib.percentage + '%, #E5F0F8 ' + lib.percentage + '% 100%)'">
+              <div class="bib-gauge__inner">
+                <span class="bib-gauge__pct">{{ Math.round(lib.percentage) }}%</span>
+              </div>
+            </div>
+            <div class="bib-info">
+              <span class="bib-info__name">{{ lib.bibliotheque }}</span>
+              <span class="bib-info__count">{{ formatNumber(lib.total) }} {{ 'accueil.demandes' | translate }}</span>
+            </div>
+            <span class="bib-total" [style.color]="getBibColor(i)">{{ formatNumber(lib.total) }}</span>
+          </div>
+        </div>
+
+        <p *ngIf="!isLoadingGraphs && libraryStats.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
+      </div>
+    </section>
+
+    <!-- Top 5 demandeurs -->
+    <section class="panel panel--statuts db-area--top5" aria-labelledby="tdb-titre-top5">
+      <div class="panel__head">
+        <h2 class="panel__title" id="tdb-titre-top5">{{ 'accueil.top5-demandeurs' | translate }}</h2>
+        <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ periodLabel }}</span>
+      </div>
+      <div class="panel__body panel__body--main">
+
+        <div *ngIf="isLoadingDashboard" class="db-spinner">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
+        </div>
+
+        <ng-container *ngIf="!isLoadingDashboard">
+          <ng-container *ngIf="topDemandeurs.length > 0">
+            <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row"
+                 role="button" tabindex="0"
+                 (click)="navigateToDemandeur(d.demandeur)"
+                 (keydown.enter)="navigateToDemandeur(d.demandeur)"
+                 [title]="'Voir les demandes · ' + d.demandeur">
+              <span class="hbar-label">{{ d.demandeur }}</span>
+              <div class="hbar-track" aria-hidden="true">
+                <div class="hbar-fill"
+                     [class.hbar-fill--first]="d.rank === 1"
+                     [style.width.%]="calculatePercentage(d.count, maxTopDemandeurCount)">
                 </div>
               </div>
-              <div class="bib-info">
-                <span class="bib-info__name">{{ lib.bibliotheque }}</span>
-                <span class="bib-info__count">{{ formatNumber(lib.total) }} {{ 'accueil.demandes' | translate }}</span>
-              </div>
-              <span class="bib-total" [style.color]="getBibColor(i)">{{ formatNumber(lib.total) }}</span>
+              <span class="hbar-meta">
+                <span class="hbar-cnt">{{ formatNumber(d.count) }}</span>
+                <span class="hbar-pct">{{ calculatePercentage(d.count, totals.total_items) }}%</span>
+              </span>
             </div>
           </ng-container>
-
-          <p *ngIf="!isLoadingGraphs && libraryStats.length === 0" class="db-empty">{{ 'accueil.aucune-donnee' | translate }}</p>
-        </div>
+          <p *ngIf="topDemandeurs.length === 0" class="db-empty">{{ 'accueil.aucun-demandeur' | translate }}</p>
+        </ng-container>
       </div>
+    </section>
 
-    </div>
-
-      <!-- ══ COL droite ══ -->
-    <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column db-col-center">
-
-      <!-- Rangée 1 : Statut ACQ / Suivi ACQ donut (bascule) — état actuel de tous les items,
-           pas limité à la période sélectionnée (voir models/home.js, by_statut_acq/by_suivi_acq). -->
-      <div class="panel panel--priority mb-3 flex-grow-1">
-        <div class="panel__head">
-          <span class="panel__title">{{ (acqBreakdownField === 'statut' ? 'accueil.par-statut-acq' : 'accueil.par-suivi-acq') | translate }}</span>
-          <div class="acq-toggle">
-            <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'statut'"
-                    (click)="setAcqBreakdownField('statut')">{{ 'accueil.statut-acq' | translate }}</button>
-            <button type="button" class="acq-toggle__btn" [class.acq-toggle__btn--active]="acqBreakdownField === 'suivi'"
-                    (click)="setAcqBreakdownField('suivi')">{{ 'accueil.suivi-acq' | translate }}</button>
-          </div>
-        </div>
-        <div class="panel__body panel__body--donut">
-
-          <div *ngIf="isLoadingDashboard || isLoadingTotalItems" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
-          </div>
-
-          <ng-container *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length > 0">
-            <div class="priority-donut" [style.background]="generateAcqDonutGradient()">
-              <div class="priority-donut__inner">
-                <span class="priority-donut__total">{{ totalItemsSysteme }}</span>
-                <span class="priority-donut__label">{{ 'accueil.total' | translate }}</span>
-              </div>
-            </div>
-            <div class="priority-legend">
-              <div class="priority-legend__item" *ngFor="let s of acqBreakdownItems; let i = index">
-                <span class="priority-legend__color" [style.background]="getBibColor(i)"></span>
-                <span class="priority-legend__text">{{ s.label }}</span>
-                <span class="priority-legend__value">
-                  {{ formatNumber(s.count) }}
-                  <span class="priority-legend__pct">({{ calculatePercentage(s.count, totalItemsSysteme || 0) }}%)</span>
-                </span>
-              </div>
-            </div>
-          </ng-container>
-
-          <p *ngIf="!isLoadingDashboard && !isLoadingTotalItems && acqBreakdownItems.length === 0" class="db-empty">{{ 'accueil.aucune-donnee-courte' | translate }}</p>
-        </div>
-      </div>
-      <div  class="panel panel--statuts flex-grow-1">
-        <div class="panel__head">
-          <span class="panel__title">{{ 'accueil.top5-demandeurs' | translate }}</span>
-          <span class="panel__sub" *ngIf="!isLoadingDashboard">{{ periodLabel }}</span>
-        </div>
-        <div class="panel__body panel__body--main">
-
-          <div *ngIf="isLoadingDashboard" class="db-spinner">
-            <div class="spinner-border spinner-border-sm text-primary"></div>
-          </div>
-
-          <ng-container *ngIf="!isLoadingDashboard">
-            <!-- Barres top 5 -->
-            <ng-container *ngIf="topDemandeurs.length > 0">
-              <div *ngFor="let d of topDemandeurs.slice(0,5)" class="hbar-row"
-                   (click)="navigateToDemandeur(d.demandeur)"
-                   [title]="'Voir les demandes · ' + d.demandeur">
-                <span class="hbar-label">{{ d.demandeur }}</span>
-                <div class="hbar-track">
-                  <div class="hbar-fill"
-                       [class.hbar-fill--first]="d.rank === 1"
-                       [style.width.%]="calculatePercentage(d.count, maxTopDemandeurCount)">
-                  </div>
-                </div>
-                <span class="hbar-meta">
-                  <span class="hbar-cnt">{{ formatNumber(d.count) }}</span>
-                  <span class="hbar-pct">{{ calculatePercentage(d.count, totals.total_items) }}%</span>
-                </span>
-              </div>
-            </ng-container>
-            <p *ngIf="topDemandeurs.length === 0" class="db-empty">{{ 'accueil.aucun-demandeur' | translate }}</p>
-
-          </ng-container>
-        </div>
-      </div>
-
-    </div>
-
-  </div><!-- /db-panels -->
+  </div><!-- /db-grid -->
 
 </div><!-- /db-wrap -->

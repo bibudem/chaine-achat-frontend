@@ -11,12 +11,8 @@
   box-sizing: border-box;
 }
 
-@media (min-width: 1400px) {
-  .db-wrap {
-    height: calc(100vh - 4.5rem);
-    overflow: hidden;
-  }
-}
+/* Pas de hauteur fixée à l'écran : la page défile toujours (accessibilité — zoom du
+   navigateur, portables à écran bas ; voir « Défilement de la page » plus bas). */
 
 /* ── Header ──────────────────────────────────────────────── */
 .db-header {
@@ -756,22 +752,21 @@
   .statut-grid     { grid-template-columns: 1fr; }
 }
 
-/* ── Mobile : libérer le scroll des panneaux ── */
-@media (max-width: 767px) {
-  .db-wrap    { height: auto !important; overflow: visible !important; }
-  .db-panels  { flex: none !important; min-height: unset !important; height: auto !important; }
-  .panel      { min-height: unset !important; height: auto !important; }
-  .panel__body {
-    overflow: visible !important;
-    overflow-y: visible !important;
-    flex: none !important;
-    height: auto !important;
-    max-height: none !important;
-  }
-  .db-col-main,
-  .db-col-center,
-  .db-col-right { height: auto !important; min-height: unset !important; }
+/* ── Défilement de la page (toutes tailles d'écran) : les panneaux prennent la hauteur de
+   leur contenu et la page défile, au lieu d'être coupée à la hauteur de la fenêtre. ── */
+.db-wrap    { height: auto !important; overflow: visible !important; }
+.db-panels  { flex: none !important; min-height: unset !important; height: auto !important; }
+.panel      { min-height: unset !important; height: auto !important; }
+.panel__body {
+  overflow: visible !important;
+  overflow-y: visible !important;
+  flex: none !important;
+  height: auto !important;
+  max-height: none !important;
 }
+.db-col-main,
+.db-col-center,
+.db-col-right { height: auto !important; min-height: unset !important; }
 
 /* ══════════════════════════════════════════════════════════
    INFO CHIPS — header ACQ
@@ -1125,3 +1120,52 @@
 .sc--amber .sc__badge, .sc--orange .sc__badge { background: rgba(255,255,255,.45); border-color: rgba(31,41,55,.15); }
 .sc--amber .sc__divider, .sc--orange .sc__divider { background: rgba(31,41,55,.15); }
 .sc--amber .sc__spark polyline, .sc--orange .sc__spark polyline { stroke: rgba(31,41,55,.55); }
+
+/* ══════════════════════════════════════════════════════════
+   GRILLE DES PANNEAUX — alignement et responsive
+   Les deux panneaux d'une même rangée ont toujours la même hauteur (grille CSS) ;
+   « Types de formulaire » occupe les deux rangées à gauche sur grand écran.
+══════════════════════════════════════════════════════════ */
+.db-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+}
+.db-grid > .panel { margin: 0; }
+.panel__title { margin: 0; }   /* titres devenus <h2> : mêmes styles qu'avant */
+
+@media (min-width: 768px) {
+  .db-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .db-area--catalog { grid-column: 1 / -1; }
+}
+@media (min-width: 1200px) {
+  .db-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "catalog types  acq"
+      "catalog biblio top5";
+  }
+  .db-area--catalog { grid-area: catalog; grid-column: auto; }
+  .db-area--types   { grid-area: types; }
+  .db-area--acq     { grid-area: acq; }
+  .db-area--biblio  { grid-area: biblio; }
+  .db-area--top5    { grid-area: top5; }
+}
+
+/* Par statut / suivi ACQ : le contenu (donut + légende) remplit la hauteur du panneau, alignée
+   sur « Répartition par type », et y est centré verticalement. */
+.db-area--acq .panel__body--donut { flex: 1 1 auto !important; align-items: center; }
+
+/* Par bibliothèque : hauteur limitée (≈ 5 bibliothèques), défilement interne */
+.bib-list { max-height: 330px; overflow-y: auto; padding-right: 4px; }
+
+/* Accessibilité clavier : focus visible sur les lignes cliquables et la liste défilante */
+.catalog-row:focus-visible,
+.type-legend__row:focus-visible,
+.bib-row:focus-visible,
+.hbar-row:focus-visible,
+.bib-list:focus-visible {
+  outline: 2px solid var(--secondary-blue, #0057AC);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
