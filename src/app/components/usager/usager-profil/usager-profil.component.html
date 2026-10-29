@@ -141,7 +141,7 @@
             <div class="up-card__row">
 
               <!-- Icône type -->
-              <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKey(d)">
+              <span class="up-type-icon" [ngClass]="'up-type-icon--' + couleurType(d.type_formulaire)">
                 <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
               </span>
 

@@ -18,7 +18,9 @@
         <div class="col-md-6 mb-3">
           <label class="form-label">{{ 'reponses.meta_type' | translate }}</label>
           <p class="mb-0">
+            <span class="badge" [ngClass]="'badge-type--' + couleurType(reponse?.type_formulaire)">
               {{ formulaireTypeLabel(reponse?.type_formulaire) }}
+            </span>
           </p>
         </div>
 

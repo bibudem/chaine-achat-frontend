@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
-import { formulaireTypeLabel, formulaireTypeIcon, ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeLabel, formulaireTypeIcon, ListeChoixOptions, formulaireTypeCouleur } from '../../../lib/ListeChoixOptions';
 import { ReponsesService } from '../../../services/reponses.service';
 import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { ACQ_STATUT_DEFAUT, ACQ_SUIVI_DEFAUT } from '../../../lib/DemandeStatut';
@@ -411,9 +411,10 @@ export class AccueilComponent implements OnInit, OnDestroy {
     return colors[index % colors.length];
   }
 
-  getTypeColorIndex(type: string): number {
-    const idx = this.allTypes.indexOf(type);
-    return idx >= 0 ? idx : 0;
+  /** Clé de couleur du type (classes tc-<clé> / tc-<clé>-bg, voir accueil.component.css) —
+   *  associée au type lui-même, pas à sa position dans une liste. */
+  getTypeColorKey(type: string): string {
+    return formulaireTypeCouleur(type);
   }
 
   getTypeIcon(type: string): string {

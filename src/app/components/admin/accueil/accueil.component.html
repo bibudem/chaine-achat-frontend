@@ -220,7 +220,7 @@
                    [class.db-link-disabled]="!authService.canEdit"
                    (click)="navigateToNouveau(type)"
                    [title]="authService.canEdit ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
-                <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorIndex(type) + '-bg'">
+                <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorKey(type) + '-bg'">
                   <i [class]="getTypeIcon(type)"></i>
                 </div>
                 <div class="catalog-row__body">
@@ -256,7 +256,7 @@
             <div class="type-seg-bar">
               <div *ngFor="let t of byType"
                    class="type-seg-bar__slice"
-                   [class]="'tc-' + getTypeColorIndex(t.formulaire_type)"
+                   [class]="'tc-' + getTypeColorKey(t.formulaire_type)"
                    [style.width.%]="t.percentage"
                    [title]="formulaireTypeLabel(t.formulaire_type) + ' — ' + t.percentage + '%'">
               </div>
@@ -266,10 +266,10 @@
                    class="type-legend__row type-legend__row--link"
                    (click)="navigateToType(t.formulaire_type)"
                    [title]="'Voir les demandes · ' + formulaireTypeLabel(t.formulaire_type)">
-                <span class="type-legend__dot" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'"></span>
+                <span class="type-legend__dot" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'"></span>
                 <span class="type-legend__name">{{ formulaireTypeLabel(t.formulaire_type) }}</span>
                 <div class="type-legend__track">
-                  <div class="type-legend__fill" [class]="'tc-' + getTypeColorIndex(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
+                  <div class="type-legend__fill" [class]="'tc-' + getTypeColorKey(t.formulaire_type) + '-bg'" [style.width.%]="t.percentage"></div>
                 </div>
                 <span class="type-legend__pct">{{ t.percentage }}%</span>
                 <span class="type-legend__cnt">{{ formatNumber(t.count) }}</span>

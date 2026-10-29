@@ -4,7 +4,7 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReponsesService, DemandeUsager, DemandePublique } from '../../../services/reponses.service';
 import { AuthService } from '../../../services/auth.service';
-import { formulaireTypeIcon } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeIcon, formulaireTypeCouleur } from '../../../lib/ListeChoixOptions';
 import { demandeBadgeStatut, estAcqEnAttenteDefaut } from '../../../lib/DemandeStatut';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
 import { FIELD_LABELS, FIELD_ORDER, construireLignesDetail } from '../../../lib/DemandeDetailFields';
@@ -221,6 +221,9 @@ export class UsagerProfilComponent implements OnInit {
     if (!d.suivi_acq || estAcqEnAttenteDefaut(d)) return 'ACQ en attente';
     return 'ACQ traité';
   }
+
+  /** Couleur de l'icône du type (charte d'accessibilité). */
+  readonly couleurType = formulaireTypeCouleur;
 
   routeFormulaire(d: DemandeUsager): string {
     const map: Record<string, string> = {

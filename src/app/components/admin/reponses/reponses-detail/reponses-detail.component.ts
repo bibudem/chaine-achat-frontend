@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Reponse } from '../../../../services/reponses.service';
-import { formulaireTypeLabel } from '../../../../lib/ListeChoixOptions';
+import { formulaireTypeLabel, formulaireTypeCouleur } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-reponses-detail',
@@ -13,6 +13,7 @@ export class ReponsesDetailComponent implements OnInit {
 
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
+  readonly couleurType = formulaireTypeCouleur;
 
   @Input() reponse: Reponse | null = null;
 

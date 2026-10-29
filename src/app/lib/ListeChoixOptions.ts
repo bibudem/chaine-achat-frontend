@@ -58,6 +58,21 @@ export function formulaireTypeIcon(value: string | undefined | null): string {
   return FORMULAIRE_TYPE_ICONS[value] || 'bi-lightbulb';
 }
 
+/** Clé de couleur d'un type de formulaire (charte d'accessibilité, variables --form-* de
+ *  css_udem.css) — mêmes clés que les badges .badge-type--<clé>. */
+const FORMULAIRE_TYPE_COULEURS: Record<string, string> = {
+  'Nouvel achat unique':         'achat',
+  'Nouvel abonnement':           'abo',
+  'Modification et CCOL':        'ccol',
+  'Requête ACQ Accessibilité':   'acq',
+  "Suggestion d'achat - Usager": 'suggest',
+  'PEB Tipasa numérique':        'peb',
+};
+
+export function formulaireTypeCouleur(value: string | undefined | null): string {
+  return (value && FORMULAIRE_TYPE_COULEURS[value]) || 'autre';
+}
+
 export class ListeChoixOptions {
 
   // Options pour la devise originale — toutes les devises disponibles dans WMS (voir

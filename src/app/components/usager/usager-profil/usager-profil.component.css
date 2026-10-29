@@ -540,3 +540,12 @@
   .up-details__grid { grid-template-columns: 1fr; }
   .up-details__grid dt { border-bottom: none; padding-bottom: 0; color: #94a3b8; font-size: var(--typo-label); text-transform: uppercase; letter-spacing: .04em; }
 }
+
+/* Icône du type de demande : couleur du formulaire (charte d'accessibilité), icône foncée */
+.up-type-icon--achat   { background: var(--form-achat);   color: var(--form-texte); }
+.up-type-icon--abo     { background: var(--form-abo);     color: var(--form-texte); }
+.up-type-icon--ccol    { background: var(--form-ccol);    color: var(--form-texte); }
+.up-type-icon--acq     { background: var(--form-acces);   color: var(--form-texte); }
+.up-type-icon--suggest { background: var(--form-suggest); color: var(--form-texte); }
+.up-type-icon--peb     { background: var(--form-peb);     color: var(--form-texte); }
+.up-type-icon--autre   { background: #f1f5f9;             color: #64748b; }
