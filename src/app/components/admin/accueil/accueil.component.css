@@ -1111,15 +1111,15 @@
 /* Charte d'accessibilité : icônes foncées sur les teintes claires des types */
 .tc-achat-bg, .tc-abo-bg, .tc-ccol-bg, .tc-acq-bg, .tc-suggest-bg, .tc-peb-bg, .tc-autre-bg { color: var(--form-texte); }
 
-/* Cartes Demandes en attente / Demandes urgentes : couleur pleine, texte foncé */
+/* Carte Demandes en attente : couleur pleine #EDAD34, texte foncé (lisibilité). La carte
+   Demandes urgentes garde son dégradé rouge-orangé d'origine (.sc--orange). */
 .sc--amber  { background: var(--tdb-en-attente); }
-.sc--orange { background: var(--tdb-urgentes); }
-.sc--amber .sc__val,  .sc--orange .sc__val  { color: var(--form-texte); text-shadow: none; }
-.sc--amber .sc__lbl,  .sc--orange .sc__lbl,
-.sc--amber .sc__badge, .sc--orange .sc__badge { color: var(--form-texte); }
-.sc--amber .sc__badge, .sc--orange .sc__badge { background: rgba(255,255,255,.45); border-color: rgba(31,41,55,.15); }
-.sc--amber .sc__divider, .sc--orange .sc__divider { background: rgba(31,41,55,.15); }
-.sc--amber .sc__spark polyline, .sc--orange .sc__spark polyline { stroke: rgba(31,41,55,.55); }
+.sc--amber .sc__val   { color: var(--form-texte); text-shadow: none; }
+.sc--amber .sc__lbl,
+.sc--amber .sc__badge  { color: var(--form-texte); }
+.sc--amber .sc__badge  { background: rgba(255,255,255,.45); border-color: rgba(31,41,55,.15); }
+.sc--amber .sc__divider { background: rgba(31,41,55,.15); }
+.sc--amber .sc__spark polyline { stroke: rgba(31,41,55,.55); }
 
 /* ══════════════════════════════════════════════════════════
    GRILLE DES PANNEAUX — alignement et responsive
