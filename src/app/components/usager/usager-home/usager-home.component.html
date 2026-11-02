@@ -46,11 +46,9 @@
       <!-- Détail des taux : à l'intérieur de la pastille (position: relative) pour s'ouvrir
            juste en dessous — placé à l'extérieur, il s'ouvrait hors de l'écran. -->
       <div *ngIf="showTauxDetail" class="info-chip__dropdown info-chip__dropdown--readonly">
-        <p class="info-chip__dropdown-title">
-          <i class="bi bi-clock-history me-1"></i>
-          {{ tauxActuels?.periode || ('accueil.aucun-taux' | translate) }}
-        </p>
+        <!-- Pas de titre de période : elle est déjà affichée dans la pastille. -->
         <p class="tdv-readonly-date" *ngIf="tauxActuels as ta">
+          <i class="bi bi-clock-history me-1"></i>
           {{ 'accueil.en-vigueur-depuis' | translate }} {{ formatDateTaux(ta.date_debut) }}
         </p>
 

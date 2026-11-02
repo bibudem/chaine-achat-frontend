@@ -35,7 +35,7 @@
 .uh-header__taux .info-chip__clickable { gap: 6px; }
 .uh-header__taux .info-chip__icon  { width: 22px; height: 22px; font-size: .75rem; border-radius: 5px; }
 .uh-header__taux .info-chip__label { font-size: .75rem; }
-.uh-header__taux .info-chip__val--lg { font-size: var(--typo-label); letter-spacing: 0; }
+.uh-header__taux .info-chip__val--lg { font-family: 'Figtree', sans-serif; font-size: var(--typo-label); letter-spacing: 0; }
 
 /* ── Chip : Taux de change (lecture seule) ── */
 .info-chip {
@@ -100,23 +100,25 @@
   color: var(--primary-blue, #0b113a);
   margin: 0 0 2px;
 }
-.info-chip__dropdown--readonly { min-width: 270px; max-height: 70vh; overflow-y: auto; gap: 8px; }
+.info-chip__dropdown--readonly { min-width: 300px; width: max-content; max-width: calc(100vw - 32px); max-height: 70vh; overflow-y: auto; gap: 8px; }
 .tdv-chevron { font-size: 0.75rem; margin-left: 3px; vertical-align: 1px; opacity: .7; }
 .tdv-readonly-date {
   font-family: 'Figtree', sans-serif;
   font-size: var(--typo-label); color: var(--text-gray, #607386);
-  margin: -6px 0 2px;
+  margin: 0 0 2px;
 }
 .tdv-readonly-list { display: flex; flex-direction: column; gap: 2px; }
 .tdv-readonly-row {
-  display: flex; align-items: center; justify-content: space-between;
+  /* Devise et valeur sur une seule ligne, valeurs alignées à droite (chiffres tabulaires). */
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
   padding: 4px 2px; border-radius: 6px;
   font-family: 'Figtree', sans-serif; font-size: var(--typo-label);
   border-bottom: 1px solid var(--extra-light-blue, #E5F0F8);
 }
 .tdv-readonly-row:last-child { border-bottom: none; }
 .tdv-readonly-row__devise { color: var(--text-gray, #607386); font-weight: 500; white-space: nowrap; }
-.tdv-readonly-row__valeur { color: var(--primary-blue, #0b113a); font-weight: 700; }
+.tdv-readonly-row__valeur { color: var(--primary-blue, #0b113a); font-weight: 700;
+                            white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .uh-header__avatar {
   width: 2.75rem;
