@@ -97,16 +97,16 @@ export class RequeteAccessibiliteComponent implements OnInit {
       statut:           [statut],
       courriel:         [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:     ['Service Accessibilité', Validators.required],
-      fonds_budgetaire: ['MO-097',      [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      fonds_budgetaire: ['MO-097',      [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
       priorite_demande: ['Urgent',     Validators.required],
-      titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
+      titre_document:     ['', Validators.maxLength(500)],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
-      isbn_issn:          ['', [Validators.required, this.isbnValidator]],
+      isbn_issn:          ['', this.isbnValidator],
       date_publication:   [''],
       type_monographie:   [''],
       reference_usager:                 [''],
-      besoin_specifique_format:         ['', Validators.required],
+      besoin_specifique_format:         [''],
       permalien_sofia:                  ['', Validators.pattern('https?://.+')],
       fournisseur_contacte_sans_succes: [''],
       exemplaire_detenu:                [''],
@@ -120,10 +120,10 @@ export class RequeteAccessibiliteComponent implements OnInit {
       format_support:             ['Électronique'],
       nombre_utilisateurs:        ['Accès illimité'],
       format_pret_numerique:      ["Ne s'applique pas"],
-      devise_originale:      ['',   Validators.required],
+      devise_originale:      [''],
       devise_autre_precision: [''],
-      prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
-      prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
+      prix_devise_originale: [null, Validators.min(0.01)],
+      prix_cad:              [null, Validators.min(0.01)],
       source_information: ['', Validators.pattern('https?://.+')],
       note_commentaire:   ['', Validators.maxLength(1000)],
       statut_bibliotheque: ['Saisie en cours - En attente'],
@@ -144,6 +144,9 @@ export class RequeteAccessibiliteComponent implements OnInit {
       this.convertirPrix();
     });
     this.updateDeviseAutreValidator();
+
+    this.form.get('statut_bibliotheque')!.valueChanges.subscribe(() => this.appliquerValidationConditionnelle());
+    this.appliquerValidationConditionnelle();
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -205,11 +208,34 @@ export class RequeteAccessibiliteComponent implements OnInit {
     return estDeviseConvertible(this.form.get('devise_originale')?.value, this.tauxRates);
   }
 
+  /** Champs obligatoires seulement quand la demande est soumise aux ACQ — même règle que
+   *  Nouvel achat unique : en brouillon, ils sont marqués « (*) » en gris. */
+  get exigeTousLesChamps(): boolean {
+    return this.form.get('statut_bibliotheque')?.value === 'Soumettre aux ACQ';
+  }
+
+  private appliquerValidationConditionnelle(): void {
+    const exige = this.exigeTousLesChamps;
+    const champs: { nom: string; validators: any[] }[] = [
+      { nom: 'fonds_budgetaire',         validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
+      { nom: 'titre_document',           validators: [Validators.maxLength(500)] },
+      { nom: 'isbn_issn',                validators: [this.isbnValidator] },
+      { nom: 'besoin_specifique_format', validators: [] },
+    ];
+    champs.forEach(({ nom, validators }) => {
+      const ctrl = this.form.get(nom)!;
+      ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+    // Devise / prix : obligatoires pour un achat seulement (voir updateBesoinSpecifiqueDerive).
+    this.updateBesoinSpecifiqueDerive(this.form.get('besoin_specifique_format')!.value);
+  }
+
   private updateDeviseAutreValidator(): void {
     const ctrl = this.form.get('devise_autre_precision');
     if (!ctrl) return;
     if (this.form.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
+      ctrl.setValidators(this.exigeTousLesChamps ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
     } else {
       ctrl.clearValidators();
     }
@@ -249,14 +275,15 @@ export class RequeteAccessibiliteComponent implements OnInit {
     const devise   = this.form.get('devise_originale')!;
     const prixOrig = this.form.get('prix_devise_originale')!;
     const prixCad  = this.form.get('prix_cad')!;
-    if (estAchat) {
+    // Obligatoires pour un achat, et seulement à la soumission aux ACQ.
+    if (estAchat && this.exigeTousLesChamps) {
       devise.setValidators([Validators.required]);
       prixOrig.setValidators([Validators.required, Validators.min(0.01)]);
       prixCad.setValidators([Validators.required, Validators.min(0.01)]);
     } else {
       devise.clearValidators();
-      prixOrig.clearValidators();
-      prixCad.clearValidators();
+      prixOrig.setValidators([Validators.min(0.01)]);
+      prixCad.setValidators([Validators.min(0.01)]);
     }
     devise.updateValueAndValidity({ emitEvent: false });
     prixOrig.updateValueAndValidity({ emitEvent: false });

@@ -1475,7 +1475,7 @@
   },
   "form-accessibilite": {
     "titre": "Accessibility",
-    "sous-titre": "Acquisition and modification requests for accessible resources",
+    "sous-titre": "Request a document for a person with a disability. Exclusive to the Accessibility Service.",
     "confirmation-titre": "Request submitted!",
     "confirmation-message": "Your accessibility request has been forwarded to the Acquisitions team.",
     "label-document": "Bibliographic information",

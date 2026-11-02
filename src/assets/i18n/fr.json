@@ -1407,7 +1407,7 @@
   },
   "form-accessibilite": {
     "titre": "Accessibilité",
-    "sous-titre": "Demandes d'acquisition et de modification pour les ressources accessibles",
+    "sous-titre": "Demander un document pour une personne en situation de handicap. Exclusif au Service Accessibilité.",
     "confirmation-titre": "Requête soumise !",
     "confirmation-message": "Votre requête d'accessibilité a bien été transmise à l'équipe des Acquisitions.",
     "label-document": "Information bibliographique",

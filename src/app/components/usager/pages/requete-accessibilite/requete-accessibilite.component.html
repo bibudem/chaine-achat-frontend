@@ -75,7 +75,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
             <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
                    [invalid]="isInvalid('fonds_budgetaire')"></app-fonds-budgetaire-select>
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback d-block">
@@ -106,7 +106,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
                    [placeholder]="'forms-usager.titre-placeholder' | translate">
@@ -128,7 +128,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'form-accessibilite.isbn-label' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'form-accessibilite.isbn-label' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    [placeholder]="'forms-usager.isbn-placeholder' | translate"
@@ -179,7 +179,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'form-accessibilite.besoin-format' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'form-accessibilite.besoin-format' | translate }}</label>
             <select formControlName="besoin_specifique_format" class="form-select"
                     [class.is-invalid]="isInvalid('besoin_specifique_format')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -283,7 +283,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -295,7 +295,7 @@
           </div>
 
           <div class="col-md-4" *ngIf="form.get('devise_originale')?.value === 'Autre'">
-            <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise-autre-label' | translate }}</label>
             <input type="text" formControlName="devise_autre_precision" class="form-control"
                    [class.is-invalid]="isInvalid('devise_autre_precision')"
                    [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
@@ -305,7 +305,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input type="number" min="0.01" step="0.01"
@@ -319,7 +319,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
