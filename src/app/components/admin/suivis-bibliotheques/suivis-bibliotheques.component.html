@@ -1,0 +1,188 @@
+<!-- Fil d'Ariane (portail usager seulement) — même gabarit que Tri / TDM -->
+<nav class="ts-nav" *ngIf="estPortail" [attr.aria-label]="'suivis.fil-ariane' | translate">
+  <div class="ts-nav__inner">
+    <a routerLink="/usager" class="ts-nav__back"><i class="bi bi-arrow-left" aria-hidden="true"></i> {{ 'tri-suggestions-page.retour' | translate }}</a>
+    <span class="ts-nav__breadcrumb">
+      <a routerLink="/usager" class="ts-nav__crumb-link">{{ 'tri-suggestions-page.breadcrumb-portail' | translate }}</a>
+      <i class="bi bi-chevron-right ts-nav__sep" aria-hidden="true"></i>
+      <span aria-current="page">{{ 'suivis.titre' | translate }}</span>
+    </span>
+  </div>
+</nav>
+
+<div class="container-fluid bg-white p-4 sb-page" [class.sb-page--portail]="estPortail">
+
+  <!-- En-tête -->
+  <div [class.mt-3]="!estPortail">
+    <h1 class="h3 mb-1">{{ 'suivis.titre' | translate }}</h1>
+    <p class="text-muted mb-0">{{ 'suivis.description' | translate }}</p>
+  </div>
+
+  <!-- Vues (onglets) -->
+  <div class="sb-tabs" role="tablist">
+    <button type="button" role="tab" class="sb-tab" [class.sb-tab--actif]="vue === 'montants'"
+            [attr.aria-selected]="vue === 'montants'" (click)="changerVue('montants')">
+      <i class="bi bi-cash-stack" aria-hidden="true"></i> {{ 'suivis.vue-montants' | translate }}
+    </button>
+    <button type="button" role="tab" class="sb-tab" [class.sb-tab--actif]="vue === 'statuts'"
+            [attr.aria-selected]="vue === 'statuts'" (click)="changerVue('statuts')">
+      <i class="bi bi-list-check" aria-hidden="true"></i> {{ 'suivis.vue-statuts' | translate }}
+    </button>
+  </div>
+  <p class="sb-aide">{{ (vue === 'montants' ? 'suivis.aide-montants' : 'suivis.aide-statuts') | translate }}</p>
+
+  <!-- Filtres — même barre (.filterbar, styles.css) et même ordre que « Mes demandes » :
+       recherche, bibliothèque(s), type, priorité, dates ; puis regroupement + actions. -->
+  <div class="sb-filter-section">
+    <div class="filterbar">
+      <div class="filterbar__search">
+        <i class="bi bi-search filterbar__search-icon" aria-hidden="true"></i>
+        <input type="search" class="filterbar__search-input" [(ngModel)]="recherche" (ngModelChange)="regrouper()"
+               [placeholder]="'suivis.rechercher-placeholder' | translate" [attr.aria-label]="'suivis.rechercher' | translate">
+      </div>
+      <span class="filterbar__sep"></span>
+
+      <!-- Bibliothèques : choix multiple (une ou plusieurs à la fois) -->
+      <div class="sb-ms" (click)="$event.stopPropagation()">
+        <button type="button" class="filterbar__select sb-ms__trigger" [class.sb-ms__trigger--actif]="selection.length"
+                [attr.aria-expanded]="menuBibOuvert" [attr.aria-label]="'suivis.bibliotheques' | translate"
+                (click)="menuBibOuvert = !menuBibOuvert">
+          {{ libelleSelection }}
+        </button>
+        <div class="sb-ms__menu" *ngIf="menuBibOuvert">
+          <div class="sb-ms__options">
+            <label class="sb-ms__option" *ngFor="let bib of bibliotheques">
+              <input type="checkbox" [checked]="selection.includes(bib)"
+                     (change)="basculerBibliotheque(bib, $any($event.target).checked)"> {{ bib }}
+            </label>
+            <label class="sb-ms__option">
+              <input type="checkbox" [checked]="selection.includes('')"
+                     (change)="basculerBibliotheque('', $any($event.target).checked)">
+              <em>{{ 'suivis.sans-bibliotheque' | translate }}</em>
+            </label>
+          </div>
+          <button type="button" class="sb-ms__clear" *ngIf="selection.length" (click)="toutesBibliotheques()">
+            {{ 'suivis.toutes-bibliotheques' | translate }}
+          </button>
+        </div>
+      </div>
+      <span class="filterbar__sep"></span>
+
+      <select class="filterbar__select" [(ngModel)]="filtreType" (ngModelChange)="regrouper()" [attr.aria-label]="'suivis.col-type' | translate">
+        <option value="">{{ 'suivis.tous-types' | translate }}</option>
+        <option *ngFor="let t of typesFormulaire" [value]="t.value">{{ t.label }}</option>
+      </select>
+      <span class="filterbar__sep"></span>
+
+      <select class="filterbar__select" [(ngModel)]="filtrePriorite" (ngModelChange)="regrouper()" [attr.aria-label]="'suivis.col-priorite' | translate">
+        <option value="">{{ 'suivis.toutes-priorites' | translate }}</option>
+        <option *ngFor="let p of priorites" [value]="p.value">{{ p.label }}</option>
+      </select>
+      <span class="filterbar__sep"></span>
+
+      <div class="filterbar__dategroup" [title]="'suivis.dates-creation' | translate">
+        <input type="date" class="filterbar__date" [(ngModel)]="filtreDateDebut" (ngModelChange)="regrouper()" [attr.aria-label]="'suivis.date-debut' | translate">
+        <span class="filterbar__date-sep">→</span>
+        <input type="date" class="filterbar__date" [(ngModel)]="filtreDateFin" (ngModelChange)="regrouper()" [attr.aria-label]="'suivis.date-fin' | translate">
+      </div>
+    </div>
+
+    <!-- Regroupement (gauche) + Réinitialiser / totaux / Exporter (droite) — même ligne -->
+    <div class="sb-filter-footer">
+      <div class="sb-regroupement">
+        <label for="sb-regroupement">{{ 'suivis.regrouper-par' | translate }}</label>
+        <select id="sb-regroupement" class="filterbar__select" [(ngModel)]="regroupement" (ngModelChange)="regrouper()">
+          <option *ngFor="let r of regroupements" [value]="r">{{ 'suivis.groupe-' + r | translate }}</option>
+        </select>
+        <label for="sb-sous-regroupement">{{ 'suivis.puis-par' | translate }}</label>
+        <select id="sb-sous-regroupement" class="filterbar__select" [(ngModel)]="sousRegroupement" (ngModelChange)="regrouper()">
+          <option value="">{{ 'suivis.aucun' | translate }}</option>
+          <ng-container *ngFor="let r of regroupements">
+            <option *ngIf="r !== regroupement" [value]="r">{{ 'suivis.groupe-' + r | translate }}</option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="filterbar__actions">
+        <button type="button" class="filterbar__reset" [class.filterbar__reset--active]="filtresActifs" (click)="reinitialiser()">
+          <i class="bi bi-x" aria-hidden="true"></i> {{ 'suivis.reinitialiser' | translate }}
+        </button>
+        <span class="sb-totaux" *ngIf="!isLoading && !erreur" aria-live="polite">
+          {{ 'suivis.nombre' | translate }} <strong>{{ total }}</strong>
+          <ng-container *ngIf="vue === 'montants'"> · {{ 'suivis.somme' | translate }} <strong>{{ formatMontant(somme) }}</strong></ng-container>
+        </span>
+        <span class="filterbar__sep"></span>
+        <button type="button" class="filterbar__export" (click)="exporter()" [disabled]="isLoading || !total">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i> {{ 'suivis.exporter' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-ouvrir" *ngIf="!isLoading && groupes.length">
+    <button type="button" class="btn btn-link btn-sm" (click)="toutOuvrir(true)">{{ 'suivis.tout-ouvrir' | translate }}</button>
+    <button type="button" class="btn btn-link btn-sm" (click)="toutOuvrir(false)">{{ 'suivis.tout-fermer' | translate }}</button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <div *ngIf="erreur && !isLoading" class="alert alert-danger">{{ 'suivis.erreur' | translate }}</div>
+  <p *ngIf="!isLoading && !erreur && !groupes.length" class="text-muted fst-italic py-4 text-center">
+    {{ 'suivis.aucune-demande' | translate }}
+  </p>
+
+  <!-- Groupes repliables -->
+  <section class="sb-groupe" *ngFor="let g of groupes">
+    <button type="button" class="sb-groupe__entete" (click)="basculerGroupe(g.cle)" [attr.aria-expanded]="ouverts.has(g.cle)">
+      <i class="bi" [class.bi-chevron-right]="!ouverts.has(g.cle)" [class.bi-chevron-down]="ouverts.has(g.cle)" aria-hidden="true"></i>
+      <span class="sb-groupe__titre">
+        {{ 'suivis.groupe-' + regroupement | translate }} :
+        <strong>{{ g.libelle || ('suivis.non-renseigne' | translate) }}</strong>
+      </span>
+      <span class="sb-groupe__compte">({{ g.lignes.length }})</span>
+      <span class="sb-groupe__somme" *ngIf="vue === 'montants'">{{ formatMontant(g.somme) }}</span>
+    </button>
+
+    <ng-container *ngIf="ouverts.has(g.cle)">
+      <!-- 2e niveau (ex. Fonds budgétaire à imputer), chacun avec son nombre et sa somme -->
+      <ng-container *ngIf="g.sousGroupes.length; else tableGroupe">
+        <div class="sb-sous-groupe" *ngFor="let sg of g.sousGroupes">
+          <button type="button" class="sb-groupe__entete sb-groupe__entete--sous" (click)="basculerGroupe(sg.cle)" [attr.aria-expanded]="ouverts.has(sg.cle)">
+            <i class="bi" [class.bi-chevron-right]="!ouverts.has(sg.cle)" [class.bi-chevron-down]="ouverts.has(sg.cle)" aria-hidden="true"></i>
+            <span class="sb-groupe__titre">
+              {{ 'suivis.groupe-' + sousRegroupement | translate }} :
+              <strong>{{ sg.libelle || ('suivis.non-renseigne' | translate) }}</strong>
+            </span>
+            <span class="sb-groupe__compte">({{ sg.lignes.length }})</span>
+            <span class="sb-groupe__somme" *ngIf="vue === 'montants'">{{ formatMontant(sg.somme) }}</span>
+          </button>
+          <ng-container *ngIf="ouverts.has(sg.cle)">
+            <ng-container *ngTemplateOutlet="table; context: { $implicit: sg.lignes }"></ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #tableGroupe>
+        <ng-container *ngTemplateOutlet="table; context: { $implicit: g.lignes }"></ng-container>
+      </ng-template>
+    </ng-container>
+  </section>
+
+  <ng-template #table let-lignes>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover sb-table">
+        <thead>
+          <tr><th *ngFor="let c of colonnesVue" scope="col" [class.text-end]="c.champ === 'prix_cad'">{{ c.cle | translate }}</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of lignes">
+            <td *ngFor="let c of colonnesVue" [class.text-end]="c.champ === 'prix_cad'" [class.sb-nowrap]="c.champ === 'prix_cad' || c.champ === 'date_creation'">
+              <a *ngIf="c.champ === 'item_id'; else valeur" [routerLink]="['/items/details', l.item_id]">#{{ l.item_id }}</a>
+              <ng-template #valeur>{{ formatValeur(c.champ, l) }}</ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+</div>

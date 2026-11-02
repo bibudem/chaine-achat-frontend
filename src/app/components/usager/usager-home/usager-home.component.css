@@ -745,6 +745,25 @@
 .info-chip__manage-link:hover { background: var(--light-blue, #cfe3f5); color: var(--primary-blue, #0057AC); }
 
 /* ── Carte « ACQ - Répartition des fonds » (consultation seulement) ── */
+/* Outils de suivi (Suivis des bibliothèques, Répartition des fonds) : une carte, une ligne
+   cliquable compacte par ressource. */
+.uh-outils { padding: .35rem; }
+.uh-outil {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .55rem .6rem; border-radius: 6px;
+  color: var(--uh-texte); text-decoration: none;
+}
+.uh-outil + .uh-outil { border-top: 1px solid var(--uh-bordure); border-top-left-radius: 0; border-top-right-radius: 0; }
+a.uh-outil:hover { background: var(--uh-fond-2); color: var(--uh-texte); text-decoration: none; }
+a.uh-outil:hover .uh-outil__titre { color: var(--uh-accent); }
+a.uh-outil:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: -2px; }
+.uh-outil__texte { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.uh-outil__titre { font-weight: 600; font-size: .9rem; line-height: 1.3; }
+.uh-outil__meta { font-size: var(--typo-label); color: var(--uh-texte-2); line-height: 1.35; }
+.uh-outil__fleche { color: var(--uh-texte-2); font-size: .85rem; flex-shrink: 0; }
+a.uh-outil:hover .uh-outil__fleche { color: var(--uh-accent); }
+.uh-outil--inactif .uh-outil__meta { font-style: italic; }
+
 .uh-ressource__meta { margin: 0 0 .75rem; font-size: var(--typo-label); color: #64748b; }
 .uh-ressource__btn {
   display: inline-flex; align-items: center; gap: .45rem;

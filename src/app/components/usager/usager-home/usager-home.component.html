@@ -178,28 +178,41 @@
     <!-- Colonne gauche -->
     <aside class="uh-sidebar">
 
-      <!-- ACQ - Répartition des fonds : fichier géré par les Admin (accueil admin), consultation
-           seulement ici — tous les profils du portail, comme le taux sécurisé. -->
-      <div class="uh-info-card uh-ressource" *ngIf="voirTaux" aria-labelledby="uh-titre-repartition">
-        <div class="uh-info-card__header">
-          <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-bar-chart-line-fill"></i></span>
-          <h3 class="uh-info-card__title" id="uh-titre-repartition">{{ 'accueil.repartition-acq' | translate }}</h3>
-        </div>
+      <!-- Outils de suivi, en une carte compacte : une ligne cliquable par ressource.
+           - Suivis des bibliothèques (remplace les vues Mentor) : même page que dans l'Espace gestion ;
+           - ACQ - Répartition des fonds : fichier géré par les Admin, consultation seulement.
+           Tous les profils du portail, comme le taux sécurisé. -->
+      <nav class="uh-info-card uh-outils" *ngIf="voirTaux" [attr.aria-label]="'accueil.suivis-titre' | translate">
+        <a routerLink="/usager/suivis-bibliotheques" class="uh-outil">
+          <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-clipboard-data"></i></span>
+          <span class="uh-outil__texte">
+            <span class="uh-outil__titre">{{ 'accueil.suivis-titre' | translate }}</span>
+            <span class="uh-outil__meta">{{ 'accueil.suivis-desc' | translate }}</span>
+          </span>
+          <i class="bi bi-chevron-right uh-outil__fleche" aria-hidden="true"></i>
+        </a>
 
-        <p class="uh-ressource__meta" *ngIf="repartitionMaj">{{ 'accueil.mis-a-jour-le' | translate }} {{ repartitionMaj }}</p>
-
-        <a *ngIf="repartitionUrl; else repartitionIndisponible"
+        <a *ngIf="repartitionUrl; else repartitionIndisponible" class="uh-outil"
            [href]="repartitionUrl" target="_blank" rel="noopener noreferrer"
-           [title]="'accueil.consultation-seulement' | translate"
-           class="uh-ressource__btn">
-          <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
-          {{ 'accueil.repartition-consulter' | translate }}
+           [title]="'accueil.consultation-seulement' | translate">
+          <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-bar-chart-line-fill"></i></span>
+          <span class="uh-outil__texte">
+            <span class="uh-outil__titre">{{ 'accueil.repartition-acq' | translate }}</span>
+            <span class="uh-outil__meta" *ngIf="repartitionMaj">{{ 'accueil.mis-a-jour-le' | translate }} {{ repartitionMaj }}</span>
+          </span>
+          <i class="bi bi-box-arrow-up-right uh-outil__fleche" aria-hidden="true"></i>
           <span class="visually-hidden">({{ 'accueil.nouvel-onglet' | translate }})</span>
         </a>
         <ng-template #repartitionIndisponible>
-          <p class="uh-ressource__indispo">{{ 'accueil.repartition-indisponible' | translate }}</p>
+          <div class="uh-outil uh-outil--inactif">
+            <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-bar-chart-line-fill"></i></span>
+            <span class="uh-outil__texte">
+              <span class="uh-outil__titre">{{ 'accueil.repartition-acq' | translate }}</span>
+              <span class="uh-outil__meta">{{ 'accueil.repartition-indisponible' | translate }}</span>
+            </span>
+          </div>
         </ng-template>
-      </div>
+      </nav>
 
       <!-- À propos -->
       <div class="uh-info-card">

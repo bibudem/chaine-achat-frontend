@@ -38,6 +38,7 @@ import { TdmItemsComponent } from './components/usager/pages/tdm-items/tdm-items
 import { TdmDecisionComponent } from './components/usager/pages/tdm-decision/tdm-decision.component';
 import { TdmGuard } from './services/tdm-guard.service';
 import { TauxDevisesComponent } from './components/admin/taux-devises/taux-devises.component';
+import { SuivisBibliothequesComponent } from './components/admin/suivis-bibliotheques/suivis-bibliotheques.component';
 import { UtilisateursComponent } from './components/configuration/utilisateurs/utilisateurs.component';
 import { FondsBudgetairesComponent } from './components/configuration/fonds-budgetaires/fonds-budgetaires.component';
 import { BibliothequesComponent } from './components/configuration/bibliotheques/bibliotheques.component';
@@ -55,6 +56,7 @@ const routes: Routes = [
   { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'statut-decision', component: StatutDecisionComponent, canActivate: [AuthGuard, DecisionGuard] },
   { path: 'rapport', component: RapportsComponent, canActivate: [AuthGuard, StaffGuard] },
+  { path: 'suivis-bibliotheques', component: SuivisBibliothequesComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
@@ -79,6 +81,8 @@ const routes: Routes = [
       { path: 'nouvel-abonnement', component: NouvelAbonnementComponent },
       { path: 'peb-tipasa-numerique', component: PebTipasaNumeriqueComponent },
       { path: 'profil',              component: UsagerProfilComponent },
+      // Suivis des bibliothèques (vues Mentor) — même page que /suivis-bibliotheques, personnel seulement.
+      { path: 'suivis-bibliotheques', component: SuivisBibliothequesComponent, canActivate: [StaffGuard] },
       // Équipe TechDoc : tri des suggestions publiques + historique partagé de l'équipe.
       { path: 'tri',                 component: TriSuggestionsComponent, canActivate: [TriGuard] },
       // Profil TDM : items routés (creation_notice_dtdm) à traiter directement depuis le portail.

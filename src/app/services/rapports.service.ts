@@ -28,6 +28,31 @@ export interface ItemDetaille {
   notes?: string;
 }
 
+/** Vues de la page Suivis des bibliothèques (voir models/rapports.js suivisBibliotheques). */
+export type SuiviVue = 'montants' | 'statuts';
+
+export interface ItemSuivi {
+  item_id: number;
+  formulaire_type: string | null;
+  date_creation: string | null;
+  priorite_demande: string | null;
+  titre_document: string | null;
+  isbn_issn: string | null;
+  periode_couverte: string | null;
+  bibliotheque: string | null;
+  demandeur: string | null;
+  prix_cad: number | string | null;
+  statut_bibliotheque: string | null;
+  statut_acq: string | null;
+  suivi_acq: string | null;
+  note_acq: string | null;
+  fonds_budgetaire: string | null;
+  precision_demande: string | null;
+  cree_par: string | null;
+  /** Fonds partagés seulement : part de chaque fonds (ventilation des sommes par fonds). */
+  fonds_parts: { fonds: string; prix_cad: number | string | null }[] | null;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
@@ -74,6 +99,14 @@ export class RapportsService {
   ) {}
 
   // ─── Endpoints API ───────────────────────────────────────
+
+  /** bibliotheques vide = toutes ; '' = demandes sans bibliothèque. Séparateur « | » : un nom
+   *  de bibliothèque peut contenir une virgule. */
+  getSuivisBibliotheques(vue: SuiviVue, bibliotheques: string[]): Observable<ApiResponse<ItemSuivi[]>> {
+    let params = new HttpParams().set('vue', vue);
+    if (bibliotheques.length) params = params.set('bibliotheques', bibliotheques.join('|'));
+    return this.http.get<ApiResponse<ItemSuivi[]>>(`${this.url}/suivis-bibliotheques`, { ...this.httpOptions, params });
+  }
 
   getRapportDetaille(filtres?: FiltresRapport): Observable<ApiResponse<ItemDetaille[]>> {
     const params = this.buildHttpParams(filtres);

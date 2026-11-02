@@ -57,6 +57,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { DialogService } from './services/dialog.service';
 import { StatutDecisionComponent } from './components/statut-decision/statut-decision.component';
 import { RapportsComponent } from './components/admin/rapports/rapports.component';
+import { SuivisBibliothequesComponent } from './components/admin/suivis-bibliotheques/suivis-bibliotheques.component';
 import { UserLayoutComponent } from './components/usager/user-layout/user-layout.component';
 import { UsagerFormulaireComponent } from './components/usager/usager-formulaire/usager-formulaire.component';
 import { SuggestionPublicComponent } from './components/usager/pages/suggestion-public/suggestion-public.component';
@@ -104,6 +105,7 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     ItemFormulaireComponent,
     DialogComponent,
     RapportsComponent,
+    SuivisBibliothequesComponent,
     UserLayoutComponent,
     UsagerFormulaireComponent,
     SuggestionPublicComponent,

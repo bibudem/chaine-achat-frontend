@@ -35,6 +35,14 @@
       </a>
     </li>
 
+    <!-- Suivis des bibliothèques (remplace les vues Mentor) -->
+    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+      <a class="nav-link" routerLink="/suivis-bibliotheques" (click)="closeSidebar()">
+        <i class="bi bi-clipboard-data menu-icon"></i>
+        <span class="menu-title">{{ 'menu.suivis' | translate }}</span>
+      </a>
+    </li>
+
     <!-- Processus / Import -->
     <li *ngIf="authService.isAdmin" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
       <a class="nav-link" routerLink="/import" (click)="closeSidebar()">
