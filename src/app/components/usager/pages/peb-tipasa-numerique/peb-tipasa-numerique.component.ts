@@ -83,25 +83,25 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       statut:           [statut],
       courriel:         [{ value: courriel, disabled: true }, [Validators.required, Validators.email]],
       bibliotheque:     ['PEB',        Validators.required],
-      fonds_budgetaire: ['MO-093',     [Validators.required, Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
+      fonds_budgetaire: ['MO-093',     [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')]],
       priorite_demande: ['Urgent',     Validators.required],
-      titre_document:     ['', [Validators.required, Validators.maxLength(500)]],
+      titre_document:     ['', Validators.maxLength(500)],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
-      isbn_issn:          ['', [Validators.required, this.isbnValidator]],
+      isbn_issn:          ['', this.isbnValidator],
       date_publication:   [''],
-      categorie_document: ['Monographie', Validators.required],
-      gobi_vu_format_numerique:   ['', Validators.required],
+      categorie_document: ['Monographie'],
+      gobi_vu_format_numerique:   [''],
       gobi_version_moins_365_usd: ["Ne s'applique pas"],
       reference_tipasa:         [''],
-      format_support:            ['Électronique', Validators.required],
+      format_support:            ['Électronique'],
+      // Masquée dans le formulaire : déduite du format (Imprimé = Oui, Électronique = Non).
       creation_notice_dtdm:      [false],
-      localisation_emplacement:  [''],
-      devise_originale:      ['',   Validators.required],
+      devise_originale:      [''],
       devise_autre_precision: [''],
-      prix_devise_originale: [null, [Validators.required, Validators.min(0.01)]],
-      prix_cad:              [null, [Validators.required, Validators.min(0.01)]],
-      source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
+      prix_devise_originale: [null, Validators.min(0.01)],
+      prix_cad:              [null, Validators.min(0.01)],
+      source_information: ['', Validators.pattern('https?://.+')],
       note_commentaire:   ['', Validators.maxLength(1000)],
       statut_bibliotheque: ['Saisie en cours - En attente'],
       bibliotheque_note_interne:    ['', Validators.maxLength(1000)],
@@ -123,6 +123,9 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       this.convertirPrix();
     });
     this.updateDeviseAutreValidator();
+
+    this.form.get('statut_bibliotheque')!.valueChanges.subscribe(() => this.appliquerValidationConditionnelle());
+    this.appliquerValidationConditionnelle();
 
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['id']) {
@@ -153,7 +156,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
           gobi_version_moins_365_usd: sd.gobi_version_moins_365_usd,
           reference_tipasa:           sd.reference_tipasa,
           creation_notice_dtdm:       bd.creation_notice_dtdm,
-          localisation_emplacement:   bd.localisation_emplacement,
           devise_originale:           deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
           devise_autre_precision:     deviseConnue || !bd.devise_originale ? '' : bd.devise_originale,
           prix_devise_originale:      bd.prix_devise_originale,
@@ -179,11 +181,39 @@ export class PebTipasaNumeriqueComponent implements OnInit {
     return estDeviseConvertible(this.form.get('devise_originale')?.value, this.tauxRates);
   }
 
+  /** Champs obligatoires seulement quand la demande est soumise aux ACQ — même règle que
+   *  Nouvel achat unique : en brouillon, ils sont marqués « (*) » en gris. */
+  get exigeTousLesChamps(): boolean {
+    return this.form.get('statut_bibliotheque')?.value === 'Soumettre aux ACQ';
+  }
+
+  private appliquerValidationConditionnelle(): void {
+    const exige = this.exigeTousLesChamps;
+    const champs: { nom: string; validators: any[] }[] = [
+      { nom: 'titre_document',           validators: [Validators.maxLength(500)] },
+      { nom: 'isbn_issn',                validators: [this.isbnValidator] },
+      { nom: 'categorie_document',       validators: [] },
+      { nom: 'gobi_vu_format_numerique', validators: [] },
+      { nom: 'source_information',       validators: [Validators.pattern('https?://.+')] },
+      { nom: 'format_support',           validators: [] },
+      { nom: 'devise_originale',         validators: [] },
+      { nom: 'prix_devise_originale',    validators: [Validators.min(0.01)] },
+      { nom: 'prix_cad',                 validators: [Validators.min(0.01)] },
+      { nom: 'fonds_budgetaire',         validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
+    ];
+    champs.forEach(({ nom, validators }) => {
+      const ctrl = this.form.get(nom)!;
+      ctrl.setValidators(exige ? [Validators.required, ...validators] : validators);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+    });
+    this.updateDeviseAutreValidator();
+  }
+
   private updateDeviseAutreValidator(): void {
     const ctrl = this.form.get('devise_autre_precision');
     if (!ctrl) return;
     if (this.form.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators([Validators.required, Validators.maxLength(100)]);
+      ctrl.setValidators(this.exigeTousLesChamps ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
     } else {
       ctrl.clearValidators();
     }
@@ -265,7 +295,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
         date_publication:           v.date_publication,
         categorie_document:         v.categorie_document,
         format_support:             v.format_support,
-        localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
         creation_notice_dtdm:       v.creation_notice_dtdm,
         prix_cad:                   v.prix_cad,
         devise_originale:           this.deviseAEnvoyer(v),
@@ -329,7 +358,6 @@ export class PebTipasaNumeriqueComponent implements OnInit {
         date_publication:           v.date_publication,
         categorie_document:         v.categorie_document,
         format_support:             v.format_support,
-        localisation_emplacement:   this.showImprime     ? v.localisation_emplacement   : null,
         creation_notice_dtdm:       v.creation_notice_dtdm,
         prix_cad:                   v.prix_cad,
         devise_originale:           this.deviseAEnvoyer(v),

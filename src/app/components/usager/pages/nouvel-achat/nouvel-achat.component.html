@@ -242,6 +242,16 @@
             </ng-container>
           </div>
 
+          <!-- Localisation / Emplacement — documents sur support physique -->
+          <div class="col-md-6" *ngIf="showAviserReservation">
+            <label class="form-label">{{ 'forms-usager.localisation' | translate }}</label>
+            <input type="text" formControlName="localisation_emplacement" class="form-control"
+                   [placeholder]="'forms-usager.localisation-placeholder' | translate">
+            <small class="form-text">
+              <i class="fas fa-info-circle me-1"></i>{{ 'forms-usager.localisation-hint-physique' | translate }}
+            </small>
+          </div>
+
           <div class="col-12" *ngIf="showElectronique">
             <div class="electronique-fields">
               <div class="row g-3">

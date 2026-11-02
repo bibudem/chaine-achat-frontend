@@ -106,7 +106,7 @@
         <div class="row g-3">
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
                    [placeholder]="'form-peb-tipasa.titre-placeholder' | translate">
@@ -128,7 +128,7 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
                    [placeholder]="'forms-usager.isbn-placeholder' | translate"
@@ -146,7 +146,7 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label required">{{ 'forms-usager.categorie-document' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -157,7 +157,7 @@
             </div>
           </div>
           <div class="col-md">
-            <label class="form-label required">{{ 'form-peb-tipasa.gobi-disponible' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'form-peb-tipasa.gobi-disponible' | translate }}</label>
             <select formControlName="gobi_vu_format_numerique" class="form-select"
                     [class.is-invalid]="isInvalid('gobi_vu_format_numerique')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -178,7 +178,7 @@
             </select>
           </div>
           <div class="col-md">
-            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
                    placeholder="https://...">
@@ -198,7 +198,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-8">
-            <label class="form-label required">{{ 'forms-usager.format-support' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.format-support' | translate }}</label>
             <div class="format-toggle">
               <div class="format-toggle-btn"
                    [class.format-toggle-btn--active]="form.get('format_support')?.value === 'Imprimé/support physique'"
@@ -223,25 +223,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Création de notice TDM — visible si non Électronique pur -->
-          <div class="col-md-4 d-flex align-items-center" *ngIf="showImprime">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox"
-                     formControlName="creation_notice_dtdm"
-                     id="creationNoticeCheck" role="switch">
-              <label class="form-check-label" for="creationNoticeCheck">
-                {{ 'forms-usager.creation-notice' | translate }}
-              </label>
-            </div>
-          </div>
-
-          <!-- Localisation — visible si Imprimé -->
-          <div class="col-md-6" *ngIf="showImprime">
-            <label class="form-label">{{ 'forms-usager.localisation' | translate }}</label>
-            <input type="text" formControlName="localisation_emplacement" class="form-control"
-                   [placeholder]="'forms-usager.localisation-placeholder' | translate">
-          </div>
         </div>
       </div>
 
@@ -252,7 +233,7 @@
         </h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.devise' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise' | translate }}</label>
             <select formControlName="devise_originale" class="form-select"
                     [class.is-invalid]="isInvalid('devise_originale')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
@@ -264,7 +245,7 @@
           </div>
 
           <div class="col-md-4" *ngIf="form.get('devise_originale')?.value === 'Autre'">
-            <label class="form-label required">{{ 'forms-usager.devise-autre-label' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.devise-autre-label' | translate }}</label>
             <input type="text" formControlName="devise_autre_precision" class="form-control"
                    [class.is-invalid]="isInvalid('devise_autre_precision')"
                    [placeholder]="'forms-usager.devise-autre-placeholder' | translate">
@@ -274,7 +255,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-devise-originale' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input type="number" min="0.01" step="0.01"
@@ -288,7 +269,7 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label required">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.prix-cad-calcule' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input type="number" step="0.01" min="0" formControlName="prix_cad" class="form-control"
@@ -305,7 +286,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.fonds-budgetaire' | translate }}</label>
             <app-fonds-budgetaire-select formControlName="fonds_budgetaire"
                    [invalid]="isInvalid('fonds_budgetaire')"></app-fonds-budgetaire-select>
             <div *ngIf="isInvalid('fonds_budgetaire')" class="invalid-feedback d-block">
