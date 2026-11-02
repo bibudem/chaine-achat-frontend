@@ -645,7 +645,11 @@
   "accueil": {
     "titre": "Dashboard",
     "sous-titre": "Overview of requests and statistics",
-    "repartition-acq": "ACQ Distribution",
+    "consultation-seulement": "Read only",
+    "repartition-consulter": "View the distribution",
+    "nouvel-onglet": "opens in a new tab",
+    "repartition-indisponible": "The distribution file is not available yet.",
+    "repartition-acq": "ACQ - Fund distribution",
     "ouvrir-repartition": "Open distribution table",
     "mis-a-jour-le": "Updated on",
     "taux-change": "Exchange rates",

@@ -15,28 +15,32 @@
       </p>
     </div>
 
-    <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — tous les profils du
-         portail (Employé, TechDoc, TDM, Admin, SuperAdmin), à droite de l'en-tête. ── -->
-    <div class="info-chip info-chip--orange info-chip--link uh-header__taux" *ngIf="voirTaux" [class.info-chip--open]="showTauxDetail">
-      <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
-        <div class="info-chip__icon">
-          <i class="bi bi-currency-exchange"></i>
-        </div>
-        <div class="info-chip__body">
-          <span class="info-chip__label">
-            {{ 'accueil.taux-securise-usd' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
-            <i class="bi tdv-chevron" [class.bi-chevron-down]="!showTauxDetail" [class.bi-chevron-up]="showTauxDetail"></i>
-          </span>
-          <span class="info-chip__val info-chip__val--lg" *ngIf="tauxActuels?.taux?.['USD'] as usd; else pasDeTauxPrincipal">
-            1 USD = {{ usd }} CAD
-          </span>
-          <ng-template #pasDeTauxPrincipal>
-            <span class="info-chip__val text-muted" style="font-weight:500;">
-              {{ isLoadingTaux ? ('accueil.chargement' | translate) : ('accueil.aucun-taux' | translate) }}
+    <!-- ── Pastilles d'information (lecture seule, gestion côté admin) ── -->
+    <div class="uh-header__chips" *ngIf="voirTaux">
+
+      <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — tous les profils du
+           portail (Employé, TechDoc, TDM, Admin, SuperAdmin), à droite de l'en-tête. ── -->
+      <div class="info-chip info-chip--orange info-chip--link uh-header__taux" [class.info-chip--open]="showTauxDetail">
+        <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
+          <div class="info-chip__icon">
+            <i class="bi bi-currency-exchange"></i>
+          </div>
+          <div class="info-chip__body">
+            <span class="info-chip__label">
+              {{ 'accueil.taux-securise-usd' | translate }}<ng-container *ngIf="tauxActuels"> · {{ tauxActuels.periode }}</ng-container>
+              <i class="bi tdv-chevron" [class.bi-chevron-down]="!showTauxDetail" [class.bi-chevron-up]="showTauxDetail"></i>
             </span>
-          </ng-template>
-        </div>
-      </div>
+            <span class="info-chip__val info-chip__val--lg" *ngIf="tauxActuels?.taux?.['USD'] as usd; else pasDeTauxPrincipal">
+              1 USD = {{ usd }} CAD
+            </span>
+            <ng-template #pasDeTauxPrincipal>
+              <span class="info-chip__val text-muted" style="font-weight:500;">
+                {{ isLoadingTaux ? ('accueil.chargement' | translate) : ('accueil.aucun-taux' | translate) }}
+              </span>
+            </ng-template>
+          </div>
+    </div>
+  </div>
 
       <div *ngIf="showTauxDetail" class="info-chip__dropdown info-chip__dropdown--readonly">
         <p class="info-chip__dropdown-title">
@@ -171,6 +175,29 @@
 
     <!-- Colonne gauche -->
     <aside class="uh-sidebar">
+
+      <!-- ACQ - Répartition des fonds : fichier géré par les Admin (accueil admin), consultation
+           seulement ici — tous les profils du portail, comme le taux sécurisé. -->
+      <div class="uh-info-card uh-ressource" *ngIf="voirTaux" aria-labelledby="uh-titre-repartition">
+        <div class="uh-info-card__header">
+          <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-bar-chart-line-fill"></i></span>
+          <h3 class="uh-info-card__title" id="uh-titre-repartition">{{ 'accueil.repartition-acq' | translate }}</h3>
+        </div>
+
+        <p class="uh-ressource__meta" *ngIf="repartitionMaj">{{ 'accueil.mis-a-jour-le' | translate }} {{ repartitionMaj }}</p>
+
+        <a *ngIf="repartitionUrl; else repartitionIndisponible"
+           [href]="repartitionUrl" target="_blank" rel="noopener noreferrer"
+           [title]="'accueil.consultation-seulement' | translate"
+           class="uh-ressource__btn">
+          <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+          {{ 'accueil.repartition-consulter' | translate }}
+          <span class="visually-hidden">({{ 'accueil.nouvel-onglet' | translate }})</span>
+        </a>
+        <ng-template #repartitionIndisponible>
+          <p class="uh-ressource__indispo">{{ 'accueil.repartition-indisponible' | translate }}</p>
+        </ng-template>
+      </div>
 
       <!-- À propos -->
       <div class="uh-info-card">

@@ -574,7 +574,11 @@
   "accueil": {
     "titre": "Tableau de bord",
     "sous-titre": "Vue d'ensemble des demandes et statistiques",
-    "repartition-acq": "Répartition ACQ",
+    "consultation-seulement": "Consultation seulement",
+    "repartition-consulter": "Consulter la répartition",
+    "nouvel-onglet": "s'ouvre dans un nouvel onglet",
+    "repartition-indisponible": "Le fichier de répartition n'est pas encore disponible.",
+    "repartition-acq": "ACQ - Répartition des fonds",
     "ouvrir-repartition": "Ouvrir le tableau de répartition",
     "mis-a-jour-le": "Mis à jour le",
     "taux-change": "Taux de change",

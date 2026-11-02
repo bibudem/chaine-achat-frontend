@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReponsesService, DemandeUsager } from '../../../services/reponses.service';
 import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
+import { ConfigService } from '../../../services/config.service';
 import { AuthService } from '../../../services/auth.service';
 import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
@@ -68,7 +69,13 @@ export class UsagerHomeComponent implements OnInit {
     private tauxDevisesService: TauxDevisesService,
     private itemService: ItemFormulaireService,
     public authService: AuthService,
+    private configService: ConfigService,
   ) {}
+
+  /** « ACQ - Répartition des fonds » : lien et date de mise à jour gérés par les Admin sur
+   *  l'accueil admin (tbl_config : acq_repartition_url / acq_maj_date) — lecture seule ici. */
+  repartitionUrl  = '';
+  repartitionMaj  = '';
 
   get prenomAdmin(): string { return sessionStorage.getItem('prenomAdmin') ?? ''; }
   get nomAdmin():    string { return sessionStorage.getItem('nomAdmin')    ?? ''; }
@@ -127,6 +134,13 @@ export class UsagerHomeComponent implements OnInit {
     // Taux sécurisé (lecture seule) pour tous les profils du portail, Admin compris —
     // non pertinent pour le reste de la communauté UdeM (rôle Usager).
     if (this.voirTaux) {
+      this.configService.getConfig().subscribe({
+        next: res => {
+          this.repartitionUrl = res?.data?.['acq_repartition_url'] || '';
+          this.repartitionMaj = res?.data?.['acq_maj_date'] || '';
+        },
+        error: () => {}   // non bloquant : la pastille reste affichée sans lien
+      });
       this.tauxDevisesService.getActuelle().subscribe({
         next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
         error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
