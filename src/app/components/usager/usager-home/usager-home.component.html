@@ -21,7 +21,9 @@
       <!-- ── Chip : taux sécurisé USD (lecture seule, gestion côté admin) — tous les profils du
            portail (Employé, TechDoc, TDM, Admin, SuperAdmin), à droite de l'en-tête. ── -->
       <div class="info-chip info-chip--orange info-chip--link uh-header__taux" [class.info-chip--open]="showTauxDetail">
-        <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate">
+        <div class="info-chip__clickable" (click)="toggleTauxDetail()" [title]="'accueil.voir-taux' | translate"
+             role="button" tabindex="0" [attr.aria-expanded]="showTauxDetail"
+             (keydown.enter)="toggleTauxDetail()" (keydown.space)="$event.preventDefault(); toggleTauxDetail()">
           <div class="info-chip__icon">
             <i class="bi bi-currency-exchange"></i>
           </div>
@@ -39,9 +41,10 @@
               </span>
             </ng-template>
           </div>
-    </div>
-  </div>
+        </div>
 
+      <!-- Détail des taux : à l'intérieur de la pastille (position: relative) pour s'ouvrir
+           juste en dessous — placé à l'extérieur, il s'ouvrait hors de l'écran. -->
       <div *ngIf="showTauxDetail" class="info-chip__dropdown info-chip__dropdown--readonly">
         <p class="info-chip__dropdown-title">
           <i class="bi bi-clock-history me-1"></i>
@@ -67,6 +70,7 @@
         <a *ngIf="authService.isAdmin" routerLink="/configuration/taux-change" class="info-chip__manage-link">
           <i class="bi bi-sliders2 me-1"></i>{{ 'accueil.gerer-taux' | translate }}
         </a>
+      </div>
       </div>
     </div>
   </div>
