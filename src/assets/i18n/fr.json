@@ -1344,7 +1344,7 @@
     "titre-placeholder": "Titre complet de la ressource",
     "editeur-placeholder": "Nom de l'éditeur ou du fournisseur",
     "issn-placeholder": "Ex : 00280836",
-    "periode-placeholder": "Ex : 2024 ou 2020-2025",
+    "periode-placeholder": "Ex : 1996-2000 / vol.1, no.1",
     "titre": "Nouvel abonnement",
     "sous-titre": "Demande de souscription à une ressource périodique ou sérielle",
     "confirmation-message": "Votre demande d'abonnement a bien été transmise à l'équipe des Acquisitions.",
@@ -1353,8 +1353,8 @@
     "section-abonnement": "Détails de l'abonnement",
     "date-debut": "Date de début d'abonnement",
     "date-debut-required": "La date de début est requise.",
-    "periode-couverte": "Période couverte",
-    "periode-hint": "Années ou volumes couverts par l'abonnement",
+    "periode-couverte": "Période / volumaison",
+    "periode-hint": "Débuter l'abonnement avec cette année ou ce volume",
     "type-monographie": "Type de monographie",
     "section-source": "Source et notes",
     "source-hint": "URL où le prix et la disponibilité ont été vérifiés (éditeur, libraire)",
@@ -1363,7 +1363,7 @@
   },
   "form-modification-ccol": {
     "titre-placeholder": "Titre complet du document ou de l'abonnement",
-    "periode-placeholder": "Ex : 1996-2000",
+    "periode-placeholder": "Ex : 1996-2000 / vol.1, no.1",
     "localisation-hint": "Visible si Format = Imprimé",
     "plateforme-hint": "Ex : EBSCO, Elsevier, Oxford…",
     "nb-utilisateurs-hint": "Entier ≥ 1",
@@ -1383,8 +1383,9 @@
     "numero-oclc-placeholder": "Ex:12345678",
     "numero-oclc-hint": "Abonnement en cours",
     "date-debut-abonnement": "Date de début d'abonnement",
-    "periode-couverte": "Période couverte",
-    "periode-hint": "Spécifique CCOL et Modification"
+    "periode-couverte": "Période / volumaison",
+    "periode-hint": "Années ou volumes",
+    "periode-hint-changement": "Changement effectif à partir de cette année ou ce volume."
   },
   "form-peb-tipasa": {
     "section-document": "Document et disponibilité numérique",

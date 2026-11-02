@@ -202,7 +202,12 @@
             <label class="form-label">{{ 'form-modification-ccol.periode-couverte' | translate }}</label>
             <input type="text" formControlName="periode_couverte" class="form-control"
                    [placeholder]="'form-modification-ccol.periode-placeholder' | translate">
-            <small class="form-text">{{ 'form-modification-ccol.periode-hint' | translate }}</small>
+            <!-- Note selon le type de demande : achat → années ou volumes ; autres types
+                 (annulation à modification du nb d'utilisateurs) → changement effectif. -->
+            <small class="form-text" *ngIf="form.get('precision_demande')?.value as type">
+              <i class="bi bi-info-circle me-1" aria-hidden="true"></i>{{ (type.startsWith('Achat') ? 'form-modification-ccol.periode-hint'
+                                             : 'form-modification-ccol.periode-hint-changement') | translate }}
+            </small>
           </div>
         </div>
       </div>

@@ -1412,7 +1412,7 @@
     "titre-placeholder": "Full title of the resource",
     "editeur-placeholder": "Publisher or vendor name",
     "issn-placeholder": "e.g. 00280836",
-    "periode-placeholder": "e.g. 2024 or 2020-2025",
+    "periode-placeholder": "e.g. 1996-2000 / vol.1, no.1",
     "titre": "New subscription",
     "sous-titre": "Request for subscription to a periodic or serial resource",
     "confirmation-message": "Your subscription request has been forwarded to the Acquisitions team.",
@@ -1421,8 +1421,8 @@
     "section-abonnement": "Subscription details",
     "date-debut": "Subscription start date",
     "date-debut-required": "Start date is required.",
-    "periode-couverte": "Covered period",
-    "periode-hint": "Years or volumes covered by the subscription",
+    "periode-couverte": "Period / volume",
+    "periode-hint": "Start the subscription with this year or volume",
     "type-monographie": "Monograph type",
     "section-source": "Source and notes",
     "source-hint": "URL where price and availability were verified (publisher, bookseller)",
@@ -1431,7 +1431,7 @@
   },
   "form-modification-ccol": {
     "titre-placeholder": "Full title of the document or subscription",
-    "periode-placeholder": "e.g. 1996-2000",
+    "periode-placeholder": "e.g. 1996-2000 / vol.1, no.1",
     "localisation-hint": "Shown when Format = Print",
     "plateforme-hint": "e.g. EBSCO, Elsevier, Oxford…",
     "nb-utilisateurs-hint": "Whole number ≥ 1",
@@ -1451,8 +1451,9 @@
     "numero-oclc-placeholder": "e.g. 12345678",
     "numero-oclc-hint": "Current subscription",
     "date-debut-abonnement": "Subscription start date",
-    "periode-couverte": "Covered period",
-    "periode-hint": "Specific to CCOL and Modification"
+    "periode-couverte": "Period / volume",
+    "periode-hint": "Years or volumes",
+    "periode-hint-changement": "Change effective from this year or volume."
   },
   "form-peb-tipasa": {
     "section-document": "Document and digital availability",
