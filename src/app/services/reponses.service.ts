@@ -69,6 +69,10 @@ export interface DemandeUsager {
   suivi_acq: string | null;
   note_acq: string | null;
   note_commentaire: string | null;
+  /** Numéro de l'item (demande transmise) — null tant que la demande n'est pas soumise. */
+  item_id: number | null;
+  /** Précision de la demande (Modification et CCOL). */
+  precision_demande: string | null;
 }
 
 /** Demande affichée dans la liste « Toutes les demandes » (profil Usager, lecture seule,
@@ -83,6 +87,8 @@ export interface DemandePublique {
   statut_bibliotheque: string | null;
   statut_acq: string | null;
   suivi_acq: string | null;
+  item_id: number | null;
+  precision_demande: string | null;
 }
 
 /** Décision de l'équipe TechDoc sur une suggestion publique. */

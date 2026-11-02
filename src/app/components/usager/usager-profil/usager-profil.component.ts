@@ -225,6 +225,17 @@ export class UsagerProfilComponent implements OnInit {
   /** Couleur de l'icône du type (charte d'accessibilité). */
   readonly couleurType = formulaireTypeCouleur;
 
+  /** Numéro affiché (carte, détail, impression) : celui de l'item, comme dans les demandes
+   *  transmises ; un brouillon pas encore soumis n'a pas d'item et garde son numéro de saisie. */
+  numeroDemande(d: DemandeUsager | DemandePublique): string {
+    return d.item_id ? `Demande #${d.item_id}` : `Brouillon #${d.id}`;
+  }
+
+  /** Première ligne de la carte : type, précision (Modification et CCOL), numéro. */
+  enteteDemande(d: DemandeUsager | DemandePublique): string {
+    return [d.type_formulaire, d.precision_demande, this.numeroDemande(d)].filter(Boolean).join(' - ');
+  }
+
   routeFormulaire(d: DemandeUsager): string {
     const map: Record<string, string> = {
       'Nouvel achat unique':          'nouvel-achat',
@@ -434,7 +445,7 @@ export class UsagerProfilComponent implements OnInit {
       : '';
 
     ecrireDocumentImpression(fenetre, {
-      titre: `${d.type_formulaire} — Demande #${d.id}`,
+      titre: `${d.type_formulaire} — ${this.numeroDemande(d)}`,
       sousTitre: `Titre : ${d.titre_document || '—'} · Soumise le ${this.formatDate(d.dateA)}`,
       enteteDroiteNom: nomConnecte,
       enteteDroiteDetail: `Imprimé le ${dateImpression}`,

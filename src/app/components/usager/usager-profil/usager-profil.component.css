@@ -245,10 +245,12 @@
   flex-wrap: wrap;
   margin-bottom: .15rem;
 }
+/* Première ligne : type - précision - numéro, en casse normale (texte complet, peut passer
+   à la ligne si la précision est longue). */
 .up-type-label {
-  font-size: var(--typo-label); font-weight: 700;
-  color: #607386; text-transform: uppercase; letter-spacing: .05em;
-  white-space: nowrap;
+  font-size: var(--typo-label); font-weight: 600;
+  color: #55657a;
+  white-space: normal;
 }
 
 /* Badges ACQ */

@@ -150,7 +150,7 @@
 
                 <!-- Type + badge + supprimer -->
                 <div class="up-card__top">
-                  <span class="up-type-label">{{ d.type_formulaire }}</span>
+                  <span class="up-type-label">{{ enteteDemande(d) }}</span>
                   <span class="up-badge" [ngClass]="badgeClass(d)">{{ badgeLabel(d) }}</span>
                   <div class="up-card__actions">
                     <a *ngIf="peutSupprimer(d)"
@@ -280,12 +280,12 @@
 
           <div class="up-card up-card--readonly" *ngFor="let d of demandesPubliques" [ngClass]="'up-card--' + statutKeyPublique(d)">
             <div class="up-card__row">
-              <span class="up-type-icon" [ngClass]="'up-type-icon--' + statutKeyPublique(d)">
+              <span class="up-type-icon" [ngClass]="'up-type-icon--' + couleurType(d.type_formulaire)">
                 <i class="bi {{ typeIcon(d.type_formulaire) }}"></i>
               </span>
               <div class="up-card__main">
                 <div class="up-card__top">
-                  <span class="up-type-label">{{ d.type_formulaire }}</span>
+                  <span class="up-type-label">{{ enteteDemande(d) }}</span>
                   <span class="up-badge" [ngClass]="badgeClassPublique(d)">{{ statutLabelPublique(d) }}</span>
                   <div class="up-card__actions">
                     <button class="up-btn-detail-icon"
