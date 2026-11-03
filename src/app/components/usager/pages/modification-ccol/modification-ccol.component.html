@@ -89,17 +89,17 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — DOCUMENT / ABONNEMENT -->
+      <!-- SECTION 2 — INFORMATIONS BIBLIOGRAPHIQUES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>{{ 'form-modification-ccol.section-document' | translate }}
+          <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
-                   [placeholder]="'form-modification-ccol.titre-placeholder' | translate">
+                   [placeholder]="'forms-usager.titre-placeholder' | translate">
             <div *ngIf="isInvalid('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.titre-required' | translate }}
             </div>
@@ -112,10 +112,10 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.editeur' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.editeur-fournisseur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
-                   [placeholder]="'form-modification-ccol.editeur-placeholder' | translate">
+                   [placeholder]="'forms-usager.editeur-fournisseur-placeholder' | translate">
             <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-modification-ccol.editeur-required' | translate }}
             </div>
@@ -135,7 +135,8 @@
 
           <div class="col-md-4">
             <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
-            <input type="date" formControlName="date_publication" class="form-control">
+            <input type="text" formControlName="date_publication" class="form-control"
+                   [placeholder]="'forms-usager.date-placeholder' | translate">
           </div>
 
           <div class="col-md-6">
@@ -152,12 +153,13 @@
 
           <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
-            <input type="url" formControlName="source_information" class="form-control"
+            <input type="text" formControlName="source_information" class="form-control"
                    [class.is-invalid]="isInvalid('source_information')"
-                   placeholder="https://...">
+                   [placeholder]="'forms-usager.source-info-placeholder' | translate">
             <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-required' | translate }}
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-requise' | translate }}
             </div>
+            <small class="form-text">{{ 'forms-usager.source-info-hint-autre' | translate }}</small>
           </div>
         </div>
       </div>
@@ -205,7 +207,7 @@
             <!-- Note selon le type de demande : achat → années ou volumes ; autres types
                  (annulation à modification du nb d'utilisateurs) → changement effectif. -->
             <small class="form-text" *ngIf="form.get('precision_demande')?.value as type">
-              <i class="bi bi-info-circle me-1" aria-hidden="true"></i>{{ (type.startsWith('Achat') ? 'form-modification-ccol.periode-hint'
+              {{ (type.startsWith('Achat') ? 'form-modification-ccol.periode-hint'
                                              : 'form-modification-ccol.periode-hint-changement') | translate }}
             </small>
           </div>

@@ -95,11 +95,12 @@
           <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
+          <!-- Ligne 1 : titre, sous-titre -->
           <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="isInvalid('titre_document')"
-                   [placeholder]="'form-abonnement.titre-placeholder' | translate">
+                   [placeholder]="'forms-usager.titre-placeholder' | translate">
             <div *ngIf="isInvalid('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.titre-required' | translate }}
             </div>
@@ -111,17 +112,18 @@
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
-          <div class="col-md-4">
-            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'form-abonnement.editeur-fournisseur' | translate }}</label>
+          <!-- Ligne 2 : éditeur / fournisseur, ISBN / ISSN -->
+          <div class="col-md-6">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.editeur-fournisseur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
-                   [placeholder]="'form-abonnement.editeur-placeholder' | translate">
+                   [placeholder]="'forms-usager.editeur-fournisseur-placeholder' | translate">
             <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-abonnement.editeur-required' | translate }}
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
@@ -133,7 +135,8 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
-          <div class="col-md-4">
+          <!-- Ligne 3 : catégorie (+ type de monographie), source d'information -->
+          <div class="col-md">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
                     [class.is-invalid]="isInvalid('categorie_document')">
@@ -145,12 +148,23 @@
             </div>
           </div>
 
-          <div class="col-md-6" *ngIf="showMonographie">
-            <label class="form-label">{{ 'form-abonnement.type-monographie' | translate }}</label>
+          <div class="col-md" *ngIf="showMonographie">
+            <label class="form-label">{{ 'forms-usager.type-monographie' | translate }}</label>
             <select formControlName="type_monographie" class="form-select">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
             </select>
+          </div>
+
+          <div class="col-md">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
+            <input type="text" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="isInvalid('source_information')"
+                   [placeholder]="'forms-usager.source-info-placeholder' | translate">
+            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-requise' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.source-info-hint-autre' | translate }}</small>
           </div>
         </div>
       </div>
@@ -174,7 +188,7 @@
             <label class="form-label">{{ 'form-abonnement.periode-couverte' | translate }}</label>
             <input type="text" formControlName="periode_couverte" class="form-control"
                    [placeholder]="'form-abonnement.periode-placeholder' | translate">
-            <small class="form-text"><i class="bi bi-info-circle me-1" aria-hidden="true"></i>{{ 'form-abonnement.periode-hint' | translate }}</small>
+            <small class="form-text">{{ 'form-abonnement.periode-hint' | translate }}</small>
           </div>
         </div>
       </div>
@@ -299,26 +313,6 @@
               </a>
             </small>
           </div>
-        </div>
-      </div>
-
-      <!-- SECTION 6 — SOURCE ET NOTES -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="fas fa-link"></i>{{ 'form-abonnement.section-source' | translate }}
-        </h2>
-        <div class="row g-3">
-          <div class="col-md-12">
-            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
-            <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="isInvalid('source_information')"
-                   placeholder="https://...">
-            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'form-abonnement.source-hint' | translate }}</small>
-          </div>
-
         </div>
       </div>
 

@@ -116,7 +116,7 @@ export class SuggestionPublicComponent implements OnInit {
       editeur:                      [''],
       date_publication:             [''],
       source_information:           ['', Validators.pattern('https?://.+')],
-      isbn_issn:                    ['', [Validators.required, this.isbnValidator]],
+      isbn_issn:                    ['', this.isbnValidator],
       note_usager:                  [''],
       aviser_reservation:           [false],
       // Toujours activé : le demandeur et le/la bibliothécaire disciplinaire sont
@@ -135,7 +135,7 @@ export class SuggestionPublicComponent implements OnInit {
       // l'usage des technicien(ne)s responsables du tri des suggestions d'achat.
       techdoc_suggestion_transmise: [false],
       techdoc_tri_notes:            [''],
-    });
+    }, { validators: this.anneeOuSourceValidator });
 
     this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
       this.showSigleCours = val;
@@ -202,6 +202,13 @@ export class SuggestionPublicComponent implements OnInit {
         this.appliquerDroits();
       }
     });
+  }
+
+  /** Date de publication OU source d'information : l'une des deux suffit (comme le formulaire du site Web). */
+  private anneeOuSourceValidator(group: AbstractControl): ValidationErrors | null {
+    const date   = group.get('date_publication')?.value;
+    const source = group.get('source_information')?.value;
+    return date || source ? null : { anneeOuSourceRequis: true };
   }
 
   private isbnValidator(control: AbstractControl): ValidationErrors | null {

@@ -28,9 +28,10 @@ export class PebTipasaNumeriqueComponent implements OnInit {
   /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
   bibliotheques: string[] = [];
 
-  categoriesDocument: string[] = [
-    'Monographie', 'Périodique', 'Base de données',
-    'Archives de périodiques', 'Archives de monographies'
+  typesMonographie: string[] = [
+    'Livre', 'Enregistrement sonore', 'Film', 'Matériel didactique',
+    'Partition de musique', 'Zine', 'Carte et données géospatiales',
+    'Autres (microfilm, etc.)', "Ne s'applique pas"
   ];
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
@@ -90,9 +91,11 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       editeur:            ['', Validators.maxLength(300)],
       isbn_issn:          ['', this.isbnValidator],
       date_publication:   [''],
+      // Plus saisie (retirée du formulaire) : toujours Monographie, conservée pour les rapports.
       categorie_document: ['Monographie'],
+      type_monographie:   ['Livre'],
       gobi_vu_format_numerique:   [''],
-      gobi_version_moins_365_usd: ["Ne s'applique pas"],
+      gobi_version_moins_365_usd: [''],
       reference_tipasa:         [''],
       format_support:            ['Électronique'],
       // Masquée dans le formulaire : déduite du format (Imprimé = Oui, Électronique = Non).
@@ -153,7 +156,9 @@ export class PebTipasaNumeriqueComponent implements OnInit {
           date_publication:           bd.date_publication,
           categorie_document:         bd.categorie_document,
           gobi_vu_format_numerique:   sd.gobi_vu_format_numerique,
-          gobi_version_moins_365_usd: sd.gobi_version_moins_365_usd,
+          // Ancienne valeur « Ne s'applique pas » (option retirée) : à choisir de nouveau.
+          gobi_version_moins_365_usd: sd.gobi_version_moins_365_usd === "Ne s'applique pas" ? '' : (sd.gobi_version_moins_365_usd ?? ''),
+          type_monographie:           sd.type_monographie || 'Livre',
           reference_tipasa:           sd.reference_tipasa,
           creation_notice_dtdm:       bd.creation_notice_dtdm,
           devise_originale:           deviseConnue || !bd.devise_originale ? bd.devise_originale : 'Autre',
@@ -191,9 +196,12 @@ export class PebTipasaNumeriqueComponent implements OnInit {
     const exige = this.exigeTousLesChamps;
     const champs: { nom: string; validators: any[] }[] = [
       { nom: 'titre_document',           validators: [Validators.maxLength(500)] },
+      { nom: 'editeur',                  validators: [Validators.maxLength(300)] },
       { nom: 'isbn_issn',                validators: [this.isbnValidator] },
-      { nom: 'categorie_document',       validators: [] },
+      { nom: 'date_publication',         validators: [] },
+      { nom: 'type_monographie',         validators: [] },
       { nom: 'gobi_vu_format_numerique', validators: [] },
+      { nom: 'gobi_version_moins_365_usd', validators: [] },
       { nom: 'source_information',       validators: [Validators.pattern('https?://.+')] },
       { nom: 'format_support',           validators: [] },
       { nom: 'devise_originale',         validators: [] },
@@ -266,7 +274,8 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       fonds_budgetaire:     'MO-093',
       format_support:       'Électronique',
       creation_notice_dtdm: false,
-      gobi_version_moins_365_usd: "Ne s'applique pas",
+      gobi_version_moins_365_usd: '',
+      type_monographie:     'Livre',
       statut_bibliotheque:  'Saisie en cours - En attente',
     });
   }
@@ -309,7 +318,8 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       specificData: {
         reference_tipasa:           v.reference_tipasa,
         gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
-        gobi_version_moins_365_usd: v.gobi_vu_format_numerique === 'Oui' ? v.gobi_version_moins_365_usd : "Ne s'applique pas",
+        gobi_version_moins_365_usd: v.gobi_version_moins_365_usd || null,
+        type_monographie:           v.type_monographie || null,
         acq_responsable_courriel:   null,
       },
     };
@@ -372,7 +382,8 @@ export class PebTipasaNumeriqueComponent implements OnInit {
       specificData: {
         reference_tipasa:           v.reference_tipasa,
         gobi_vu_format_numerique:   v.gobi_vu_format_numerique,
-        gobi_version_moins_365_usd: v.gobi_vu_format_numerique === 'Oui' ? v.gobi_version_moins_365_usd : "Ne s'applique pas",
+        gobi_version_moins_365_usd: v.gobi_version_moins_365_usd || null,
+        type_monographie:           v.type_monographie || null,
         acq_responsable_courriel:   null,
       },
     };

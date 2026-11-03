@@ -197,28 +197,30 @@
         </div>
       </div>
 
-      <!-- SECTION 3 — DESCRIPTION DE LA SUGGESTION -->
+      <!-- SECTION 3 — INFORMATIONS BIBLIOGRAPHIQUES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>{{ 'form-suggestion.section-description' | translate }}
+          <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-12">
+          <!-- Ligne 1 : titre, sous-titre -->
+          <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
                    [class.is-invalid]="submitted && f['titre_document'].invalid"
-                   [placeholder]="'form-suggestion.titre-placeholder' | translate">
+                   [placeholder]="'forms-usager.titre-placeholder' | translate">
             <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-md-6">
             <label class="form-label">{{ 'forms-usager.sous-titre' | translate }}</label>
             <input type="text" formControlName="sous_titre" class="form-control"
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
+          <!-- Ligne 2 : auteur, éditeur, ISBN / ISSN -->
           <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.auteur-autrice' | translate }}</label>
             <input type="text" formControlName="auteur" class="form-control"
@@ -230,33 +232,16 @@
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">{{ 'form-suggestion.editeur-document' | translate }}</label>
+            <label class="form-label">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
-                   [placeholder]="'form-suggestion.editeur-placeholder' | translate">
+                   [placeholder]="'forms-usager.maison-edition-placeholder' | translate">
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
-            <input type="date" formControlName="date_publication" class="form-control">
-            <small class="form-text">{{ 'form-suggestion.date-publication-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">{{ 'form-suggestion.source-internet' | translate }}</label>
-            <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="submitted && f['source_information'].invalid"
-                   placeholder="https://...">
-            <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.source-invalid' | translate }}
-            </div>
-            <small class="form-text">{{ 'form-suggestion.source-hint' | translate }}</small>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.isbn-issn' | translate }}</label>
+            <label class="form-label">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="submitted && f['isbn_issn'].invalid"
-                   [placeholder]="'form-suggestion.isbn-placeholder' | translate"
+                   [placeholder]="'forms-usager.isbn-placeholder' | translate"
                    (input)="stripDashes($event)">
             <div *ngIf="submitted && f['isbn_issn'].invalid" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
@@ -264,6 +249,32 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
+          <!-- Ligne 3 : date de publication OU source d'information (l'une des deux suffit) -->
+          <div class="col-md-6">
+            <label class="form-label required">{{ 'forms-usager.date-publication' | translate }}</label>
+            <input type="text" formControlName="date_publication" class="form-control"
+                   [class.is-invalid]="submitted && form.hasError('anneeOuSourceRequis')"
+                   [placeholder]="'forms-usager.date-placeholder' | translate">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <input type="url" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="(submitted && f['source_information'].invalid) || (submitted && form.hasError('anneeOuSourceRequis'))"
+                   placeholder="https://...">
+            <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.source-invalid' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.source-info-hint' | translate }}</small>
+          </div>
+
+          <div class="col-12" *ngIf="submitted && form.hasError('anneeOuSourceRequis')">
+            <div class="text-danger small">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.annee-source-requis' | translate }}
+            </div>
+          </div>
+
+          <!-- Ligne 4 : notes et commentaires -->
           <div class="col-12">
             <label class="form-label">{{ 'form-suggestion.notes-commentaires' | translate }}</label>
             <textarea formControlName="note_usager" class="form-control" rows="4"

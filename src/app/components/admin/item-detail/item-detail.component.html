@@ -206,6 +206,13 @@
                 </div>
               </div>
 
+              <!-- Auteur ou autrice saisi dans le formulaire (ex. Nouvel achat unique) ; les suggestions l'affichent dans leur propre bloc -->
+              <div class="col-md-4" *ngIf="item.auteur && !item.formulaire_type?.startsWith('Suggestion')">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.auteur' | translate }}</span>
+                  <span class="itd-field__value">{{ val(item.auteur) }}</span>
+                </div>
+              </div>
               <div class="col-md-4">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.editeur' | translate }}</span>
@@ -292,11 +299,12 @@
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.source-info' | translate }}</span>
                   <span class="itd-field__value">
-                    <a *ngIf="item.source_information; else noLink"
-                       [href]="item.source_information" target="_blank">
+                    <!-- Source en texte libre (ex. « courriel en pièce jointe ») : affichée telle quelle -->
+                    <a *ngIf="estUrl(item.source_information); else sourceTexte"
+                       [href]="item.source_information" target="_blank" rel="noopener">
                       <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'item-detail.voir-lien' | translate }}
                     </a>
-                    <ng-template #noLink>—</ng-template>
+                    <ng-template #sourceTexte>{{ val(item.source_information) }}</ng-template>
                   </span>
                 </div>
               </div>

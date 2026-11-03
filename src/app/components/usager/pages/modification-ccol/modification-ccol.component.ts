@@ -113,7 +113,7 @@ export class ModificationCcolComponent implements OnInit {
       nombre_titres_inclus:     [null, Validators.min(1)],
       usager_aviser_activation: [{ value: '', disabled: true }, Validators.email],
       fonds_sn_projet:    ['', Validators.maxLength(50)],
-      source_information: ['', [Validators.required, Validators.pattern('https?://.+')]],
+      source_information: ['', Validators.required],
       note_commentaire: ['', Validators.maxLength(1000)],
       statut_bibliotheque: ['Saisie en cours - En attente'],
       bibliotheque_note_interne:    ['', Validators.maxLength(1000)],
@@ -146,7 +146,7 @@ export class ModificationCcolComponent implements OnInit {
       { nom: 'categorie_document', validators: [] },
       { nom: 'precision_demande',  validators: [] },
       { nom: 'format_support',     validators: [] },
-      { nom: 'source_information', validators: [Validators.pattern('https?://.+')] },
+      { nom: 'source_information', validators: [] },
     ];
     simples.forEach(({ nom, validators }) => {
       const ctrl = this.form.get(nom)!;

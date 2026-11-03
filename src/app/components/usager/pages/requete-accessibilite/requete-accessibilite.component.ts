@@ -104,7 +104,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       editeur:            ['', Validators.maxLength(300)],
       isbn_issn:          ['', this.isbnValidator],
       date_publication:   [''],
-      type_monographie:   [''],
+      type_monographie:   ['Livre'],
       reference_usager:                 [''],
       besoin_specifique_format:         [''],
       permalien_sofia:                  ['', Validators.pattern('https?://.+')],
@@ -124,7 +124,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       devise_autre_precision: [''],
       prix_devise_originale: [null, Validators.min(0.01)],
       prix_cad:              [null, Validators.min(0.01)],
-      source_information: ['', Validators.pattern('https?://.+')],
+      source_information: [''],
       note_commentaire:   ['', Validators.maxLength(1000)],
       statut_bibliotheque: ['Saisie en cours - En attente'],
       bibliotheque_note_interne:    ['', Validators.maxLength(1000)],
@@ -171,7 +171,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
           editeur:                          bd.editeur,
           isbn_issn:                        bd.isbn_issn,
           date_publication:                 bd.date_publication,
-          type_monographie:                 sd.type_monographie,
+          type_monographie:                 sd.type_monographie || 'Livre',
           nombre_utilisateurs:              bd.nombre_utilisateurs,
           reference_usager:                 sd.reference_usager,
           besoin_specifique_format:         sd.besoin_specifique_format,
@@ -219,7 +219,11 @@ export class RequeteAccessibiliteComponent implements OnInit {
     const champs: { nom: string; validators: any[] }[] = [
       { nom: 'fonds_budgetaire',         validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
       { nom: 'titre_document',           validators: [Validators.maxLength(500)] },
+      { nom: 'editeur',                  validators: [Validators.maxLength(300)] },
       { nom: 'isbn_issn',                validators: [this.isbnValidator] },
+      { nom: 'date_publication',         validators: [] },
+      { nom: 'type_monographie',         validators: [] },
+      { nom: 'source_information',       validators: [] },
       { nom: 'besoin_specifique_format', validators: [] },
     ];
     champs.forEach(({ nom, validators }) => {
@@ -337,6 +341,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       format_support:        'Électronique',
       nombre_utilisateurs:   'Accès illimité',
       format_pret_numerique: "Ne s'applique pas",
+      type_monographie:      'Livre',
       statut_bibliotheque:   'Saisie en cours - En attente',
     });
     this.updateBesoinSpecifiqueDerive(null);

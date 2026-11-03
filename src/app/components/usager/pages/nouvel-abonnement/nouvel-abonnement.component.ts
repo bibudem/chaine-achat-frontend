@@ -107,7 +107,7 @@ export class NouvelAbonnementComponent implements OnInit {
       personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
       fonds_repartition:    this.fb.array([FondsRepartitionComponent.creerLigne()]),
       fonds_sn_projet:      ['',   Validators.maxLength(50)],
-      source_information:   ['', [Validators.required, Validators.pattern('https?://.+')]],
+      source_information:   ['', Validators.required],
       note_commentaire:     ['',  Validators.maxLength(1000)],
       statut_bibliotheque:  ['Saisie en cours - En attente'],
       bibliotheque_note_interne:     ['', Validators.maxLength(1000)],
@@ -149,7 +149,7 @@ export class NouvelAbonnementComponent implements OnInit {
       { nom: 'categorie_document',    validators: [] },
       { nom: 'date_debut_abonnement', validators: [] },
       { nom: 'format_support',        validators: [] },
-      { nom: 'source_information',    validators: [Validators.pattern('https?://.+')] },
+      { nom: 'source_information',    validators: [] },
     ];
     simples.forEach(({ nom, validators }) => {
       const ctrl = this.form.get(nom)!;

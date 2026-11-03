@@ -99,12 +99,13 @@
         </div>
       </div>
 
-      <!-- SECTION 2 — INFORMATION BIBLIOGRAPHIQUE -->
+      <!-- SECTION 2 — INFORMATIONS BIBLIOGRAPHIQUES -->
       <div class="form-section">
         <h2 class="form-section__title">
-          <i class="fas fa-book-open"></i>{{ 'form-accessibilite.label-document' | translate }}
+          <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
+          <!-- Ligne 1 : titre, sous-titre -->
           <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
@@ -121,10 +122,15 @@
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
+          <!-- Ligne 2 : éditeur, ISBN, date de publication -->
           <div class="col-md-4">
-            <label class="form-label">{{ 'forms-usager.editeur' | translate }}</label>
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
+                   [class.is-invalid]="isInvalid('editeur')"
                    [placeholder]="'forms-usager.maison-edition-placeholder' | translate">
+            <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.editeur-required' | translate }}
+            </div>
           </div>
 
           <div class="col-md-4">
@@ -136,23 +142,44 @@
             <div *ngIf="isInvalid('isbn_issn')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-accessibilite.isbn-invalid' | translate }}
             </div>
-            <small class="form-text">{{ 'form-accessibilite.isbn-hint' | translate }}</small>
+            <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">{{ 'forms-usager.date-publication' | translate }}</label>
-            <input type="date" formControlName="date_publication" class="form-control">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.date-publication' | translate }}</label>
+            <input type="text" formControlName="date_publication" class="form-control"
+                   [class.is-invalid]="isInvalid('date_publication')"
+                   [placeholder]="'forms-usager.date-placeholder' | translate">
+            <div *ngIf="isInvalid('date_publication')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.date-requise' | translate }}
+            </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label">{{ 'form-accessibilite.type-monographie' | translate }}</label>
-            <select formControlName="type_monographie" class="form-select">
+          <!-- Ligne 3 : type de monographie, source d'information, permalien Sofia -->
+          <div class="col-md-4">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.type-monographie' | translate }}</label>
+            <select formControlName="type_monographie" class="form-select"
+                    [class.is-invalid]="isInvalid('type_monographie')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
             </select>
+            <div *ngIf="isInvalid('type_monographie')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.type-monographie-required' | translate }}
+            </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
+            <input type="text" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="isInvalid('source_information')"
+                   [placeholder]="'forms-usager.source-info-placeholder' | translate">
+            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-requise' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.source-info-hint-autre' | translate }}</small>
+          </div>
+
+          <div class="col-md-4">
             <label class="form-label">{{ 'form-accessibilite.permalien-sofia' | translate }}</label>
             <input type="url" formControlName="permalien_sofia" class="form-control"
                    [class.is-invalid]="isInvalid('permalien_sofia')"
@@ -346,25 +373,6 @@
         </div>
       </div>
       </ng-container>
-
-      <!-- SECTION 7 — SOURCE ET NOTES -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="fas fa-info-circle"></i>{{ 'form-accessibilite.section-source' | translate }}
-        </h2>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">{{ 'form-accessibilite.source-info-url' | translate }}</label>
-            <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="isInvalid('source_information')"
-                   placeholder="https://...">
-            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-accessibilite.source-invalid' | translate }}
-            </div>
-          </div>
-
-        </div>
-      </div>
 
       <!-- SECTION — BIBLIOTHÈQUE -->
       <div class="form-section">

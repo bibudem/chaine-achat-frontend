@@ -98,6 +98,9 @@ case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
     return 'badge bg-light text-dark';
   }
 
+  /** Vrai seulement pour une adresse web : la source d'information peut aussi être du texte libre. */
+  estUrl(v: unknown): boolean { return typeof v === 'string' && /^https?:\/\//i.test(v.trim()); }
+
   val(v: any): string {
     if (v === null || v === undefined || v === '') return '—';
     if (typeof v === 'boolean') return v ? 'Oui' : 'Non';

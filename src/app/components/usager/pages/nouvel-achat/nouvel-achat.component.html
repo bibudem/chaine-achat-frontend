@@ -97,6 +97,7 @@
           <i class="fas fa-book-open"></i>{{ 'forms-usager.section-biblio' | translate }}
         </h2>
         <div class="row g-3">
+          <!-- Ligne 1 : titre, sous-titre -->
           <div class="col-md-6">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
@@ -113,17 +114,24 @@
                    [placeholder]="'forms-usager.sous-titre-placeholder' | translate">
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'form-nouvel-achat.auteur-editeur' | translate }}</label>
+          <!-- Ligne 2 : auteur, éditeur, ISBN / ISSN, date de publication -->
+          <div class="col-md-3">
+            <label class="form-label">{{ 'forms-usager.auteur' | translate }}</label>
+            <input type="text" formControlName="auteur" class="form-control"
+                   [placeholder]="'forms-usager.auteur-placeholder' | translate">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.editeur' | translate }}</label>
             <input type="text" formControlName="editeur" class="form-control"
                    [class.is-invalid]="isInvalid('editeur')"
-                   [placeholder]="'form-nouvel-achat.auteur-editeur-placeholder' | translate">
+                   [placeholder]="'forms-usager.maison-edition-placeholder' | translate">
             <div *ngIf="isInvalid('editeur')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-nouvel-achat.auteur-editeur-required' | translate }}
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.editeur-required' | translate }}
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-3">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
                    [class.is-invalid]="isInvalid('isbn_issn')"
@@ -135,16 +143,17 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
-          <div class="col-md">
+          <div class="col-md-3">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="text" formControlName="date_publication" class="form-control"
                    [class.is-invalid]="isInvalid('date_publication')"
-                   [placeholder]="'form-nouvel-achat.date-placeholder' | translate">
+                   [placeholder]="'forms-usager.date-placeholder' | translate">
             <div *ngIf="isInvalid('date_publication')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-nouvel-achat.date-required' | translate }}
             </div>
           </div>
 
+          <!-- Ligne 3 : catégorie, type de monographie (si Monographie), source d'information, quantité -->
           <div class="col-md">
             <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.categorie-document' | translate }}</label>
             <select formControlName="categorie_document" class="form-select"
@@ -157,24 +166,28 @@
             </div>
           </div>
 
-          <div class="col-md">
-            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
-            <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="isInvalid('source_information')"
-                   placeholder="https://...">
-            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-required' | translate }}
-            </div>
-            <small class="form-text">{{ 'forms-usager.source-info-hint' | translate }}</small>
-          </div>
-
           <div class="col-md" *ngIf="showMonographie">
-            <label class="form-label">{{ 'form-nouvel-achat.type-monographie' | translate }}</label>
-            <select formControlName="type_monographie" class="form-select">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.type-monographie' | translate }}</label>
+            <select formControlName="type_monographie" class="form-select"
+                    [class.is-invalid]="isInvalid('type_monographie')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
             </select>
+            <div *ngIf="isInvalid('type_monographie')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.type-monographie-required' | translate }}
+            </div>
             <small class="form-text">{{ 'form-nouvel-achat.type-mono-hint' | translate }}</small>
+          </div>
+
+          <div class="col-md">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.source-info' | translate }}</label>
+            <input type="text" formControlName="source_information" class="form-control"
+                   [class.is-invalid]="isInvalid('source_information')"
+                   [placeholder]="'forms-usager.source-info-placeholder' | translate">
+            <div *ngIf="isInvalid('source_information')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.source-info-requise' | translate }}
+            </div>
+            <small class="form-text">{{ 'forms-usager.source-info-hint-autre' | translate }}</small>
           </div>
 
           <div class="col-md">

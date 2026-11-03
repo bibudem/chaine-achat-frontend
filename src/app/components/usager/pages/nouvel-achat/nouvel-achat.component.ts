@@ -29,9 +29,9 @@ export class NouvelAchatComponent implements OnInit {
   /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
   bibliotheques: string[] = [];
 
+  /** Achat ponctuel : pas de périodiques (voir Nouvel abonnement). */
   categoriesDocument: string[] = [
-    'Monographie', 'Périodique', 'Base de données',
-    'Archives de périodiques', 'Archives de monographies'
+    'Monographie', 'Base de données', 'Archives de monographies'
   ];
 
   typesMonographie: string[] = [
@@ -93,10 +93,11 @@ export class NouvelAchatComponent implements OnInit {
       priorite_demande:            ['Régulier', Validators.required],
       titre_document:              ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:                  ['', Validators.maxLength(500)],
+      auteur:                      ['', Validators.maxLength(300)],
       editeur:                     ['', [Validators.required, Validators.maxLength(300)]],
       isbn_issn:                   ['', [Validators.required, this.isbnValidator]],
       date_publication:            ['', Validators.required],
-      source_information:          ['', [Validators.required, Validators.pattern('https?://.+')]],
+      source_information:          ['', Validators.required],
       categorie_document:          ['', Validators.required],
       type_monographie:            [{ value: '', disabled: true }],
       format_support:              ['Imprimé/support physique', Validators.required],
@@ -126,9 +127,8 @@ export class NouvelAchatComponent implements OnInit {
         typeMonographie.enable();
       } else {
         typeMonographie.disable();
-        typeMonographie.clearValidators();
-        typeMonographie.updateValueAndValidity();
       }
+      this.majValidationTypeMonographie();
     });
 
     this.form.get('mettreReserve')!.valueChanges.subscribe(() => this.majValidationMettreReserve());
@@ -158,7 +158,7 @@ export class NouvelAchatComponent implements OnInit {
       { nom: 'editeur',            validators: [Validators.maxLength(300)] },
       { nom: 'isbn_issn',          validators: [this.isbnValidator] },
       { nom: 'date_publication',   validators: [] },
-      { nom: 'source_information', validators: [Validators.pattern('https?://.+')] },
+      { nom: 'source_information', validators: [] },
       { nom: 'categorie_document', validators: [] },
       { nom: 'format_support',     validators: [] },
       { nom: 'quantite',           validators: [Validators.min(1)] },
@@ -171,7 +171,15 @@ export class NouvelAchatComponent implements OnInit {
 
     this.majValidationMettreReserve();
     this.majValidationFormatSupport();
+    this.majValidationTypeMonographie();
     this.fondsRepartitionArray.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, exige));
+  }
+
+  /** Type de monographie : obligatoire à la soumission aux ACQ, seulement si catégorie = Monographie. */
+  private majValidationTypeMonographie(): void {
+    const ctrl = this.form.get('type_monographie')!;
+    ctrl.setValidators(this.showMonographie && this.exigeTousLesChamps ? [Validators.required] : []);
+    ctrl.updateValueAndValidity({ emitEvent: false });
   }
 
   private majValidationMettreReserve(): void {
@@ -226,6 +234,10 @@ export class NouvelAchatComponent implements OnInit {
         const bd = row.reponses?.baseData ?? {};
         const sd = row.reponses?.specificData ?? {};
         if (bd.format_support)     this.form.get('format_support')!.setValue(bd.format_support);
+        // Ancienne demande avec une catégorie retirée de la liste (ex. Périodique) : conservée.
+        if (bd.categorie_document && !this.categoriesDocument.includes(bd.categorie_document)) {
+          this.categoriesDocument = [...this.categoriesDocument, bd.categorie_document];
+        }
         if (bd.categorie_document) this.form.get('categorie_document')!.setValue(bd.categorie_document);
         if (sd.reserve_cours)      this.form.get('mettreReserve')!.setValue(sd.reserve_cours);
         this.form.patchValue({
@@ -233,6 +245,7 @@ export class NouvelAchatComponent implements OnInit {
           priorite_demande:       bd.priorite_demande,
           titre_document:         bd.titre_document,
           sous_titre:             bd.sous_titre,
+          auteur:                 bd.auteur,
           editeur:                bd.editeur,
           isbn_issn:              bd.isbn_issn,
           date_publication:       bd.date_publication,
@@ -387,6 +400,7 @@ export class NouvelAchatComponent implements OnInit {
         priorite_demande:      v.priorite_demande,
         titre_document:        v.titre_document,
         sous_titre:            v.sous_titre,
+        auteur:                v.auteur,
         editeur:               v.editeur,
         isbn_issn:             v.isbn_issn,
         date_publication:      v.date_publication,
@@ -463,6 +477,7 @@ export class NouvelAchatComponent implements OnInit {
         priorite_demande:      v.priorite_demande,
         titre_document:        v.titre_document,
         sous_titre:            v.sous_titre,
+        auteur:                v.auteur,
         editeur:               v.editeur,
         isbn_issn:             v.isbn_issn,
         date_publication:      v.date_publication,
