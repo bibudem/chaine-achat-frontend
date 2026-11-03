@@ -242,18 +242,9 @@
             </div>
           </div>
 
-          <!-- Création de notice TDM -->
-          <div class="col-md-4">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox"
-                     formControlName="creation_notice_dtdm"
-                     id="creationNoticeCheck" role="switch">
-              <label class="form-check-label" for="creationNoticeCheck">
-                {{ 'forms-usager.creation-notice' | translate }}
-              </label>
-            </div>
-            <small class="form-text">{{ 'forms-usager.creation-notice-hint' | translate }}</small>
-          </div>
+          <!-- Création de notice TDM : non affichée aux bibliothèques (décision des Acquisitions).
+               La valeur reste déduite du format (Oui pour l'imprimé, voir majValidationFormatSupport)
+               et les ACQ la modifient au besoin dans la fiche de l'item. -->
 
           <!-- Localisation — visible si Imprimé -->
           <div class="col-md-6" *ngIf="showImprime">
