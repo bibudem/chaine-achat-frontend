@@ -759,7 +759,7 @@ a.uh-outil:hover .uh-outil__titre { color: var(--uh-accent); }
 a.uh-outil:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: -2px; }
 .uh-outil__texte { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .uh-outil__titre { font-weight: 600; font-size: .9rem; line-height: 1.3; }
-.uh-outil__meta { font-size: var(--typo-label); color: var(--uh-texte-2); line-height: 1.35; }
+.uh-outil__meta { font-size: var(--typo-label); color: var(--uh-texte-2); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .uh-outil__fleche { color: var(--uh-texte-2); font-size: .85rem; flex-shrink: 0; }
 a.uh-outil:hover .uh-outil__fleche { color: var(--uh-accent); }
 .uh-outil--inactif .uh-outil__meta { font-style: italic; }

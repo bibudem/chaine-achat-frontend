@@ -253,7 +253,7 @@
     "utilisateurs": "Users",
     "fonds-budgetaires": "Budget funds",
     "bibliotheques": "Libraries",
-    "suivis": "Library follow-up"
+    "suivis": "Follow-up"
   },
   "utilisateurs-page": {
     "titre": "Users",
@@ -651,7 +651,7 @@
     "nouvel-onglet": "opens in a new tab",
     "repartition-indisponible": "The distribution file is not available yet.",
     "suivis-titre": "Library follow-up",
-    "suivis-desc": "Amounts awaiting entry and request follow-up by status.",
+    "suivis-desc": "Amounts and statuses by library",
     "suivis-ouvrir": "Open follow-up",
     "repartition-acq": "ACQ - Fund distribution",
     "ouvrir-repartition": "Open distribution table",
@@ -1624,57 +1624,78 @@
     "soumettre": "Submit"
   },
   "suivis": {
-    "titre": "Library follow-up",
-    "fil-ariane": "Breadcrumb",
-    "description": "Follow up on the requests of one or more libraries at once.",
-    "exporter": "Export (Excel)",
-    "vue-montants": "Amounts awaiting entry",
-    "vue-statuts": "Follow-up by status",
-    "aide-montants": "Requests submitted to ACQ that are not yet processed (ACQ status Pending or In progress): amounts awaiting entry.",
-    "aide-statuts": "All requests recorded in the system, grouped by status.",
-    "bibliotheques": "Libraries",
-    "toutes-bibliotheques": "All libraries",
-    "n-bibliotheques": "{{n}} libraries",
-    "sans-bibliotheque": "No library",
-    "tous-types": "All types",
-    "toutes-priorites": "All priorities",
-    "dates-creation": "Creation date (from… to…)",
-    "date-debut": "Created from",
-    "date-fin": "Created until",
-    "reinitialiser": "Reset",
-    "regrouper-par": "Group by",
-    "groupe-bibliotheque": "Library",
-    "groupe-statut_acq": "DIRCOL/ACQ: Request status",
-    "groupe-statut_bibliotheque": "Library: Request status",
-    "groupe-fonds_budgetaire": "Budget fund to charge",
-    "puis-par": "Then by",
-    "aucun": "None",
-    "groupe-formulaire_type": "Form type",
-    "non-renseigne": "(not specified)",
-    "rechercher": "Search",
-    "rechercher-placeholder": "ID, title, ISBN, requester, fund…",
-    "nombre": "Count =",
-    "somme": "Total =",
-    "tout-ouvrir": "Expand all",
-    "tout-fermer": "Collapse all",
-    "erreur": "Unable to load the requests.",
-    "aucune-demande": "No request for this selection.",
-    "col-id": "ID",
-    "col-type": "Form type",
-    "col-prix-cad": "Price (CAD)",
-    "col-precision": "Request details",
-    "col-titre": "Document title",
-    "col-isbn": "ISBN/ISSN",
-    "col-periode": "Period / volume",
-    "col-bibliotheque": "Library",
-    "col-priorite": "Priority",
-    "col-fonds": "Budget fund",
-    "col-statut-bib": "Library: Status",
-    "col-statut-acq": "DIRCOL/ACQ: Status",
-    "col-suivi-acq": "DIRCOL/ACQ: Follow-up",
-    "col-note-acq": "ACQ note",
-    "col-cree": "Created",
-    "col-cree-par": "Created by",
-    "col-demandeur": "Requester"
+    "page": {
+      "titre": "Library follow-up",
+      "description": "Follow up on the requests of one or more libraries at once."
+    },
+    "vues": {
+      "montants": "Amounts awaiting entry",
+      "statuts": "Follow-up by status"
+    },
+    "aide": {
+      "montants": "Requests submitted to ACQ that are not yet processed (ACQ status Pending or In progress): amounts awaiting entry.",
+      "statuts": "All requests recorded in the system, grouped by status."
+    },
+    "filtres": {
+      "rechercher": "Search",
+      "rechercher-placeholder": "ID, title, ISBN, requester, fund…",
+      "date-debut": "Created from",
+      "date-fin": "Created until",
+      "bibliotheques": "Libraries",
+      "toutes-bibliotheques": "All libraries",
+      "n-bibliotheques": "{{n}} libraries",
+      "sans-bibliotheque": "No library",
+      "type": "Form type",
+      "tous-types": "All types",
+      "priorite": "Priority",
+      "toutes-priorites": "All priorities",
+      "regrouper-par": "Group by",
+      "puis-par": "Then by",
+      "aucun": "None"
+    },
+    "regroupements": {
+      "bibliotheque": "Library",
+      "fonds_budgetaire": "Budget fund to charge",
+      "statut_acq": "DIRCOL/ACQ: Request status",
+      "statut_bibliotheque": "Library: Request status",
+      "formulaire_type": "Form type"
+    },
+    "actions": {
+      "reinitialiser": "Reset",
+      "exporter": "Export (Excel)",
+      "tout-ouvrir": "Expand all",
+      "tout-fermer": "Collapse all"
+    },
+    "resultats": {
+      "titre": "Results",
+      "nombre": "Count =",
+      "somme": "Total =",
+      "non-renseigne": "(not specified)",
+      "aucune-demande": "No request for this selection.",
+      "erreur": "Unable to load the requests."
+    },
+    "colonnes": {
+      "item_id": "ID",
+      "formulaire_type": "Form type",
+      "prix_cad": "Price (CAD)",
+      "precision_demande": "Request details",
+      "titre_document": "Document title",
+      "isbn_issn": "ISBN/ISSN",
+      "periode_couverte": "Period / volume",
+      "bibliotheque": "Library",
+      "priorite_demande": "Priority",
+      "fonds_budgetaire": "Budget fund",
+      "statut_bibliotheque": "Library: Status",
+      "statut_acq": "DIRCOL/ACQ: Status",
+      "suivi_acq": "DIRCOL/ACQ: Follow-up",
+      "note_acq": "ACQ note",
+      "date_creation": "Created",
+      "cree_par": "Created by",
+      "demandeur": "Requester"
+    },
+    "export": {
+      "feuille-montants": "Amounts awaiting entry",
+      "feuille-statuts": "Follow-up by status"
+    }
   }
 }

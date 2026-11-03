@@ -81,8 +81,8 @@ const routes: Routes = [
       { path: 'nouvel-abonnement', component: NouvelAbonnementComponent },
       { path: 'peb-tipasa-numerique', component: PebTipasaNumeriqueComponent },
       { path: 'profil',              component: UsagerProfilComponent },
-      // Suivis des bibliothèques (vues Mentor) — même page que /suivis-bibliotheques, personnel seulement.
-      { path: 'suivis-bibliotheques', component: SuivisBibliothequesComponent, canActivate: [StaffGuard] },
+      // Ancienne adresse du portail : une seule page Suivis des bibliothèques (/suivis-bibliotheques).
+      { path: 'suivis-bibliotheques', redirectTo: '/suivis-bibliotheques', pathMatch: 'full' },
       // Équipe TechDoc : tri des suggestions publiques + historique partagé de l'équipe.
       { path: 'tri',                 component: TriSuggestionsComponent, canActivate: [TriGuard] },
       // Profil TDM : items routés (creation_notice_dtdm) à traiter directement depuis le portail.

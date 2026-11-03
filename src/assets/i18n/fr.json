@@ -159,7 +159,7 @@
     "utilisateurs": "Utilisateurs",
     "fonds-budgetaires": "Fonds budgétaires",
     "bibliotheques": "Bibliothèques",
-    "suivis": "Suivis des bibliothèques"
+    "suivis": "Suivi"
   },
   "utilisateurs-page": {
     "titre": "Utilisateurs",
@@ -580,7 +580,7 @@
     "nouvel-onglet": "s'ouvre dans un nouvel onglet",
     "repartition-indisponible": "Le fichier de répartition n'est pas encore disponible.",
     "suivis-titre": "Suivis des bibliothèques",
-    "suivis-desc": "Montants en attente de saisie et suivi des demandes par statut.",
+    "suivis-desc": "Montants et statuts par bibliothèque",
     "suivis-ouvrir": "Ouvrir les suivis",
     "repartition-acq": "ACQ - Répartition des fonds",
     "ouvrir-repartition": "Ouvrir le tableau de répartition",
@@ -1556,57 +1556,78 @@
     "embed-nouvelle-suggestion": "Envoyer une autre suggestion"
   },
   "suivis": {
-    "titre": "Suivis des bibliothèques",
-    "fil-ariane": "Fil d'Ariane",
-    "description": "Suivi des demandes d'une ou de plusieurs bibliothèques à la fois.",
-    "exporter": "Exporter (Excel)",
-    "vue-montants": "Montants en attente de saisie",
-    "vue-statuts": "Suivi par statut",
-    "aide-montants": "Demandes soumises aux ACQ qui ne sont pas encore traitées (statut ACQ En attente ou En traitement) : montants en attente d'être saisis.",
-    "aide-statuts": "Toutes les demandes enregistrées dans le système, regroupées par statut.",
-    "bibliotheques": "Bibliothèques",
-    "toutes-bibliotheques": "Toutes les bibliothèques",
-    "n-bibliotheques": "{{n}} bibliothèques",
-    "sans-bibliotheque": "Sans bibliothèque",
-    "tous-types": "Tous les types",
-    "toutes-priorites": "Toutes les priorités",
-    "dates-creation": "Date de création (du… au…)",
-    "date-debut": "Créée à partir du",
-    "date-fin": "Créée jusqu'au",
-    "reinitialiser": "Réinitialiser",
-    "regrouper-par": "Regrouper par",
-    "groupe-bibliotheque": "Bibliothèque",
-    "groupe-statut_acq": "DIRCOL/ACQ : Statut de la demande",
-    "groupe-statut_bibliotheque": "Bibliothèque : Statut de la demande",
-    "groupe-fonds_budgetaire": "Fonds budgétaire à imputer",
-    "puis-par": "Puis par",
-    "aucun": "Aucun",
-    "groupe-formulaire_type": "Type de formulaire",
-    "non-renseigne": "(non renseigné)",
-    "rechercher": "Rechercher",
-    "rechercher-placeholder": "ID, titre, ISBN, demandeur, fonds…",
-    "nombre": "Nombre =",
-    "somme": "Somme =",
-    "tout-ouvrir": "Tout ouvrir",
-    "tout-fermer": "Tout fermer",
-    "erreur": "Impossible de charger les demandes.",
-    "aucune-demande": "Aucune demande pour cette sélection.",
-    "col-id": "ID",
-    "col-type": "Type de formulaire",
-    "col-prix-cad": "Prix (CAD)",
-    "col-precision": "Précision de la demande",
-    "col-titre": "Titre du document",
-    "col-isbn": "ISBN/ISSN",
-    "col-periode": "Période / volumaison",
-    "col-bibliotheque": "Bibliothèque",
-    "col-priorite": "Priorité",
-    "col-fonds": "Fonds budgétaire",
-    "col-statut-bib": "Bibliothèque : Statut",
-    "col-statut-acq": "DIRCOL/ACQ : Statut",
-    "col-suivi-acq": "DIRCOL/ACQ : Suivi",
-    "col-note-acq": "Note ACQ",
-    "col-cree": "Créé",
-    "col-cree-par": "Créé par",
-    "col-demandeur": "Demandeur"
+    "page": {
+      "titre": "Suivis des bibliothèques",
+      "description": "Suivi des demandes d'une ou de plusieurs bibliothèques à la fois."
+    },
+    "vues": {
+      "montants": "Montants en attente de saisie",
+      "statuts": "Suivi par statut"
+    },
+    "aide": {
+      "montants": "Demandes soumises aux ACQ qui ne sont pas encore traitées (statut ACQ En attente ou En traitement) : montants en attente d'être saisis.",
+      "statuts": "Toutes les demandes enregistrées dans le système, regroupées par statut."
+    },
+    "filtres": {
+      "rechercher": "Rechercher",
+      "rechercher-placeholder": "ID, titre, ISBN, demandeur, fonds…",
+      "date-debut": "Créée à partir du",
+      "date-fin": "Créée jusqu'au",
+      "bibliotheques": "Bibliothèques",
+      "toutes-bibliotheques": "Toutes les bibliothèques",
+      "n-bibliotheques": "{{n}} bibliothèques",
+      "sans-bibliotheque": "Sans bibliothèque",
+      "type": "Type de formulaire",
+      "tous-types": "Tous les types",
+      "priorite": "Priorité",
+      "toutes-priorites": "Toutes les priorités",
+      "regrouper-par": "Regrouper par",
+      "puis-par": "Puis par",
+      "aucun": "Aucun"
+    },
+    "regroupements": {
+      "bibliotheque": "Bibliothèque",
+      "fonds_budgetaire": "Fonds budgétaire à imputer",
+      "statut_acq": "DIRCOL/ACQ : Statut de la demande",
+      "statut_bibliotheque": "Bibliothèque : Statut de la demande",
+      "formulaire_type": "Type de formulaire"
+    },
+    "actions": {
+      "reinitialiser": "Réinitialiser",
+      "exporter": "Exporter (Excel)",
+      "tout-ouvrir": "Tout ouvrir",
+      "tout-fermer": "Tout fermer"
+    },
+    "resultats": {
+      "titre": "Résultats",
+      "nombre": "Nombre =",
+      "somme": "Somme =",
+      "non-renseigne": "(non renseigné)",
+      "aucune-demande": "Aucune demande pour cette sélection.",
+      "erreur": "Impossible de charger les demandes."
+    },
+    "colonnes": {
+      "item_id": "ID",
+      "formulaire_type": "Type de formulaire",
+      "prix_cad": "Prix (CAD)",
+      "precision_demande": "Précision de la demande",
+      "titre_document": "Titre du document",
+      "isbn_issn": "ISBN/ISSN",
+      "periode_couverte": "Période / volumaison",
+      "bibliotheque": "Bibliothèque",
+      "priorite_demande": "Priorité",
+      "fonds_budgetaire": "Fonds budgétaire",
+      "statut_bibliotheque": "Bibliothèque : Statut",
+      "statut_acq": "DIRCOL/ACQ : Statut",
+      "suivi_acq": "DIRCOL/ACQ : Suivi",
+      "note_acq": "Note ACQ",
+      "date_creation": "Créé",
+      "cree_par": "Créé par",
+      "demandeur": "Demandeur"
+    },
+    "export": {
+      "feuille-montants": "Montants en attente",
+      "feuille-statuts": "Suivi par statut"
+    }
   }
 }
