@@ -131,7 +131,7 @@ export class ItemFormulaireComponent implements OnInit {
     }
 
     // creation_notice_dtdm : même règle de valeur par défaut que statut-decision (ACQ) —
-    // Oui si le format n'est pas Électronique, vide si Électronique — sans jamais écraser
+    // Oui si le format n'est pas Électronique, Non si Électronique — sans jamais écraser
     // une valeur déjà renseignée. Réévalué au changement de format au cas où celui-ci est
     // choisi après que la demande soit déjà « Soumettre aux ACQ ».
     this.itemForm.get('format_support')?.valueChanges.subscribe(() => {
@@ -323,6 +323,15 @@ export class ItemFormulaireComponent implements OnInit {
     if (this.gereFondsPartages) {
       this.chargerFondsRepartition({ ...flat, ...baseData });
     }
+    this.appliquerValidateursStatut();
+  }
+
+  /** Champs requis selon le statut de la bibliothèque (suivi ACQ, finances), après un chargement
+   *  fait sans événement (patchValue emitEvent:false). */
+  private appliquerValidateursStatut(): void {
+    const statut = this.itemForm.get('statut_bibliotheque')?.value;
+    this.updateSuiviAcqValidator(statut);
+    this.updateFinanceValidators(statut);
   }
 
   createForm(): FormGroup {
@@ -491,7 +500,7 @@ export class ItemFormulaireComponent implements OnInit {
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
       'gobi_vu_format_numerique', 'besoin_specifique_format', 'quantite',
       'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire',
-      'categorie_document'
+      'categorie_document', 'isbn_issn', 'source_information'
     ];
 
     specificFieldsToUpdate.forEach(field => {
@@ -624,6 +633,9 @@ export class ItemFormulaireComponent implements OnInit {
 
           // Applique les validateurs pour le type chargé sans déclencher de reset
           this.applyValidatorsForEditMode(this.selectedFormulaireType);
+          // Le statut chargé (patch sans événement) ne déclenche pas son abonnement : on applique
+          // ici les champs requis à la soumission aux ACQ (suivi ACQ, finances).
+          this.appliquerValidateursStatut();
 
           this.itemForm.get('formulaire_type')?.disable({ emitEvent: false });
 
@@ -681,7 +693,7 @@ export class ItemFormulaireComponent implements OnInit {
       'precision_demande', 'date_debut_abonnement', 'type_monographie',
       'gobi_vu_format_numerique', 'besoin_specifique_format', 'quantite',
       'auteur', 'usager_statut', 'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire',
-      'categorie_document'
+      'categorie_document', 'isbn_issn', 'source_information'
     ];
     specificFields.forEach(field => {
       this.itemForm.get(field)?.updateValueAndValidity({ emitEvent: false });

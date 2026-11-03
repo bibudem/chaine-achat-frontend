@@ -169,7 +169,8 @@ export class TauxDevisesComponent implements OnInit {
      PÉRIODES (lignes)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   openAddPeriode(): void {
-    this.newPeriode = { periode: '', date_debut: new Date().toISOString().slice(0, 10), note: '' };
+    // Date locale (fr-CA = AAAA-MM-JJ) : toISOString() donne la date UTC, soit le lendemain en soirée.
+    this.newPeriode = { periode: '', date_debut: new Date().toLocaleDateString('fr-CA'), note: '' };
     this.showAddPeriode = true;
   }
 

@@ -17,7 +17,7 @@
     <ul class="pj-list" *ngIf="pieces.length">
       <li *ngFor="let p of pieces">
         <i class="bi bi-file-earmark-text pj-list__icon"></i>
-        <a [href]="telechargerUrl(p.piece_id)" target="_blank" rel="noopener"
+        <a href="#" (click)="telecharger(p, $event)"
            class="pj-list__name" [title]="p.nom_fichier">{{ p.nom_fichier }}</a>
         <span class="pj-list__taille">{{ formatTaille(p.taille_octets) }}</span>
         <button *ngIf="!readonlyMode" type="button" class="pj-list__remove"

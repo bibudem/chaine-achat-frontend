@@ -173,13 +173,17 @@ export class NouvelAbonnementComponent implements OnInit {
     if (this.showElectronique) {
       lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
       personne.enable();
-      aviserRes.disable();
-      aviserRes.setValue('', { emitEvent: false });
     } else {
       lien.clearValidators();
       personne.disable();
       personne.setValue('', { emitEvent: false });
+    }
+    // « Usager à aviser (réservation) » : affiché pour l'imprimé, y compris Imprimé et électronique.
+    if (this.showImprime) {
       aviserRes.enable();
+    } else {
+      aviserRes.disable();
+      aviserRes.setValue('', { emitEvent: false });
     }
     lien.updateValueAndValidity({ emitEvent: false });
     personne.updateValueAndValidity({ emitEvent: false });
@@ -201,7 +205,7 @@ export class NouvelAbonnementComponent implements OnInit {
           editeur:                    bd.editeur,
           isbn_issn:                  bd.isbn_issn,
           date_debut_abonnement:      sd.date_debut_abonnement,
-          periode_couverte:           sd.periode_couverte,
+          periode_couverte:           bd.periode_couverte ?? sd.periode_couverte,
           usager_aviser_reservation:  sd.usager_aviser_reservation,
           nombre_titres_inclus:       bd.nombre_titres_inclus,
           nombre_utilisateurs:        bd.nombre_utilisateurs,
@@ -341,6 +345,7 @@ export class NouvelAbonnementComponent implements OnInit {
         priorite_demande:           v.priorite_demande,
         titre_document:             v.titre_document,
         sous_titre:                 v.sous_titre,
+        periode_couverte:           v.periode_couverte,
         editeur:                    v.editeur,
         isbn_issn:                  v.isbn_issn,
         categorie_document:         v.categorie_document,
@@ -409,6 +414,7 @@ export class NouvelAbonnementComponent implements OnInit {
         priorite_demande:           v.priorite_demande,
         titre_document:             v.titre_document,
         sous_titre:                 v.sous_titre,
+        periode_couverte:           v.periode_couverte,
         editeur:                    v.editeur,
         isbn_issn:                  v.isbn_issn,
         categorie_document:         v.categorie_document,

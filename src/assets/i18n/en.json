@@ -256,7 +256,8 @@
     "utilisateurs": "Users",
     "fonds-budgetaires": "Budget funds",
     "bibliotheques": "Libraries",
-    "suivis": "Follow-up"
+    "suivis": "Follow-up",
+    "rapports": "Reports"
   },
   "utilisateurs-page": {
     "titre": "Users",
@@ -415,7 +416,7 @@
     "tele": "Downloads",
     "citations": "Quotes",
     "article-udem": "Udem Articles",
-    "home-description": "The « matrix of periodicals » is a web tool used to collect statistics on scientific, printed or electronic periodicals.",
+    "home-description": "Acquisition request management platform of the UdeM Libraries.",
     "home-titre": "For technical problems:",
     "apropos": "About",
     "direction-collections": "Collections Department",
@@ -510,7 +511,26 @@
     "btn-filtre": "Apply filters",
     "total-rapport": "Total result :",
     "rapport-total-statistique": "General report",
-    "rapport-statistique-plateforme": "Statistics report by platform"
+    "rapport-statistique-plateforme": "Statistics report by platform",
+    "aucun-resultat": "No results found",
+    "aucun-resultat-description": "Try changing your filters to get results",
+    "aucune-donnee": "No data to display",
+    "bibliotheque": "Library",
+    "chargement": "Loading",
+    "chargement-en-cours": "Loading data...",
+    "date-debut": "Start date",
+    "date-fin": "End date",
+    "demandeur": "Requester",
+    "description": "Use the filters to generate your custom reports",
+    "exporter": "Export to Excel",
+    "fonds-budgetaire": "Budget fund",
+    "priorite": "Priority",
+    "recherche-partielle": "Partial search...",
+    "reinitialiser": "Reset",
+    "resultats": "Report results",
+    "selection-colonnes": "Columns to display",
+    "titre": "Reports",
+    "type-formulaire": "Form type"
   },
   "logs": {
     "menu-logs": "Import logs",
@@ -528,7 +548,7 @@
   "codes": {
     "400": "400- This error indicates a bad request from the client. The cause of this error is usually a wrongly deleted URL or content.",
     "401": "401- Means that you do not have permission for the requested website and that you need to log in first.",
-    "404": "404- This error is a web page that people land on after clicking on a link that no longer exists. They can take all kinds of shapes.",
+    "404": "404 – The requested page does not exist or has been moved.",
     "429": "429- You receive the error message because the user sent too many requests in a period of time. It is a server that asks you to stop sending requests.",
     "500": "Error 500, with its Internal Server Error message, indicates an internal server error in the http communication protocol. The web server then encounters a difficulty in finding a web page, without being able to precisely identify the source of the problem."
   },
@@ -876,7 +896,8 @@
     "tri-acceptee": "Accepted",
     "tri-par": "Triaged by",
     "tri-date": "Triaged on",
-    "tri-commentaire": "Comment sent to the requester"
+    "tri-commentaire": "Comment sent to the requester",
+    "en-attente": "Pending"
   },
   "item-formulaire": {
     "titre-modifier": "Edit item",
@@ -1174,7 +1195,8 @@
     "badge-attente": "Pending",
     "badge-traitee": "Processed",
     "btn-traiter": "Process",
-    "erreur-chargement": "Unable to load your items."
+    "erreur-chargement": "Unable to load your items.",
+    "sans-titre": "(untitled)"
   },
   "tdm-decision-page": {
     "retour": "Back",
@@ -1689,5 +1711,10 @@
       "feuille-montants": "Amounts awaiting entry",
       "feuille-statuts": "Follow-up by status"
     }
-  }
+  },
+  "connexion": "Sign in",
+  "not-user-title": "Restricted access",
+  "not-user-lien": "Website home",
+  "not-user-explication": "You do not have permission to access this page.",
+  "user-explication": "If you believe you should have access to this platform and cannot sign in, please write to us "
 }

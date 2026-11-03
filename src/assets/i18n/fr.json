@@ -444,7 +444,8 @@
     "dir-collections-tel": "555-555 5555",
     "dir-collections-courriel": "courriel@umontreal.ca",
     "dir-technologies-tel": "514-343-2080",
-    "dir-technologies-courriel": "service@bib.umontreal.ca"
+    "dir-technologies-courriel": "service@bib.umontreal.ca",
+    "home-description": "Plateforme de gestion des demandes d'acquisition des Bibliothèques UdeM."
   },
   "import": {
     "titre": "Import de données",
@@ -1106,7 +1107,8 @@
     "badge-attente": "En attente",
     "badge-traitee": "Traité",
     "btn-traiter": "Traiter",
-    "erreur-chargement": "Impossible de charger vos items."
+    "erreur-chargement": "Impossible de charger vos items.",
+    "sans-titre": "(sans titre)"
   },
   "tdm-decision-page": {
     "retour": "Retour",
@@ -1621,5 +1623,9 @@
       "feuille-montants": "Montants en attente",
       "feuille-statuts": "Suivi par statut"
     }
+  },
+  "not-user-explication": "Vous n'avez pas les droits nécessaires pour accéder à cette page.",
+  "codes": {
+    "404": "404 – La page demandée n'existe pas ou a été déplacée."
   }
 }

@@ -106,6 +106,8 @@ export class UsagerHomeComponent implements OnInit {
   get voirTaux(): boolean { return !this.authService.isUsager; }
 
   ngOnInit(): void {
+    this.chargerTauxEtRepartition();
+
     // Profil TDM : le combo (voir .uh-combo au template) montre « Mes demandes » (sans
     // compteur, comme pour TechDoc) + « Total à trier » restreint à l'équipe (creation_notice_
     // dtdm) — pas le tableau de bord générique « Mes demandes » ci-dessous, dont la
@@ -131,6 +133,17 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
+    if (this.authService.canTrier) {
+      this.reponsesService.compterATrier().subscribe({
+        next:  n => this.aTrier = n,
+        error: () => {}   // non bloquant : la carte reste affichée sans compteur
+      });
+    }
+  }
+
+  /** Taux sécurisé (lecture seule) et lien Répartition des fonds : appelé en premier dans
+   *  ngOnInit, avant les retours anticipés (profil TDM, courriel absent). */
+  private chargerTauxEtRepartition(): void {
     // Taux sécurisé (lecture seule) pour tous les profils du portail, Admin compris —
     // non pertinent pour le reste de la communauté UdeM (rôle Usager).
     if (this.voirTaux) {
@@ -144,13 +157,6 @@ export class UsagerHomeComponent implements OnInit {
       this.tauxDevisesService.getActuelle().subscribe({
         next:  res => { this.tauxActuels = res.data; this.isLoadingTaux = false; },
         error: ()  => { this.tauxActuels = null; this.isLoadingTaux = false; }
-      });
-    }
-
-    if (this.authService.canTrier) {
-      this.reponsesService.compterATrier().subscribe({
-        next:  n => this.aTrier = n,
-        error: () => {}   // non bloquant : la carte reste affichée sans compteur
       });
     }
   }

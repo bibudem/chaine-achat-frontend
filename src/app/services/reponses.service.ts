@@ -142,7 +142,6 @@ export class ReponsesService {
   // SUGGESTION D'ACHAT
   // Composant : suggestion-public.component.ts
   // Route     : POST /reponses/suggestion
-  // Décision  : GET  /reponses/suggestion_usagers
   // ──────────────────────────────────────────────────────────
   envoyerSuggestion(reponses: Record<string, any>): Observable<any> {
     const body: SuggestionPayload = {
@@ -239,7 +238,6 @@ export class ReponsesService {
   // NOUVEL ACHAT UNIQUE
   // Composant : nouvel-achat.component.ts
   // Route     : POST /reponses/nouvel-achat
-  // Décision  : GET  /reponses/decision-achat
   // ──────────────────────────────────────────────────────────
   envoyerNouvelAchat(payload: {
     baseData:     Record<string, any>;
@@ -400,9 +398,10 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('supprimerPieceJointe')));
   }
 
-  /** URL de téléchargement direct (à utiliser dans un lien <a>, pas via HttpClient). */
-  telechargerPieceJointeUrl(pieceId: number): string {
-    return `${this.baseUrl}/pieces-jointes/${pieceId}/telecharger`;
+  /** Contenu d'une pièce jointe, via HttpClient : la route exige le jeton de connexion
+   *  (ajouté par AuthInterceptor), qu'un simple lien <a href> n'envoie pas. */
+  telechargerPieceJointe(pieceId: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/pieces-jointes/${pieceId}/telecharger`, { responseType: 'blob' });
   }
 
   // ──────────────────────────────────────────────────────────

@@ -541,12 +541,18 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   formatCell(column: string, value: any): string {
     if (value === null || value === undefined || value === '') return '-';
     if (column === 'formulaire_type') return this.formulaireTypeLabel(value);
-    if (column.includes('date')) {
+    // Date de publication : texte libre (AAAA ou AAAA-MM-JJ), affichée telle quelle.
+    if (column.includes('date') && column !== 'date_publication') {
       const d = new Date(value);
       if (!isNaN(d.getTime())) return d.toLocaleString('fr-CA', {
         year: 'numeric', month: '2-digit', day: '2-digit',
         hour: '2-digit', minute: '2-digit'
       });
+    }
+    // Prix en devise d'origine (USD, EUR…) : pas de symbole $ CAD.
+    if (column === 'prix_devise_originale') {
+      const n = Number(value);
+      if (!isNaN(n)) return new Intl.NumberFormat('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
     }
     if (column.includes('montant') || column.includes('prix') || column.includes('cout')) {
       const n = Number(value);
@@ -558,7 +564,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private formatCellForExport(column: string, value: any): string {
     if (value === null || value === undefined || value === '') return '';
-    if (column.includes('date')) {
+    if (column.includes('date') && column !== 'date_publication') {
       const d = new Date(value);
       if (!isNaN(d.getTime())) return d.toLocaleString('fr-CA', {
         year: 'numeric', month: '2-digit', day: '2-digit',

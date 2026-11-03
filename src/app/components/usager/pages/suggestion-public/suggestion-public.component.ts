@@ -33,7 +33,8 @@ export class SuggestionPublicComponent implements OnInit {
   /** Section « TechDoc Tri » : modifiable par l'équipe de tri seulement. */
   get peutSuiviTri(): boolean { return this.authService.canSuiviTri; }
   private demandeurOrigine: { nom: string; courriel: string } | null = null;
-  /** Type de document choisi sur le formulaire public — pas de champ ici, on le conserve. */
+  /** Catégorie de document d'origine (suggestion du site Web) : conservée si le type de
+   *  document ne permet pas de la déduire (voir categorieDepuisTypeDocument). */
   private categorieDocumentOrigine: string | null = null;
   readonly typesDocument = TYPES_DOCUMENT_SUGGESTION;
 
@@ -280,9 +281,7 @@ export class SuggestionPublicComponent implements OnInit {
       priorite_demande:             v.priorite_demande,
       bibliotheque:                 v.bibliotheque,
       bibliothecaire_disciplinaire: v.bibliothecaire_disciplinaire,
-      // Type de document et Format/Support : retirés du formulaire usager — champs
-      // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
-      // suggestion publique en a un, qu'on conserve (voir triMode).
+      // Format/Support : complété par les ACQ (section « ACQ : Suivi de la demande »).
       type_document:                v.type_document,
       edition:                      v.edition?.trim() || null,
       // Catégorie des ACQ : préremplie depuis le type de document, sinon celle d'origine.
@@ -354,9 +353,7 @@ export class SuggestionPublicComponent implements OnInit {
       priorite_demande:             v.priorite_demande,
       bibliotheque:                 v.bibliotheque,
       bibliothecaire_disciplinaire: v.bibliothecaire_disciplinaire,
-      // Type de document et Format/Support : retirés du formulaire usager — champs
-      // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
-      // suggestion publique en a un, qu'on conserve (voir triMode).
+      // Format/Support : complété par les ACQ (section « ACQ : Suivi de la demande »).
       type_document:                v.type_document,
       edition:                      v.edition?.trim() || null,
       // Catégorie des ACQ : préremplie depuis le type de document, sinon celle d'origine.

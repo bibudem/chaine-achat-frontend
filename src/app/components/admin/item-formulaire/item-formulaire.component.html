@@ -1402,9 +1402,9 @@
                     (click)="setActiveTab('specifique')">
               {{ 'item-formulaire.champs-specifiques-btn' | translate }} <i class="bi bi-arrow-right ms-1"></i>
             </button>
-            <!-- Suivant : spécifiques → décision ACQ -->
+            <!-- Suivant : spécifiques → décision ACQ (seulement si l'onglet est affiché) -->
             <button type="button" class="btn btn-primary"
-                    *ngIf="activeTab === 'specifique'"
+                    *ngIf="activeTab === 'specifique' && showDecisionAcqTab"
                     (click)="setActiveTab('acq-decision')">
               {{ 'item-formulaire.decision-acq-btn' | translate }} <i class="bi bi-arrow-right ms-1"></i>
             </button>

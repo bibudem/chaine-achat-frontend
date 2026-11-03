@@ -238,8 +238,9 @@ export class RequeteAccessibiliteComponent implements OnInit {
   private updateDeviseAutreValidator(): void {
     const ctrl = this.form.get('devise_autre_precision');
     if (!ctrl) return;
+    // Section financière masquée hors achat (voir estAchat) : jamais requise dans ce cas.
     if (this.form.get('devise_originale')?.value === 'Autre') {
-      ctrl.setValidators(this.exigeTousLesChamps ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
+      ctrl.setValidators(this.exigeTousLesChamps && this.estAchat ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
     } else {
       ctrl.clearValidators();
     }

@@ -171,9 +171,10 @@ export class TriSuggestionsComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         d.envoiEnCours = false;
         if (err.status === 409) {
-          // Un autre membre de l'équipe l'a traitée entre-temps : on rafraîchit la file.
-          this.errorMessage = err.error?.error ?? this.t('erreur-deja-traitee');
+          // Un autre membre de l'équipe l'a traitée entre-temps : on rafraîchit la file, puis on
+          // affiche le message (charger() efface errorMessage en commençant).
           this.charger();
+          this.errorMessage = err.error?.error ?? this.t('erreur-deja-traitee');
           return;
         }
         d.erreur = err.error?.error ?? this.t('erreur-enregistrement');

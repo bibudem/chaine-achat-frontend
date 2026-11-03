@@ -26,8 +26,8 @@ import { STATUT_SUGGESTION_RECUE, TYPES_DOCUMENT_SUGGESTION, categorieDepuisType
  *    n'a pas accès à « Mes demandes » pour revenir modifier un envoi.
  *  - Section « Bibliothèque » (statut de la demande, note interne, pièces déjà envoyées)
  *    retirée : ce sont des contrôles internes au personnel, pas destinés au grand public.
- *    La demande est toujours soumise avec statut_bibliotheque = « Saisie en cours - En
- *    attente » (file d'attente interne, pour révision avant envoi formel aux ACQ).
+ *    La demande est toujours soumise avec statut_bibliotheque = « Suggestion d'achat reçue »
+ *    (STATUT_SUGGESTION_RECUE, aussi imposé par le backend), pour le tri par l'équipe TechDoc.
  *  - Une seule identité (le formulaire de référence n'a pas de distinction demandeur/usager) :
  *    plus de champ « Nom de l'usager » séparé, usager_nom = nom à l'envoi.
  *  - Priorité, bibliothèque cible et bibliothécaire disciplinaire : retirés du formulaire
@@ -185,9 +185,9 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   // Le formulaire de référence n'a qu'un seul champ « Année de publication ou source Internet
-  // (URL) » obligatoire. On garde nos deux champs distincts (date structurée + URL — le
-  // premier alimente une colonne de type date en base, on évite d'y écrire du texte libre),
-  // mais on exige qu'au moins l'un des deux soit rempli, pour préserver la même contrainte.
+  // (URL) » obligatoire. On garde deux champs distincts (date de publication en texte libre,
+  // AAAA ou AAAA-MM-JJ, et source d'information), mais on exige qu'au moins l'un des deux soit
+  // rempli, pour préserver la même contrainte.
   private anneeOuSourceValidator(group: AbstractControl): ValidationErrors | null {
     const date   = group.get('date_publication')?.value;
     const source = group.get('source_information')?.value;

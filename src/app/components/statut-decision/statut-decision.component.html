@@ -626,7 +626,7 @@
 
               <tr *ngIf="item.editeur"><th>{{ 'acq-decision.col-editeur' | translate }}</th><td>{{ item.editeur }}</td></tr>
               <tr *ngIf="item.isbn_issn"><th>{{ 'acq-decision.col-isbn-issn' | translate }}</th><td>{{ item.isbn_issn }}</td></tr>
-              <tr *ngIf="item.date_publication"><th>{{ 'acq-decision.col-date-publication' | translate }}</th><td>{{ item.date_publication | date:'yyyy-MM-dd' }}</td></tr>
+              <tr *ngIf="item.date_publication"><th>{{ 'acq-decision.col-date-publication' | translate }}</th><td>{{ item.date_publication }}</td></tr>
 
               <tr *ngIf="item.fonds_budgetaire && !estFondsPartage"><th>{{ 'acq-decision.col-fonds-budgetaire' | translate }}</th><td><code>{{ item.fonds_budgetaire }}</code></td></tr>
               <tr *ngIf="item.fonds_sn_projet"><th>{{ 'acq-decision.col-fonds-sn' | translate }}</th><td>{{ item.fonds_sn_projet }}</td></tr>

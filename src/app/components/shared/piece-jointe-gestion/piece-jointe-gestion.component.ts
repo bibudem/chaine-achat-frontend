@@ -150,8 +150,20 @@ export class PieceJointeGestionComponent implements OnInit, OnChanges {
     });
   }
 
-  telechargerUrl(pieceId: number): string {
-    return this.reponsesService.telechargerPieceJointeUrl(pieceId);
+  /** Télécharge la pièce avec le jeton de connexion, puis l'enregistre sous son nom d'origine. */
+  telecharger(piece: PieceJointe, event: Event): void {
+    event.preventDefault();
+    this.reponsesService.telechargerPieceJointe(piece.piece_id).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const lien = document.createElement('a');
+        lien.href = url;
+        lien.download = piece.nom_fichier;
+        lien.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      },
+      error: (err) => console.error('[PieceJointeGestion] telecharger:', err)
+    });
   }
 
   formatTaille(octets: number): string {
