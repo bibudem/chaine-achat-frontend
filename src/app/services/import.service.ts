@@ -185,7 +185,7 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'sous_titre',                required: false, example: 'Tome 2' },
       { name: 'date_publication',          required: false, example: '2024' },
       { name: 'numero_oclc',               required: false, example: '12345678' },
-      { name: 'date_debut_abonnement',     required: false, example: '2025-01-01' },
+      { name: 'periode_couverte',          required: false, example: '1996-2000 / vol.1, no.1' },
       { name: 'nombre_utilisateurs',       required: false, example: 'Accès illimité' },
       { name: 'lien_plateforme',           required: false, example: 'https://...' },
       { name: 'usager_aviser_activation',  required: false, example: 'prenom.nom@umontreal.ca' },

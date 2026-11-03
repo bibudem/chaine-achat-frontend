@@ -102,7 +102,6 @@ export class ModificationCcolComponent implements OnInit {
       categorie_document:   ['', Validators.required],
       precision_demande:     ['', Validators.required],
       numero_oclc:           [''],
-      date_debut_abonnement: [''],
       periode_couverte:      [''],
       catalogue:             ['', Validators.maxLength(200)],
       format_support:           ['Imprimé/support physique', Validators.required],
@@ -195,8 +194,8 @@ export class ModificationCcolComponent implements OnInit {
           categorie_document:       bd.categorie_document,
           precision_demande:        sd.precision_demande,
           numero_oclc:              sd.numero_oclc,
-          date_debut_abonnement:    sd.date_debut_abonnement,
-          periode_couverte:         bd.periode_couverte,
+          // « Date de début d'abonnement » retirée (redondante) : une ancienne valeur passe dans Période / volumaison.
+          periode_couverte:         bd.periode_couverte || sd.date_debut_abonnement || '',
           catalogue:                bd.catalogue,
           localisation_emplacement: bd.localisation_emplacement,
           creation_notice_dtdm:     bd.creation_notice_dtdm,
@@ -362,7 +361,6 @@ export class ModificationCcolComponent implements OnInit {
       specificData: {
         precision_demande:        v.precision_demande,
         numero_oclc:              v.numero_oclc,
-        date_debut_abonnement:    v.date_debut_abonnement,
         usager_aviser_activation: this.showElectronique ? v.usager_aviser_activation : null,
       },
     };
@@ -437,7 +435,6 @@ export class ModificationCcolComponent implements OnInit {
       specificData: {
         precision_demande:        v.precision_demande,
         numero_oclc:              v.numero_oclc,
-        date_debut_abonnement:    v.date_debut_abonnement,
         usager_aviser_activation: this.showElectronique ? v.usager_aviser_activation : null,
       },
     };

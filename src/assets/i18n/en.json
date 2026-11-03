@@ -1451,7 +1451,6 @@
     "numero-oclc": "OCLC number",
     "numero-oclc-placeholder": "e.g. 12345678",
     "numero-oclc-hint": "Current subscription",
-    "date-debut-abonnement": "Subscription start date",
     "periode-couverte": "Period / volume",
     "periode-hint": "Years or volumes",
     "periode-hint-changement": "Change effective from this year or volume."

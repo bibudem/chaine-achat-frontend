@@ -1383,7 +1383,6 @@
     "numero-oclc": "Numéro OCLC",
     "numero-oclc-placeholder": "Ex:12345678",
     "numero-oclc-hint": "Abonnement en cours",
-    "date-debut-abonnement": "Date de début d'abonnement",
     "periode-couverte": "Période / volumaison",
     "periode-hint": "Années ou volumes",
     "periode-hint-changement": "Changement effectif à partir de cette année ou ce volume."
