@@ -664,6 +664,24 @@
                     <span class="itd-field__value">{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</span>
                   </div>
                 </div>
+                <div class="col-md-4" *ngIf="item.type_document">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'form-suggestion.type-document' | translate }}</span>
+                    <span class="itd-field__value">{{ val(item.type_document) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.edition">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'form-suggestion.edition-document' | translate }}</span>
+                    <span class="itd-field__value">{{ val(item.edition) }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="item.courriel_tierce_personne">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'form-suggestion.soumise-pour' | translate }}</span>
+                    <span class="itd-field__value">{{ val(item.courriel_tierce_personne) }}</span>
+                  </div>
+                </div>
                 <div class="col-md-4" *ngIf="item.usager_statut">
                   <div class="itd-field">
                     <span class="itd-field__label">{{ 'item-detail.statut-usager' | translate }}</span>

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReponsesService } from '../../../services/reponses.service';
 import { AuthService } from '../../../services/auth.service';
-import { STATUT_SUGGESTION_RECUE } from '../../../lib/ListeChoixOptions';
+import { STATUT_SUGGESTION_RECUE, TYPES_DOCUMENT_SUGGESTION, categorieDepuisTypeDocument } from '../../../lib/ListeChoixOptions';
 
 /**
  * Formulaire public de suggestion d'achat — autonome, sans en-tête ni pied de page de
@@ -80,13 +80,7 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
     { valeur: 'Autre',              cle: 'form-suggestion.statut-autre' },
   ];
 
-  readonly typesDocument: { valeur: string; cle: string }[] = [
-    { valeur: 'Livre',                cle: 'form-suggestion.type-livre' },
-    { valeur: 'Périodique',           cle: 'form-suggestion.type-periodique' },
-    { valeur: 'Document audiovisuel', cle: 'form-suggestion.type-audiovisuel' },
-    { valeur: 'Base de données',      cle: 'form-suggestion.type-base-donnees' },
-    { valeur: 'Autre',                cle: 'form-suggestion.type-autre' },
-  ];
+  readonly typesDocument = TYPES_DOCUMENT_SUGGESTION;
 
   constructor(
     private fb: FormBuilder,
@@ -135,6 +129,8 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
       source_information:           ['', Validators.pattern('https?://.+')],
       isbn_issn:                    ['', this.isbnValidator],
       note_usager:                  [''],
+      // Optionnel : courriel @umontreal.ca de la personne pour qui la suggestion est soumise.
+      courriel_tierce_personne:     ['', Validators.pattern(/^[^@\s]+@umontreal\.ca$/i)],
       aviser_reservation:           [false],
       date_requise_cours:           [''],
       reserve_cours:                [false],
@@ -226,12 +222,6 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
     this.isLoading = true;
     const v = this.form.getRawValue();
 
-    // Édition : pas de colonne dédiée en base pour ce champ public — on l'ajoute au début des
-    // notes plutôt que de l'abandonner silencieusement.
-    const noteAvecEdition = v.edition
-      ? `Édition : ${v.edition}${v.note_usager ? '\n\n' + v.note_usager : ''}`
-      : v.note_usager;
-
     const reponses = {
       demandeur:                    v.nom,
       // Le formulaire de référence ne distingue pas demandeur/usager : une seule identité.
@@ -244,7 +234,9 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
       priorite_demande:             'Régulier',
       bibliotheque:                 null,
       bibliothecaire_disciplinaire: null,
-      categorie_document:           v.type_document,
+      // Type de document de l'usager conservé tel quel ; la Catégorie des ACQ en est préremplie.
+      type_document:                v.type_document,
+      categorie_document:           categorieDepuisTypeDocument(v.type_document),
       titre_document:               v.titre_document,
       sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
@@ -253,7 +245,9 @@ export class SuggestionEmbedComponent implements OnInit, AfterViewInit, OnDestro
       source_information:           v.source_information,
       isbn_issn:                    v.isbn_issn,
       format_support:               null,
-      note_usager:                  noteAvecEdition,
+      edition:                      v.edition?.trim() || null,
+      note_usager:                  v.note_usager,
+      courriel_tierce_personne:     v.courriel_tierce_personne?.trim() || null,
       aviser_reservation:           v.aviser_reservation,
       // Pas de champ « Aviser à la réception » distinct dans le formulaire de référence —
       // mais la politique est désormais que l'usager et le/la bibliothécaire disciplinaire

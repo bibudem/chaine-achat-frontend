@@ -125,6 +125,11 @@ export interface Item {
   usager_faculte?: string;
   usager_courriel?: string;
   bibliothecaire_disciplinaire?: string;
+  /** Courriel @umontreal.ca de la personne pour qui la suggestion est soumise (ex. TCTB pour un professeur). */
+  courriel_tierce_personne?: string | null;
+  /** Suggestion d'achat : type de document et édition saisis par l'usager. */
+  type_document?: string | null;
+  edition?: string | null;
   aviser_reservation?: boolean;
   aviser_reception?: boolean;
   date_requise_cours?: string;

@@ -309,7 +309,8 @@
     "erreur-commentaire-obligatoire": "Un commentaire est obligatoire pour refuser la suggestion.",
     "erreur-deja-traitee": "Cette suggestion a déjà été traitée.",
     "erreur-enregistrement": "Erreur lors de l'enregistrement de la décision.",
-    "succes-refus": "Suggestion « {{titre}} » refusée. Le demandeur a été avisé par courriel."
+    "succes-refus": "Suggestion « {{titre}} » refusée. Le demandeur a été avisé par courriel.",
+    "pour": "Pour :"
   },
   "rapport": {
     "titre": "Rapports",
@@ -422,7 +423,10 @@
     "bibliotheque_note_interne": "Note interne (Bibliothèque)",
     "utilisateur_modification": "Modifié par",
     "date_creation": "Date de création",
-    "date_modification": "Date de modification"
+    "date_modification": "Date de modification",
+    "type_document": "Type de document (usager)",
+    "edition": "Édition",
+    "courriel_tierce_personne": "Soumise pour (courriel)"
   },
   "home": {
     "cards-list": "Éditeurs ou fournisseurs",
@@ -1493,10 +1497,10 @@
     "notes-commentaires": "Notes et commentaires",
     "notes-placeholder": "Justification de votre demande, informations complémentaires…",
     "section-reservation": "Réservation",
-    "reserver-document": "Réserver le document à son arrivée",
+    "reserver-document": "Réserver le document imprimé à son arrivée",
     "reserver-hint": "Vous serez avisé(e) lorsque le document sera mis en réservation",
-    "aviser-reception": "Aviser à la réception",
-    "aviser-reception-hint": "Vous serez avisé(e) lorsque le document sera reçu en bibliothèque",
+    "aviser-reception": "Aviser usager et bibliothécaire disciplinaire à la réception en bibliothèque",
+    "aviser-reception-hint": "Pour usage en bibliothèque – Ne pas modifier",
     "section-enseignant": "Section réservée au corps enseignant",
     "requis-cours": "Document requis pour un cours en date du",
     "requis-cours-hint": "Laisser vide si non applicable",
@@ -1535,7 +1539,13 @@
     "fermer": "Fermer",
     "embed-confirmation-titre": "Suggestion envoyée",
     "embed-confirmation-message": "Merci ! Votre suggestion d'achat a bien été transmise à la bibliothèque. Vous recevrez un courriel lorsqu'elle aura été examinée.",
-    "embed-nouvelle-suggestion": "Envoyer une autre suggestion"
+    "embed-nouvelle-suggestion": "Envoyer une autre suggestion",
+    "courriel-tierce": "Si vous soumettez cette suggestion pour une tierce personne, veuillez inscrire son adresse courriel @umontreal.ca",
+    "courriel-tierce-placeholder": "prenom.nom@umontreal.ca",
+    "courriel-tierce-invalide": "Adresse courriel @umontreal.ca requise.",
+    "courriel-usager": "Courriel de l'usager (@umontreal.ca)",
+    "soumise-pour": "Soumise pour (courriel)",
+    "reserver-hint-usager": "L'usager sera avisé(e) lorsque le document sera mis en réservation"
   },
   "suivis": {
     "page": {

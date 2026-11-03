@@ -132,7 +132,7 @@
           <i class="fas fa-user-graduate"></i>{{ 'form-suggestion.section-identification-usager' | translate }}
         </h2>
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.nom-usager' | translate }}</label>
             <input type="text" formControlName="usager_nom" class="form-control"
                    [class.is-invalid]="submitted && f['usager_nom'].invalid"
@@ -142,7 +142,18 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <!-- Courriel de l'usager quand la suggestion est saisie pour lui (ex. professeur) — repris du site Web -->
+          <div class="col-md-4">
+            <label class="form-label" for="sg-courriel-tierce">{{ 'form-suggestion.courriel-usager' | translate }}</label>
+            <input type="email" id="sg-courriel-tierce" formControlName="courriel_tierce_personne" class="form-control"
+                   [class.is-invalid]="submitted && f['courriel_tierce_personne'].invalid"
+                   [placeholder]="'form-suggestion.courriel-tierce-placeholder' | translate">
+            <div *ngIf="submitted && f['courriel_tierce_personne'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.courriel-tierce-invalide' | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.categorie-usager' | translate }}</label>
             <select formControlName="statut" class="form-select"
                     [class.is-invalid]="submitted && f['statut'].invalid">
@@ -249,6 +260,25 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
+          <!-- Type de document et édition (comme le formulaire du site Web) -->
+          <div class="col-md-6">
+            <label class="form-label required">{{ 'form-suggestion.type-document' | translate }}</label>
+            <select formControlName="type_document" class="form-select"
+                    [class.is-invalid]="submitted && f['type_document'].invalid">
+              <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
+              <option *ngFor="let t of typesDocument" [value]="t.valeur">{{ t.cle | translate }}</option>
+            </select>
+            <div *ngIf="submitted && f['type_document'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">{{ 'form-suggestion.edition-document' | translate }}</label>
+            <input type="text" formControlName="edition" class="form-control"
+                   [placeholder]="'form-suggestion.edition-placeholder' | translate">
+          </div>
+
           <!-- Ligne 3 : date de publication OU source d'information (l'une des deux suffit) -->
           <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.date-publication' | translate }}</label>
@@ -298,7 +328,7 @@
                 {{ 'form-suggestion.reserver-document' | translate }}
               </label>
             </div>
-            <small class="form-text">{{ 'form-suggestion.reserver-hint' | translate }}</small>
+            <small class="form-text">{{ 'form-suggestion.reserver-hint-usager' | translate }}</small>
           </div>
 
           <div class="col-md-6">

@@ -192,7 +192,10 @@
     "bibliotheque_note_interne": "Internal Note (Library)",
     "utilisateur_modification": "Modified By",
     "date_creation": "Creation Date",
-    "date_modification": "Modification Date"
+    "date_modification": "Modification Date",
+    "type_document": "Document type (user)",
+    "edition": "Edition",
+    "courriel_tierce_personne": "Submitted for (email)"
   },
   "message": {
     "confirmer-titre": "Confirm modification",
@@ -403,7 +406,8 @@
     "erreur-commentaire-obligatoire": "A comment is required to decline the suggestion.",
     "erreur-deja-traitee": "This suggestion has already been processed.",
     "erreur-enregistrement": "Error while saving the decision.",
-    "succes-refus": "Suggestion \"{{titre}}\" declined. The requester has been notified by email."
+    "succes-refus": "Suggestion \"{{titre}}\" declined. The requester has been notified by email.",
+    "pour": "For:"
   },
   "home": {
     "board": "Our statistics",
@@ -1542,10 +1546,10 @@
     "notes-commentaires": "Notes and comments",
     "notes-placeholder": "Justification for your request, additional information…",
     "section-reservation": "Reservation",
-    "reserver-document": "Reserve the document upon arrival",
+    "reserver-document": "Hold the printed document on arrival",
     "reserver-hint": "You will be notified when the document is placed on reserve",
-    "aviser-reception": "Notify upon receipt",
-    "aviser-reception-hint": "You will be notified when the document is received at the library",
+    "aviser-reception": "Notify the user and subject librarian upon receipt at the library",
+    "aviser-reception-hint": "For library use – Do not modify",
     "section-enseignant": "Faculty section",
     "requis-cours": "Document required for a course as of",
     "requis-cours-hint": "Leave blank if not applicable",
@@ -1584,7 +1588,13 @@
     "fermer": "Close",
     "embed-confirmation-titre": "Suggestion sent",
     "embed-confirmation-message": "Thank you! Your purchase suggestion has been sent to the library. You will receive an email once it has been reviewed.",
-    "embed-nouvelle-suggestion": "Send another suggestion"
+    "embed-nouvelle-suggestion": "Send another suggestion",
+    "courriel-tierce": "If you are submitting this suggestion on behalf of someone else, please enter their @umontreal.ca email address",
+    "courriel-tierce-placeholder": "firstname.lastname@umontreal.ca",
+    "courriel-tierce-invalide": "An @umontreal.ca email address is required.",
+    "courriel-usager": "User email (@umontreal.ca)",
+    "soumise-pour": "Submitted for (email)",
+    "reserver-hint-usager": "The user will be notified when the document is placed on hold"
   },
   "usager-formulaire": {
     "titre": "New request",

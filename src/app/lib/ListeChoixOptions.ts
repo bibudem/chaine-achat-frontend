@@ -31,6 +31,33 @@ export const STATUTS_BIBLIOTHEQUE: readonly { valeur: string; libelle: string }[
 // l'équipe TechDoc) et dans la fiche d'item admin, pas dans les 5 autres formulaires.
 export const STATUT_SUGGESTION_RECUE = 'Suggestion d’achat reçue';
 
+// Type de document choisi par l'usager dans la Suggestion d'achat (formulaire de référence du
+// site des bibliothèques) — conservé tel quel (tbl_suggestion_achat.type_document), distinct de
+// la Catégorie de document des ACQ, préremplie à partir de lui (voir categorieDepuisTypeDocument).
+export const TYPES_DOCUMENT_SUGGESTION: readonly { valeur: string; cle: string }[] = [
+  { valeur: 'Livre',                cle: 'form-suggestion.type-livre' },
+  { valeur: 'Périodique',           cle: 'form-suggestion.type-periodique' },
+  { valeur: 'Document audiovisuel', cle: 'form-suggestion.type-audiovisuel' },
+  { valeur: 'Base de données',      cle: 'form-suggestion.type-base-donnees' },
+  { valeur: 'Autre',                cle: 'form-suggestion.type-autre' },
+];
+
+/** Catégorie de document des ACQ correspondant au type choisi par l'usager ; null si aucune
+ *  correspondance évidente (Document audiovisuel, Autre) — les ACQ la choisissent. */
+export function categorieDepuisTypeDocument(type: string | null | undefined): string | null {
+  const correspondances: Record<string, string> = {
+    'Livre': 'Monographie', 'Périodique': 'Périodique', 'Base de données': 'Base de données',
+  };
+  return (type && correspondances[type]) || null;
+}
+
+/** Type de document d'une ancienne suggestion : avant la colonne dédiée, il était enregistré
+ *  dans categorie_document. */
+export function typeDocumentDeSuggestion(d: { type_document?: string | null; categorie_document?: string | null }): string {
+  if (d.type_document) return d.type_document;
+  return TYPES_DOCUMENT_SUGGESTION.some(t => t.valeur === d.categorie_document) ? (d.categorie_document as string) : '';
+}
+
 export const STATUTS_BIBLIOTHEQUE_SUGGESTION: readonly { valeur: string; libelle: string }[] = [
   { valeur: STATUT_SUGGESTION_RECUE, libelle: STATUT_SUGGESTION_RECUE },
   ...STATUTS_BIBLIOTHEQUE,

@@ -918,14 +918,29 @@
             </div>
           </div>
 
+          <!-- Ordre des champs : document « formulaire_Suggestion d'achats usagers_2026-09-28 » (Gestion d'achats) -->
+          <!-- 1-4 : nom, courriel, catégorie, faculté / département de l'usager -->
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.requis-cours' | translate }}</label>
-                <input type="date" class="form-control" formControlName="date_requise_cours">
+                <label class="form-label">{{ 'item-formulaire.nom-usager' | translate }}</label>
+                <input type="text" class="form-control" formControlName="usager_nom"
+                       placeholder="Prénom Nom">
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.courriel-usager' | translate }}</label>
+                <input type="email" class="form-control" formControlName="usager_courriel"
+                       [class.is-invalid]="isInvalid('usager_courriel')"
+                       placeholder="nom@umontreal.ca">
+                <div class="invalid-feedback">
+                  <ng-container *ngIf="hasError('usager_courriel', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</ng-container>
+                  <ng-container *ngIf="hasError('usager_courriel', 'email')">{{ 'item-formulaire.courriel-invalide-msg' | translate }}</ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> {{ 'form-suggestion.categorie-usager' | translate }}</label>
                 <select class="form-select form-control" formControlName="usager_statut"
@@ -943,29 +958,7 @@
                 <div class="invalid-feedback" *ngIf="hasError('usager_statut', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</div>
               </div>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">{{ 'item-formulaire.nom-usager' | translate }}</label>
-                <input type="text" class="form-control" formControlName="usager_nom"
-                       placeholder="Prénom Nom">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.courriel-usager' | translate }}</label>
-                <input type="email" class="form-control" formControlName="usager_courriel"
-                       [class.is-invalid]="isInvalid('usager_courriel')"
-                       placeholder="nom@umontreal.ca">
-                <div class="invalid-feedback">
-                  <ng-container *ngIf="hasError('usager_courriel', 'required')">{{ 'item-formulaire.obligatoire' | translate }}</ng-container>
-                  <ng-container *ngIf="hasError('usager_courriel', 'email')">{{ 'item-formulaire.courriel-invalide-msg' | translate }}</ng-container>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.faculte' | translate }}</label>
                 <input type="text" class="form-control" formControlName="usager_faculte"
@@ -976,16 +969,20 @@
             </div>
           </div>
 
+          <!-- 5 : notes et commentaires de l'usager -->
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-12">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.notes-usager' | translate }}</label>
                 <textarea class="form-control" formControlName="note_usager" rows="5"
                           [placeholder]="'item-formulaire.notes-usager-placeholder' | translate"></textarea>
               </div>
             </div>
+          </div>
 
-             <div class="col-md ml-4">
+          <!-- 6-7 : réserve de cours (+ sigle), requis pour un cours (date) -->
+          <div class="row">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.reserve-cours' | translate }}</label>
                 <div class="form-check mt-1 ml-4">
@@ -995,17 +992,44 @@
                 </div>
               </div>
             </div>
-            <div class="col-md" *ngIf="itemForm.get('reserve_cours')?.value">
+            <div class="col-md-3" *ngIf="itemForm.get('reserve_cours')?.value">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.sigle-cours' | translate }}</label>
                 <input type="text" class="form-control" formControlName="reserve_cours_sigle"
                        placeholder="Ex: INFO-4200">
               </div>
             </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.requis-cours' | translate }}</label>
+                <input type="date" class="form-control" formControlName="date_requise_cours">
+              </div>
+            </div>
           </div>
 
+          <!-- Type de document et édition saisis par l'usager (formulaire du site Web) -->
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label" for="if-type-document">{{ 'form-suggestion.type-document' | translate }}</label>
+                <select id="if-type-document" class="form-select form-control" formControlName="type_document">
+                  <option value="">{{ 'item-formulaire.selectionner' | translate }}</option>
+                  <option *ngFor="let t of typesDocumentSuggestion" [value]="t.valeur">{{ t.cle | translate }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="form-label" for="if-edition">{{ 'form-suggestion.edition-document' | translate }}</label>
+                <input id="if-edition" type="text" class="form-control" formControlName="edition"
+                       [placeholder]="'form-suggestion.edition-placeholder' | translate">
+              </div>
+            </div>
+          </div>
+
+          <!-- 8-10 : bibliothécaire disciplinaire, aviser – réservation, aviser – réception -->
+          <div class="row">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label"><span class="text-danger">*</span> {{ 'item-formulaire.bibliothecaire-disc' | translate }}</label>
                 <input type="email" class="form-control" formControlName="bibliothecaire_disciplinaire"
@@ -1017,7 +1041,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.aviser-reservation' | translate }}</label>
                 <select class="form-select form-control" formControlName="aviser_reservation">
@@ -1026,7 +1050,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.aviser-reception' | translate }}</label>
                 <select class="form-select form-control" formControlName="aviser_reception">

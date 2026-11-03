@@ -100,6 +100,10 @@
                   <td class="ts-col-demandeur">
                     <div class="ts-trunc" [title]="s.usager_nom">{{ s.usager_nom }}</div>
                     <div class="ts-trunc ts-muted ts-sub" [title]="s.usager_courriel">{{ s.usager_courriel }}</div>
+                    <!-- Soumise pour une tierce personne (ex. TCTB pour un professeur) -->
+                    <div class="ts-trunc ts-sub ts-tierce" *ngIf="s.reponses['courriel_tierce_personne'] as tierce" [title]="tierce">
+                      <i class="bi bi-person-arrow-right me-1" aria-hidden="true"></i>{{ 'tri-suggestions-page.pour' | translate }} {{ tierce }}
+                    </div>
                   </td>
                   <td class="ts-col-decision">
                     <span class="ts-badge" [ngClass]="statutInfo(s).classe">{{ statutInfo(s).libelle }}</span>

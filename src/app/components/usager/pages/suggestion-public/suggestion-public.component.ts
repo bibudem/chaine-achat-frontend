@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { AuthService } from '../../../../services/auth.service';
-import { STATUTS_BIBLIOTHEQUE_SUGGESTION } from '../../../../lib/ListeChoixOptions';
+import { STATUTS_BIBLIOTHEQUE_SUGGESTION, TYPES_DOCUMENT_SUGGESTION, categorieDepuisTypeDocument, typeDocumentDeSuggestion } from '../../../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-suggestion-public',
@@ -35,6 +35,7 @@ export class SuggestionPublicComponent implements OnInit {
   private demandeurOrigine: { nom: string; courriel: string } | null = null;
   /** Type de document choisi sur le formulaire public — pas de champ ici, on le conserve. */
   private categorieDocumentOrigine: string | null = null;
+  readonly typesDocument = TYPES_DOCUMENT_SUGGESTION;
 
   derniereTitre    = '';
   derniereCourriel = '';
@@ -112,12 +113,16 @@ export class SuggestionPublicComponent implements OnInit {
       bibliothecaire_disciplinaire: ['',        [Validators.required, Validators.email]],
       titre_document:               ['', Validators.required],
       sous_titre:                   [''],
+      type_document:                ['', Validators.required],
+      edition:                      [''],
       auteur:                       ['', Validators.required],
       editeur:                      [''],
       date_publication:             [''],
       source_information:           ['', Validators.pattern('https?://.+')],
       isbn_issn:                    ['', this.isbnValidator],
       note_usager:                  [''],
+      // Optionnel : courriel @umontreal.ca de l'usager pour qui la suggestion est saisie.
+      courriel_tierce_personne:     ['', Validators.pattern(/^[^@\s]+@umontreal\.ca$/i)],
       aviser_reservation:           [false],
       // Toujours activé : le demandeur et le/la bibliothécaire disciplinaire sont
       // systématiquement avisés à la réception d'une suggestion d'achat — pas un choix de
@@ -181,12 +186,15 @@ export class SuggestionPublicComponent implements OnInit {
           bibliothecaire_disciplinaire: d.bibliothecaire_disciplinaire,
           titre_document:               d.titre_document,
           sous_titre:                   d.sous_titre,
+          type_document:                typeDocumentDeSuggestion(d),
+          edition:                      d.edition ?? '',
           auteur:                       d.auteur,
           editeur:                      d.editeur,
           date_publication:             d.date_publication,
           source_information:           d.source_information,
           isbn_issn:                    d.isbn_issn,
           note_usager:                  d.note_usager,
+          courriel_tierce_personne:     d.courriel_tierce_personne ?? '',
           aviser_reservation:           d.aviser_reservation,
           // aviser_reception : pas repris depuis d — toujours true, voir le form group.
           date_requise_cours:           d.date_requise_cours,
@@ -275,7 +283,10 @@ export class SuggestionPublicComponent implements OnInit {
       // Type de document et Format/Support : retirés du formulaire usager — champs
       // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
       // suggestion publique en a un, qu'on conserve (voir triMode).
-      categorie_document:           this.triMode ? this.categorieDocumentOrigine : null,
+      type_document:                v.type_document,
+      edition:                      v.edition?.trim() || null,
+      // Catégorie des ACQ : préremplie depuis le type de document, sinon celle d'origine.
+      categorie_document:           categorieDepuisTypeDocument(v.type_document) ?? (this.triMode ? this.categorieDocumentOrigine : null),
       titre_document:               v.titre_document,
       sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
@@ -285,6 +296,7 @@ export class SuggestionPublicComponent implements OnInit {
       isbn_issn:                    v.isbn_issn,
       format_support:               null,
       note_usager:                  v.note_usager,
+      courriel_tierce_personne:     v.courriel_tierce_personne?.trim() || null,
       aviser_reservation:           v.aviser_reservation,
       aviser_reception:             v.aviser_reception,
       date_requise_cours:           v.date_requise_cours || null,
@@ -345,7 +357,10 @@ export class SuggestionPublicComponent implements OnInit {
       // Type de document et Format/Support : retirés du formulaire usager — champs
       // complétés par les ACQ (section « ACQ : Suivi de la demande »). Exception : la
       // suggestion publique en a un, qu'on conserve (voir triMode).
-      categorie_document:           this.triMode ? this.categorieDocumentOrigine : null,
+      type_document:                v.type_document,
+      edition:                      v.edition?.trim() || null,
+      // Catégorie des ACQ : préremplie depuis le type de document, sinon celle d'origine.
+      categorie_document:           categorieDepuisTypeDocument(v.type_document) ?? (this.triMode ? this.categorieDocumentOrigine : null),
       titre_document:               v.titre_document,
       sous_titre:                   v.sous_titre,
       auteur:                       v.auteur,
@@ -355,6 +370,7 @@ export class SuggestionPublicComponent implements OnInit {
       isbn_issn:                    v.isbn_issn,
       format_support:               null,
       note_usager:                  v.note_usager,
+      courriel_tierce_personne:     v.courriel_tierce_personne?.trim() || null,
       aviser_reservation:           v.aviser_reservation,
       aviser_reception:             v.aviser_reception,
       date_requise_cours:           v.date_requise_cours || null,

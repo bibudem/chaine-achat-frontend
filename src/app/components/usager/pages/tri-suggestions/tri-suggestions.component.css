@@ -124,6 +124,7 @@
 
 .ts-trunc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ts-sub   { font-size: .75rem; }
+.ts-tierce { color: #00407F; }
 .ts-clamp {
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   overflow: hidden; white-space: pre-line; color: #475569;

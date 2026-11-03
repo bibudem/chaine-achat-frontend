@@ -182,7 +182,7 @@
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
           </div>
 
-          <!-- Propres au site Web : type de document, édition -->
+          <!-- Type de document et édition (formulaire de référence du site des bibliothèques) -->
           <div class="col-md-6">
             <label class="form-label required">{{ 'form-suggestion.type-document' | translate }}</label>
             <select formControlName="type_document" class="form-select"
@@ -223,6 +223,17 @@
           <div class="col-12" *ngIf="submitted && form.hasError('anneeOuSourceRequis')">
             <div class="text-danger small">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.annee-source-requis' | translate }}
+            </div>
+          </div>
+
+          <!-- Suggestion soumise pour une autre personne (ex. TCTB pour un professeur) : précise le tri -->
+          <div class="col-12">
+            <label class="form-label" for="sg-courriel-tierce">{{ 'form-suggestion.courriel-tierce' | translate }}</label>
+            <input type="email" id="sg-courriel-tierce" formControlName="courriel_tierce_personne" class="form-control"
+                   [class.is-invalid]="submitted && f['courriel_tierce_personne'].invalid"
+                   [placeholder]="'form-suggestion.courriel-tierce-placeholder' | translate">
+            <div *ngIf="submitted && f['courriel_tierce_personne'].invalid" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.courriel-tierce-invalide' | translate }}
             </div>
           </div>
 

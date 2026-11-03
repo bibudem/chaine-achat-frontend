@@ -17,6 +17,9 @@ export const FIELD_LABELS: Record<string, string> = {
   fonds_budgetaire: 'Fonds budgétaire',
   priorite_demande: 'Priorité',
   bibliothecaire_disciplinaire: 'Bibliothécaire disciplinaire',
+  courriel_tierce_personne: 'Soumise pour (courriel)',
+  type_document: 'Type de document',
+  edition: 'Édition',
   categorie_document: 'Catégorie de document',
   titre_document: 'Titre',
   sous_titre: 'Sous-titre',
@@ -60,9 +63,9 @@ export const FIELD_LABELS: Record<string, string> = {
 };
 
 export const FIELD_ORDER = [
-  'usager_nom', 'demandeur', 'usager_statut', 'statut', 'usager_faculte', 'usager_courriel', 'courriel',
+  'usager_nom', 'demandeur', 'usager_statut', 'statut', 'usager_faculte', 'usager_courriel', 'courriel', 'courriel_tierce_personne',
   'bibliotheque', 'fonds_budgetaire', 'priorite_demande', 'bibliothecaire_disciplinaire',
-  'categorie_document', 'titre_document', 'sous_titre', 'auteur', 'editeur',
+  'categorie_document', 'type_document', 'titre_document', 'sous_titre', 'auteur', 'editeur', 'edition',
   'date_publication', 'isbn_issn', 'format_support', 'source_information',
   'prix_devise_originale', 'devise_originale', 'prix_cad',
   'gobi_vu_format_numerique', 'reference_tipasa',

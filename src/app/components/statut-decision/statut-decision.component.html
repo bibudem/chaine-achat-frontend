@@ -156,6 +156,44 @@
                 </div>
               </div>
 
+              <!-- Champs réservés au personnel (document Sugg.Achat_2026-10-19) — demandeur, courriel et
+                   bibliothèque n'y sont pas répétés : ils sont déjà dans l'en-tête de la page. -->
+              <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                  <label class="form-label" for="sd-tri-priorite">{{ 'forms-usager.priorite' | translate }}</label>
+                  <input id="sd-tri-priorite" type="text" class="form-control sd-tri-lecture" disabled [value]="item?.priorite_demande || ''">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="sd-tri-bib-disc">{{ 'form-suggestion.bibliothecaire-disc' | translate }}</label>
+                  <input id="sd-tri-bib-disc" type="text" class="form-control sd-tri-lecture" disabled [value]="item?.bibliothecaire_disciplinaire || ''">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="sd-tri-tierce">{{ 'form-suggestion.soumise-pour' | translate }}</label>
+                  <input id="sd-tri-tierce" type="text" class="form-control sd-tri-lecture" disabled [value]="item?.courriel_tierce_personne || ''">
+                </div>
+              </div>
+
+              <!-- Bibliothèque : statut de la demande, pièces jointes, note interne -->
+              <h3 class="sd-tri-titre sd-tri-titre--section">
+                <i class="bi bi-building me-2"></i>{{ 'forms-usager.bibliotheque' | translate }}
+              </h3>
+              <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                  <label class="form-label" for="sd-tri-statut-bib">{{ 'forms-usager.statut-demande' | translate }}</label>
+                  <input id="sd-tri-statut-bib" type="text" class="form-control sd-tri-lecture" disabled [value]="item?.statut_bibliotheque || ''">
+                </div>
+                <div class="col-md-8">
+                  <span class="form-label d-block">{{ 'forms-usager.piece-jointe' | translate }}</span>
+                  <app-piece-jointe-gestion [itemId]="itemId" [reponseId]="itemId ? null : reponseId" [readonlyMode]="true">
+                  </app-piece-jointe-gestion>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="sd-tri-note-interne">{{ 'item-formulaire.note-interne' | translate }}</label>
+                  <textarea id="sd-tri-note-interne" class="form-control sd-tri-lecture" rows="3" disabled
+                            [value]="item?.bibliotheque_note_interne || ''"></textarea>
+                </div>
+              </div>
+
               <h3 class="sd-tri-titre sd-tri-titre--section">
                 <i class="bi bi-funnel me-2"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
               </h3>
@@ -563,10 +601,13 @@
 
               <ng-container *ngIf="isSuggestion">
                 <tr *ngIf="item.auteur"><th>{{ 'acq-decision.col-auteur' | translate }}</th><td>{{ item.auteur }}</td></tr>
+                <tr *ngIf="item.type_document"><th>{{ 'form-suggestion.type-document' | translate }}</th><td>{{ item.type_document }}</td></tr>
+                <tr *ngIf="item.edition"><th>{{ 'form-suggestion.edition-document' | translate }}</th><td>{{ item.edition }}</td></tr>
                 <tr *ngIf="item.usager_nom"><th>{{ 'acq-decision.col-nom-usager' | translate }}</th><td>{{ item.usager_nom }}</td></tr>
                 <tr *ngIf="item.usager_statut"><th>{{ 'acq-decision.col-statut-usager' | translate }}</th><td>{{ item.usager_statut }}</td></tr>
                 <tr *ngIf="item.usager_faculte"><th>{{ 'acq-decision.col-faculte' | translate }}</th><td>{{ item.usager_faculte }}</td></tr>
                 <tr *ngIf="item.usager_courriel"><th>{{ 'acq-decision.col-courriel-usager' | translate }}</th><td>{{ item.usager_courriel }}</td></tr>
+                <tr *ngIf="item.courriel_tierce_personne"><th>{{ 'form-suggestion.soumise-pour' | translate }}</th><td>{{ item.courriel_tierce_personne }}</td></tr>
                 <tr *ngIf="item.date_requise_cours"><th>{{ 'acq-decision.col-requis-cours' | translate }}</th><td>{{ item.date_requise_cours | date:'yyyy-MM-dd' }}</td></tr>
                 <tr *ngIf="item.bibliothecaire_disciplinaire"><th>{{ 'acq-decision.col-bibliothecaire-disc' | translate }}</th><td>{{ item.bibliothecaire_disciplinaire }}</td></tr>
                 <tr *ngIf="item.aviser_reservation"><th>{{ 'acq-decision.col-reserver-arrivee' | translate }}</th><td>{{ 'item-formulaire.oui' | translate }}</td></tr>

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Item, ItemFormulaireService, ApiResponse } from '../../../services/items-formulaire.service';
-import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { ListeChoixOptions, TYPES_DOCUMENT_SUGGESTION } from '../../../lib/ListeChoixOptions';
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { ReponsesService } from '../../../services/reponses.service';
@@ -153,6 +153,9 @@ export class ItemFormulaireComponent implements OnInit {
       }
     }
 
+    // Suggestion d'achat : « date OU source » — la source se revalide quand la date change.
+    this.itemForm.get('date_publication')!.valueChanges.subscribe(() =>
+      this.itemForm.get('source_information')?.updateValueAndValidity({ emitEvent: false }));
     this.itemForm.get('prix_devise_originale')!.valueChanges.subscribe(() => this.convertirPrix());
     this.itemForm.get('devise_originale')!.valueChanges.subscribe(() => {
       this.itemForm.get('prix_cad')?.setValue(null, { emitEvent: false });
@@ -410,6 +413,9 @@ export class ItemFormulaireComponent implements OnInit {
       date_requise_cours: [''],
       usager_nom: ['', Validators.maxLength(200)],
       note_usager: [''],
+      // Suggestion d'achat : type de document et édition saisis par l'usager.
+      type_document: [''],
+      edition: ['', Validators.maxLength(100)],
       techdoc_suggestion_transmise: [false],
       techdoc_tri_notes: [''],
       acq_raison_annulation: [''],
@@ -436,6 +442,9 @@ export class ItemFormulaireComponent implements OnInit {
       categorieDocCtrl?.setValidators([Validators.required]);
     }
 
+    // ISBN / ISSN et source d'information : obligatoires, sauf pour la Suggestion d'achat (voir plus bas).
+    this.itemForm.get('isbn_issn')?.setValidators([Validators.required, Validators.maxLength(50)]);
+    this.itemForm.get('source_information')?.setValidators([Validators.required, Validators.maxLength(500)]);
     switch(type) {
       case 'Modification et CCOL':
         this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
@@ -458,6 +467,9 @@ export class ItemFormulaireComponent implements OnInit {
         this.itemForm.get('usager_faculte')?.setValidators([Validators.required, Validators.maxLength(255)]);
         this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
         this.itemForm.get('bibliothecaire_disciplinaire')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
+        // Mêmes règles que les formulaires de suggestion : ISBN facultatif, date de publication OU source.
+        this.itemForm.get('isbn_issn')?.setValidators([Validators.maxLength(50)]);
+        this.itemForm.get('source_information')?.setValidators([Validators.maxLength(500), this.dateOuSourceValidator]);
         // Fonds budgétaire par défaut pour une nouvelle Suggestion d'achat — jamais en
         // édition (ne pas écraser une valeur déjà choisie) ni si déjà renseigné. Différé d'un
         // tick : app-fonds-budgetaire-select vient d'apparaître dans le DOM (*ngIf) au moment
@@ -529,7 +541,7 @@ export class ItemFormulaireComponent implements OnInit {
       'usager_statut', 'usager_faculte', 'usager_courriel',
       'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
       'date_requise_cours', 'auteur',
-      'usager_nom', 'note_usager', 'techdoc_suggestion_transmise', 'techdoc_tri_notes', 'acq_raison_annulation', 'acq_isbn',
+      'usager_nom', 'note_usager', 'type_document', 'edition', 'techdoc_suggestion_transmise', 'techdoc_tri_notes', 'acq_raison_annulation', 'acq_isbn',
       // Partagés
       'format_pret_numerique',
       // Nouvel achat unique
@@ -555,6 +567,12 @@ export class ItemFormulaireComponent implements OnInit {
   isNouvelAchatUnique(): boolean { return this.selectedFormulaireType === 'Nouvel achat unique'; }
   isPEBTipasaNumerique(): boolean { return this.selectedFormulaireType === 'PEB Tipasa numérique'; }
   isRequeteAccessibilite(): boolean { return this.selectedFormulaireType === 'Requête ACQ Accessibilité'; }
+  /** Suggestion d'achat : la source est requise seulement si la date de publication est vide. */
+  private dateOuSourceValidator = (c: AbstractControl): ValidationErrors | null =>
+    c.value || c.parent?.get('date_publication')?.value ? null : { required: true };
+
+  readonly typesDocumentSuggestion = TYPES_DOCUMENT_SUGGESTION;
+
   isSuggestionAchat(): boolean { return this.selectedFormulaireType === "Suggestion d'achat - Usager"; }
 
   hasSpecificFields(): boolean {
@@ -629,6 +647,9 @@ export class ItemFormulaireComponent implements OnInit {
     this.itemForm.get('categorie_document')?.setValidators(
       type === 'Requête ACQ Accessibilité' ? [] : [Validators.required]
     );
+    // ISBN / ISSN et source d'information : obligatoires, sauf pour la Suggestion d'achat (voir plus bas).
+    this.itemForm.get('isbn_issn')?.setValidators([Validators.required, Validators.maxLength(50)]);
+    this.itemForm.get('source_information')?.setValidators([Validators.required, Validators.maxLength(500)]);
     switch (type) {
       case 'Modification et CCOL':
         this.itemForm.get('precision_demande')?.setValidators([Validators.required]);
@@ -651,6 +672,9 @@ export class ItemFormulaireComponent implements OnInit {
         this.itemForm.get('usager_faculte')?.setValidators([Validators.required, Validators.maxLength(255)]);
         this.itemForm.get('usager_courriel')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
         this.itemForm.get('bibliothecaire_disciplinaire')?.setValidators([Validators.required, Validators.maxLength(255), Validators.email]);
+        // Mêmes règles que les formulaires de suggestion : ISBN facultatif, date de publication OU source.
+        this.itemForm.get('isbn_issn')?.setValidators([Validators.maxLength(50)]);
+        this.itemForm.get('source_information')?.setValidators([Validators.maxLength(500), this.dateOuSourceValidator]);
         break;
     }
     const specificFields = [
@@ -863,6 +887,8 @@ export class ItemFormulaireComponent implements OnInit {
           acq_responsable_courriel:     formData.acq_responsable_courriel,
           usager_nom:                   formData.usager_nom,
           note_usager:                  formData.note_usager,
+          type_document:                formData.type_document || null,
+          edition:                      formData.edition || null,
           techdoc_suggestion_transmise: formData.techdoc_suggestion_transmise,
           techdoc_tri_notes:            formData.techdoc_tri_notes,
           acq_raison_annulation:        formData.acq_raison_annulation,

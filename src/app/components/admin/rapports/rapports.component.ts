@@ -50,7 +50,8 @@ const CHAMPS_PAR_TYPE: Record<string, string[]> = {
     'auteur', 'usager_nom', 'usager_statut', 'usager_faculte', 'usager_courriel',
     'bibliothecaire_disciplinaire', 'aviser_reservation', 'aviser_reception',
     'date_requise_cours', 'note_usager', 'techdoc_tri_notes',
-    'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime'
+    'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime',
+    'type_document', 'edition', 'courriel_tierce_personne'
   ]
 };
 
