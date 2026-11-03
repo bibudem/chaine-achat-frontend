@@ -27,7 +27,14 @@
 .sb-groupe__somme { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .sb-table { font-size: .85rem; margin-bottom: .75rem; }
-.sb-table th { color: #55657a; font-weight: 600; white-space: nowrap; }
+/* En-têtes compacts : petite taille, fond léger ; le libellé peut passer sur 2 lignes
+   pour que la largeur des colonnes suive les données plutôt que le titre. */
+.sb-table thead th {
+  font-size: .72rem; font-weight: 600; line-height: 1.2; letter-spacing: .01em;
+  color: #64748b; background: #f8fafc; vertical-align: bottom;
+  padding: .35rem .5rem; border-bottom: 1px solid #e2e8f0; min-width: 4.5rem;
+}
+.sb-table tbody td { padding: .3rem .5rem; }
 .sb-nowrap { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* 2e niveau : décalé sous le groupe parent, comme Mentor. */
@@ -67,6 +74,13 @@
 }
 .sb-filter-footer .filterbar__actions { margin-left: auto; }
 .sb-regroupement { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; }
+.sb-regroupement .filterbar__select { width: 170px; }
+/* Écran large : regroupement et actions sur une seule ligne. */
+@media (min-width: 992px) {
+  .sb-filter-footer, .sb-regroupement { flex-wrap: nowrap; }
+  .sb-regroupement { min-width: 0; }
+  .sb-regroupement .filterbar__select { min-width: 0; flex: 0 1 170px; }
+}
 .sb-regroupement label { font-size: .78rem; color: #55657a; margin: 0; white-space: nowrap; }
 .sb-totaux { font-size: .8rem; color: #55657a; white-space: nowrap; }
 .sb-totaux strong { color: #0B113A; font-variant-numeric: tabular-nums; }
