@@ -114,10 +114,7 @@ export class UsagerHomeComponent implements OnInit {
     // répartition par statut ne concerne que ses propres soumissions.
     if (this.authService.isTdm) {
       this.loadingDemandes = false;
-      this.itemService.getAll({ limit: 1, creation_notice_dtdm: true }).subscribe({
-        next:  res => { this.totalTdmAssignees = res.total ?? 0; },
-        error: ()  => { this.totalTdmAssignees = null; }
-      });
+      this.chargerTotalTdm();
       return;
     }
 
@@ -133,12 +130,23 @@ export class UsagerHomeComponent implements OnInit {
       error: () => { this.demandes = []; this.totalDemandes = null; this.loadingDemandes = false; }
     });
 
+    // File TDM : aussi pour Admin/SuperAdmin (supervision), même compteur que le TDM.
+    if (this.authService.isAdmin) this.chargerTotalTdm();
+
     if (this.authService.canTrier) {
       this.reponsesService.compterATrier().subscribe({
         next:  n => this.aTrier = n,
         error: () => {}   // non bloquant : la carte reste affichée sans compteur
       });
     }
+  }
+
+  /** Nombre d'items routés vers l'équipe TDM (creation_notice_dtdm) — carte « File TDM ». */
+  private chargerTotalTdm(): void {
+    this.itemService.getAll({ limit: 1, creation_notice_dtdm: true }).subscribe({
+      next:  res => { this.totalTdmAssignees = res.total ?? 0; },
+      error: ()  => { this.totalTdmAssignees = null; }
+    });
   }
 
   /** Taux sécurisé (lecture seule) et lien Répartition des fonds : appelé en premier dans

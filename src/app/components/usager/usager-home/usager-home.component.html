@@ -128,7 +128,7 @@
   <!-- ── Mes demandes + Tri des suggestions (TechDoc/Admin/SuperAdmin) ou + Total à trier de
        l'équipe (TDM) : une seule rangée, deux colonnes, même gabarit, sans répartition par
        statut (plus compact), chaque accès avec sa propre couleur (thème du projet). -->
-  <div class="uh-combo" *ngIf="authService.canTrier || authService.isTdm">
+  <div class="uh-combo" *ngIf="authService.canTrier || authService.canAccessDecision">
     <a routerLink="/usager/profil" class="uh-combo__col">
       <span class="uh-combo__icon uh-combo__icon--demandes"><i class="bi bi-clock-history"></i></span>
       <span class="uh-combo__text">
@@ -156,8 +156,10 @@
     </a>
 
     <!-- TDM : total d'items routés vers l'équipe (creation_notice_dtdm), pas personnel —
-         même file que tdm-items.component.ts / tdm-decision.component.ts. -->
-    <a *ngIf="authService.isTdm" routerLink="/usager/tdm" class="uh-combo__col">
+         même file que tdm-items.component.ts / tdm-decision.component.ts. Aussi pour
+         Admin/SuperAdmin, qui voient tout ce que voit le TDM (supervision). -->
+    <div class="uh-combo__sep-v" *ngIf="authService.canTrier && authService.canAccessDecision"></div>
+    <a *ngIf="authService.canAccessDecision" routerLink="/usager/tdm" class="uh-combo__col">
       <span class="uh-combo__icon uh-combo__icon--tri"><i class="bi bi-inbox-fill"></i></span>
       <span class="uh-combo__text">
         <span class="uh-combo__title">
