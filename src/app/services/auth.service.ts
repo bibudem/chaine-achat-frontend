@@ -177,6 +177,45 @@ export class AuthService {
    *  ACQ complète) et le TDM (catalogage/note TDM — champs ACQ affichés en lecture seule). */
   get canAccessDecision(): boolean { return this.isAdmin || this.isTdm; }
 
+  /* ── Aperçu « Voir comme » (Admin / SuperAdmin) ──
+     Le rôle réel est mis de côté (roleReel) et 'role' prend le rôle simulé : menus, pages et
+     gardes de routes (qui lisent tous 'role') suivent sans autre changement. Le jeton (JWT)
+     reste celui de l'Admin : le backend applique toujours ses droits réels — l'aperçu montre
+     l'interface, il ne retire aucun droit côté serveur.
+  ─────────────────────────────────────────────────── */
+  static readonly ROLES_APERCU: { role: UserRole; cle: string }[] = [
+    { role: 'Employe', cle: 'apercu.role-employe' },
+    { role: 'TechDoc', cle: 'apercu.role-techdoc' },
+    { role: 'TDM',     cle: 'apercu.role-tdm' },
+  ];
+
+  /** Rôles proposés dans le menu du profil (instance : utilisable dans les gabarits). */
+  get rolesApercu() { return AuthService.ROLES_APERCU; }
+
+  /** Rôle réel de la session (différent de `role` pendant un aperçu). */
+  get roleReel(): UserRole | null {
+    return (sessionStorage.getItem('roleReel') as UserRole | null) ?? this.role;
+  }
+  get estEnApercu(): boolean { return !!sessionStorage.getItem('roleReel'); }
+  get peutVoirComme(): boolean { return this.roleReel === 'Admin' || this.roleReel === 'SuperAdmin'; }
+
+  /** Affiche l'interface comme le rôle choisi (portail usager), sans changer de compte. */
+  voirComme(role: UserRole): void {
+    if (!this.peutVoirComme || !AuthService.ROLES_APERCU.some(r => r.role === role)) return;
+    if (!this.estEnApercu) sessionStorage.setItem('roleReel', this.role as string);
+    sessionStorage.setItem('role', role);
+    window.location.href = '/usager';   // rechargement : menus et gardes relisent le rôle
+  }
+
+  /** Fin de l'aperçu : retour au rôle réel et à l'espace de gestion. */
+  quitterApercu(): void {
+    const reel = sessionStorage.getItem('roleReel');
+    if (!reel) return;
+    sessionStorage.setItem('role', reel);
+    sessionStorage.removeItem('roleReel');
+    window.location.href = '/accueil';
+  }
+
   /* ── Connexion simulée (dev uniquement) ──────────
      Passe par le vrai backend (/auth/dev-login, actif seulement hors production —
      voir routes/auth.js) pour obtenir un vrai JWT, comme le ferait Azure AD. Sans ça,

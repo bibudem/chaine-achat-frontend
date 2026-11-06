@@ -68,6 +68,9 @@
         </div>
       </div>
 
+      <!-- Aperçu « Voir comme » : pastille toujours visible dans l'en-tête -->
+      <app-pastille-apercu></app-pastille-apercu>
+
       <!-- Menu utilisateur -->
       <div class="ul-user" [class.ul-user--open]="userOpen">
         <button class="ul-user__btn" (click)="toggleUser($event)">
@@ -100,6 +103,20 @@
               <span>Mes demandes</span>
               <i class="bi bi-chevron-right ul-user__item-arrow"></i>
             </button>
+            <!-- Aperçu « Voir comme » (Admin / SuperAdmin) -->
+            <ng-container *ngIf="authService.peutVoirComme">
+              <div class="apercu-menu__titre">{{ 'apercu.voir-comme' | translate }}</div>
+              <button *ngFor="let r of authService.rolesApercu" class="ul-user__item" (click)="authService.voirComme(r.role)"
+                      [class.apercu-menu__actif]="authService.role === r.role">
+                <i class="bi bi-eye ul-user__item-icon"></i>
+                <span>{{ r.cle | translate }}</span>
+                <i class="bi bi-check2 ul-user__item-arrow" *ngIf="authService.role === r.role"></i>
+              </button>
+              <button *ngIf="authService.estEnApercu" class="ul-user__item" (click)="authService.quitterApercu()">
+                <i class="bi bi-arrow-counterclockwise ul-user__item-icon"></i>
+                <span>{{ 'apercu.quitter' | translate }}</span>
+              </button>
+            </ng-container>
             <button class="ul-user__item" (click)="logout()">
               <i class="bi bi-box-arrow-right ul-user__item-icon"></i>
               <span>{{ 'user-layout.deconnexion' | translate }}</span>

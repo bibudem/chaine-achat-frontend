@@ -1716,5 +1716,14 @@
   "not-user-title": "Restricted access",
   "not-user-lien": "Website home",
   "not-user-explication": "You do not have permission to access this page.",
-  "user-explication": "If you believe you should have access to this platform and cannot sign in, please write to us "
+  "user-explication": "If you believe you should have access to this platform and cannot sign in, please write to us ",
+  "apercu": {
+    "voir-comme": "View the interface as",
+    "role-employe": "Staff (library)",
+    "role-techdoc": "TechDoc",
+    "role-tdm": "TDM",
+    "quitter": "Back to my profile",
+    "infobulle": "Previewing the {{role}} interface — actions use your real permissions ({{reel}}).",
+    "pastille": "Preview: {{role}}"
+  }
 }

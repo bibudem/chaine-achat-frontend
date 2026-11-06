@@ -137,6 +137,11 @@
         </div>
       </li>
 
+      <!-- Aperçu « Voir comme » : pastille toujours visible dans l'en-tête -->
+      <li class="nav-item d-flex align-items-center">
+        <app-pastille-apercu></app-pastille-apercu>
+      </li>
+
       <!-- Utilisateur -->
       <li class="nav-item nav-item--user d-flex align-items-center"
           [class.panel-open]="userOpen">
@@ -166,6 +171,20 @@
               <span class="user-item__label">{{ 'header.espace-depot' | translate }}</span>
               <i class="bi bi-chevron-right user-item__arrow"></i>
             </button>
+            <!-- Aperçu « Voir comme » (Admin / SuperAdmin) -->
+            <ng-container *ngIf="authService.peutVoirComme">
+              <div class="apercu-menu__titre">{{ 'apercu.voir-comme' | translate }}</div>
+              <button *ngFor="let r of authService.rolesApercu" class="user-item" (click)="authService.voirComme(r.role)"
+                      [class.apercu-menu__actif]="authService.role === r.role">
+                <i class="bi bi-eye user-item__icon"></i>
+                <span class="user-item__label">{{ r.cle | translate }}</span>
+                <i class="bi bi-check2 user-item__arrow" *ngIf="authService.role === r.role"></i>
+              </button>
+              <button *ngIf="authService.estEnApercu" class="user-item" (click)="authService.quitterApercu()">
+                <i class="bi bi-arrow-counterclockwise user-item__icon"></i>
+                <span class="user-item__label">{{ 'apercu.quitter' | translate }}</span>
+              </button>
+            </ng-container>
             <button class="user-item" (click)="logout()">
               <i class="bi bi-box-arrow-right user-item__icon"></i>
               <span class="user-item__label">{{ 'login.logout-text' | translate }}</span>

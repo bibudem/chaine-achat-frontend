@@ -75,6 +75,7 @@ import { FaqComponent } from './components/faq/faq.component';
 import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipasa-numerique/peb-tipasa-numerique.component';
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { PieceJointeGestionComponent } from './components/shared/piece-jointe-gestion/piece-jointe-gestion.component';
+import { PastilleApercuComponent } from './components/shared/pastille-apercu/pastille-apercu.component';
 import { FondsRepartitionComponent } from './components/shared/fonds-repartition/fonds-repartition.component';
 import { FondsBudgetaireSelectComponent } from './components/shared/fonds-budgetaire-select/fonds-budgetaire-select.component';
 import { PieceJointeUploaderComponent } from './components/shared/piece-jointe-uploader/piece-jointe-uploader.component';
@@ -127,6 +128,7 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     PebTipasaNumeriqueComponent,
     UsagerProfilComponent,
     PieceJointeGestionComponent,
+    PastilleApercuComponent,
     FondsRepartitionComponent,
     FondsBudgetaireSelectComponent,
     PieceJointeUploaderComponent,

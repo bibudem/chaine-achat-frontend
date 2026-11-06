@@ -223,3 +223,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .filterbar__date { width: 110px; }
   .filterbar__count { display: none; }
 }
+
+/* ── Menu du profil : aperçu « Voir comme » (Admin / SuperAdmin) ──
+   Commun aux en-têtes de l'espace de gestion et du portail usager. */
+.apercu-menu__titre {
+  padding: .5rem 1rem .25rem; font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em; color: #64748b;
+  border-top: 1px solid #f1f5f9; margin-top: .25rem;
+}
+.apercu-menu__actif { background: #fff7e6; }

@@ -1,0 +1,12 @@
+<!-- Pastille d'aperçu « Voir comme », dans l'en-tête (toujours visible) : rôle simulé + retour au profil réel -->
+<button type="button" class="pastille-apercu" *ngIf="authService.estEnApercu"
+        (click)="authService.quitterApercu()"
+        [title]="'apercu.infobulle' | translate: { role: (cleRole | translate), reel: authService.roleReel }"
+        [attr.aria-label]="('apercu.pastille' | translate: { role: (cleRole | translate) }) + ' — ' + ('apercu.quitter' | translate)">
+  <i class="bi bi-eye-fill" aria-hidden="true"></i>
+  <span class="pastille-apercu__texte">{{ 'apercu.pastille' | translate: { role: (cleRole | translate) } }}</span>
+  <span class="pastille-apercu__quitter">
+    <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+    <span class="d-none d-md-inline">{{ 'apercu.quitter' | translate }}</span>
+  </span>
+</button>

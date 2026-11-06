@@ -1627,5 +1627,14 @@
   "not-user-explication": "Vous n'avez pas les droits nécessaires pour accéder à cette page.",
   "codes": {
     "404": "404 – La page demandée n'existe pas ou a été déplacée."
+  },
+  "apercu": {
+    "voir-comme": "Voir l'interface comme",
+    "role-employe": "Employé (bibliothèque)",
+    "role-techdoc": "TechDoc",
+    "role-tdm": "TDM",
+    "quitter": "Revenir à mon profil",
+    "infobulle": "Aperçu de l'interface {{role}} — les actions se font avec vos droits réels ({{reel}}).",
+    "pastille": "Aperçu : {{role}}"
   }
 }
