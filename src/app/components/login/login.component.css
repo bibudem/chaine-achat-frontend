@@ -3,9 +3,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 20% 15%, #eef4fb 0%, #e6ecf3 45%, #dde5ee 100%);
+  background: #f3f6f9;
   padding: 1.5rem;
   font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  isolation: isolate;
+}
+
+/* ── Image de fond sur la moitié supérieure de la page (voile bleu pour le contraste) ── */
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50vh;
+  min-height: 260px;
+  background:
+    linear-gradient(180deg, rgba(0, 48, 95, .15) 0%, rgba(0, 48, 95, .55) 100%),
+    url('/assets/images/UdeM-Biblioth%C3%A8ques-207.jpg') center / cover no-repeat;
+  z-index: -1;
 }
 
 .login-box {
