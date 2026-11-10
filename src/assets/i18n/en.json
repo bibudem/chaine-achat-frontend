@@ -1722,7 +1722,7 @@
   "apercu": {
     "voir-comme": "View the interface as",
     "role-employe": "Staff (library)",
-    "role-techdoc": "TechDoc",
+    "role-techdoc": "TechDocTri",
     "role-tdm": "TDM",
     "quitter": "Back to my profile",
     "infobulle": "Previewing the {{role}} interface — actions use your real permissions ({{reel}}).",

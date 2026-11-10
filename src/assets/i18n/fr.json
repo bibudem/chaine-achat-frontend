@@ -1633,7 +1633,7 @@
   "apercu": {
     "voir-comme": "Voir l'interface comme",
     "role-employe": "Employé (bibliothèque)",
-    "role-techdoc": "TechDoc",
+    "role-techdoc": "TechDocTri",
     "role-tdm": "TDM",
     "quitter": "Revenir à mon profil",
     "infobulle": "Aperçu de l'interface {{role}} — les actions se font avec vos droits réels ({{reel}}).",

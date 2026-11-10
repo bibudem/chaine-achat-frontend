@@ -92,7 +92,7 @@ export class UsagerHomeComponent implements OnInit {
     SuperAdmin: "Accès complet : gestion des comptes et des accès, en plus de tout ce que voit le Service des acquisitions.",
     Admin:      "Vous consultez l'espace usager avec votre accès Service des acquisitions — tableau de bord et gestion des demandes dans Espace de gestion.",
     TDM:        'Vous traitez ici les items qui vous sont routés (création de notice) — catalogage et suivi ACQ.',
-    TechDoc:    "Équipe de tri : traitez les suggestions soumises par la communauté UdeM et consultez l'historique de l'équipe.",
+    TechDocTri: "Équipe de tri : traitez les suggestions soumises par la communauté UdeM et consultez l'historique de l'équipe.",
     Employe:    'Personnel des bibliothèques : soumettez vos demandes d\'acquisition et suivez leur traitement.',
     Usager:     "Communauté UdeM : soumettez une suggestion d'achat et suivez son traitement.",
   };

@@ -24,9 +24,9 @@ interface MeResponse {
  *  bib-usagers), renommé pour laisser 'Usager' au nouveau rôle, plus restreint (toute
  *  personne avec un compte UdeM — accès à ses seules demandes). Valeur sans accent (comme
  *  les autres rôles) ; "Employé" n'apparaît qu'à l'affichage, voir roleLabel().
- *  'TechDoc' = équipe de tri des suggestions publiques : mêmes formulaires que l'Employé, plus
+ *  'TechDocTri' = équipe de tri des suggestions publiques : mêmes formulaires que l'Employé, plus
  *  la file de tri et son historique partagé (/usager/tri). */
-export type UserRole = 'SuperAdmin' | 'Admin' | 'TDM' | 'TechDoc' | 'Employe' | 'Usager';
+export type UserRole = 'SuperAdmin' | 'Admin' | 'TDM' | 'TechDocTri' | 'Employe' | 'Usager';
 
 /** Message échangé entre la fenêtre de connexion (popup) et le formulaire public embarqué
  *  en <iframe> — voir loginWithPopup() et AuthCallbackComponent (?popup=1). */
@@ -84,12 +84,12 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     icon:        'bi-journal-bookmark-fill',
   },
   {
-    role:        'TechDoc',
-    nom:         'TechDoc',
+    role:        'TechDocTri',
+    nom:         'TechDocTri',
     prenom:      'Test',
     courriel:    'techdoc@umontreal.ca',
-    groupe:      'TechDoc',
-    label:       'TechDoc',
+    groupe:      'TechDocTri',
+    label:       'TechDocTri',
     subtitle:    'Équipe de tri des suggestions publiques',
     description: "Tri des suggestions de la communauté UdeM, historique de l'équipe et formulaires de demande",
     icon:        'bi-funnel-fill',
@@ -158,7 +158,7 @@ export class AuthService {
    *  formulaire public de suggestion d'achat (/suggestion-public), rien d'autre. */
   get isUsager(): boolean       { return this.role === 'Usager'; }
   /** Équipe de tri des suggestions publiques. */
-  get isTechDoc(): boolean      { return this.role === 'TechDoc'; }
+  get isTechDoc(): boolean      { return this.role === 'TechDocTri'; }
   /** Rôles du portail usager (/usager) — pour les droits communs (formulaires, "Mes
    *  demandes"...) ; utiliser isEmploye seul pour ce qui est réservé au personnel. */
   get isUsagerSpace(): boolean  { return this.isEmploye || this.isTechDoc; }
@@ -185,7 +185,7 @@ export class AuthService {
   ─────────────────────────────────────────────────── */
   static readonly ROLES_APERCU: { role: UserRole; cle: string }[] = [
     { role: 'Employe', cle: 'apercu.role-employe' },
-    { role: 'TechDoc', cle: 'apercu.role-techdoc' },
+    { role: 'TechDocTri', cle: 'apercu.role-techdoc' },
     { role: 'TDM',     cle: 'apercu.role-tdm' },
   ];
 
@@ -224,7 +224,7 @@ export class AuthService {
   ─────────────────────────────────────────────────── */
   loginWithDevProfile(role: UserRole, popup = false): void {
     const cle: Record<UserRole, string> = {
-      SuperAdmin: 'superadmin', Admin: 'admin', TDM: 'acq', TechDoc: 'techdoc', Employe: 'employe', Usager: 'usager'
+      SuperAdmin: 'superadmin', Admin: 'admin', TDM: 'acq', TechDocTri: 'techdoc', Employe: 'employe', Usager: 'usager'
     };
     window.location.href = `${this.apiUrl}/auth/dev-login?role=${cle[role]}${popup ? '&popup=1' : ''}`;
   }

@@ -13,7 +13,7 @@ interface FaqItem {
 /* Groupes de profils — le SuperAdmin hérite de tout ce que voit l'Admin. */
 const ADMINS: UserRole[]        = ['Admin', 'SuperAdmin'];
 /** Personnes qui remplissent les 6 formulaires et suivent « Mes demandes ». */
-const DEMANDEURS: UserRole[]    = ['Employe', 'TechDoc'];
+const DEMANDEURS: UserRole[]    = ['Employe', 'TechDocTri'];
 
 const UL = 'style="margin:.4rem 0 .2rem 1.1rem;padding:0"';
 
@@ -167,25 +167,25 @@ export class FaqComponent {
           <li><strong>Non</strong> : un commentaire est <strong>obligatoire</strong> ; il explique aux ACQ la raison du refus</li>
         </ul>
         Votre réponse est un <strong>avis</strong> : la décision finale revient aux ACQ. Dans les deux cas, la suggestion s'ouvre dans le formulaire, à compléter puis à soumettre aux ACQ, qui voient votre avis et votre commentaire. Aucun courriel n'est envoyé au demandeur à cette étape ; il reçoit la confirmation une fois la demande traitée par les ACQ. Une décision ne peut être prise qu'une fois : si une collègue ou un collègue a déjà trié la suggestion, un message vous l'indique.`,
-      answer: '', open: false, roles: ['TechDoc']
+      answer: '', open: false, roles: ['TechDocTri']
     },
     {
       question: 'Que se passe-t-il après avoir accepté une suggestion ?',
       answerHtml: `<strong>Accepter et compléter</strong> ouvre la suggestion dans le formulaire de <strong>suggestion d'achat</strong>, déjà rempli avec les informations du demandeur. Complétez les champs manquants (fonds, prix, format…), puis choisissez <strong>Soumettre aux ACQ</strong>.
         <br><br>Tant qu'elle n'est pas soumise, la suggestion reste marquée <strong>À compléter</strong> dans la file de tri : le bouton <strong>Compléter</strong> permet d'y revenir. Une fois soumise, le Service des acquisitions reçoit un courriel et la traite comme les autres demandes.`,
-      answer: '', open: false, roles: ['TechDoc']
+      answer: '', open: false, roles: ['TechDocTri']
     },
     {
       question: 'Comment suivre les suggestions déjà triées ?',
       answerHtml: `La file de tri conserve l'historique de toute l'équipe : date du tri, document, décision, commentaire et personne qui a trié. Le filtre de statut permet par exemple de n'afficher que les suggestions <strong>Soumises aux ACQ</strong>.
         <br><br>En cliquant sur <strong>Détails</strong>, vous voyez aussi le <strong>Statut</strong> et le <strong>Suivi</strong> laissés par les ACQ une fois la demande traitée.`,
-      answer: '', open: false, roles: ['TechDoc']
+      answer: '', open: false, roles: ['TechDocTri']
     },
     {
       question: 'Comment suis-je avisé·e d\'une nouvelle suggestion ?',
       answerHtml: `Chaque nouvelle suggestion envoyée par la communauté UdeM déclenche un courriel à l'équipe TechDoc, avec le lien vers la file de tri. Le compteur <strong>Tri des suggestions</strong> de l'accueil indique aussi le nombre de suggestions en attente.
         <br><br>Les suggestions publiques ne sont pas visibles par les ACQ avant d'avoir été acceptées et soumises par votre équipe.`,
-      answer: '', open: false, roles: ['TechDoc']
+      answer: '', open: false, roles: ['TechDocTri']
     },
 
     /* ━━ DEMANDEURS (Employé, TechDoc) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

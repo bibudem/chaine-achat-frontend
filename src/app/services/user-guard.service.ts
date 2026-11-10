@@ -8,7 +8,7 @@ export class UserGuard implements CanActivate {
 
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
-    if (role === 'Employe' || role === 'TechDoc' || role === 'Admin' || role === 'SuperAdmin' || role === 'TDM') {
+    if (role === 'Employe' || role === 'TechDocTri' || role === 'Admin' || role === 'SuperAdmin' || role === 'TDM') {
       return true;
     }
     // La communauté UdeM n'a accès qu'au formulaire public de suggestion d'achat.

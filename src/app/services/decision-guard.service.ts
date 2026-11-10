@@ -15,7 +15,7 @@ export class DecisionGuard implements CanActivate {
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
     // TechDoc : onglet « TechDoc Tri » seulement, en lecture seule (StatutDecisionComponent.techDocSeul).
-    if (role === 'Admin' || role === 'SuperAdmin' || role === 'TDM' || role === 'TechDoc') { return true; }
+    if (role === 'Admin' || role === 'SuperAdmin' || role === 'TDM' || role === 'TechDocTri') { return true; }
 
     this.router.navigate(['/login'], { queryParams: { acces: 'refuse' } });
     return false;

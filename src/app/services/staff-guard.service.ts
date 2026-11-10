@@ -8,7 +8,7 @@ export class StaffGuard implements CanActivate {
 
   canActivate(): boolean {
     const role = sessionStorage.getItem('role');
-    if (role === 'Admin' || role === 'SuperAdmin' || role === 'TDM' || role === 'Employe' || role === 'TechDoc') { return true; }
+    if (role === 'Admin' || role === 'SuperAdmin' || role === 'TDM' || role === 'Employe' || role === 'TechDocTri') { return true; }
     // Communauté UdeM (rôle Usager) → formulaire public seulement.
     this.router.navigate([role === 'Usager' ? '/suggestion-public' : '/usager']);
     return false;
