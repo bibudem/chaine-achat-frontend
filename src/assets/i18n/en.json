@@ -260,6 +260,12 @@
     "rapports": "Reports"
   },
   "utilisateurs-page": {
+    "filtre-role-tous": "All roles",
+    "filtre-role-aria": "Filter by role",
+    "recherche-placeholder": "Search by name or email",
+    "reinitialiser": "Reset",
+    "compte": "{{n}} of {{total}}",
+    "aucun-resultat": "No user matches the filters.",
     "titre": "Users",
     "sous-titre": "Application roles — Usager by default — UdeM authentication is still required to sign in",
     "nouvel-usager": "New user",

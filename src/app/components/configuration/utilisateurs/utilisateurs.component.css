@@ -6,6 +6,9 @@
 .utl-empty i { font-size: 3rem; display: block; margin-bottom: .75rem; }
 .utl-empty p { margin-bottom: 1rem; }
 
+/* Barre de filtres : styles partagés .filterbar (styles.css). */
+.utl-aucun { text-align: center; color: #9FB3C8; padding: 1.5rem .75rem !important; }
+
 /* ── Tableau ───────────────────────────────────────────────────────── */
 .utl-table-wrap {
   background:    #fff;

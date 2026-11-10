@@ -26,9 +26,14 @@ export class UtilisateursComponent implements OnInit {
   loading      = true;
   errorMessage = '';
 
-  /** Tri courant du tableau (clic sur l'en-tête Prénom/Nom). */
-  sortColumn: 'prenom' | 'nom' = 'nom';
+  /** Tri courant du tableau (clic sur l'en-tête Prénom/Nom/Courriel) — par défaut : ordre
+   *  alphabétique du nom. */
+  sortColumn: 'prenom' | 'nom' | 'email' = 'nom';
   sortDirection: 'asc' | 'desc' = 'asc';
+
+  /** Filtres : rôle ('' = tous) et recherche libre sur le prénom, le nom ou le courriel. */
+  filtreRole: UserRole | '' = '';
+  recherche = '';
 
   /** Modale d'ajout/modification — editingId null = création, sinon id de l'usager modifié. */
   showModal   = false;
@@ -67,9 +72,33 @@ export class UtilisateursComponent implements OnInit {
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     TRI (clic sur l'en-tête Prénom/Nom)
+     FILTRES (rôle + recherche prénom/nom/courriel)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  sortBy(column: 'prenom' | 'nom'): void {
+  /** Liste affichée : déjà triée (applySort), puis filtrée. Recherche insensible à la casse
+   *  et aux accents. */
+  get utilisateursAffiches(): Utilisateur[] {
+    const terme = this.normaliser(this.recherche.trim());
+    return this.utilisateurs.filter(u =>
+      (!this.filtreRole || u.role === this.filtreRole) &&
+      (!terme || this.normaliser(`${u.prenom || ''} ${u.nom || ''} ${u.email || ''}`).includes(terme))
+    );
+  }
+
+  get filtresActifs(): boolean { return !!this.filtreRole || !!this.recherche.trim(); }
+
+  reinitialiserFiltres(): void {
+    this.filtreRole = '';
+    this.recherche  = '';
+  }
+
+  private normaliser(v: string): string {
+    return v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TRI (clic sur l'en-tête Prénom/Nom/Courriel)
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  sortBy(column: 'prenom' | 'nom' | 'email'): void {
     if (this.sortColumn === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
@@ -79,12 +108,21 @@ export class UtilisateursComponent implements OnInit {
     this.applySort();
   }
 
+  /** Ordre alphabétique (français, sans tenir compte des accents ni de la casse). Une valeur
+   *  manquante (ex. nom vide) passe après les autres au lieu d'arriver en tête ; à égalité,
+   *  on départage par nom, prénom puis courriel. */
   private applySort(): void {
     const dir = this.sortDirection === 'asc' ? 1 : -1;
     const col = this.sortColumn;
-    this.utilisateurs = [...this.utilisateurs].sort((a, b) =>
-      dir * (a[col] || '').localeCompare(b[col] || '')
-    );
+    const cmp = (x: string, y: string) => x.localeCompare(y, 'fr', { sensitivity: 'base' });
+    this.utilisateurs = [...this.utilisateurs].sort((a, b) => {
+      const va = (a[col] || '').trim(), vb = (b[col] || '').trim();
+      if (!va !== !vb) return va ? -1 : 1;
+      return dir * cmp(va, vb)
+          || cmp(a.nom || '', b.nom || '')
+          || cmp(a.prenom || '', b.prenom || '')
+          || cmp(a.email || '', b.email || '');
+    });
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -162,6 +162,12 @@
     "suivis": "Suivi"
   },
   "utilisateurs-page": {
+    "filtre-role-tous": "Tous les rôles",
+    "filtre-role-aria": "Filtrer par rôle",
+    "recherche-placeholder": "Rechercher par nom ou courriel",
+    "reinitialiser": "Réinitialiser",
+    "compte": "{{n}} sur {{total}}",
+    "aucun-resultat": "Aucun utilisateur ne correspond aux filtres.",
     "titre": "Utilisateurs",
     "sous-titre": "Rôles applicatifs — Usager par défaut — l'authentification UdeM reste requise pour se connecter",
     "nouvel-usager": "Nouvel usager",

@@ -31,6 +31,36 @@
     </button>
   </div>
 
+  <!-- ── FILTRES : recherche + rôle — barre partagée .filterbar (styles.css), comme la
+       liste des items et « Mes demandes » ── -->
+  <div *ngIf="!loading && utilisateurs.length > 0" class="filterbar mb-3">
+    <div class="filterbar__search">
+      <i class="bi bi-search filterbar__search-icon"></i>
+      <input type="text" class="filterbar__search-input" [(ngModel)]="recherche"
+             [placeholder]="'utilisateurs-page.recherche-placeholder' | translate"
+             [attr.aria-label]="'utilisateurs-page.recherche-placeholder' | translate">
+    </div>
+
+    <span class="filterbar__sep"></span>
+
+    <select class="filterbar__select" [(ngModel)]="filtreRole"
+            [attr.aria-label]="'utilisateurs-page.filtre-role-aria' | translate">
+      <option value="">{{ 'utilisateurs-page.filtre-role-tous' | translate }}</option>
+      <option *ngFor="let r of roles" [value]="r">{{ roleLabel(r) }}</option>
+    </select>
+
+    <div class="filterbar__actions">
+      <span class="filterbar__count">
+        {{ 'utilisateurs-page.compte' | translate: { n: utilisateursAffiches.length, total: utilisateurs.length } }}
+      </span>
+      <button type="button" class="filterbar__reset" [class.filterbar__reset--active]="filtresActifs"
+              (click)="reinitialiserFiltres()">
+        <i class="bi bi-x-circle"></i>
+        <span>{{ 'utilisateurs-page.reinitialiser' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
   <!-- ── TABLEAU ───────────────────────────────────────────────────── -->
   <div *ngIf="!loading && utilisateurs.length > 0" class="utl-table-wrap">
     <table class="table utl-table">
@@ -47,14 +77,21 @@
             <i class="bi utl-sort-icon"
                [ngClass]="sortColumn === 'nom' ? (sortDirection === 'asc' ? 'bi-sort-alpha-down' : 'bi-sort-alpha-up') : 'bi-arrow-down-up'"></i>
           </th>
-          <th>{{ 'utilisateurs-page.col-courriel' | translate }}</th>
+          <th class="utl-th--sortable" (click)="sortBy('email')">
+            {{ 'utilisateurs-page.col-courriel' | translate }}
+            <i class="bi utl-sort-icon"
+               [ngClass]="sortColumn === 'email' ? (sortDirection === 'asc' ? 'bi-sort-alpha-down' : 'bi-sort-alpha-up') : 'bi-arrow-down-up'"></i>
+          </th>
           <th class="text-center">{{ 'utilisateurs-page.col-role' | translate }}</th>
           <th>{{ 'utilisateurs-page.col-derniere-connexion' | translate }}</th>
           <th class="utl-th--actions"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let u of utilisateurs; let i = index">
+        <tr *ngIf="!utilisateursAffiches.length">
+          <td colspan="7" class="utl-aucun">{{ 'utilisateurs-page.aucun-resultat' | translate }}</td>
+        </tr>
+        <tr *ngFor="let u of utilisateursAffiches; let i = index">
           <td class="utl-td--num">{{ i + 1 }}</td>
           <td class="utl-td--nom">{{ u.prenom || '—' }}</td>
           <td class="utl-td--nom">{{ u.nom || '—' }}</td>
