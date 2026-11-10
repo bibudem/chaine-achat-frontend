@@ -1074,7 +1074,7 @@
     "notes-usager": "User notes and comments",
     "notes-usager-placeholder": "User remarks or details...",
     "transmis-techdoc": "Purchase suggestion forwarded to the library",
-    "transmis-techdoc-hint": "Checked automatically as soon as the triage team gives its decision (Yes or No).",
+    "transmis-techdoc-hint": "Checked automatically at the triage decision (Yes or No), then editable by the triage team and Admins.",
     "techdoc-tri-notes": "Notes and comments",
     "onglet-techdoc-tri": "TechDoc Tri",
     "bibliothecaire-disc": "Subject librarian",

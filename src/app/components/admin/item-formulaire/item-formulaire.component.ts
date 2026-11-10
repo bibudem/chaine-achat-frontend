@@ -425,9 +425,8 @@ export class ItemFormulaireComponent implements OnInit {
       // Suggestion d'achat : type de document et édition saisis par l'usager.
       type_document: [''],
       edition: ['', Validators.maxLength(100)],
-      // Cochée automatiquement à la décision de tri (backend) : lecture seule, la valeur
-      // reste transmise à l'enregistrement (getRawValue).
-      techdoc_suggestion_transmise: [{ value: false, disabled: true }],
+      // Cochée automatiquement à la décision de tri (backend), modifiable ici ensuite.
+      techdoc_suggestion_transmise: [false],
       techdoc_tri_notes: [''],
       acq_raison_annulation: [''],
       acq_isbn: ['', Validators.maxLength(50)],

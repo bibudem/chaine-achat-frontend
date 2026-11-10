@@ -92,8 +92,9 @@ export class SuggestionPublicComponent implements OnInit {
    *  « TechDoc Tri » (getRawValue conserve les valeurs des champs désactivés). */
   private appliquerDroits(): void {
     if (this.lectureSeule) { this.form.disable(); return; }
-    // « Transmise en bibliothèque » : cochée automatiquement à la décision de tri (backend).
-    this.form.get('techdoc_suggestion_transmise')!.disable();
+    // « Transmise en bibliothèque » : cochée automatiquement à la décision de tri (backend),
+    // modifiable ensuite par l'équipe de tri et les Admin.
+    if (!this.authService.canTrier) this.form.get('techdoc_suggestion_transmise')!.disable();
     if (!this.peutSuiviTri) {
       this.form.get('techdoc_tri_notes')!.disable();
       this.form.get('tri_commentaire')!.disable();

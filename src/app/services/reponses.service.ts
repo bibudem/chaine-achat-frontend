@@ -225,6 +225,15 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('deciderTri')));
   }
 
+  /** « Suggestion d'achat transmise en bibliothèque » (équipe de tri / Admin) pour une suggestion
+   *  pas encore matérialisée en item — sinon ItemFormulaireService.majTechdocTransmise. */
+  majTechdocTransmise(id: number, transmise: boolean): Observable<{ success: boolean }> {
+    return this.http
+      .put<{ success: boolean }>(`${this.baseUrl}/${id}/techdoc-transmise`,
+        { techdoc_suggestion_transmise: transmise }, this.httpOptions)
+      .pipe(catchError(this.handleError('majTechdocTransmise')));
+  }
+
   // ──────────────────────────────────────────────────────────
   // NOUVEL ACHAT UNIQUE
   // Composant : nouvel-achat.component.ts

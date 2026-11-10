@@ -986,7 +986,7 @@
     "notes-usager": "Notes et commentaires de l'usager",
     "notes-usager-placeholder": "Remarques ou précisions de l'usager...",
     "transmis-techdoc": "Suggestion d'achat transmise en bibliothèque",
-    "transmis-techdoc-hint": "Cochée automatiquement dès que l'équipe de tri rend sa décision (Oui ou Non).",
+    "transmis-techdoc-hint": "Cochée automatiquement à la décision de tri (Oui ou Non), modifiable ensuite par l'équipe de tri et les Admin.",
     "techdoc-tri-notes": "Notes et commentaires",
     "onglet-techdoc-tri": "TechDoc Tri",
     "bibliothecaire-disc": "Bibliothécaire disciplinaire",

@@ -58,7 +58,48 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return this.activeTab;
   }
 
-  /** Valeur stockée → libellé (séparateur uniformisé « – », comme les menus de statut). */
+  /** « Suggestion d'achat transmise en bibliothèque » : cochée automatiquement à la décision de
+   *  tri, modifiable ensuite par l'équipe de tri et les Admin (isAdmin inclut SuperAdmin). */
+  get peutModifierTransmise(): boolean { return this.authService.isAdmin || this.authService.isTechDoc; }
+
+  enregistrementTransmise = false;
+  erreurTransmise: string | null = null;
+
+  basculerTransmise(event: Event): void {
+    const input     = event.target as HTMLInputElement;
+    const transmise = input.checked;
+    const precedent = !!this.item?.techdoc_suggestion_transmise;
+    if (!this.item || this.enregistrementTransmise) { input.checked = precedent; return; }
+
+    // Item matérialisé → tbl_suggestion_achat ; sinon la réponse d'origine (tbl_reponses.reponses).
+    const appel$ = this.itemId
+      ? this.itemService.majTechdocTransmise(this.itemId, transmise)
+      : this.reponseId
+        ? this.reponsesService.majTechdocTransmise(this.reponseId, transmise)
+        : null;
+    if (!appel$) { input.checked = precedent; return; }
+
+    this.enregistrementTransmise = true;
+    this.erreurTransmise = null;
+    this.item.techdoc_suggestion_transmise = transmise;
+    appel$.subscribe({
+      next: (res: any) => {
+        this.enregistrementTransmise = false;
+        if (!res?.success) this.annulerTransmise(input, precedent);
+      },
+      error: () => {
+        this.enregistrementTransmise = false;
+        this.annulerTransmise(input, precedent);
+      }
+    });
+  }
+
+  private annulerTransmise(input: HTMLInputElement, precedent: boolean): void {
+    if (this.item) this.item.techdoc_suggestion_transmise = precedent;
+    input.checked = precedent;
+    this.erreurTransmise = "La modification n'a pas pu être enregistrée. Réessayez.";
+  }
+
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
   itemExisteDansItems = false;
