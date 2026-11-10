@@ -702,7 +702,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     const selected = this.notifTargets.filter(t => t.selected);
     // Suggestion publique acceptée au tri : l'équipe de tri reçoit aussi la confirmation de fin
     // de traitement — une seule fois, avec le courriel au demandeur (cible 'saisie').
-    const suggestionTriee = this.item?.tri_statut === 'accepte';
+    // Suggestion publique triée (acceptée ou refusée — avis) : copie du suivi final à l'équipe de tri.
+    const suggestionTriee = this.item?.tri_statut === 'accepte' || this.item?.tri_statut === 'refuse';
     selected.forEach(target => {
       const payload = {
         reponse_id:          this.reponseId ?? this.item?.reponse_id ?? null,
