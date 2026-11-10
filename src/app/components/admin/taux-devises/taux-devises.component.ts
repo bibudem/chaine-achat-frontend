@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TauxDevisesService, TauxPeriode } from '../../../services/taux-devises.service';
 import { DialogService } from '../../../services/dialog.service';
+import { AuthService } from '../../../services/auth.service';
 import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
 
 @Component({
@@ -38,8 +39,13 @@ export class TauxDevisesComponent implements OnInit {
 
   constructor(
     private tauxDevisesService: TauxDevisesService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private authService: AuthService
   ) {}
+
+  /** Configuration : modifiable par le SuperAdmin seulement ; l'Admin consulte en lecture
+   *  seule (le backend refuse aussi l'écriture, voir requireSuperAdmin). */
+  get peutModifier(): boolean { return this.authService.isSuperAdmin; }
 
   ngOnInit(): void {
     this.load();
@@ -73,6 +79,7 @@ export class TauxDevisesComponent implements OnInit {
   }
 
   startEditCell(periode: TauxPeriode, devise: string): void {
+    if (!this.peutModifier) return;
     this.editingCell = { periodeId: periode.id, devise };
     const v = this.tauxDe(periode, devise);
     this.editValue = v != null ? String(v).replace('.', ',') : '';
@@ -108,6 +115,7 @@ export class TauxDevisesComponent implements OnInit {
   }
 
   async removeTauxDevise(periode: TauxPeriode, devise: string): Promise<void> {
+    if (!this.peutModifier) return;
     const confirmed = await this.dialog.confirm(
       `Retirer le taux ${devise} de la période « ${periode.periode} » ?`,
       'Confirmer la suppression'
@@ -128,6 +136,7 @@ export class TauxDevisesComponent implements OnInit {
      MÉTADONNÉES DE PÉRIODE (libellé / date / note)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   startEditMeta(periode: TauxPeriode): void {
+    if (!this.peutModifier) return;
     this.editingMetaId = periode.id;
     this.editMeta = {
       periode:    periode.periode,
@@ -169,6 +178,7 @@ export class TauxDevisesComponent implements OnInit {
      PÉRIODES (lignes)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   openAddPeriode(): void {
+    if (!this.peutModifier) return;
     // Date locale (fr-CA = AAAA-MM-JJ) : toISOString() donne la date UTC, soit le lendemain en soirée.
     this.newPeriode = { periode: '', date_debut: new Date().toLocaleDateString('fr-CA'), note: '' };
     this.showAddPeriode = true;
@@ -204,6 +214,7 @@ export class TauxDevisesComponent implements OnInit {
   }
 
   async deletePeriode(periode: TauxPeriode): Promise<void> {
+    if (!this.peutModifier) return;
     const confirmed = await this.dialog.confirm(
       `Supprimer définitivement la période « ${periode.periode} » et tous les taux qu'elle contient ? Cette action est irréversible.`,
       'Confirmer la suppression'

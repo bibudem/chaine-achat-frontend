@@ -131,3 +131,6 @@
   padding: .75rem 1.25rem; border-top: 1px solid #E7EBEE;
   text-align: right; display: flex; justify-content: flex-end; gap: .5rem;
 }
+
+/* Lecture seule (Admin) : valeur affichée sans invitation à l'édition */
+.tdv-cell-val__nombre--lecture { cursor: default; pointer-events: none; }

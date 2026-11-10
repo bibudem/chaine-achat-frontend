@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FondsBudgetairesService, FondBudgetaire } from '../../../services/fonds-budgetaires.service';
 import { DialogService } from '../../../services/dialog.service';
+import { AuthService } from '../../../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -32,8 +33,13 @@ export class FondsBudgetairesComponent implements OnInit {
   constructor(
     private fondsService: FondsBudgetairesService,
     private dialog: DialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: AuthService
   ) {}
+
+  /** Configuration : modifiable par le SuperAdmin seulement ; l'Admin consulte en lecture
+   *  seule (le backend refuse aussi l'écriture, voir requireSuperAdmin). */
+  get peutModifier(): boolean { return this.authService.isSuperAdmin; }
 
   private t(key: string, params?: object): string {
     return this.translate.instant(`fonds-budgetaires-page.${key}`, params);

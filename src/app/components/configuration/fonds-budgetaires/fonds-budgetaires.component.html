@@ -6,7 +6,7 @@
       <h1 class="h3 mb-1">{{ 'fonds-budgetaires-page.titre' | translate }}</h1>
       <p class="text-muted mb-0">{{ 'fonds-budgetaires-page.sous-titre' | translate }}</p>
     </div>
-    <button type="button" class="btn btn-primary" (click)="openAdd()">
+    <button *ngIf="peutModifier" type="button" class="btn btn-primary" (click)="openAdd()">
       <i class="bi bi-plus-circle me-2"></i>{{ 'fonds-budgetaires-page.nouveau-fonds' | translate }}
     </button>
   </div>
@@ -26,7 +26,7 @@
   <div *ngIf="!loading && !errorMessage && fonds.length === 0" class="fbp-empty">
     <i class="bi bi-inbox"></i>
     <p>{{ 'fonds-budgetaires-page.vide' | translate }}</p>
-    <button class="btn btn-primary btn-sm" (click)="openAdd()">
+    <button *ngIf="peutModifier" class="btn btn-primary btn-sm" (click)="openAdd()">
       <i class="bi bi-plus-lg me-1"></i>{{ 'fonds-budgetaires-page.ajouter-premier' | translate }}
     </button>
   </div>
@@ -55,10 +55,10 @@
             <td class="fbp-td--code">{{ f.code }}</td>
             <td class="fbp-td--date">{{ f.date_creation | date: 'dd MMM yyyy' }}</td>
             <td class="fbp-td--actions">
-              <button class="fbp-action-btn" (click)="openEdit(f)" [title]="'fonds-budgetaires-page.modifier' | translate">
+              <button *ngIf="peutModifier" class="fbp-action-btn" (click)="openEdit(f)" [title]="'fonds-budgetaires-page.modifier' | translate">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="fbp-action-btn fbp-action-btn--delete" (click)="supprimer(f)" [title]="'fonds-budgetaires-page.supprimer' | translate">
+              <button *ngIf="peutModifier" class="fbp-action-btn fbp-action-btn--delete" (click)="supprimer(f)" [title]="'fonds-budgetaires-page.supprimer' | translate">
                 <i class="bi bi-trash3"></i>
               </button>
             </td>

@@ -6,7 +6,7 @@
       <h1 class="h3 mb-1">{{ 'bibliotheques-page.titre' | translate }}</h1>
       <p class="text-muted mb-0">{{ 'bibliotheques-page.sous-titre' | translate }}</p>
     </div>
-    <button type="button" class="btn btn-primary" (click)="openAdd()">
+    <button *ngIf="peutModifier" type="button" class="btn btn-primary" (click)="openAdd()">
       <i class="bi bi-plus-circle me-2"></i>{{ 'bibliotheques-page.nouvelle-bibliotheque' | translate }}
     </button>
   </div>
@@ -26,7 +26,7 @@
   <div *ngIf="!loading && !errorMessage && bibliotheques.length === 0" class="bib-empty">
     <i class="bi bi-inbox"></i>
     <p>{{ 'bibliotheques-page.vide' | translate }}</p>
-    <button class="btn btn-primary btn-sm" (click)="openAdd()">
+    <button *ngIf="peutModifier" class="btn btn-primary btn-sm" (click)="openAdd()">
       <i class="bi bi-plus-lg me-1"></i>{{ 'bibliotheques-page.ajouter-premiere' | translate }}
     </button>
   </div>
@@ -49,10 +49,10 @@
             <td class="bib-td--nom">{{ b.nom }}</td>
             <td class="bib-td--date">{{ b.date_creation | date: 'dd MMM yyyy' }}</td>
             <td class="bib-td--actions">
-              <button class="bib-action-btn" (click)="openEdit(b)" [title]="'bibliotheques-page.modifier' | translate">
+              <button *ngIf="peutModifier" class="bib-action-btn" (click)="openEdit(b)" [title]="'bibliotheques-page.modifier' | translate">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="bib-action-btn bib-action-btn--delete" (click)="supprimer(b)" [title]="'bibliotheques-page.supprimer' | translate">
+              <button *ngIf="peutModifier" class="bib-action-btn bib-action-btn--delete" (click)="supprimer(b)" [title]="'bibliotheques-page.supprimer' | translate">
                 <i class="bi bi-trash3"></i>
               </button>
             </td>

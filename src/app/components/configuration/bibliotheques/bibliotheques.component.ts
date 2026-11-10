@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BibliothequesService, Bibliotheque } from '../../../services/bibliotheques.service';
 import { DialogService } from '../../../services/dialog.service';
+import { AuthService } from '../../../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -24,8 +25,13 @@ export class BibliothequesComponent implements OnInit {
   constructor(
     private bibliothequesService: BibliothequesService,
     private dialog: DialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: AuthService
   ) {}
+
+  /** Configuration : modifiable par le SuperAdmin seulement ; l'Admin consulte en lecture
+   *  seule (le backend refuse aussi l'écriture, voir requireSuperAdmin). */
+  get peutModifier(): boolean { return this.authService.isSuperAdmin; }
 
   private t(key: string, params?: object): string {
     return this.translate.instant(`bibliotheques-page.${key}`, params);
