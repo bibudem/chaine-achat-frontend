@@ -8,6 +8,10 @@ import { BibliothequesService } from '../../../../services/bibliotheques.service
 import { AuthService } from '../../../../services/auth.service';
 import { STATUTS_BIBLIOTHEQUE_SUGGESTION, TYPES_DOCUMENT_SUGGESTION, categorieDepuisTypeDocument, typeDocumentDeSuggestion } from '../../../../lib/ListeChoixOptions';
 
+/** Refuse un texte composé uniquement d'espaces (le backend le traiterait comme vide). */
+const espacesSeulsInterdits = (c: AbstractControl): ValidationErrors | null =>
+  typeof c.value === 'string' && c.value.length && !c.value.trim() ? { required: true } : null;
+
 @Component({
   selector: 'app-suggestion-public',
   templateUrl: './suggestion-public.component.html',
@@ -22,11 +26,14 @@ export class SuggestionPublicComponent implements OnInit {
   showSigleCours   = false;
   editId: number | null = null;
 
-  /** Suggestion publique acceptée par l'équipe TechDoc (/usager/tri), ouverte ici avec
+  /** Suggestion publique triée par l'équipe TechDoc (/usager/tri), ouverte ici avec
    *  ?id=&tri=1 pour être complétée puis soumise aux ACQ. Le demandeur reste la personne de
    *  la communauté UdeM qui l'a envoyée (c'est elle qui sera avisée de la décision ACQ), pas
    *  le membre de l'équipe connecté. */
   triMode = false;
+  /** Avis de tri (Oui/Non) de l'équipe TechDoc, rappelé dans la section « TechDoc Tri » : un
+   *  refus n'empêche pas de compléter ni de soumettre — la décision finale revient aux ACQ. */
+  avisTri: { statut: 'accepte' | 'refuse'; par: string | null; date: string | null } | null = null;
   /** Suggestion publique ouverte par un autre rôle que l'équipe de tri ou un Admin : lecture
    *  seule (le backend refuse aussi la modification, voir patchReponses). */
   get lectureSeule(): boolean { return this.triMode && !this.authService.canTrier; }
@@ -85,9 +92,11 @@ export class SuggestionPublicComponent implements OnInit {
    *  « TechDoc Tri » (getRawValue conserve les valeurs des champs désactivés). */
   private appliquerDroits(): void {
     if (this.lectureSeule) { this.form.disable(); return; }
+    // « Transmise en bibliothèque » : cochée automatiquement à la décision de tri (backend).
+    this.form.get('techdoc_suggestion_transmise')!.disable();
     if (!this.peutSuiviTri) {
-      this.form.get('techdoc_suggestion_transmise')!.disable();
       this.form.get('techdoc_tri_notes')!.disable();
+      this.form.get('tri_commentaire')!.disable();
     }
   }
 
@@ -141,6 +150,9 @@ export class SuggestionPublicComponent implements OnInit {
       // l'usage des technicien(ne)s responsables du tri des suggestions d'achat.
       techdoc_suggestion_transmise: [false],
       techdoc_tri_notes:            [''],
+      // Commentaire de la décision de tri pour les ACQ (tbl_reponses.tri_commentaire, pas dans
+      // le JSON des réponses) — affiché seulement pour une suggestion publique triée.
+      tri_commentaire:              ['', Validators.maxLength(2000)],
     }, { validators: this.anneeOuSourceValidator });
 
     this.form.get('reserve_cours')!.valueChanges.subscribe(val => {
@@ -166,10 +178,20 @@ export class SuggestionPublicComponent implements OnInit {
   private loadDemande(id: number): void {
     this.reponsesService.getReponseById(id).subscribe({
       next: (row) => {
-        if (this.triMode && row.tri_statut !== 'accepte') {
-          // Pas (ou plus) une suggestion publique acceptée — rien à compléter ici.
+        if (this.triMode && row.tri_statut !== 'accepte' && row.tri_statut !== 'refuse') {
+          // Pas une suggestion publique triée (pas encore triée, ou autre demande) — rien à compléter ici.
           this.router.navigate(['/usager/tri']);
           return;
+        }
+        if (row.tri_statut === 'accepte' || row.tri_statut === 'refuse') {
+          this.avisTri = { statut: row.tri_statut, par: row.tri_par_nom || row.tri_par || null, date: row.tri_date ?? null };
+          const ctrl = this.form.get('tri_commentaire')!;
+          ctrl.setValue(row.tri_commentaire ?? '');
+          // Refus : le commentaire reste obligatoire (même règle qu'à la décision de tri).
+          if (row.tri_statut === 'refuse') {
+            ctrl.setValidators([Validators.required, Validators.maxLength(2000), espacesSeulsInterdits]);
+            ctrl.updateValueAndValidity();
+          }
         }
         const d = row.reponses ?? {};
         if (this.triMode) {
@@ -311,6 +333,7 @@ export class SuggestionPublicComponent implements OnInit {
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque,
       bibliotheque_note_interne:             v.bibliotheque_note_interne,
+      ...this.champCommentaireTri(v),
     };
 
     const obs = this.editId
@@ -336,6 +359,12 @@ export class SuggestionPublicComponent implements OnInit {
       ? this.translate.instant('forms-usager.msg-soumise-pj-echec')
       : this.translate.instant('forms-usager.msg-soumise');
     this.naviguerVersListe(message);
+  }
+
+  /** Commentaire de tri pour les ACQ : envoyé seulement pour une suggestion publique triée et
+   *  par l'équipe de tri ; le backend le retire du JSON et met à jour tri_commentaire. */
+  private champCommentaireTri(v: any): { tri_commentaire?: string | null } {
+    return this.avisTri && this.peutSuiviTri ? { tri_commentaire: v.tri_commentaire?.trim() || null } : {};
   }
 
   onSave(): void {
@@ -383,6 +412,7 @@ export class SuggestionPublicComponent implements OnInit {
       acq_isbn:                     null,
       statut_bibliotheque:          v.statut_bibliotheque || 'Saisie en cours - En attente',
       bibliotheque_note_interne:             v.bibliotheque_note_interne,
+      ...this.champCommentaireTri(v),
     };
     const obs = this.editId
       ? this.reponsesService.updateReponse(this.editId, payload)

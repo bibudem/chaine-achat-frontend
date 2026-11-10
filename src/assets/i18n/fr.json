@@ -256,10 +256,12 @@
     "nouvelle-periode": "Nouvelle période"
   },
   "tri-suggestions-page": {
+    "avis-refus-infobulle": "Avis de l'équipe de tri — la décision finale revient aux ACQ.",
+    "hint-refuse": "Le refus est un avis : la suggestion s'ouvrira ensuite dans le formulaire, à compléter puis à soumettre aux ACQ, qui verront votre commentaire et prendront la décision finale. Aucun courriel n'est envoyé au demandeur.",
     "titre": "Tri des suggestions publiques",
     "breadcrumb-portail": "Portail acquisitions",
     "retour": "Retour",
-    "sous-titre": "Suggestions d'achat envoyées par la communauté UdeM. Acceptez-les pour les compléter et les soumettre aux ACQ, ou refusez-les avec un commentaire. Le demandeur est avisé par courriel en cas de refus ; une suggestion acceptée lui est confirmée une fois traitée par les ACQ.",
+    "sous-titre": "Suggestions d'achat envoyées par la communauté UdeM. Donnez votre avis (accepter ou refuser, avec un commentaire), puis complétez la demande et soumettez-la aux ACQ, qui prennent la décision finale. Le demandeur reçoit la confirmation une fois la demande traitée par les ACQ.",
     "fermer": "Fermer",
     "recherche-placeholder": "Titre, nom ou courriel du demandeur",
     "recherche-aria": "Rechercher",
@@ -276,13 +278,13 @@
     "decision-legend": "Accepter cette suggestion ?",
     "oui": "Oui",
     "non": "Non",
-    "commentaire-label": "Commentaire au demandeur",
+    "commentaire-label": "Commentaire pour les ACQ",
     "commentaire-facultatif": "(facultatif)",
-    "commentaire-placeholder-refuse": "Raison du refus — sera incluse dans le courriel au demandeur",
+    "commentaire-placeholder-refuse": "Raison du refus — visible par les ACQ (non transmise au demandeur)",
     "commentaire-placeholder-accepte": "Commentaire interne (non transmis au demandeur)",
     "hint-accepte": "La suggestion s'ouvrira ensuite dans le formulaire de suggestion d'achat, à compléter puis à soumettre aux ACQ.",
     "btn-accepter": "Accepter et compléter",
-    "btn-refuser": "Refuser la suggestion",
+    "btn-refuser": "Refuser et compléter",
     "th-triee-le": "Date",
     "ordre-defaut": "Trier par date (plus récentes d'abord)",
     "ordre-date_desc": "Plus récentes d'abord — cliquer pour les plus anciennes d'abord",
@@ -309,7 +311,6 @@
     "erreur-commentaire-obligatoire": "Un commentaire est obligatoire pour refuser la suggestion.",
     "erreur-deja-traitee": "Cette suggestion a déjà été traitée.",
     "erreur-enregistrement": "Erreur lors de l'enregistrement de la décision.",
-    "succes-refus": "Suggestion « {{titre}} » refusée. Le demandeur a été avisé par courriel.",
     "pour": "Pour :"
   },
   "rapport": {
@@ -702,6 +703,7 @@
     "favoris-nom-placeholder": "Nom du favori…"
   },
   "item-detail": {
+    "tri-refusee": "Refusée",
     "chargement": "Chargement...",
     "introuvable": "Item introuvable.",
     "retour": "Retour",
@@ -809,7 +811,7 @@
     "tri-acceptee": "Acceptée",
     "tri-par": "Triée par",
     "tri-date": "Triée le",
-    "tri-commentaire": "Commentaire envoyé au demandeur"
+    "tri-commentaire": "Commentaire de l'équipe de tri"
   },
   "item-formulaire": {
     "titre-modifier": "Modifier l'item",
@@ -984,7 +986,7 @@
     "notes-usager": "Notes et commentaires de l'usager",
     "notes-usager-placeholder": "Remarques ou précisions de l'usager...",
     "transmis-techdoc": "Suggestion d'achat transmise en bibliothèque",
-    "transmis-techdoc-hint": "Réservé à l'usage des technicien(ne)s responsables du tri des suggestions d'achat",
+    "transmis-techdoc-hint": "Cochée automatiquement dès que l'équipe de tri rend sa décision (Oui ou Non).",
     "techdoc-tri-notes": "Notes et commentaires",
     "onglet-techdoc-tri": "TechDoc Tri",
     "bibliothecaire-disc": "Bibliothécaire disciplinaire",
@@ -1461,7 +1463,7 @@
     "fil-tri": "Tri des suggestions publiques",
     "lecture-seule-titre": "Lecture seule.",
     "lecture-seule-texte": "Seules l'équipe de tri et les Admin peuvent compléter cette suggestion publique et la soumettre aux ACQ.",
-    "acceptee-titre": "Suggestion publique acceptée.",
+    "acceptee-titre": "Suggestion publique triée.",
     "acceptee-texte": "Complétez les champs manquants (priorité, bibliothèque, bibliothécaire disciplinaire, ISBN…). Elle reste en brouillon tant que le statut n'est pas « Soumettre aux ACQ » : vous pouvez l'enregistrer et la reprendre plus tard depuis l'historique de l'équipe. Le demandeur d'origine sera avisé de la décision des ACQ.",
     "suivi-tri-lecture-seule": "Réservé à l'équipe de tri (lecture seule).",
     "titre": "Suggestion d'achat – Usager",

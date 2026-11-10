@@ -98,24 +98,34 @@
 .pj-groupe {
   border: 1px solid #ced4da;
   border-radius: 0.375rem;
-  padding: 0.65rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   background: #fff;
 }
-.pj-groupe ::ng-deep .piece-jointe-gestion .form-label,
-.pj-groupe ::ng-deep .piece-jointe-uploader .form-label {
+/* Sélecteurs doublés (.pj-groupe.pj-groupe) : plus spécifiques que les styles encapsulés des
+   composants partagés, sinon leurs bordures et hauteur minimale reprennent le dessus. */
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-gestion .form-label,
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .form-label {
   display: none;
 }
-.pj-groupe ::ng-deep .piece-jointe-gestion .pj-box,
-.pj-groupe ::ng-deep .piece-jointe-uploader .pju-box {
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-gestion .pj-box,
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .pju-box {
   border: none;
   padding: 0;
   min-height: 0;
 }
-.pj-groupe ::ng-deep .piece-jointe-gestion .pj-box {
-  padding-bottom: 0.6rem;
-  margin-bottom: 0.6rem;
+/* Fichiers déjà envoyés : séparés du sélecteur seulement s'il y en a ; « Aucune pièce
+   jointe » n'est pas répété (le sélecteur affiche déjà « Aucun fichier sélectionné »). */
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-gestion .pj-empty,
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-gestion .pj-loading { display: none; }
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-gestion .pj-list {
+  margin: 0 0 .45rem;
+  padding-bottom: .35rem;
   border-bottom: 1px solid #e9ecef;
 }
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .pju-empty { display: none; }
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .pju-list { margin-bottom: .45rem; }
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .pju-actions { gap: .35rem .6rem; }
+.pj-groupe.pj-groupe ::ng-deep .piece-jointe-uploader .pju-hint { line-height: 1.35; }
 
 /* ── TechDoc Tri — case « transmise en bibliothèque » ─────────────────── */
 .fsp-techdoc-transmise {
@@ -125,8 +135,10 @@
   border-radius: 8px;
   transition: background-color .15s, border-color .15s;
 }
-.fsp-techdoc-transmise .form-check-input { cursor: pointer; }
-.fsp-techdoc-transmise .form-check-label { cursor: pointer; }
+.fsp-techdoc-transmise { height: 100%; }
+/* Lecture seule (cochée automatiquement à la décision de tri) : lisible, pas grisée. */
+.fsp-techdoc-transmise .form-check-input:disabled,
+.fsp-techdoc-transmise .form-check-input:disabled ~ .form-check-label { opacity: 1; cursor: default; }
 
 /* Coché : mise en évidence franche — vert succès, pas juste un interrupteur discret. */
 .fsp-techdoc-transmise--actif {
@@ -143,3 +155,12 @@
 
 /* Charte d'accessibilité : couleur du formulaire sur l'icône d'en-tête, icône foncée */
 .form-header__icon { background: var(--form-suggest); color: var(--form-texte); }
+
+/* Avis de tri de l'équipe TechDoc (section « TechDoc Tri ») */
+.fsp-avis-tri {
+  display: flex; gap: .6rem; align-items: flex-start;
+  background: #ecfdf5; border: 1px solid #bbf7d0; color: #166534;
+  border-radius: 8px; padding: .9rem 1.1rem; height: 100%; font-size: .88rem;
+}
+.fsp-avis-tri > i { margin-top: .15rem; }
+.fsp-avis-tri--refuse { background: #fef2f2; border-color: #fecaca; color: #991b1b; }

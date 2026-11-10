@@ -6,6 +6,14 @@
   background: #fff;
 }
 
+/* Lecture seule (aucun bouton d'ajout) : la boîte prend la hauteur de son contenu — une
+   seule ligne « Aucune pièce jointe. » quand il n'y en a pas. */
+.piece-jointe-gestion .pj-box--lecture {
+  min-height: 0;
+  padding: 0.45rem 0.75rem;
+}
+.piece-jointe-gestion .pj-box--lecture .pj-list { margin-bottom: 0; }
+
 .piece-jointe-gestion .pj-loading,
 .piece-jointe-gestion .pj-empty {
   font-size: 0.85rem;

@@ -211,27 +211,12 @@
   font-size: var(--typo-texte); font-weight: 600; color: #0B113A;
 }
 
-/* Suivi TechDoc : interrupteur puis notes, empilés pleine largeur (même accent vert
-   qu'item-formulaire.component.css / suggestion-public.component.css .itf-/.fsp-
-   techdoc-transmise, dupliqué ici par cohérence visuelle). */
+/* Notes TechDoc, pleine largeur sous la question. */
 .ts-techdoc-row {
   margin: .9rem 0;
   padding-top: .9rem;
   border-top: 1px solid #eef1f5;
 }
-.ts-techdoc-switch {
-  padding: .7rem .9rem;
-  background: #f8f9fb;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  margin-bottom: .9rem;
-  transition: background-color .15s, border-color .15s;
-}
-.ts-techdoc-switch .form-check-input { cursor: pointer; }
-.ts-techdoc-switch .form-check-label { cursor: pointer; font-size: var(--typo-texte); }
-.ts-techdoc-switch--actif { background: #ecfdf5; border-color: #86efac; }
-.ts-techdoc-switch--actif .form-check-input { background-color: #16a34a; border-color: #16a34a; }
-.ts-techdoc-switch--actif .form-check-label { color: #166534; }
 .ts-techdoc-notes .form-label { font-size: var(--typo-label); font-weight: 600; color: #374151; margin-bottom: .35rem; }
 
 .ts-decision__comment { margin-top: .9rem; }

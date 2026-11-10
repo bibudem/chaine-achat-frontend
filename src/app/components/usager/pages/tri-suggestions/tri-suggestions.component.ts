@@ -17,10 +17,9 @@ interface DecisionSaisie {
   commentaire: string;
   envoiEnCours: boolean;
   erreur:      string;
-  /** Suivi interne de l'équipe TechDoc, saisi en même temps que la décision — voir
-   *  item-formulaire.component.ts, mêmes champs (techdoc_suggestion_transmise/
-   *  techdoc_tri_notes), repris automatiquement si la suggestion est ensuite matérialisée. */
-  techdocSuggestionTransmise: boolean;
+  /** Notes internes de l'équipe TechDoc, saisies en même temps que la décision — même champ
+   *  techdoc_tri_notes qu'item-formulaire, repris si la suggestion est ensuite matérialisée.
+   *  (« Transmise en bibliothèque » est cochée automatiquement par le backend à la décision.) */
   techdocTriNotes: string;
 }
 
@@ -31,10 +30,10 @@ interface DecisionSaisie {
  * Liste unique couvrant tout le cycle de vie d'une suggestion publique (voir ReponsesModel.
  * findTri pour l'ordre de priorité exact : à trier, puis acceptées à compléter, puis
  * soumises aux ACQ, puis refusées). Décider une suggestion « à trier » se fait en dépliant
- * sa ligne : Oui → la demande s'ouvre dans le formulaire de suggestion interne
- * (/usager/suggestion-bib?id=&tri=1), à compléter puis à soumettre aux ACQ quand l'équipe le
- * décide, sans courriel au demandeur (les ACQ sont avisés à la soumission). Non → commentaire
- * obligatoire, transmis tout de suite au demandeur par courriel (backend → n8n /tri-decision).
+ * sa ligne. La décision (Oui/Non) est un AVIS de l'équipe : la décision finale revient aux ACQ.
+ * Dans les deux cas la demande s'ouvre dans le formulaire de suggestion interne
+ * (/usager/suggestion-bib?id=&tri=1), à compléter puis à soumettre aux ACQ, qui voient l'avis
+ * et son commentaire (obligatoire pour un refus). Aucun courriel au demandeur à cette étape.
  * « Mes demandes » (/usager/profil) : les demandes saisies par le membre lui-même.
  */
 @Component({
@@ -99,7 +98,6 @@ export class TriSuggestionsComponent implements OnInit {
         for (const s of res.data) {
           this.decisions[s.id] = {
             choix: null, commentaire: '', envoiEnCours: false, erreur: '',
-            techdocSuggestionTransmise: !!s.reponses?.['techdoc_suggestion_transmise'],
             techdocTriNotes: s.reponses?.['techdoc_tri_notes'] ?? '',
           };
         }
@@ -154,20 +152,11 @@ export class TriSuggestionsComponent implements OnInit {
     d.envoiEnCours = true;
     d.erreur = '';
     this.reponsesService.deciderTri(
-      s.id, d.choix, commentaire || null,
-      d.techdocSuggestionTransmise, d.techdocTriNotes.trim() || null,
+      s.id, d.choix, commentaire || null, d.techdocTriNotes.trim() || null,
     ).subscribe({
-      next: () => {
-        if (d.choix === 'accepte') {
-          // La suggestion acceptée se complète dans le formulaire interne, au rythme de
-          // l'équipe — elle reste un brouillon tant qu'elle n'est pas « Soumettre aux ACQ ».
-          this.router.navigate(['/usager/suggestion-bib'], { queryParams: { id: s.id, tri: 1 } });
-          return;
-        }
-        this.expandedId = null;
-        this.successMessage = this.t('succes-refus', { titre: this.titre(s) });
-        this.charger();
-      },
+      // Acceptée ou refusée, la suggestion se complète dans le formulaire interne, au rythme de
+      // l'équipe — elle reste un brouillon tant qu'elle n'est pas « Soumettre aux ACQ ».
+      next: () => this.router.navigate(['/usager/suggestion-bib'], { queryParams: { id: s.id, tri: 1 } }),
       error: (err: HttpErrorResponse) => {
         d.envoiEnCours = false;
         if (err.status === 409) {
@@ -200,12 +189,13 @@ export class TriSuggestionsComponent implements OnInit {
     return s.tri_date || s.dateA;
   }
 
-  /** Une suggestion acceptée reste à compléter tant qu'elle n'est pas soumise aux ACQ. */
+  /** Une suggestion triée (acceptée ou refusée — le refus n'est qu'un avis) reste à compléter
+   *  tant qu'elle n'est pas soumise aux ACQ. */
   estACompleter(s: SuggestionTri): boolean {
-    return s.tri_statut === 'accepte' && s.statut_bibliotheque !== 'Soumettre aux ACQ';
+    return s.tri_statut !== 'a_trier' && s.statut_bibliotheque !== 'Soumettre aux ACQ';
   }
 
-  /** Progression d'une suggestion acceptée — même catégorisation que « Mes demandes » : tant que
+  /** Progression d'une suggestion triée — même catégorisation que « Mes demandes » : tant que
    *  les ACQ n'ont pas réellement statué (suivi_acq vide ou encore sur les valeurs par défaut du
    *  formulaire de décision, voir estAcqEnAttenteDefaut), le texte reste « Soumise aux ACQ », pas
    *  « Traitée » — sinon le libellé se contredit lui-même (ex. « Traitée… — En attente »). */
@@ -219,10 +209,10 @@ export class TriSuggestionsComponent implements OnInit {
     return { libelle: this.t('etat-traitee-suivi', { suivi: s.suivi_acq }), classe: 'ts-badge--traitee' };
   }
 
-  /** Statut affiché pour n'importe quelle ligne de la liste unique (toutes catégories). */
+  /** Progression affichée pour n'importe quelle ligne de la liste unique. L'avis « Refusée »
+   *  s'affiche à part (gabarit), la suggestion poursuivant le même circuit qu'une acceptée. */
   statutInfo(s: SuggestionTri): { libelle: string; classe: string } {
     if (s.tri_statut === 'a_trier') return { libelle: this.t('badge-a-trier'), classe: 'ts-badge--a-trier' };
-    if (s.tri_statut === 'refuse')  return { libelle: this.t('badge-refusee'), classe: 'ts-badge--refuse' };
     return this.etatAcq(s);
   }
 }

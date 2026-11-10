@@ -766,7 +766,7 @@
               <div class="col-md-3">
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.tri-statut' | translate }}</span>
-                  <span class="badge bg-success">{{ 'item-detail.tri-acceptee' | translate }}</span>
+                  <span class="badge" [ngClass]="item.tri_statut === 'refuse' ? 'bg-danger' : 'bg-success'">{{ (item.tri_statut === 'refuse' ? 'item-detail.tri-refusee' : 'item-detail.tri-acceptee') | translate }}</span>
                 </div>
               </div>
               <div class="col-md-3" *ngIf="item.tri_par_nom || item.tri_par">

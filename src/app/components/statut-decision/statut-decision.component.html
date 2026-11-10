@@ -151,7 +151,7 @@
                   <span *ngIf="item?.tri_par_nom || item?.tri_par"> — {{ item?.tri_par_nom || item?.tri_par }}</span>
                   <span *ngIf="item?.tri_date"> · {{ item?.tri_date | date:'d MMM y, HH:mm' }}</span>
                   <div class="sd-tri-decision__comment" *ngIf="item?.tri_commentaire">
-                    Commentaire au demandeur : « {{ item?.tri_commentaire }} »
+                    Commentaire de l'équipe de tri : « {{ item?.tri_commentaire }} »
                   </div>
                 </div>
               </div>
@@ -183,7 +183,6 @@
                   <input id="sd-tri-statut-bib" type="text" class="form-control sd-tri-lecture" disabled [value]="item?.statut_bibliotheque || ''">
                 </div>
                 <div class="col-md-8">
-                  <span class="form-label d-block">{{ 'forms-usager.piece-jointe' | translate }}</span>
                   <app-piece-jointe-gestion [itemId]="itemId" [reponseId]="itemId ? null : reponseId" [readonlyMode]="true">
                   </app-piece-jointe-gestion>
                 </div>
@@ -200,17 +199,11 @@
               <div class="sd-tri-transmise" [class.sd-tri-transmise--actif]="item?.techdoc_suggestion_transmise">
                 <div class="form-check form-switch mb-0">
                   <input class="form-check-input" type="checkbox" role="switch" id="sd-tri-transmise"
-                         [checked]="!!item?.techdoc_suggestion_transmise"
-                         [disabled]="!peutModifierTransmise || enregistrementTransmise"
-                         (change)="basculerTransmise($event)">
+                         [checked]="!!item?.techdoc_suggestion_transmise" disabled>
                   <label class="form-check-label" for="sd-tri-transmise">
                     {{ 'item-formulaire.transmis-techdoc' | translate }}
                   </label>
-                  <span *ngIf="enregistrementTransmise" class="spinner-border spinner-border-sm ms-2" role="status"></span>
                 </div>
-                <small class="text-danger d-block mt-1" *ngIf="erreurTransmise">
-                  <i class="bi bi-exclamation-triangle me-1"></i>{{ erreurTransmise }}
-                </small>
                 <small class="text-muted d-block mt-1">
                   <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.transmis-techdoc-hint' | translate }}
                 </small>

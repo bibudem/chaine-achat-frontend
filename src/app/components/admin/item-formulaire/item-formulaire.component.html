@@ -1314,7 +1314,7 @@
             <div class="col-md-4">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-detail.tri-statut' | translate }}</label>
-                <div><span class="badge bg-success">{{ 'item-detail.tri-acceptee' | translate }}</span></div>
+                <div><span class="badge" [ngClass]="i.tri_statut === 'refuse' ? 'bg-danger' : 'bg-success'">{{ (i.tri_statut === 'refuse' ? 'item-detail.tri-refusee' : 'item-detail.tri-acceptee') | translate }}</span></div>
               </div>
             </div>
             <div class="col-md-4" *ngIf="i.tri_par_nom || i.tri_par">

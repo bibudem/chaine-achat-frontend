@@ -392,6 +392,58 @@
         </div>
       </div>
 
+      <!-- SECTION — TECHDOC TRI (réservée à l'usage des technicien(ne)s responsables du tri
+           des suggestions d'achat — voir item-formulaire.component.html, même champs) -->
+      <div class="form-section">
+        <h2 class="form-section__title">
+          <i class="bi bi-inboxes"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
+        </h2>
+        <p *ngIf="!peutSuiviTri && !lectureSeule" class="form-text mt-0">{{ 'form-suggestion.suivi-tri-lecture-seule' | translate }}</p>
+        <!-- Avis de tri (Oui/Non, transmis aux ACQ) et « transmise en bibliothèque », côte à côte -->
+        <div class="row g-3">
+          <div class="col-md-6" *ngIf="avisTri as a">
+            <div class="fsp-avis-tri" [class.fsp-avis-tri--refuse]="a.statut === 'refuse'">
+              <i class="bi" [ngClass]="a.statut === 'refuse' ? 'bi-x-circle-fill' : 'bi-check-circle-fill'" aria-hidden="true"></i>
+              <div>
+                <strong>{{ (a.statut === 'refuse' ? 'item-detail.tri-refusee' : 'item-detail.tri-acceptee') | translate }}</strong>
+                <span *ngIf="a.par"> · {{ a.par }}</span><span *ngIf="a.date"> · {{ a.date | date:'d MMM y' }}</span>
+              </div>
+            </div>
+          </div>
+          <div [class.col-md-6]="avisTri" [class.col-12]="!avisTri">
+            <div class="fsp-techdoc-transmise"
+                 [class.fsp-techdoc-transmise--actif]="f['techdoc_suggestion_transmise'].value">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox"
+                       formControlName="techdoc_suggestion_transmise"
+                       id="techdocTransmiseCheck" role="switch">
+                <label class="form-check-label fw-semibold" for="techdocTransmiseCheck">
+                  {{ 'item-formulaire.transmis-techdoc' | translate }}
+                </label>
+              </div>
+              <small class="form-text d-block mt-1">{{ 'item-formulaire.transmis-techdoc-hint' | translate }}</small>
+            </div>
+          </div>
+        </div>
+        <!-- Notes TechDoc et commentaire pour les ACQ, côte à côte -->
+        <div class="row g-3 mt-1">
+          <div [class.col-md-6]="avisTri" [class.col-12]="!avisTri">
+            <label class="form-label">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
+            <textarea formControlName="techdoc_tri_notes" class="form-control" rows="4"></textarea>
+          </div>
+          <!-- Commentaire de la décision de tri, destiné aux ACQ (obligatoire pour un refus) -->
+          <div class="col-md-6" *ngIf="avisTri">
+            <label class="form-label" for="triCommentaire">
+              {{ 'tri-suggestions-page.commentaire-label' | translate }}
+              <span *ngIf="avisTri.statut === 'refuse'" class="text-danger">*</span>
+            </label>
+            <textarea id="triCommentaire" formControlName="tri_commentaire" class="form-control" rows="4" maxlength="2000"
+                      [class.is-invalid]="submitted && f['tri_commentaire'].invalid"></textarea>
+            <div class="invalid-feedback">{{ 'tri-suggestions-page.erreur-commentaire-obligatoire' | translate }}</div>
+          </div>
+        </div>
+      </div>
+
       <!-- SECTION — BIBLIOTHÈQUE -->
       <div class="form-section">
         <h2 class="form-section__title">
@@ -407,6 +459,12 @@
             <small class="form-text">
               <i class="fas fa-info-circle me-1"></i><span [innerHTML]="'forms-usager.statut-demande-hint' | translate"></span>
             </small>
+            <!-- Note interne : sous le statut de la demande -->
+            <label class="form-label mt-3">
+              <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>{{ 'forms-usager.note-interne' | translate }}
+            </label>
+            <textarea formControlName="bibliotheque_note_interne" class="form-control" rows="4"
+                      [placeholder]="'forms-usager.note-interne-placeholder' | translate"></textarea>
           </div>
           <div class="col-md-6">
             <label class="form-label mb-1"><i class="bi bi-paperclip me-1"></i>{{ 'forms-usager.piece-jointe' | translate }}</label>
@@ -414,45 +472,6 @@
               <app-piece-jointe-gestion *ngIf="editId" [reponseId]="editId" [readonlyMode]="true"></app-piece-jointe-gestion>
               <app-piece-jointe-uploader (filesChange)="onFichiersJointsChange($event)"></app-piece-jointe-uploader>
             </div>
-          </div>
-        </div>
-        <div class="row g-3 mt-1">
-          <div class="col-md-12">
-            <label class="form-label">
-              <i class="fas fa-lock me-1" style="font-size:.8em;opacity:.6"></i>{{ 'forms-usager.note-interne' | translate }}
-            </label>
-            <textarea formControlName="bibliotheque_note_interne" class="form-control" rows="4"
-                      [placeholder]="'forms-usager.note-interne-placeholder' | translate"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION — TECHDOC TRI (réservée à l'usage des technicien(ne)s responsables du tri
-           des suggestions d'achat — voir item-formulaire.component.html, même champs) -->
-      <div class="form-section">
-        <h2 class="form-section__title">
-          <i class="bi bi-inboxes"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
-        </h2>
-        <p *ngIf="!peutSuiviTri && !lectureSeule" class="form-text mt-0">{{ 'form-suggestion.suivi-tri-lecture-seule' | translate }}</p>
-        <div class="row g-3">
-          <div class="col-12">
-            <div class="fsp-techdoc-transmise"
-                 [class.fsp-techdoc-transmise--actif]="f['techdoc_suggestion_transmise'].value">
-              <div class="form-check form-switch mb-0">
-                <input class="form-check-input" type="checkbox"
-                       formControlName="techdoc_suggestion_transmise"
-                       id="techdocTransmiseCheck" role="switch">
-                <label class="form-check-label fw-semibold" for="techdocTransmiseCheck">
-                  <i class="fas fa-check-circle me-1" *ngIf="f['techdoc_suggestion_transmise'].value"></i>
-                  {{ 'item-formulaire.transmis-techdoc' | translate }}
-                </label>
-              </div>
-              <small class="form-text d-block mt-1">{{ 'item-formulaire.transmis-techdoc-hint' | translate }}</small>
-            </div>
-          </div>
-          <div class="col-12">
-            <label class="form-label">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
-            <textarea formControlName="techdoc_tri_notes" class="form-control" rows="4"></textarea>
           </div>
         </div>
       </div>

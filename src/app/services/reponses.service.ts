@@ -41,10 +41,10 @@ export interface Reponse {
    *  ReponsesModel.findAll/findById (backend) et canSupprimer (reponses-list.component.ts). */
   item_existe?: boolean;
   item_statut_bibliotheque?: string | null;
-  /** Suggestion publique refusée par l'équipe de tri (TechDoc) — voir reponses.service.ts
-   *  getTri/deciderTri. 'a_trier'/'accepte' n'arrivent jamais ici : findAll (backend) ne les
-   *  inclut que pour garder un historique des refus, visible par Admin/SuperAdmin. */
-  tri_statut?: 'refuse' | null;
+  /** Avis de l'équipe de tri (TechDoc) sur une suggestion publique — voir getTri/deciderTri.
+   *  'a_trier' n'arrive jamais ici (findAll, backend). Un refus n'arrête pas le circuit : la
+   *  décision finale revient aux ACQ, qui voient l'avis et son commentaire. */
+  tri_statut?: 'accepte' | 'refuse' | null;
   tri_commentaire?: string | null;
   tri_par_nom?: string | null;
   tri_date?: string | null;
@@ -209,29 +209,20 @@ export class ReponsesService {
   }
 
   /** 409 si un autre membre de l'équipe a déjà traité la suggestion (message dans error.error).
-   *  techdocSuggestionTransmise/techdocTriNotes : suivi interne de l'équipe TechDoc, saisi en
-   *  même temps que la décision — reporté dans tbl_reponses.reponses (voir decisionTri côté
-   *  backend), repris automatiquement si la suggestion est ensuite matérialisée en item. */
+   *  techdocTriNotes : notes internes de l'équipe TechDoc, saisies en même temps que la
+   *  décision — reportées dans tbl_reponses.reponses (voir decisionTri côté backend), reprises
+   *  si la suggestion est ensuite matérialisée en item. « Transmise en bibliothèque » est
+   *  cochée automatiquement par le backend à la décision. */
   deciderTri(
     id: number, decision: TriDecision, commentaire: string | null,
-    techdocSuggestionTransmise = false, techdocTriNotes: string | null = null,
+    techdocTriNotes: string | null = null,
   ): Observable<{ success: boolean }> {
     return this.http
       .put<{ success: boolean }>(`${this.baseUrl}/${id}/tri`, {
         decision, commentaire,
-        techdoc_suggestion_transmise: techdocSuggestionTransmise,
-        techdoc_tri_notes:            techdocTriNotes,
+        techdoc_tri_notes: techdocTriNotes,
       }, this.httpOptions)
       .pipe(catchError(this.handleError('deciderTri')));
-  }
-
-  /** Étape de fin « Suggestion d'achat transmise en bibliothèque » (Admin/SuperAdmin) pour une
-   *  suggestion pas encore matérialisée en item — sinon ItemFormulaireService.majTechdocTransmise. */
-  majTechdocTransmise(id: number, transmise: boolean): Observable<{ success: boolean }> {
-    return this.http
-      .put<{ success: boolean }>(`${this.baseUrl}/${id}/techdoc-transmise`,
-        { techdoc_suggestion_transmise: transmise }, this.httpOptions)
-      .pipe(catchError(this.handleError('majTechdocTransmise')));
   }
 
   // ──────────────────────────────────────────────────────────

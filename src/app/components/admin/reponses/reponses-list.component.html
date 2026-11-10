@@ -241,7 +241,7 @@
                   </span>
                 </div>
 
-                <!-- Alerte suggestion refusée par l'équipe de tri (TechDoc) — historique -->
+                <!-- Avis « refusée » de l'équipe de tri (TechDoc) — la décision finale revient aux ACQ -->
                 <div *ngIf="expandedReponse.tri_statut === 'refuse'"
                      class="alert alert-secondary d-flex align-items-center gap-2 mx-3 mb-2 py-2"
                      role="alert">
@@ -258,7 +258,7 @@
                 <div class="panel-footer">
 
                   <!-- Bannière ACQ : visible uniquement quand la demande est verrouillée -->
-                  <div *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && expandedReponse.tri_statut !== 'refuse' && !canDecisionAcq(expandedReponse)"
+                  <div *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && !canDecisionAcq(expandedReponse)"
                        class="pf-acq-banner">
                     <i class="bi bi-lock-fill pf-acq-banner__icon"></i>
                     <div class="pf-acq-banner__body">
@@ -278,7 +278,7 @@
                       <i class="bi bi-x me-1"></i>Fermer
                     </button>
                     <div class="pf-actions">
-                      <button *ngIf="expandedReponse.statut_approbation !== 'item_supprime' && expandedReponse.tri_statut !== 'refuse'"
+                      <button *ngIf="expandedReponse.statut_approbation !== 'item_supprime'"
                               class="pf-btn pf-btn--acq"
                               [class.pf-btn--acq--ready]="canDecisionAcq(expandedReponse)"
                               (click)="ouvrirDecisionAcq()"

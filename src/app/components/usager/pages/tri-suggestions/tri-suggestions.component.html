@@ -106,6 +106,9 @@
                     </div>
                   </td>
                   <td class="ts-col-decision">
+                    <!-- Avis « Non » de l'équipe : la suggestion poursuit le circuit (décision finale aux ACQ) -->
+                    <span *ngIf="s.tri_statut === 'refuse'" class="ts-badge ts-badge--refuse me-1"
+                          [title]="'tri-suggestions-page.avis-refus-infobulle' | translate">{{ 'tri-suggestions-page.badge-refusee' | translate }}</span>
                     <span class="ts-badge" [ngClass]="statutInfo(s).classe">{{ statutInfo(s).libelle }}</span>
                     <div class="ts-trunc ts-muted ts-sub ts-par" *ngIf="s.tri_par_nom || s.tri_par"
                          [title]="('tri-suggestions-page.th-par' | translate) + ' ' + (s.tri_par_nom || s.tri_par)">
@@ -136,7 +139,7 @@
                   <td colspan="6">
                     <!-- Décision de tri — question d'abord, puis le suivi TechDoc et le
                          commentaire regroupés dans la même carte (voir item-formulaire.component.ts,
-                         mêmes champs techdoc_suggestion_transmise/techdoc_tri_notes, repris
+                         même champ techdoc_tri_notes, repris
                          automatiquement si la suggestion est ensuite matérialisée en item). -->
                     <ng-container *ngIf="s.tri_statut === 'a_trier' && decisions[s.id] as d">
                     <div class="ts-decision-card">
@@ -155,17 +158,6 @@
                       </fieldset>
 
                       <div class="ts-techdoc-row">
-                        <div class="ts-techdoc-switch" [class.ts-techdoc-switch--actif]="d.techdocSuggestionTransmise">
-                          <div class="form-check form-switch mb-0">
-                            <input class="form-check-input" type="checkbox" role="switch"
-                                   [id]="'techdoc-transmise-' + s.id"
-                                   [(ngModel)]="d.techdocSuggestionTransmise" [disabled]="d.envoiEnCours || !peutSuiviTri">
-                            <label class="form-check-label fw-semibold" [for]="'techdoc-transmise-' + s.id">
-                              {{ 'item-formulaire.transmis-techdoc' | translate }}
-                            </label>
-                          </div>
-                          <small class="form-text d-block mt-1">{{ 'item-formulaire.transmis-techdoc-hint' | translate }}</small>
-                        </div>
                         <div class="ts-techdoc-notes">
                           <label class="form-label" [for]="'techdoc-notes-' + s.id">{{ 'item-formulaire.techdoc-tri-notes' | translate }}</label>
                           <textarea class="form-control" rows="2" [id]="'techdoc-notes-' + s.id"
@@ -182,8 +174,8 @@
                         <textarea class="form-control" rows="3" maxlength="2000" [id]="'commentaire-' + s.id"
                                   [name]="'commentaire-' + s.id" [(ngModel)]="d.commentaire" [disabled]="d.envoiEnCours"
                                   [placeholder]="(d.choix === 'refuse' ? 'tri-suggestions-page.commentaire-placeholder-refuse' : 'tri-suggestions-page.commentaire-placeholder-accepte') | translate"></textarea>
-                        <p class="ts-hint" *ngIf="d.choix === 'accepte'">
-                          {{ 'tri-suggestions-page.hint-accepte' | translate }}
+                        <p class="ts-hint">
+                          {{ (d.choix === 'accepte' ? 'tri-suggestions-page.hint-accepte' : 'tri-suggestions-page.hint-refuse') | translate }}
                         </p>
                       </div>
 

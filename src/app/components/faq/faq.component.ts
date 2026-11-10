@@ -163,10 +163,10 @@ export class FaqComponent {
       question: 'Comment trier une suggestion de la communauté UdeM ?',
       answerHtml: `Depuis l'accueil, ouvrez <strong>Tri des suggestions</strong>. Les suggestions marquées <strong>À trier</strong> attendent une décision ; cliquez sur <strong>Décider</strong> pour voir tous les champs soumis, puis répondez à <strong>Accepter cette suggestion ?</strong> :
         <ul ${UL}>
-          <li><strong>Oui</strong> : le commentaire au demandeur est facultatif</li>
-          <li><strong>Non</strong> : un commentaire est <strong>obligatoire</strong> ; il explique la raison du refus au demandeur</li>
+          <li><strong>Oui</strong> : le commentaire est facultatif</li>
+          <li><strong>Non</strong> : un commentaire est <strong>obligatoire</strong> ; il explique aux ACQ la raison du refus</li>
         </ul>
-        Dans les deux cas, le demandeur reçoit un courriel avec la décision et votre commentaire. Une décision ne peut être prise qu'une fois : si une collègue ou un collègue a déjà trié la suggestion, un message vous l'indique.`,
+        Votre réponse est un <strong>avis</strong> : la décision finale revient aux ACQ. Dans les deux cas, la suggestion s'ouvre dans le formulaire, à compléter puis à soumettre aux ACQ, qui voient votre avis et votre commentaire. Aucun courriel n'est envoyé au demandeur à cette étape ; il reçoit la confirmation une fois la demande traitée par les ACQ. Une décision ne peut être prise qu'une fois : si une collègue ou un collègue a déjà trié la suggestion, un message vous l'indique.`,
       answer: '', open: false, roles: ['TechDoc']
     },
     {
