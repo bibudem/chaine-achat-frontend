@@ -768,6 +768,40 @@
 .db-col-center,
 .db-col-right { height: auto !important; min-height: unset !important; }
 
+/* Types de formulaire : le panneau occupe deux rangées de la grille (≥ 1200 px) — le corps
+   s'étire sur toute la hauteur et les lignes se partagent l'espace, au lieu de laisser un
+   grand vide en bas. Sur une seule colonne, la hauteur reste celle du contenu. */
+.panel--catalog .panel__body--catalog {
+  flex: 1 1 auto !important;
+  display: flex;
+  flex-direction: column;
+}
+.panel--catalog .catalog-group-label { flex: none; font-size: .7rem; padding-top: 12px; }
+/* Lignes : contenu plus lisible (icône et texte un peu plus grands) plutôt que du vide ;
+   l'espace restant est réparti sans dépasser un écart raisonnable entre les lignes. */
+.panel--catalog .catalog-row {
+  flex: 1 1 auto;
+  max-height: 92px;
+  gap: 12px;
+  padding: 10px 20px;
+}
+.panel--catalog .catalog-row__icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+.panel--catalog .catalog-row__body { gap: 2px; }
+.panel--catalog .catalog-row__name { font-size: .9rem; }
+.panel--catalog .catalog-row__desc { font-size: .76rem; white-space: normal; line-height: 1.35; }
+
+/* Petits écrans : icône et texte légèrement réduits, lignes plus serrées. */
+@media (max-width: 767.98px) {
+  .panel--catalog .catalog-row { padding: 10px 14px; gap: 10px; }
+  .panel--catalog .catalog-row__icon { width: 30px; height: 30px; font-size: 1rem; }
+  .panel--catalog .catalog-row__name { font-size: .85rem; }
+  .panel--catalog .catalog-row__desc { font-size: .72rem; }
+}
+
 /* ══════════════════════════════════════════════════════════
    INFO CHIPS — header ACQ
 ══════════════════════════════════════════════════════════ */
@@ -1178,3 +1212,17 @@
 }
 .db-actions > .form-select { height: var(--db-ctrl-h); }
 .db-actions > .db-refresh { width: var(--db-ctrl-h); height: var(--db-ctrl-h); }
+
+/* « Voir tout » (Répartition par type) : pas de saut ni d'ombre au survol (règle globale
+   .btn:hover de css_udem.css), seulement un changement de couleur. */
+.db-voir-tout,
+.db-voir-tout:hover,
+.db-voir-tout:focus,
+.db-voir-tout:active {
+  transform: none !important;
+  box-shadow: none !important;
+  text-decoration: none;
+}
+.db-voir-tout { color: var(--primary-blue, #00407F); transition: color .15s; }
+.db-voir-tout:hover,
+.db-voir-tout:focus-visible { color: var(--light-blue, #2380D1); }
