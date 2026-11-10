@@ -191,14 +191,18 @@ export class FaqComponent {
     /* ━━ DEMANDEURS (Employé, TechDoc) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     {
       question: 'Quels sont les 6 types de formulaire et lesquels utiliser ?',
-      answerHtml: `Le portail propose 6 types de demandes :
-        <ul style="margin:.5rem 0 .3rem 1.1rem;padding:0;line-height:1.9">
-          <li><strong>Nouvel achat unique</strong> : l'acquisition ponctuelle d'un document, imprimé ou électronique</li>
-          <li><strong>Nouvel abonnement</strong> : une ressource périodique ou une base de données</li>
-          <li><strong>Modification et CCOL</strong> : une correction de notice dans le catalogue collectif</li>
-          <li><strong>PEB numérique</strong> : un prêt entre bibliothèques via la plateforme Tipasa</li>
-          <li><strong>Accessibilité</strong> : une ressource en format accessible</li>
-          <li><strong>Suggestion d'achat</strong> : une suggestion transmise par un usager</li>
+      answerHtml: `Le portail propose 6 types de demandes, en deux groupes :
+        <br><strong>Développement des collections</strong>
+        <ul style="margin:.3rem 0 .5rem 1.1rem;padding:0;line-height:1.7">
+          <li><strong>Nouvel achat unique</strong> : demander l'achat de documents (sans frais annuels récurrents).</li>
+          <li><strong>Nouvel abonnement</strong> : demander un nouvel abonnement (frais annuels récurrents).</li>
+          <li><strong>Modification et CCOL</strong> : demander une modification à un abonnement actif ou l'achat d'un complément de collection (CCOL).</li>
+        </ul>
+        <strong>Acquisitions pour les usagers</strong>
+        <ul style="margin:.3rem 0 .3rem 1.1rem;padding:0;line-height:1.7">
+          <li><strong>Accessibilité</strong> : demander un document pour une personne en situation de handicap. Exclusif au Service Accessibilité.</li>
+          <li><strong>Suggestion d'achat - Usager</strong> : demander l'achat de documents ayant fait l'objet d'une suggestion d'achat sur le site des bibliothèques. Exclusif à l'équipe Suggestions d'achat.</li>
+          <li><strong>PEB numérique</strong> : demander l'achat de documents découlant de demandes de prêt entre bibliothèques. Exclusif à l'équipe du PEB.</li>
         </ul>
         En cas de doute sur le bon type, indiquez votre question dans le champ <strong>Bibliothèque : Note / Commentaire / Question</strong> et l'équipe des Acquisitions vous orientera.`,
       answer: '', open: false, roles: DEMANDEURS

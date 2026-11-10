@@ -1,16 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImportLogsService, ImportLog } from '../../../services/import-logs.service';
-import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeLabel, FORMULAIRE_TYPES_ORDRE } from '../../../lib/ListeChoixOptions';
 
-const FORM_TYPES = [
-  'Nouvel achat unique',
-  'Nouvel abonnement',
-  'Modification et CCOL',
-  'PEB Tipasa numérique',
-  'Requête ACQ Accessibilité',
-  "Suggestion d'achat - Usager",
-];
+const FORM_TYPES = FORMULAIRE_TYPES_ORDRE;
 
 @Component({
   selector:    'app-import-logs',

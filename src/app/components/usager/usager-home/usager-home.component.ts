@@ -5,7 +5,7 @@ import { ConfigService } from '../../../services/config.service';
 import { AuthService } from '../../../services/auth.service';
 import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
-import { ListeChoixOptions } from '../../../lib/ListeChoixOptions';
+import { ListeChoixOptions, FORMULAIRE_TYPE_DESCRIPTIONS } from '../../../lib/ListeChoixOptions';
 
 export interface FormulaireCard {
   titre:       string;
@@ -182,7 +182,7 @@ export class UsagerHomeComponent implements OnInit {
     /* ── Développement des collections ── */
     {
       titre:       'Nouvel achat unique',
-      description: "Demander l'achat de documents (sans frais annuels récurrents).",
+      description: FORMULAIRE_TYPE_DESCRIPTIONS['Nouvel achat unique'],
       icon:        'bi-cart-plus',
       route:       '/usager/nouvel-achat',
       accentColor: '#1F2937',
@@ -192,7 +192,7 @@ export class UsagerHomeComponent implements OnInit {
     },
     {
       titre:       'Nouvel abonnement',
-      description: 'Demander un nouvel abonnement (frais annuels récurrents).',
+      description: FORMULAIRE_TYPE_DESCRIPTIONS['Nouvel abonnement'],
       icon:        'bi-newspaper',
       route:       '/usager/nouvel-abonnement',
       accentColor: '#1F2937',
@@ -202,7 +202,7 @@ export class UsagerHomeComponent implements OnInit {
     },
     {
       titre:       'Modification et CCOL',
-      description: "Demander une modification à un abonnement actif ou l'achat d'un complément de collection (CCOL).",
+      description: FORMULAIRE_TYPE_DESCRIPTIONS['Modification et CCOL'],
       icon:        'bi-pencil-square',
       route:       '/usager/modification-ccol',
       accentColor: '#1F2937',
@@ -214,7 +214,7 @@ export class UsagerHomeComponent implements OnInit {
     /* ── Acquisitions pour les usagers ── */
     {
       titre:       'Accessibilité',
-      description: 'Demander un document pour une personne en situation de handicap. Exclusif au Service Accessibilité.',
+      description: FORMULAIRE_TYPE_DESCRIPTIONS['Requête ACQ Accessibilité'],
       icon:        'bi-universal-access',
       route:       '/usager/requete-accessibilite',
       accentColor: '#1F2937',
@@ -224,7 +224,7 @@ export class UsagerHomeComponent implements OnInit {
     },
     {
       titre:       "Suggestion d'achat - Usager",
-      description: "Demander l'achat de documents ayant fait l'objet d'une suggestion d'achat sur le site des bibliothèques. Exclusif à l'équipe Suggestions d'achat.",
+      description: FORMULAIRE_TYPE_DESCRIPTIONS["Suggestion d'achat - Usager"],
       icon:        'bi-lightbulb',
       route:       '/usager/suggestion-bib',
       accentColor: '#1F2937',
@@ -234,7 +234,7 @@ export class UsagerHomeComponent implements OnInit {
     },
     {
       titre:       'PEB numérique',
-      description: "Demander l'achat de documents découlant de demandes de prêt entre bibliothèques. Exclusif à l'équipe du PEB.",
+      description: FORMULAIRE_TYPE_DESCRIPTIONS['PEB Tipasa numérique'],
       icon:        'bi-share',
       route:       '/usager/peb-tipasa-numerique',
       accentColor: '#1F2937',

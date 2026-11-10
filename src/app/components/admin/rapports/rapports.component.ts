@@ -5,7 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { Router } from "@angular/router";
 import { RapportsService, FiltresRapport, ApiResponse } from '../../../services/rapports.service';
-import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeLabel, FORMULAIRE_TYPES_ORDRE } from '../../../lib/ListeChoixOptions';
 
 // Champs présents dans tbl_items — visibles quel que soit le type de formulaire filtré
 const CHAMPS_COMMUNS = new Set<string>([
@@ -123,10 +123,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   statutsAcq: string[]          = ['Soumis aux ACQ', 'Demande annulée'];
 
   // Options statiques
-  typesFormulaires: string[] = [
-    'Modification et CCOL', 'Nouvel abonnement', 'Nouvel achat unique',
-    'PEB Tipasa numérique', 'Requête ACQ Accessibilité', "Suggestion d'achat - Usager"
-  ];
+  typesFormulaires: string[] = [...FORMULAIRE_TYPES_ORDRE];
   priorites: string[] = ['Urgent', 'Régulier', 'Basse'];
   // Suggestions pour l'autocomplétion du champ Fonds budgétaire (voir <datalist> dans le template)
   fondsBudgetaires: string[] = [];

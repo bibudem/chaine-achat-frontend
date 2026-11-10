@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import * as XLSX from 'xlsx';
+import { formulaireTypeLabel, FORMULAIRE_TYPE_DESCRIPTIONS, FORMULAIRE_TYPES_ORDRE } from '../lib/ListeChoixOptions';
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TYPES
@@ -64,13 +65,15 @@ const FONDS_PARTAGES_COLUMNS: ColumnInfo[] = [
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    MÉTADONNÉES UI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export const FORM_TYPES: FormTypeInfo[] = [
+// Libellés et descriptions officiels (ListeChoixOptions) ; cartes affichées dans l'ordre
+// officiel des types (FORMULAIRE_TYPES_ORDRE), comme l'accueil et les filtres.
+export const FORM_TYPES: FormTypeInfo[] = ([
   {
     // tbl_items + tbl_nouvel_achat_unique
     type:        'Nouvel achat unique',
-    label:       'Nouvel achat unique',
+    label:       formulaireTypeLabel('Nouvel achat unique'),
     icon:        'bi bi-cart-plus',
-    description: "Acquisition ponctuelle d'un document.",
+    description: FORMULAIRE_TYPE_DESCRIPTIONS['Nouvel achat unique'],
     columns: [
       { name: 'titre_document',            required: true,  example: "Introduction à l'informatique" },
       { name: 'demandeur',                 required: true,  example: 'Marie Tremblay' },
@@ -119,9 +122,9 @@ export const FORM_TYPES: FormTypeInfo[] = [
   {
     // tbl_items + tbl_nouvel_abonnement
     type:        'Nouvel abonnement',
-    label:       'Nouvel abonnement',
+    label:       formulaireTypeLabel('Nouvel abonnement'),
     icon:        'bi bi-newspaper',
-    description: 'Souscription à une ressource périodique.',
+    description: FORMULAIRE_TYPE_DESCRIPTIONS['Nouvel abonnement'],
     columns: [
       { name: 'titre_document',           required: true,  example: 'Nature' },
       { name: 'demandeur',                required: true,  example: 'Jean Dupont' },
@@ -163,9 +166,9 @@ export const FORM_TYPES: FormTypeInfo[] = [
   {
     // tbl_items + tbl_modification_ccol
     type:        'Modification et CCOL',
-    label:       'Modification et CCOL',
+    label:       formulaireTypeLabel('Modification et CCOL'),
     icon:        'bi bi-pencil-square',
-    description: 'Modifications de notices dans le catalogue collectif.',
+    description: FORMULAIRE_TYPE_DESCRIPTIONS['Modification et CCOL'],
     columns: [
       { name: 'titre_document',           required: true,  example: 'Les misérables' },
       { name: 'demandeur',                required: true,  example: 'Paul Martin' },
@@ -205,9 +208,9 @@ export const FORM_TYPES: FormTypeInfo[] = [
   {
     // tbl_items + tbl_peb_tipasa_numerique
     type:        'PEB Tipasa numérique',
-    label:       'PEB Tipasa numérique',
+    label:       formulaireTypeLabel('PEB Tipasa numérique'),
     icon:        'bi bi-share',
-    description: 'Prêt entre bibliothèques via Tipasa.',
+    description: FORMULAIRE_TYPE_DESCRIPTIONS['PEB Tipasa numérique'],
     columns: [
       { name: 'titre_document',              required: true,  example: 'Article sur les réseaux' },
       { name: 'demandeur',                   required: true,  example: 'Sophie Côté' },
@@ -246,9 +249,9 @@ export const FORM_TYPES: FormTypeInfo[] = [
   {
     // tbl_items + tbl_requete_acq
     type:        'Requête ACQ Accessibilité',
-    label:       'Requête ACQ Accessibilité',
+    label:       formulaireTypeLabel('Requête ACQ Accessibilité'),
     icon:        'bi bi-universal-access',
-    description: "Demandes d'acquisition et de modification pour les ressources accessibles.",
+    description: FORMULAIRE_TYPE_DESCRIPTIONS['Requête ACQ Accessibilité'],
     columns: [
       // ── Champs communs ──
       { name: 'titre_document',               required: true,  example: 'Introduction aux mathématiques' },
@@ -294,9 +297,9 @@ export const FORM_TYPES: FormTypeInfo[] = [
   {
     // tbl_items + tbl_suggestion_achat
     type:        "Suggestion d'achat - Usager",
-    label:       "Suggestion d'achat - Usager",
+    label:       formulaireTypeLabel("Suggestion d'achat - Usager"),
     icon:        'bi bi-lightbulb',
-    description: "Suggestions d'acquisition par les usagers.",
+    description: FORMULAIRE_TYPE_DESCRIPTIONS["Suggestion d'achat - Usager"],
     columns: [
       // ── Champs communs ──
       { name: 'titre_document',               required: true,  example: 'Machine Learning Pro' },
@@ -345,7 +348,7 @@ export const FORM_TYPES: FormTypeInfo[] = [
       { name: 'bibliotheque_note_interne',    required: false, example: 'Note interne bibliothèque' },
     ]
   },
-];
+] as FormTypeInfo[]).sort((a, b) => FORMULAIRE_TYPES_ORDRE.indexOf(a.type) - FORMULAIRE_TYPES_ORDRE.indexOf(b.type));
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SERVICE

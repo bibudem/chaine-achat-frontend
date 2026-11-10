@@ -85,6 +85,26 @@ export function formulaireTypeIcon(value: string | undefined | null): string {
   return FORMULAIRE_TYPE_ICONS[value] || 'bi-lightbulb';
 }
 
+/** Les 6 types de formulaire (valeurs stockées en BD), dans l'ordre officiel de l'accueil :
+ *  Développement des collections, puis Acquisitions pour les usagers. Source unique de
+ *  l'ordre des listes de choix « Type » (recherche, rapports, réponses, import, suivis…). */
+export const FORMULAIRE_TYPES_ORDRE: readonly string[] = [
+  'Nouvel achat unique', 'Nouvel abonnement', 'Modification et CCOL',
+  'Requête ACQ Accessibilité', "Suggestion d'achat - Usager", 'PEB Tipasa numérique',
+];
+
+/** Description officielle de chaque type de formulaire (textes validés par les ACQ) —
+ *  source unique pour l'accueil usager, le tableau de bord et les pages des formulaires
+ *  (sous-titres i18n form-*.sous-titre, mêmes textes). Clé = valeur stockée en BD. */
+export const FORMULAIRE_TYPE_DESCRIPTIONS: Record<string, string> = {
+  'Nouvel achat unique':         "Demander l'achat de documents (sans frais annuels récurrents).",
+  'Nouvel abonnement':           'Demander un nouvel abonnement (frais annuels récurrents).',
+  'Modification et CCOL':        "Demander une modification à un abonnement actif ou l'achat d'un complément de collection (CCOL).",
+  'Requête ACQ Accessibilité':   'Demander un document pour une personne en situation de handicap. Exclusif au Service Accessibilité.',
+  "Suggestion d'achat - Usager": "Demander l'achat de documents ayant fait l'objet d'une suggestion d'achat sur le site des bibliothèques. Exclusif à l'équipe Suggestions d'achat.",
+  'PEB Tipasa numérique':        "Demander l'achat de documents découlant de demandes de prêt entre bibliothèques. Exclusif à l'équipe du PEB.",
+};
+
 /** Clé de couleur d'un type de formulaire (charte d'accessibilité, variables --form-* de
  *  css_udem.css) — mêmes clés que les badges .badge-type--<clé>. */
 const FORMULAIRE_TYPE_COULEURS: Record<string, string> = {
@@ -216,14 +236,8 @@ export class ListeChoixOptions {
   ];
 
   // Options pour le type de formulaire (value = valeur DB, label = affichage UI)
-  formulaireTypeOptions = [
-    { value: 'Nouvel achat unique',         label: 'Nouvel achat unique' },
-    { value: 'Modification et CCOL',        label: 'Modification et CCOL' },
-    { value: 'Nouvel abonnement',           label: 'Nouvel abonnement' },
-    { value: 'PEB Tipasa numérique',        label: FORMULAIRE_TYPE_LABELS['PEB Tipasa numérique'] },
-    { value: "Suggestion d'achat - Usager", label: "Suggestion d'achat - Usager" },
-    { value: 'Requête ACQ Accessibilité',   label: FORMULAIRE_TYPE_LABELS['Requête ACQ Accessibilité'] },
-  ];
+  // Ordre et libellés officiels (FORMULAIRE_TYPES_ORDRE, formulaireTypeLabel).
+  formulaireTypeOptions = FORMULAIRE_TYPES_ORDRE.map(value => ({ value, label: formulaireTypeLabel(value) }));
 
   listProgramme = [
     { id: 1, name: "EBA - Achat sectoriel (Add On)" },
