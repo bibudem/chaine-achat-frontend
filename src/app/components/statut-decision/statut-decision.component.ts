@@ -10,6 +10,7 @@ import { Item, ItemFormulaireService } from '../../services/items-formulaire.ser
 import { ReponsesService } from '../../services/reponses.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from 'src/environments/environment';
+import { courrielsPourEnvoi } from '../../lib/ValidateurCourriels';
 
 /** Champs ACQ affichés en lecture seule pour le profil TDM — seuls les champs de l'onglet
  *  « TDM – Choix de notice » (catalogue/note_dtdm/note_interne_dtdm, sous sa responsabilité)
@@ -484,7 +485,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     } else if (this.isModificationCcol) {
       keys = ['precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation'];
     } else if (this.isNouvelAbonnement) {
-      keys = ['date_debut_abonnement', 'type_monographie', 'usager_aviser_reservation'];
+      keys = ['date_debut_abonnement', 'type_monographie', 'usager_aviser_reservation', 'usager_aviser_activation'];
     } else if (this.isPebTipasa) {
       keys = ['gobi_vu_format_numerique', 'gobi_version_moins_365_usd', 'reference_tipasa'];
     } else if (this.isAccessibilite) {
@@ -672,8 +673,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Aviser activation — si le champ est renseigné (Nouvel achat + Modification CCOL + Accessibilité)
-    if ((this.isNouvelAchat || this.isModificationCcol || this.isAccessibilite)
+    // Aviser activation — si le champ est renseigné (Nouvel achat + Nouvel abonnement + Modification CCOL + Accessibilité)
+    if ((this.isNouvelAchat || this.isNouvelAbonnement || this.isModificationCcol || this.isAccessibilite)
         && this.item.usager_aviser_activation) {
       this.notifTargets.push({
         key: 'activation', label: 'Aviser — Activation', icon: 'bi-lightning-fill',
@@ -711,7 +712,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         item_id:             this.itemId,
         suivi_acq,
         note_acq,
-        usager_courriel:     target.email,
+        // Plusieurs adresses possibles (saisies séparées par « ; ») → liste séparée par des virgules pour l'envoi.
+        usager_courriel:     courrielsPourEnvoi(target.email),
         usager_nom:          target.nom || null,
         titre_document:      this.item?.titre_document,
         type_formulaire:     this.item?.formulaire_type,

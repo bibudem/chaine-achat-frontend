@@ -445,6 +445,12 @@
                     <span class="itd-field__value">{{ val(item.usager_aviser_reservation) }}</span>
                   </div>
                 </div>
+                <div class="col-md-4" *ngIf="item.usager_aviser_activation">
+                  <div class="itd-field">
+                    <span class="itd-field__label">{{ 'item-detail.usager-aviser-activation' | translate }}</span>
+                    <span class="itd-field__value">{{ val(item.usager_aviser_activation) }}</span>
+                  </div>
+                </div>
               </ng-container>
 
               <!-- Nouvel achat unique -->

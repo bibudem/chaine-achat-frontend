@@ -227,7 +227,7 @@
             </div>
           </div>
 
-          <!-- Usager à aviser — Imprimé / Mixte (ancré à droite du format) -->
+          <!-- Usager à aviser (réservation) et personnes à aviser lors de l'activation — ancrés à droite du format -->
           <div class="col-md-4">
             <ng-container *ngIf="showImprime">
               <label class="form-label">{{ 'forms-usager.aviser-reservation' | translate }}</label>
@@ -238,6 +238,28 @@
                 <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
               </div>
               <small class="form-text">{{ 'forms-usager.aviser-reservation-hint' | translate }}</small>
+            </ng-container>
+            <ng-container *ngIf="showElectronique">
+              <div [class.mt-3]="showImprime">
+                <label class="form-label">{{ 'forms-usager.aviser-activation-bib' | translate }}</label>
+                <input type="text" inputmode="email" formControlName="personne_a_aviser_courriel" class="form-control"
+                       [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
+                       placeholder="courriel@umontreal.ca">
+                <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
+                  <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriels-invalides' | translate }}
+                </div>
+                <small class="form-text"><i class="fas fa-info-circle me-1"></i>{{ 'forms-usager.aviser-activation-bib-hint' | translate }}</small>
+              </div>
+              <div class="mt-3">
+                <label class="form-label">{{ 'forms-usager.aviser-activation' | translate }}</label>
+                <input type="text" inputmode="email" formControlName="usager_aviser_activation" class="form-control"
+                       [class.is-invalid]="isInvalid('usager_aviser_activation')"
+                       placeholder="courriel@umontreal.ca">
+                <div *ngIf="isInvalid('usager_aviser_activation')" class="invalid-feedback">
+                  <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriels-invalides' | translate }}
+                </div>
+                <small class="form-text"><i class="fas fa-info-circle me-1"></i>{{ 'forms-usager.aviser-activation-hint' | translate }}</small>
+              </div>
             </ng-container>
           </div>
 
@@ -269,16 +291,6 @@
                     <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.lien-required' | translate }}
                   </div>
                   <small class="form-text">{{ 'form-abonnement.lien-plateforme-hint' | translate }}</small>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">{{ 'forms-usager.aviser-activation' | translate }}</label>
-                  <input type="email" formControlName="personne_a_aviser_courriel" class="form-control"
-                         [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
-                         placeholder="courriel@umontreal.ca">
-                  <div *ngIf="isInvalid('personne_a_aviser_courriel')" class="invalid-feedback">
-                    <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.courriel-required' | translate }}
-                  </div>
-                  <small class="form-text">{{ 'forms-usager.aviser-activation-hint' | translate }}</small>
                 </div>
               </div>
             </div>

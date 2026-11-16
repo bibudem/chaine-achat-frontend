@@ -148,6 +148,7 @@ export const FORM_TYPES: FormTypeInfo[] = ([
       { name: 'periode_couverte',          required: false, example: '2025' },
       { name: 'type_monographie',          required: false, example: 'Livre' },
       { name: 'usager_aviser_reservation', required: false, example: 'prenom.nom@umontreal.ca' },
+      { name: 'usager_aviser_activation',  required: false, example: 'prenom.nom@umontreal.ca' },
       { name: 'personne_a_aviser_courriel',required: false, example: 'prenom.nom@umontreal.ca' },
       { name: 'localisation_emplacement',  required: false, example: 'Rayon 3B' },
       { name: 'fonds_sn_projet',           required: false, example: 'RH000841' },

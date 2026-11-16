@@ -9,6 +9,7 @@ import { ReponsesService } from '../../../services/reponses.service';
 import { ConfigService, TauxRates } from '../../../services/config.service';
 import { BibliothequesService } from '../../../services/bibliotheques.service';
 import { convertirPrixCad, estDeviseConvertible } from '../../../lib/ConversionDevise';
+import { courrielsMultiples } from '../../../lib/ValidateurCourriels';
 import { FondsRepartitionComponent } from '../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
@@ -384,7 +385,7 @@ export class ItemFormulaireComponent implements OnInit {
       localisation_emplacement: ['', Validators.maxLength(200)],
       demandeur: ['', [Validators.required, Validators.maxLength(200)]],
       personne_a_aviser_nom: ['', Validators.maxLength(200)],
-      personne_a_aviser_courriel: ['', [Validators.maxLength(200), Validators.email]],
+      personne_a_aviser_courriel: ['', [Validators.maxLength(200), courrielsMultiples]],
       source_information: ['', [Validators.required, Validators.maxLength(500)]],
       note_commentaire: [''],
       id_ressource: ['', Validators.maxLength(50)],
@@ -411,7 +412,7 @@ export class ItemFormulaireComponent implements OnInit {
       bordereau_imprime: ['Non'],
       quantite: [null],
       usager_aviser_reservation:  ['', [Validators.maxLength(255), Validators.email]],
-      usager_aviser_activation:   ['', [Validators.maxLength(255), Validators.email]],
+      usager_aviser_activation:   ['', [Validators.maxLength(255), courrielsMultiples]],
       auteur: ['', Validators.maxLength(500)],
       reference_tipasa: [''],
       gobi_vu_format_numerique: [''],
@@ -546,7 +547,7 @@ export class ItemFormulaireComponent implements OnInit {
     const baseValidators: { [key: string]: ValidatorFn[] } = {
       'acq_responsable_courriel':     [Validators.maxLength(255), Validators.email],
       'usager_aviser_reservation':    [Validators.maxLength(255), Validators.email],
-      'usager_aviser_activation':     [Validators.maxLength(255), Validators.email],
+      'usager_aviser_activation':     [Validators.maxLength(255), courrielsMultiples],
       'usager_courriel':              [Validators.maxLength(255), Validators.email],
       'bibliothecaire_disciplinaire': [Validators.maxLength(255)],
       'auteur':                       [Validators.maxLength(500)],
@@ -861,6 +862,7 @@ export class ItemFormulaireComponent implements OnInit {
           date_debut_abonnement:      formData.date_debut_abonnement,
           type_monographie:           formData.type_monographie,
           usager_aviser_reservation:  formData.usager_aviser_reservation,
+          usager_aviser_activation:   formData.usager_aviser_activation,
         };
       case 'Nouvel achat unique':
         return {

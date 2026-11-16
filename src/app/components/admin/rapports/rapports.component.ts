@@ -27,7 +27,7 @@ const CHAMPS_PAR_TYPE: Record<string, string[]> = {
     'precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation'
   ],
   'Nouvel abonnement': [
-    'date_debut_abonnement', 'usager_aviser_reservation', 'type_monographie'
+    'date_debut_abonnement', 'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie'
   ],
   'Nouvel achat unique': [
     'id_ressource', 'projets_speciaux', 'format_electronique', 'quantite',

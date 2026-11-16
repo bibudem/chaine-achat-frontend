@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
+import { courrielsMultiples } from '../../../../lib/ValidateurCourriels';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
@@ -107,7 +108,8 @@ export class NouvelAchatComponent implements OnInit {
       nombre_titres_inclus:        [null, Validators.min(1)],
       aviser_reservation:          ['', Validators.email],
       localisation_emplacement:    ['', Validators.maxLength(255)],
-      aviser_activation:           [{ value: '', disabled: true }, Validators.email],
+      aviser_activation:           [{ value: '', disabled: true }, [courrielsMultiples, Validators.maxLength(255)]],
+      personne_a_aviser_courriel:  [{ value: '', disabled: true }, [courrielsMultiples, Validators.maxLength(200)]],
       fonds_repartition:           this.fb.array([FondsRepartitionComponent.creerLigne()]),
       fonds_sn_projet:             ['',   Validators.maxLength(50)],
       quantite:                    [1, [Validators.required, Validators.min(1)]],
@@ -219,18 +221,22 @@ export class NouvelAchatComponent implements OnInit {
     const lien      = this.form.get('lien_plateforme')!;
     const aviserRes = this.form.get('aviser_reservation')!;
     const aviserAct = this.form.get('aviser_activation')!;
+    const personne  = this.form.get('personne_a_aviser_courriel')!;
     if (this.showElectronique) {
       lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
       aviserAct.enable();
+      personne.enable();
       aviserRes.disable();
     } else {
       lien.clearValidators();
       aviserAct.disable();
+      personne.disable();
       aviserRes.enable();
     }
     lien.updateValueAndValidity({ emitEvent: false });
     aviserRes.updateValueAndValidity({ emitEvent: false });
     aviserAct.updateValueAndValidity({ emitEvent: false });
+    personne.updateValueAndValidity({ emitEvent: false });
   }
 
   private loadDemande(id: number): void {
@@ -262,6 +268,7 @@ export class NouvelAchatComponent implements OnInit {
           aviser_reservation:     sd.usager_aviser_reservation,
           localisation_emplacement: bd.localisation_emplacement,
           aviser_activation:      sd.usager_aviser_activation,
+          personne_a_aviser_courriel: bd.personne_a_aviser_courriel,
           fonds_sn_projet:        bd.fonds_sn_projet,
           quantite:               sd.quantite,
           type_monographie:       sd.type_monographie,
@@ -428,6 +435,7 @@ export class NouvelAchatComponent implements OnInit {
         nombre_utilisateurs:   this.showElectronique ? v.nombre_utilisateurs : null,
         lien_plateforme:       this.showElectronique ? v.lien_plateforme : null,
         nombre_titres_inclus:  this.showElectronique ? v.nombre_titres_inclus : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         prix_cad:              this.dernierPrixCAD,
         devise_originale:      repartition[0]?.devise_originale || '',
         prix_devise_originale: repartition[0]?.prix_devise_originale ?? null,
@@ -505,6 +513,7 @@ export class NouvelAchatComponent implements OnInit {
         nombre_utilisateurs:   this.showElectronique ? v.nombre_utilisateurs : null,
         lien_plateforme:       this.showElectronique ? v.lien_plateforme : null,
         nombre_titres_inclus:  this.showElectronique ? v.nombre_titres_inclus : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
         // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
         prix_cad:              totalPrixCad > 0 ? totalPrixCad : null,

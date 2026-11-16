@@ -429,12 +429,12 @@
                 <div class="col-md-6">
                   <div class="mb-2">
                     <label class="form-label">{{ 'item-formulaire.courriel' | translate }}</label>
-                    <input type="email" class="form-control" formControlName="personne_a_aviser_courriel"
+                    <input type="text" inputmode="email" class="form-control" formControlName="personne_a_aviser_courriel"
                            appEmailMask
                            [class.is-invalid]="isInvalid('personne_a_aviser_courriel')"
                            placeholder="courriel@exemple.com">
                     <div class="invalid-feedback" *ngIf="hasError('personne_a_aviser_courriel', 'email')">
-                      {{ 'item-formulaire.courriel-invalide' | translate }}
+                      {{ 'forms-usager.courriels-invalides' | translate }}
                     </div>
                   </div>
                 </div>
@@ -525,11 +525,11 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">{{ 'item-formulaire.usager-aviser-activation' | translate }}</label>
-                <input type="email" class="form-control" formControlName="usager_aviser_activation"
+                <input type="text" inputmode="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'forms-usager.courriels-invalides' | translate }}</div>
                 <small class="text-muted">{{ 'item-formulaire.notifier-activation' | translate }}</small>
               </div>
             </div>
@@ -577,6 +577,20 @@
                        placeholder="courriel@exemple.com">
                 <div class="invalid-feedback" *ngIf="hasError('usager_aviser_reservation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
                 <small class="text-muted">{{ 'item-formulaire.notifier-reservation' | translate }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="row"
+               *ngIf="itemForm.get('format_support')?.value === 'Électronique' || itemForm.get('format_support')?.value === 'Imprimé et électronique'">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">{{ 'item-formulaire.usager-aviser-activation' | translate }}</label>
+                <input type="text" inputmode="email" class="form-control" formControlName="usager_aviser_activation"
+                       appEmailMask
+                       [class.is-invalid]="isInvalid('usager_aviser_activation')"
+                       placeholder="courriel@exemple.com">
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'forms-usager.courriels-invalides' | translate }}</div>
+                <small class="text-muted">{{ 'item-formulaire.notifier-activation' | translate }}</small>
               </div>
             </div>
           </div>
@@ -693,11 +707,11 @@
                   <span class="text-muted fw-normal small"
                         *ngIf="itemForm.get('format_support')?.value === 'Imprimé/support physique'"> {{ 'item-formulaire.imprime-label' | translate }}</span>
                 </label>
-                <input type="email" class="form-control" formControlName="usager_aviser_activation"
+                <input type="text" inputmode="email" class="form-control" formControlName="usager_aviser_activation"
                        appEmailMask
                        [class.is-invalid]="isInvalid('usager_aviser_activation')"
                        placeholder="courriel@exemple.com">
-                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'item-formulaire.courriel-invalide' | translate }}</div>
+                <div class="invalid-feedback" *ngIf="hasError('usager_aviser_activation', 'email')">{{ 'forms-usager.courriels-invalides' | translate }}</div>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
+import { courrielsMultiples } from '../../../../lib/ValidateurCourriels';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
@@ -110,7 +111,8 @@ export class ModificationCcolComponent implements OnInit {
       lien_plateforme:          [''],
       nombre_utilisateurs:      ['Accès illimité'],
       nombre_titres_inclus:     [null, Validators.min(1)],
-      usager_aviser_activation: [{ value: '', disabled: true }, Validators.email],
+      usager_aviser_activation: [{ value: '', disabled: true }, [courrielsMultiples, Validators.maxLength(255)]],
+      personne_a_aviser_courriel: [{ value: '', disabled: true }, [courrielsMultiples, Validators.maxLength(200)]],
       fonds_sn_projet:    ['', Validators.maxLength(50)],
       source_information: ['', Validators.required],
       note_commentaire: ['', Validators.maxLength(1000)],
@@ -169,16 +171,20 @@ export class ModificationCcolComponent implements OnInit {
     this.showImprime      = val === 'Imprimé/support physique' || val === 'Imprimé et électronique';
     const lien   = this.form.get('lien_plateforme')!;
     const aviser = this.form.get('usager_aviser_activation')!;
+    const personne = this.form.get('personne_a_aviser_courriel')!;
     this.form.get('creation_notice_dtdm')!.setValue(val !== 'Électronique', { emitEvent: false });
     if (this.showElectronique) {
       lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
       aviser.enable();
+      personne.enable();
     } else {
       lien.clearValidators();
       aviser.disable();
+      personne.disable();
     }
     lien.updateValueAndValidity({ emitEvent: false });
     aviser.updateValueAndValidity({ emitEvent: false });
+    personne.updateValueAndValidity({ emitEvent: false });
   }
 
   private loadDemande(id: number): void {
@@ -208,6 +214,7 @@ export class ModificationCcolComponent implements OnInit {
           nombre_utilisateurs:      bd.nombre_utilisateurs,
           nombre_titres_inclus:     bd.nombre_titres_inclus,
           usager_aviser_activation: sd.usager_aviser_activation,
+          personne_a_aviser_courriel: bd.personne_a_aviser_courriel,
           fonds_sn_projet:          bd.fonds_sn_projet,
           source_information:       bd.source_information,
           note_commentaire:         bd.note_commentaire,
@@ -359,6 +366,7 @@ export class ModificationCcolComponent implements OnInit {
         lien_plateforme:          this.showElectronique ? v.lien_plateforme          : null,
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         catalogue:                v.catalogue,
         // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
         // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.
@@ -433,6 +441,7 @@ export class ModificationCcolComponent implements OnInit {
         lien_plateforme:          this.showElectronique ? v.lien_plateforme          : null,
         nombre_utilisateurs:      this.showElectronique ? v.nombre_utilisateurs      : null,
         nombre_titres_inclus:     this.showElectronique ? v.nombre_titres_inclus     : null,
+        personne_a_aviser_courriel: this.showElectronique ? v.personne_a_aviser_courriel : null,
         catalogue:                v.catalogue,
         // 0 ne peut provenir que de lignes vides (Validators.min(0.01) interdit un vrai 0) —
         // conserver null plutôt que 0 pour ne pas rebloquer la ligne au rechargement en brouillon.

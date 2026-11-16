@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
+import { courrielsMultiples } from '../../../../lib/ValidateurCourriels';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
 
 @Component({
@@ -104,7 +105,8 @@ export class NouvelAbonnementComponent implements OnInit {
       nombre_titres_inclus: [null, Validators.min(1)],
       nombre_utilisateurs:  ['Accès illimité'],
       lien_plateforme:      ['', [Validators.required, Validators.pattern('https?://.+')]],
-      personne_a_aviser_courriel: [{ value: '', disabled: false }, Validators.email],
+      personne_a_aviser_courriel: [{ value: '', disabled: false }, [courrielsMultiples, Validators.maxLength(200)]],
+      usager_aviser_activation:   [{ value: '', disabled: false }, [courrielsMultiples, Validators.maxLength(255)]],
       fonds_repartition:    this.fb.array([FondsRepartitionComponent.creerLigne()]),
       fonds_sn_projet:      ['',   Validators.maxLength(50)],
       source_information:   ['', Validators.required],
@@ -174,14 +176,18 @@ export class NouvelAbonnementComponent implements OnInit {
     this.showMixte        = val === 'Imprimé et électronique';
     const lien      = this.form.get('lien_plateforme')!;
     const personne  = this.form.get('personne_a_aviser_courriel')!;
+    const aviserAct = this.form.get('usager_aviser_activation')!;
     const aviserRes = this.form.get('usager_aviser_reservation')!;
     if (this.showElectronique) {
       lien.setValidators(exige ? [Validators.required, Validators.pattern('https?://.+')] : [Validators.pattern('https?://.+')]);
       personne.enable();
+      aviserAct.enable();
     } else {
       lien.clearValidators();
       personne.disable();
       personne.setValue('', { emitEvent: false });
+      aviserAct.disable();
+      aviserAct.setValue('', { emitEvent: false });
     }
     // « Usager à aviser (réservation) » : affiché pour l'imprimé, y compris Imprimé et électronique.
     if (this.showImprime) {
@@ -192,6 +198,7 @@ export class NouvelAbonnementComponent implements OnInit {
     }
     lien.updateValueAndValidity({ emitEvent: false });
     personne.updateValueAndValidity({ emitEvent: false });
+    aviserAct.updateValueAndValidity({ emitEvent: false });
     aviserRes.updateValueAndValidity({ emitEvent: false });
   }
 
@@ -212,6 +219,7 @@ export class NouvelAbonnementComponent implements OnInit {
           date_debut_abonnement:      sd.date_debut_abonnement,
           periode_couverte:           bd.periode_couverte ?? sd.periode_couverte,
           usager_aviser_reservation:  sd.usager_aviser_reservation,
+          usager_aviser_activation:   sd.usager_aviser_activation,
           nombre_titres_inclus:       bd.nombre_titres_inclus,
           nombre_utilisateurs:        bd.nombre_utilisateurs,
           lien_plateforme:            bd.lien_plateforme,
@@ -387,6 +395,7 @@ export class NouvelAbonnementComponent implements OnInit {
         date_debut_abonnement:    v.date_debut_abonnement,
         type_monographie:         this.showMonographie ? v.type_monographie : null,
         usager_aviser_reservation:this.showImprime ? v.usager_aviser_reservation : null,
+        usager_aviser_activation: this.showElectronique ? v.usager_aviser_activation : null,
       },
     };
 
@@ -458,6 +467,7 @@ export class NouvelAbonnementComponent implements OnInit {
         date_debut_abonnement:    v.date_debut_abonnement,
         type_monographie:         this.showMonographie ? v.type_monographie : null,
         usager_aviser_reservation:this.showImprime ? v.usager_aviser_reservation : null,
+        usager_aviser_activation: this.showElectronique ? v.usager_aviser_activation : null,
       },
     };
     const obs = this.editId
