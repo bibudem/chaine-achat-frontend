@@ -712,7 +712,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         item_id:             this.itemId,
         suivi_acq,
         note_acq,
-        // Plusieurs adresses possibles (saisies séparées par « ; ») → liste séparée par des virgules pour l'envoi.
+        // Saisie « a@x; b@y » → « a@x, b@y » pour le nœud courriel n8n.
         usager_courriel:     courrielsPourEnvoi(target.email),
         usager_nom:          target.nom || null,
         titre_document:      this.item?.titre_document,

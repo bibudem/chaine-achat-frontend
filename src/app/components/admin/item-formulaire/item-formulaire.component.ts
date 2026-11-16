@@ -202,20 +202,13 @@ export class ItemFormulaireComponent implements OnInit {
     this.updateFondsSNValidator();
   }
 
-  /** Fonds SN – No de projet Synchro : obligatoire dès qu'un fonds budgétaire SN-### est choisi
-   *  (hors brouillon), pour les 3 types où ce champ est affiché. */
+  /** Fonds SN obligatoire (fonds SN-### choisi) seulement hors brouillon, pour les 3 types qui l'affichent. */
   private updateFondsSNValidator(): void {
     FondsRepartitionComponent.majValidationFondsSN(this.itemForm, this.gereFondsPartages && this.financeFieldsRequired);
   }
 
-  get fondsSNRequis(): boolean {
-    return FondsRepartitionComponent.contientFondsSN(this.itemForm);
-  }
-
-  /** Affiché seulement pour un fonds SN — ou si une valeur est déjà enregistrée, pour ne pas la masquer. */
-  get afficherFondsSN(): boolean {
-    return this.fondsSNRequis || !!this.itemForm.get('fonds_sn_projet')?.value;
-  }
+  get fondsSNRequis(): boolean   { return FondsRepartitionComponent.contientFondsSN(this.itemForm); }
+  get afficherFondsSN(): boolean { return FondsRepartitionComponent.afficherFondsSN(this.itemForm); }
 
   get financeFieldsRequired(): boolean {
     return !(this.itemForm.get('statut_bibliotheque')?.value ?? '').startsWith('Saisie en cours');
@@ -728,7 +721,7 @@ export class ItemFormulaireComponent implements OnInit {
       const specificInvalidFields = [
         'precision_demande', 'date_debut_abonnement', 'gobi_vu_format_numerique',
         'besoin_specifique_format', 'quantite', 'auteur', 'usager_statut',
-        'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire'
+        'usager_faculte', 'usager_courriel', 'bibliothecaire_disciplinaire', 'usager_aviser_activation'
       ];
       const hasAcqError = acqInvalidFields.some(f => this.itemForm.get(f)?.invalid);
       const hasSpecificError = specificInvalidFields.some(f => this.itemForm.get(f)?.invalid);
