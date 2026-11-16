@@ -315,13 +315,13 @@
         <div class="row g-3">
           <app-fonds-repartition [fondsArray]="fondsRepartitionArray" [submitted]="submitted" [exigeTousLesChamps]="exigeTousLesChamps"></app-fonds-repartition>
 
-          <div class="col-md-6">
-            <label class="form-label">{{ 'forms-usager.fonds-sn' | translate }}</label>
+          <div class="col-md-6" *ngIf="afficherFondsSN">
+            <label class="form-label" [class.required]="fondsSNRequis && exigeTousLesChamps" [class.requis-soumission]="fondsSNRequis && !exigeTousLesChamps">{{ 'forms-usager.fonds-sn' | translate }}</label>
             <input type="text" formControlName="fonds_sn_projet" class="form-control"
                    [class.is-invalid]="isInvalid('fonds_sn_projet')"
                    [placeholder]="'forms-usager.fonds-sn-placeholder' | translate">
             <div *ngIf="isInvalid('fonds_sn_projet')" class="invalid-feedback">
-              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.fonds-sn-required' | translate }}
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ (form.get('fonds_sn_projet')?.hasError('required') ? 'forms-usager.fonds-sn-obligatoire' : 'forms-usager.fonds-sn-required') | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.fonds-sn-hint' | translate }}</small>
           </div>

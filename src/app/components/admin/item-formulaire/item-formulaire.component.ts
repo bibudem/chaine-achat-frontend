@@ -166,6 +166,8 @@ export class ItemFormulaireComponent implements OnInit {
       this.tauxRates = rates;
       this.convertirPrix();
     });
+    this.fondsRepartitionArray.valueChanges.subscribe(() => this.updateFondsSNValidator());
+    this.itemForm.get('fonds_budgetaire')!.valueChanges.subscribe(() => this.updateFondsSNValidator());
   }
 
   // Même règle que StatutDecisionComponent.applyAcqDefaults() : Oui si le format n'est pas
@@ -196,6 +198,22 @@ export class ItemFormulaireComponent implements OnInit {
       ctrl.updateValueAndValidity({ emitEvent: false });
     });
     this.updateDeviseAutreValidator();
+    this.updateFondsSNValidator();
+  }
+
+  /** Fonds SN – No de projet Synchro : obligatoire dès qu'un fonds budgétaire SN-### est choisi
+   *  (hors brouillon), pour les 3 types où ce champ est affiché. */
+  private updateFondsSNValidator(): void {
+    FondsRepartitionComponent.majValidationFondsSN(this.itemForm, this.gereFondsPartages && this.financeFieldsRequired);
+  }
+
+  get fondsSNRequis(): boolean {
+    return FondsRepartitionComponent.contientFondsSN(this.itemForm);
+  }
+
+  /** Affiché seulement pour un fonds SN — ou si une valeur est déjà enregistrée, pour ne pas la masquer. */
+  get afficherFondsSN(): boolean {
+    return this.fondsSNRequis || !!this.itemForm.get('fonds_sn_projet')?.value;
   }
 
   get financeFieldsRequired(): boolean {

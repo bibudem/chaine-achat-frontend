@@ -96,6 +96,25 @@ export class FondsRepartitionComponent implements OnInit {
     }
   }
 
+  /** Vrai si au moins un fonds budgétaire du formulaire est un fonds de souscription (SN-###) —
+   *  lignes de fonds_repartition et, le cas échéant, champ plat fonds_budgetaire (formulaire admin). */
+  static contientFondsSN(form: AbstractControl): boolean {
+    const lignes = (form.get('fonds_repartition') as FormArray | null)?.controls ?? [];
+    const valeurs = lignes.map(l => l.get('fonds_budgetaire')?.value);
+    const plat = form.get('fonds_budgetaire');
+    if (plat && !lignes.length) valeurs.push(plat.value);
+    return valeurs.some(v => /^\s*SN-/i.test(v ?? ''));
+  }
+
+  /** Fonds SN – No de projet Synchro : obligatoire (si `exige`) dès qu'un fonds SN est choisi. */
+  static majValidationFondsSN(form: AbstractControl, exige: boolean, champ = 'fonds_sn_projet'): void {
+    const ctrl = form.get(champ);
+    if (!ctrl) return;
+    const requis = exige && FondsRepartitionComponent.contientFondsSN(form);
+    ctrl.setValidators(requis ? [Validators.required, Validators.maxLength(50)] : [Validators.maxLength(50)]);
+    ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
   get lignes(): FormGroup[] {
     return this.fondsArray.controls as FormGroup[];
   }

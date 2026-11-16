@@ -123,6 +123,10 @@ export class NouvelAbonnementComponent implements OnInit {
 
     this.form.get('statut_bibliotheque')!.valueChanges.subscribe(() => this.appliquerValidationConditionnelle());
 
+    // Fonds SN – No de projet Synchro : obligatoire dès qu'un fonds budgétaire SN-### est choisi.
+    this.fondsRepartitionArray.valueChanges.subscribe(() =>
+      FondsRepartitionComponent.majValidationFondsSN(this.form, this.exigeTousLesChamps));
+
     this.showElectronique = true;
     this.showImprime      = false;
 
@@ -159,6 +163,7 @@ export class NouvelAbonnementComponent implements OnInit {
 
     this.majValidationFormatSupport();
     this.fondsRepartitionArray.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, exige));
+    FondsRepartitionComponent.majValidationFondsSN(this.form, exige);
   }
 
   private majValidationFormatSupport(): void {
@@ -243,6 +248,17 @@ export class NouvelAbonnementComponent implements OnInit {
   }
 
   get f() { return this.form.controls; }
+
+  /** Un fonds budgétaire SN-### est choisi → Fonds SN – No de projet Synchro devient obligatoire. */
+  get fondsSNRequis(): boolean {
+    return FondsRepartitionComponent.contientFondsSN(this.form);
+  }
+
+  /** Le champ Fonds SN n'est affiché que pour un fonds SN — ou s'il contient déjà une valeur
+   *  (demande existante), pour ne jamais masquer une donnée qui serait envoyée à l'insu de l'usager. */
+  get afficherFondsSN(): boolean {
+    return this.fondsSNRequis || !!this.form.get('fonds_sn_projet')?.value;
+  }
 
   get fondsRepartitionArray(): FormArray {
     return this.form.get('fonds_repartition') as FormArray;
