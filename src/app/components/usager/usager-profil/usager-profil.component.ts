@@ -257,9 +257,16 @@ export class UsagerProfilComponent implements OnInit {
     return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
-  peutSupprimer(d: DemandeUsager): boolean {
+  /** Modifiable tant que la demande n'est pas soumise aux ACQ, y compris quand les ACQ
+   *  la remettent à « Saisie en cours ». */
+  peutModifier(d: DemandeUsager): boolean {
     if (d.statut_approbation === 'refuse') return false;
     return d.statut_bibliotheque !== 'Soumettre aux ACQ';
+  }
+
+  /** Supprimable seulement si aucun item n'a été créé. */
+  peutSupprimer(d: DemandeUsager): boolean {
+    return this.peutModifier(d) && !d.item_id;
   }
 
   // N'utilise que `id` — accepte aussi bien une demande personnelle (DemandeUsager) qu'une

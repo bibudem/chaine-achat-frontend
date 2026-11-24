@@ -153,7 +153,7 @@
                   <span class="up-type-label">{{ enteteDemande(d) }}</span>
                   <span class="up-badge" [ngClass]="badgeClass(d)">{{ badgeLabel(d) }}</span>
                   <div class="up-card__actions">
-                    <a *ngIf="peutSupprimer(d)"
+                    <a *ngIf="peutModifier(d)"
                        [routerLink]="routeFormulaire(d)"
                        [queryParams]="{ id: d.id }"
                        class="up-btn-edit-icon"
