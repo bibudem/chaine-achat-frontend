@@ -116,6 +116,7 @@ export class NouvelAbonnementComponent implements OnInit {
       this.showMonographie = val === 'Monographie';
       const ctrl = this.form.get('type_monographie')!;
       this.showMonographie ? ctrl.enable() : ctrl.disable();
+      this.majValidationTypeMonographie();
     });
 
     this.form.get('format_support')!.valueChanges.subscribe(() => this.majValidationFormatSupport());
@@ -160,8 +161,17 @@ export class NouvelAbonnementComponent implements OnInit {
     });
 
     this.majValidationFormatSupport();
+    this.majValidationTypeMonographie();
     this.fondsRepartitionArray.controls.forEach(c => FondsRepartitionComponent.appliquerValidation(c as FormGroup, exige));
     FondsRepartitionComponent.majValidationFondsSN(this.form, exige);
+  }
+
+  /** Type de monographie : obligatoire à la soumission aux ACQ, seulement si catégorie =
+   *  Monographie (même règle que Nouvel achat unique). */
+  private majValidationTypeMonographie(): void {
+    const ctrl = this.form.get('type_monographie')!;
+    ctrl.setValidators(this.showMonographie && this.exigeTousLesChamps ? [Validators.required] : []);
+    ctrl.updateValueAndValidity({ emitEvent: false });
   }
 
   private majValidationFormatSupport(): void {

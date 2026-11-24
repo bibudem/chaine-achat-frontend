@@ -149,11 +149,15 @@
           </div>
 
           <div class="col-md" *ngIf="showMonographie">
-            <label class="form-label">{{ 'forms-usager.type-monographie' | translate }}</label>
-            <select formControlName="type_monographie" class="form-select">
+            <label class="form-label" [class.required]="exigeTousLesChamps" [class.requis-soumission]="!exigeTousLesChamps">{{ 'forms-usager.type-monographie' | translate }}</label>
+            <select formControlName="type_monographie" class="form-select"
+                    [class.is-invalid]="isInvalid('type_monographie')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
             </select>
+            <div *ngIf="isInvalid('type_monographie')" class="invalid-feedback">
+              <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.type-monographie-required' | translate }}
+            </div>
           </div>
 
           <div class="col-md">
