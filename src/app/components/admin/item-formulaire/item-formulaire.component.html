@@ -154,8 +154,8 @@
                      [class.is-invalid]="isInvalid('isbn_issn')"
                      placeholder="Ex: 9780306406157">
               <div class="invalid-feedback" *ngIf="hasError('isbn_issn', 'required')">{{ 'item-formulaire.isbn-issn-required' | translate }}</div>
-              <small class="text-muted" *ngIf="isbnMask.wasStripped">
-                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.isbn-retire' | translate }}
+              <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i>{{ 'item-formulaire.isbn-issn-hint' | translate }}
               </small>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { ConfigService, TauxRates } from '../../../../services/config.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
+import { IDENTIFIANT_MAX, nettoyerIdentifiant } from '../../../../lib/IdentifiantDocument';
 
 @Component({
   selector: 'app-requete-accessibilite',
@@ -99,7 +100,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       titre_document:     ['', Validators.maxLength(500)],
       sous_titre:         ['', Validators.maxLength(500)],
       editeur:            ['', Validators.maxLength(300)],
-      isbn_issn:          ['', this.isbnValidator],
+      isbn_issn:          ['', Validators.maxLength(IDENTIFIANT_MAX)],
       date_publication:   [''],
       type_monographie:   ['Livre'],
       reference_usager:                 [''],
@@ -217,7 +218,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       { nom: 'fonds_budgetaire',         validators: [Validators.maxLength(200), Validators.pattern('^[A-Za-z]{2,4}-\\d{2,}$')] },
       { nom: 'titre_document',           validators: [Validators.maxLength(500)] },
       { nom: 'editeur',                  validators: [Validators.maxLength(300)] },
-      { nom: 'isbn_issn',                validators: [this.isbnValidator] },
+      { nom: 'isbn_issn',                validators: [Validators.maxLength(IDENTIFIANT_MAX)] },
       { nom: 'date_publication',         validators: [] },
       { nom: 'type_monographie',         validators: [] },
       { nom: 'source_information',       validators: [] },
@@ -248,15 +249,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
     return v.devise_originale === 'Autre' ? (v.devise_autre_precision || 'Autre') : v.devise_originale;
   }
 
-  private isbnValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-    if (/-/.test(value)) return { invalidIsbn: true };
-    const v      = value.replace(/\s/g, '');
-    const isbn10 = /^\d{9}[\dX]$/i;
-    const isbn13 = /^97[89]\d{10}$/;
-    return isbn10.test(v) || isbn13.test(v) ? null : { invalidIsbn: true };
-  }
 
   /** Dérive l'état (achat / électronique / institutionnel) à partir du champ
    *  "besoin spécifique / format", qui remplace l'ancien toggle Format et support et
@@ -309,7 +301,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
 
   stripDashes(event: Event): void {
     const input    = event.target as HTMLInputElement;
-    const stripped = input.value.replace(/-/g, '');
+    const stripped = nettoyerIdentifiant(input.value);
     if (stripped !== input.value) {
       this.form.get('isbn_issn')?.setValue(stripped, { emitEvent: true });
     }

@@ -8,6 +8,7 @@ import { BibliothequesService } from '../../../../services/bibliotheques.service
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 import { courrielsMultiples } from '../../../../lib/ValidateurCourriels';
 import { FondsRepartitionComponent } from '../../../shared/fonds-repartition/fonds-repartition.component';
+import { IDENTIFIANT_MAX, nettoyerIdentifiant } from '../../../../lib/IdentifiantDocument';
 
 @Component({
   selector: 'app-modification-ccol',
@@ -98,7 +99,7 @@ export class ModificationCcolComponent implements OnInit {
       titre_document:       ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre:           ['', Validators.maxLength(500)],
       editeur:              ['', [Validators.required, Validators.maxLength(300)]],
-      isbn_issn:            ['', [Validators.required, this.isbnValidator]],
+      isbn_issn:            ['', [Validators.required, Validators.maxLength(IDENTIFIANT_MAX)]],
       date_publication:     [''],
       categorie_document:   ['', Validators.required],
       precision_demande:     ['', Validators.required],
@@ -146,7 +147,7 @@ export class ModificationCcolComponent implements OnInit {
     const simples: { nom: string; validators: any[] }[] = [
       { nom: 'titre_document',     validators: [Validators.maxLength(500)] },
       { nom: 'editeur',            validators: [Validators.maxLength(300)] },
-      { nom: 'isbn_issn',          validators: [this.isbnValidator] },
+      { nom: 'isbn_issn',          validators: [Validators.maxLength(IDENTIFIANT_MAX)] },
       { nom: 'categorie_document', validators: [] },
       { nom: 'precision_demande',  validators: [] },
       { nom: 'format_support',     validators: [] },
@@ -224,20 +225,10 @@ export class ModificationCcolComponent implements OnInit {
     });
   }
 
-  private isbnValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-    if (/-/.test(value)) return { invalidIsbn: true };
-    const v      = value.replace(/\s/g, '');
-    const isbn10 = /^\d{9}[\dX]$/i;
-    const isbn13 = /^97[89]\d{10}$/;
-    const issn   = /^\d{7}[\dX]$/i;
-    return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
-  }
 
   stripDashes(event: Event): void {
     const input    = event.target as HTMLInputElement;
-    const stripped = input.value.replace(/-/g, '');
+    const stripped = nettoyerIdentifiant(input.value);
     if (stripped !== input.value) {
       this.form.get('isbn_issn')?.setValue(stripped, { emitEvent: true });
     }

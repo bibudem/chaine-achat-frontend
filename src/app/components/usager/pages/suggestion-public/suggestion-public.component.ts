@@ -7,6 +7,7 @@ import { ReponsesService } from '../../../../services/reponses.service';
 import { BibliothequesService } from '../../../../services/bibliotheques.service';
 import { AuthService } from '../../../../services/auth.service';
 import { STATUTS_BIBLIOTHEQUE_SUGGESTION, TYPES_DOCUMENT_SUGGESTION, categorieDepuisTypeDocument, typeDocumentDeSuggestion } from '../../../../lib/ListeChoixOptions';
+import { IDENTIFIANT_MAX, nettoyerIdentifiant } from '../../../../lib/IdentifiantDocument';
 
 /** Refuse un texte composé uniquement d'espaces (le backend le traiterait comme vide). */
 const espacesSeulsInterdits = (c: AbstractControl): ValidationErrors | null =>
@@ -130,7 +131,7 @@ export class SuggestionPublicComponent implements OnInit {
       editeur:                      [''],
       date_publication:             [''],
       source_information:           ['', Validators.pattern('https?://.+')],
-      isbn_issn:                    ['', this.isbnValidator],
+      isbn_issn:                    ['', Validators.maxLength(IDENTIFIANT_MAX)],
       note_usager:                  [''],
       // Optionnel : courriel @umontreal.ca de l'usager pour qui la suggestion est saisie.
       courriel_tierce_personne:     ['', Validators.pattern(/^[^@\s]+@umontreal\.ca$/i)],
@@ -243,20 +244,10 @@ export class SuggestionPublicComponent implements OnInit {
     return date || source ? null : { anneeOuSourceRequis: true };
   }
 
-  private isbnValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-    if (/-/.test(value)) return { invalidIsbn: true };
-    const v      = value.replace(/\s/g, '');
-    const isbn10 = /^\d{9}[\dX]$/i;
-    const isbn13 = /^97[89]\d{10}$/;
-    const issn   = /^\d{7}[\dX]$/i;
-    return isbn10.test(v) || isbn13.test(v) || issn.test(v) ? null : { invalidIsbn: true };
-  }
 
   stripDashes(event: Event): void {
     const input    = event.target as HTMLInputElement;
-    const stripped = input.value.replace(/-/g, '');
+    const stripped = nettoyerIdentifiant(input.value);
     if (stripped !== input.value) {
       this.form.get('isbn_issn')?.setValue(stripped, { emitEvent: true });
     }

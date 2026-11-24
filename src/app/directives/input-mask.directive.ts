@@ -1,5 +1,6 @@
 import { Directive, HostListener, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { nettoyerIdentifiant } from '../lib/IdentifiantDocument';
 
 /**
  * Masque fonds_budgetaire : format AA-### (ex: PE-001, MO-260, SN-080)
@@ -49,7 +50,9 @@ export class FondsBudgetaireMaskDirective {
 }
 
 /**
- * Masque isbn_issn : chiffres uniquement (0-9), tout autre caractère est supprimé à la saisie.
+ * Masque isbn_issn (« ISBN / ISSN / Autre identifiant ») : retire les tirets seulement si la
+ * valeur commence par 9 (ISBN) ; sinon saisie libre (ISSN, autre identifiant, N/A) — même
+ * règle que les formulaires usager, voir lib/IdentifiantDocument.ts.
  * Expose `wasStripped` via exportAs="appIsbnMask" pour afficher un message dans le template.
  */
 @Directive({ selector: '[appIsbnMask]', exportAs: 'appIsbnMask' })
@@ -63,7 +66,7 @@ export class IsbnMaskDirective {
   onInput(): void {
     const ctrl = this.ngControl.control;
     if (!ctrl) return;
-    const cleaned = (ctrl.value ?? '').replace(/\D/g, '');
+    const cleaned = nettoyerIdentifiant(ctrl.value);
     this.wasStripped = ctrl.value !== cleaned;
     if (this.wasStripped) {
       ctrl.setValue(cleaned, { emitEvent: false });
