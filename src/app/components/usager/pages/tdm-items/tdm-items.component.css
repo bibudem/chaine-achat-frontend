@@ -90,6 +90,17 @@
 .ts-table tbody tr:hover td { background: #f8fafc; }
 .ts-table td.text-nowrap { white-space: nowrap; vertical-align: middle; }
 
+/* Le thème global (assets/css/vertical-layout-light/style.css, « .table td ») force
+   white-space: nowrap et line-height: 1 sur toutes les cellules : les titres longs
+   élargissaient le tableau au-delà de l'écran (barre de défilement horizontale). Ici le texte
+   revient à la ligne ; seules les petites colonnes (#, priorité, statut, date, bouton) restent
+   sur une ligne (.text-nowrap / badges). */
+.ts-table td { white-space: normal; line-height: 1.35; }
+.ts-table td.text-nowrap { white-space: nowrap; }
+.ts-col-id    { width: 1%; }
+.ts-col-titre { width: 100%; min-width: 220px; overflow-wrap: anywhere; }
+.ts-col-bib   { min-width: 110px; max-width: 180px; }
+
 .ts-col-decision { max-width: 220px; }
 
 .ts-badge {

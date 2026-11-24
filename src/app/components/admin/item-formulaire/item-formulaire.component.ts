@@ -48,10 +48,7 @@ export class ItemFormulaireComponent implements OnInit {
   /** Liste volontairement restreinte pour Requête ACQ Accessibilité (voir requete-accessibilite
    *  côté usager) — pas de Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom, absent de
    *  la liste générale (options.sousTypesMonographie). */
-  readonly typesMonographieAccessibilite: string[] = [
-    'Livre', 'CD-Rom/DVD-Rom', 'Enregistrement sonore', 'Film',
-    'Matériel didactique', 'Partition de musique', 'Carte et données géospatiales'
-  ];
+  readonly typesMonographieAccessibilite: string[] = this.options.typesMonographieAccessibilite;
   readonly besoinsFormat: string[] = [
     "Électronique : écrire à l'éditeur pour version numérique gratuite",
     'Électronique : acheter licence institutionnelle standard + version numérique gratuite',
@@ -878,6 +875,7 @@ export class ItemFormulaireComponent implements OnInit {
           gobi_vu_format_numerique:    formData.gobi_vu_format_numerique,
           gobi_version_moins_365_usd:  formData.gobi_version_moins_365_usd,
           acq_responsable_courriel:    formData.acq_responsable_courriel,
+          type_monographie:            formData.type_monographie,
         };
       case 'Requête ACQ Accessibilité':
         return {

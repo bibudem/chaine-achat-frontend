@@ -662,6 +662,8 @@
     "statut-acq-placeholder": "Statut ACQ",
     "suivi-placeholder": "Suivi ACQ",
     "priorite-placeholder": "Priorité",
+    "type-document-placeholder": "Type de document",
+    "type-monographie-placeholder": "Type de monographie",
     "chargement": "Chargement...",
     "chargement-donnees": "Chargement des données...",
     "groupe-bib": "Bibliothèque",

@@ -18,6 +18,8 @@ interface FavoriFilter {
   /** Ancien format (un seul fonds, texte libre) accepté à la relecture — voir versListeFonds. */
   selectedFonds: string[] | string;
   selectedPrecision?: string;
+  selectedCategorieDocument?: string;
+  selectedTypeMonographie?: string;
   selectedStatutAcq: string;
   selectedSuiviAcq: string;
   selectedAnnee: string;
@@ -45,6 +47,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   selectedPriorite       = '';
   /** Précision de la demande (Modification et CCOL). */
   selectedPrecision      = '';
+  /** Type de document (tbl_items.categorie_document). */
+  selectedCategorieDocument = '';
+  /** Type de monographie (Nouvel abonnement, Nouvel achat unique, Requête ACQ). */
+  selectedTypeMonographie   = '';
   /** Année de date_creation ('' = toutes années). Pas de contrôle de filtre dédié dans la
    *  barre (jugé pas nécessaire ici) — comme selectedStatutBib, activé uniquement via le
    *  query param annee=YYYY (voir « Répartition par type », accueil.component.ts). */
@@ -76,6 +82,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedFormulaireType: this.selectedFormulaireType,
       selectedFonds:          this.selectedFonds,
       selectedPrecision:      this.selectedPrecision,
+      selectedCategorieDocument: this.selectedCategorieDocument,
+      selectedTypeMonographie:   this.selectedTypeMonographie,
       selectedAnnee:          this.selectedAnnee,
       selectedPriorite:       this.selectedPriorite,
       currentPage:            this.currentPage,
@@ -97,6 +105,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedFormulaireType = s.selectedFormulaireType ?? '';
       this.selectedFonds          = this.versListeFonds(s.selectedFonds);
       this.selectedPrecision      = s.selectedPrecision      ?? '';
+      this.selectedCategorieDocument = s.selectedCategorieDocument ?? '';
+      this.selectedTypeMonographie   = s.selectedTypeMonographie   ?? '';
       this.selectedAnnee          = s.selectedAnnee          ?? '';
       this.selectedPriorite       = s.selectedPriorite       ?? '';
       this.currentPage            = s.currentPage            ?? 1;
@@ -117,6 +127,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedSuiviAcq,
       this.selectedFonds.length ? 'fonds' : '',
       this.filtrePrecisionVisible ? this.selectedPrecision : '',
+      this.selectedCategorieDocument,
+      this.filtreTypeMonographieVisible ? this.selectedTypeMonographie : '',
       this.selectedAnnee,
       this.selectedPriorite,
       this.selectedImportLogId
@@ -137,6 +149,14 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   options = new ListeChoixOptions();
   /** Libellé court d'affichage pour un type de formulaire. */
   readonly formulaireTypeLabel = formulaireTypeLabel;
+
+  /** Types de monographie proposés dans le filtre : union des listes des formulaires
+   *  (sous-types Monographie, « Série » du Nouvel abonnement, liste de la Requête ACQ
+   *  Accessibilité — voir item-formulaire). */
+  readonly typesMonographie: string[] = [...new Set([
+    ...this.options.typesMonographieAbonnement,
+    ...this.options.typesMonographieAccessibilite,
+  ])];
 
   /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
   bibliotheques: string[] = [];
@@ -195,6 +215,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedFormulaireType = typeParam         ?? '';
       this.selectedFonds          = [];
       this.selectedPrecision      = '';
+      this.selectedCategorieDocument = '';
+      this.selectedTypeMonographie   = '';
       this.selectedAnnee          = anneeParam        ?? '';
       this.selectedStatutAcq      = statutAcqParam    ?? '';
       this.selectedSuiviAcq       = suiviAcqParam     ?? '';
@@ -253,6 +275,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       formulaire_type:       this.selectedFormulaireType || undefined,
       fonds_budgetaire:      this.selectedFonds.join(',') || undefined,
       precision_demande:     (this.filtrePrecisionVisible && this.selectedPrecision) || undefined,
+      categorie_document:    this.selectedCategorieDocument || undefined,
+      type_monographie:      (this.filtreTypeMonographieVisible && this.selectedTypeMonographie) || undefined,
       annee:                 this.selectedAnnee          || undefined,
       priorite_demande:      this.selectedPriorite       || undefined,
       import_log_id:         this.selectedImportLogId    || undefined,
@@ -325,6 +349,17 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.onFilterChange();
   }
 
+  /** Type de monographie : son filtre n'apparaît que lorsque Type de document = Monographie. */
+  get filtreTypeMonographieVisible(): boolean {
+    return this.selectedCategorieDocument === 'Monographie';
+  }
+
+  /** Changement de Type de document : le type de monographie ne s'applique plus hors Monographie. */
+  onCategorieDocumentChange(): void {
+    if (!this.filtreTypeMonographieVisible) this.selectedTypeMonographie = '';
+    this.onFilterChange();
+  }
+
   resetFilters(): void {
     this.searchTerm             = '';
     this.selectedBibliotheque   = '';
@@ -334,6 +369,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedFormulaireType = '';
     this.selectedFonds          = [];
     this.selectedPrecision      = '';
+    this.selectedCategorieDocument = '';
+    this.selectedTypeMonographie   = '';
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
     this.selectedImportLogId    = '';
@@ -406,6 +443,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedBibliotheque:   this.selectedBibliotheque,
       selectedFonds:          [...this.selectedFonds],
       selectedPrecision:      this.selectedPrecision,
+      selectedCategorieDocument: this.selectedCategorieDocument,
+      selectedTypeMonographie:   this.selectedTypeMonographie,
       selectedStatutAcq:      this.selectedStatutAcq,
       selectedSuiviAcq:       this.selectedSuiviAcq,
       selectedAnnee:          this.selectedAnnee,
@@ -422,6 +461,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedBibliotheque   = f.selectedBibliotheque;
     this.selectedFonds          = this.versListeFonds(f.selectedFonds);
     this.selectedPrecision      = f.selectedPrecision ?? '';
+    this.selectedCategorieDocument = f.selectedCategorieDocument ?? '';
+    this.selectedTypeMonographie   = f.selectedTypeMonographie   ?? '';
     this.selectedStatutAcq      = f.selectedStatutAcq;
     this.selectedSuiviAcq       = f.selectedSuiviAcq;
     this.selectedAnnee          = f.selectedAnnee ?? '';
@@ -523,6 +564,15 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     if (!format) return '';
     return format === 'Imprimé/support physique' ? 'Imprimé'
          : format === 'Électronique' ? 'Électronique' : format;
+  }
+
+  /** Ligne discrète sous le titre : Type de document · Type de monographie · Format
+   *  (ex. « Monographie · Livre · Imprimé ») — valeurs absentes ou « Ne s'applique pas » omises. */
+  getInfoDocument(item: Item): string {
+    const typeMono = item.type_monographie === 'Ne s\'applique pas' ? '' : item.type_monographie;
+    return [item.categorie_document, typeMono, this.getFormatSupport(item.format_support)]
+      .filter(v => !!v)
+      .join(' · ');
   }
 
   getPrioriteBadgeClass(priorite: string | undefined | null): string {

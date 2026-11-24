@@ -683,6 +683,7 @@
               </ng-container>
 
               <ng-container *ngIf="isPebTipasa">
+                <tr *ngIf="item.type_monographie"><th>{{ 'acq-decision.col-type-mono' | translate }}</th><td>{{ item.type_monographie }}</td></tr>
                 <tr *ngIf="item.gobi_vu_format_numerique"><th>{{ 'acq-decision.col-gobi-numerique' | translate }}</th><td>{{ item.gobi_vu_format_numerique }}</td></tr>
                 <tr *ngIf="item.gobi_version_moins_365_usd"><th>{{ 'acq-decision.col-gobi-365' | translate }}</th><td>{{ item.gobi_version_moins_365_usd }}</td></tr>
                 <tr *ngIf="item.reference_tipasa"><th>{{ 'acq-decision.col-reference-tipasa' | translate }}</th><td>{{ item.reference_tipasa }}</td></tr>

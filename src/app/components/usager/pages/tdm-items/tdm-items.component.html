@@ -64,9 +64,9 @@
           <table class="table table-sm ts-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>{{ 'tri-suggestions-page.th-document' | translate }}</th>
-                <th>{{ 'tdm-items-page.th-bibliotheque' | translate }}</th>
+                <th class="ts-col-id">#</th>
+                <th class="ts-col-titre">{{ 'tri-suggestions-page.th-document' | translate }}</th>
+                <th class="ts-col-bib">{{ 'tdm-items-page.th-bibliotheque' | translate }}</th>
                 <th>{{ 'tdm-items-page.th-priorite' | translate }}</th>
                 <th>{{ 'tdm-items-page.th-statut' | translate }}</th>
                 <th>{{ 'tdm-items-page.th-recu-le' | translate }}</th>
@@ -75,13 +75,13 @@
             </thead>
             <tbody>
               <tr *ngFor="let item of items">
-                <td class="text-nowrap ts-muted small">#{{ item.item_id }}</td>
-                <td>
+                <td class="text-nowrap ts-muted small ts-col-id">#{{ item.item_id }}</td>
+                <td class="ts-col-titre">
                   <div class="fw-semibold">{{ titre(item) }}</div>
                   <div class="ts-muted small" *ngIf="item.isbn_issn">{{ item.isbn_issn }}</div>
                 </td>
-                <td class="small">{{ item.bibliotheque || '—' }}</td>
-                <td class="small">{{ item.priorite_demande || '—' }}</td>
+                <td class="small ts-col-bib">{{ item.bibliotheque || '—' }}</td>
+                <td class="small text-nowrap">{{ item.priorite_demande || '—' }}</td>
                 <td class="ts-col-decision">
                   <span class="ts-badge" [ngClass]="enAttente(item) ? 'ts-badge--attente' : 'ts-badge--traitee'">
                     {{ statutLabel(item) }}

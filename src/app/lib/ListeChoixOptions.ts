@@ -194,6 +194,16 @@ export class ListeChoixOptions {
     'Ne s\'applique pas'
   ];
 
+  // Nouvel abonnement : mêmes sous-types + « Série » (suivi continu d'une série).
+  readonly typesMonographieAbonnement: string[] = [...this.sousTypesMonographie, 'Série'];
+
+  // Requête ACQ Accessibilité : liste volontairement restreinte (voir spec Accessibilité) —
+  // pas de Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom.
+  readonly typesMonographieAccessibilite: string[] = [
+    'Livre', 'CD-Rom/DVD-Rom', 'Enregistrement sonore', 'Film',
+    'Matériel didactique', 'Partition de musique', 'Carte et données géospatiales'
+  ];
+
   // Options pour la catégorie d'usager
   usagerCategorieOptions = [
     'Étudiant-e 3e cycle',

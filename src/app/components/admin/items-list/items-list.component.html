@@ -68,6 +68,19 @@
       <option *ngFor="let p of options.prioriteOptions" [value]="p.value">{{ p.label }}</option>
     </select>
 
+    <select class="filterbar__select" [(ngModel)]="selectedCategorieDocument" (change)="onCategorieDocumentChange()"
+            [attr.aria-label]="'items.type-document-placeholder' | translate">
+      <option value="">{{ 'items.type-document-placeholder' | translate }}</option>
+      <option *ngFor="let c of options.categorieDocumentOptions" [value]="c">{{ c }}</option>
+    </select>
+
+    <!-- Type de monographie : visible seulement quand Type de document = Monographie -->
+    <select *ngIf="filtreTypeMonographieVisible" class="filterbar__select" [(ngModel)]="selectedTypeMonographie" (change)="onFilterChange()"
+            [attr.aria-label]="'items.type-monographie-placeholder' | translate">
+      <option value="">{{ 'items.type-monographie-placeholder' | translate }}</option>
+      <option *ngFor="let t of typesMonographie" [value]="t">{{ t }}</option>
+    </select>
+
     <!-- Fonds : choix multiples -->
     <div class="il-ms" (click)="$event.stopPropagation()">
       <button type="button" class="filterbar__select il-ms__trigger"
@@ -243,9 +256,7 @@
                   </td>
                   <td class="col-titre">
                     <div class="fw-semibold">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
-                    <div class="small text-muted" *ngIf="item.format_support">
-                      {{ getFormatSupport(item.format_support) }}
-                    </div>
+                    <div class="small text-muted" *ngIf="getInfoDocument(item) as info">{{ info }}</div>
                     <div class="small il-titre-precision" *ngIf="item.precision_demande"
                          [title]="'items.col-precision' | translate">
                       <i class="bi bi-tag me-1"></i>{{ item.precision_demande }}
@@ -351,6 +362,7 @@
                 </div>
               </div>
               <div class="item-card__title">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
+              <div class="small text-muted" *ngIf="getInfoDocument(item) as info">{{ info }}</div>
               <div class="item-card__body">
                 <div class="item-card__row" *ngIf="item.precision_demande">
                   <span class="item-card__label">{{ 'items.col-precision' | translate }}</span>

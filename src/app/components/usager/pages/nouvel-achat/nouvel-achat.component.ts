@@ -35,11 +35,8 @@ export class NouvelAchatComponent implements OnInit {
     'Monographie', 'Base de données', 'Archives de monographies'
   ];
 
-  typesMonographie: string[] = [
-    'Livre', 'Enregistrement sonore', 'Film', 'Matériel didactique',
-    'Partition de musique', 'Zine', 'Carte et données géospatiales',
-    'Autres (microfilm, etc.)', "Ne s'applique pas"
-  ];
+  /** Liste commune — voir ListeChoixOptions.sousTypesMonographie. */
+  typesMonographie: string[] = new ListeChoixOptions().sousTypesMonographie;
 
   devises = new ListeChoixOptions().devisesOptions;
 

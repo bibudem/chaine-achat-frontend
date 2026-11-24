@@ -487,7 +487,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     } else if (this.isNouvelAbonnement) {
       keys = ['date_debut_abonnement', 'type_monographie', 'usager_aviser_reservation', 'usager_aviser_activation'];
     } else if (this.isPebTipasa) {
-      keys = ['gobi_vu_format_numerique', 'gobi_version_moins_365_usd', 'reference_tipasa'];
+      keys = ['gobi_vu_format_numerique', 'gobi_version_moins_365_usd', 'reference_tipasa', 'type_monographie'];
     } else if (this.isAccessibilite) {
       keys = [
         'reference_usager', 'besoin_specifique_format', 'permalien_sofia', 'type_monographie',

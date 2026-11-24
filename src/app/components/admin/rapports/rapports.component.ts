@@ -37,7 +37,7 @@ const CHAMPS_PAR_TYPE: Record<string, string[]> = {
   ],
   'PEB Tipasa numérique': [
     'reference_tipasa', 'gobi_vu_format_numerique', 'gobi_version_moins_365_usd',
-    'acq_responsable_courriel'
+    'acq_responsable_courriel', 'type_monographie'
   ],
   'Requête ACQ Accessibilité': [
     'reference_usager', 'besoin_specifique_format', 'permalien_sofia',

@@ -28,11 +28,8 @@ export class PebTipasaNumeriqueComponent implements OnInit {
   /** Chargée dynamiquement — voir Configuration > Bibliothèques. */
   bibliotheques: string[] = [];
 
-  typesMonographie: string[] = [
-    'Livre', 'Enregistrement sonore', 'Film', 'Matériel didactique',
-    'Partition de musique', 'Zine', 'Carte et données géospatiales',
-    'Autres (microfilm, etc.)', "Ne s'applique pas"
-  ];
+  /** Liste commune — voir ListeChoixOptions.sousTypesMonographie. */
+  typesMonographie: string[] = new ListeChoixOptions().sousTypesMonographie;
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
   devises = new ListeChoixOptions().devisesOptions;

@@ -35,11 +35,8 @@ export class NouvelAbonnementComponent implements OnInit {
     'Archives de périodiques', 'Archives de monographies'
   ];
 
-  typesMonographie: string[] = [
-    'Livre', 'Enregistrement sonore', 'Film', 'Matériel didactique',
-    'Partition de musique', 'Zine', 'Carte et données géospatiales',
-    'Autres (microfilm, etc.)', "Ne s'applique pas", 'Série'
-  ];
+  /** Liste commune — voir ListeChoixOptions.typesMonographieAbonnement. */
+  typesMonographie: string[] = new ListeChoixOptions().typesMonographieAbonnement;
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 

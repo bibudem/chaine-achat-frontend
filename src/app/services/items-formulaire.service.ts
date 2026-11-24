@@ -214,6 +214,10 @@ export class ItemFormulaireService {
     priorite_demande?: string;
     /** Précision de la demande (Modification et CCOL). */
     precision_demande?: string;
+    /** Type de document (tbl_items.categorie_document). */
+    categorie_document?: string;
+    /** Type de monographie (Nouvel abonnement, Nouvel achat unique, Requête ACQ). */
+    type_monographie?: string;
     /** Profil TDM : ne renvoyer que les items routés vers le TDM (Création de notice = Oui). */
     creation_notice_dtdm?: boolean;
     /** Année de date_creation (ex. "2026") — voir tableau de bord admin. */
@@ -238,6 +242,8 @@ export class ItemFormulaireService {
     if (opts.fonds_budgetaire)     p = p.set('fonds_budgetaire',     opts.fonds_budgetaire);
     if (opts.priorite_demande)     p = p.set('priorite_demande',     opts.priorite_demande);
     if (opts.precision_demande)    p = p.set('precision_demande',    opts.precision_demande);
+    if (opts.categorie_document)   p = p.set('categorie_document',   opts.categorie_document);
+    if (opts.type_monographie)     p = p.set('type_monographie',     opts.type_monographie);
     if (opts.creation_notice_dtdm != null) p = p.set('creation_notice_dtdm', String(opts.creation_notice_dtdm));
     if (opts.annee)                p = p.set('annee',                opts.annee);
     if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);

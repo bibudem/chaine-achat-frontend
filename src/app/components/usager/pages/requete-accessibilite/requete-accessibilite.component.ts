@@ -32,10 +32,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
   /** Liste volontairement restreinte pour ce formulaire (voir spec Accessibilité) — pas de
    *  Zine/Autres/Ne s'applique pas, et ajoute CD-Rom/DVD-Rom, absent de la liste générale
    *  (options.sousTypesMonographie). */
-  typesMonographie: string[] = [
-    'Livre', 'CD-Rom/DVD-Rom', 'Enregistrement sonore', 'Film',
-    'Matériel didactique', 'Partition de musique', 'Carte et données géospatiales'
-  ];
+  typesMonographie: string[] = new ListeChoixOptions().typesMonographieAccessibilite;
 
   priorites: string[] = ['Régulier', 'Prioritaire', 'Urgent'];
 
