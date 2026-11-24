@@ -82,7 +82,7 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
     note_acq:                 'Note ACQ',
     bibliotheque_note_interne:'Note interne bibliothèque',
     catalogue:                'Catalogue',
-    priorite_demande:         'Priorité',
+    priorite_demande:         'Priorité de la demande',
     auteur:                   'Auteur(rice)',
     usager_statut:            "Statut de l'usager",
     usager_faculte:           'Faculté / Département',

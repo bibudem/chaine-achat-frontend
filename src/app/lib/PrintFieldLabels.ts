@@ -13,7 +13,7 @@
 export const PRINT_FIELD_LABELS: Record<string, string> = {
   titre_document: 'Titre', sous_titre: 'Sous-titre', demandeur: 'Demandeur',
   bibliotheque: 'Bibliothèque', categorie_document: 'Catégorie', format_support: 'Type de traitement',
-  priorite_demande: 'Priorité',
+  priorite_demande: 'Priorité de la demande',
   auteur: 'Auteur(rice)', usager_statut: 'Statut usager', usager_faculte: 'Faculté / Département',
   usager_courriel: 'Courriel usager', date_requise_cours: 'Requis pour cours',
   editeur: 'Éditeur', isbn_issn: 'ISBN / ISSN', date_publication: 'Date de publication',

@@ -15,7 +15,7 @@ export const FIELD_LABELS: Record<string, string> = {
   usager_courriel: 'Courriel', courriel: 'Courriel',
   bibliotheque: 'Bibliothèque',
   fonds_budgetaire: 'Fonds budgétaire',
-  priorite_demande: 'Priorité',
+  priorite_demande: 'Priorité de la demande',
   bibliothecaire_disciplinaire: 'Bibliothécaire disciplinaire',
   courriel_tierce_personne: 'Soumise pour (courriel)',
   type_document: 'Type de document',
