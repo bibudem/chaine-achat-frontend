@@ -1,5 +1,6 @@
-import { Directive, HostListener, Self } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnDestroy, Renderer2, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { nettoyerIdentifiant } from '../lib/IdentifiantDocument';
 
 /**
@@ -75,12 +76,48 @@ export class IsbnMaskDirective {
 }
 
 /**
+ * Courte ligne grise affichée sous un champ quand un masque a corrigé la saisie ; retirée à
+ * la sortie du champ.
+ */
+class AideMasque {
+  private el: HTMLElement | null = null;
+
+  constructor(private hote: ElementRef<HTMLElement>, private renderer: Renderer2) {}
+
+  afficher(texte: string): void {
+    if (!this.el) {
+      this.el = this.renderer.createElement('small');
+      this.renderer.addClass(this.el, 'aide-masque');
+      this.renderer.setAttribute(this.el, 'aria-live', 'polite');
+      const parent = this.renderer.parentNode(this.hote.nativeElement);
+      this.renderer.insertBefore(parent, this.el, this.renderer.nextSibling(this.hote.nativeElement));
+    }
+    this.renderer.setProperty(this.el, 'textContent', texte);
+  }
+
+  masquer(): void {
+    if (!this.el) return;
+    this.renderer.removeChild(this.renderer.parentNode(this.el), this.el);
+    this.el = null;
+  }
+}
+
+/**
  * Masque courriel : convertit en minuscules et supprime les espaces à la saisie.
  */
 @Directive({ selector: '[appEmailMask]' })
-export class EmailMaskDirective {
+export class EmailMaskDirective implements OnDestroy {
 
-  constructor(@Self() private ngControl: NgControl) {}
+  private aide: AideMasque;
+
+  constructor(
+    @Self() private ngControl: NgControl,
+    hote: ElementRef<HTMLElement>,
+    renderer: Renderer2,
+    private translate: TranslateService
+  ) {
+    this.aide = new AideMasque(hote, renderer);
+  }
 
   @HostListener('input')
   onInput(): void {
@@ -89,6 +126,12 @@ export class EmailMaskDirective {
     const cleaned = (ctrl.value ?? '').toLowerCase().replace(/\s/g, '');
     if (ctrl.value !== cleaned) {
       ctrl.setValue(cleaned, { emitEvent: false });
+      this.aide.afficher(this.translate.instant('masques.courriel'));
     }
   }
+
+  @HostListener('blur')
+  onBlur(): void { this.aide.masquer(); }
+
+  ngOnDestroy(): void { this.aide.masquer(); }
 }

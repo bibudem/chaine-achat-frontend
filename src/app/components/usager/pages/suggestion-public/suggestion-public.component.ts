@@ -255,6 +255,12 @@ export class SuggestionPublicComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  /** Erreur affichée une fois le champ quitté (ou après une pause de frappe), ou à l'envoi. */
+  voirErreur(champ: string): boolean {
+    const c = this.form.get(champ);
+    return !!c && c.invalid && (c.touched || this.submitted);
+  }
+
   onReset(): void {
     this.submitted      = false;
     this.success        = false;

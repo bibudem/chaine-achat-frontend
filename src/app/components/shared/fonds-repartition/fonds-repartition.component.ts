@@ -206,7 +206,7 @@ export class FondsRepartitionComponent implements OnInit {
 
   isInvalid(ligne: FormGroup, champ: string): boolean {
     const c = ligne.get(champ);
-    return !!c && c.invalid && (c.dirty || c.touched || this.submitted);
+    return !!c && c.invalid && (c.touched || this.submitted);
   }
 
   static creerLigne(data: {

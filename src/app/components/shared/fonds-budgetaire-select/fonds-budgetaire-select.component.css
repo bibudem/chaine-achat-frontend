@@ -64,6 +64,12 @@
   font-weight: 600;
 }
 
+.fbs-item--surligne,
+.fbs-item--surligne:hover {
+  background-color: #dbe7f5;
+  outline: 1px solid #93b4dc;
+}
+
 .fbs-item--vide {
   color: #6c757d;
   cursor: default;

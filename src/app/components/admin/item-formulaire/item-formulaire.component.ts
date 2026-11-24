@@ -964,12 +964,12 @@ export class ItemFormulaireComponent implements OnInit {
 
   hasError(controlName: string, errorType: string): boolean {
     const control = this.itemForm.get(controlName);
-    return control ? control.hasError(errorType) && (control.touched || control.dirty) : false;
+    return control ? control.hasError(errorType) && (control.touched || this.submitted) : false;
   }
 
   isInvalid(controlName: string): boolean {
     const control = this.itemForm.get(controlName);
-    return control ? control.invalid && (control.touched || control.dirty) : false;
+    return control ? control.invalid && (control.touched || this.submitted) : false;
   }
 
   setActiveTab(tab: string): void {

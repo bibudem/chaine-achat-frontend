@@ -1742,5 +1742,9 @@
     "quitter": "Back to my profile",
     "infobulle": "Previewing the {{role}} interface — actions use your real permissions ({{reel}}).",
     "pastille": "Preview: {{role}}"
+  },
+  "masques": {
+    "courriel": "Converted to lowercase, without spaces.",
+    "fonds": "Format: 2 letters, a dash, then digits (e.g. MO-094)."
   }
 }

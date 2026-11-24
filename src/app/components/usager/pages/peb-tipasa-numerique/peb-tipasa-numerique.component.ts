@@ -243,7 +243,7 @@ export class PebTipasaNumeriqueComponent implements OnInit {
 
   isInvalid(field: string): boolean {
     const c = this.form.get(field);
-    return !!c && c.invalid && (c.dirty || c.touched || this.submitted);
+    return !!c && c.invalid && (c.touched || this.submitted);
   }
 
   onReset(): void {

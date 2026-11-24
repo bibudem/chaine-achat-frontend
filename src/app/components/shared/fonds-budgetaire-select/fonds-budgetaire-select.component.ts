@@ -1,6 +1,7 @@
-import { Component, ElementRef, forwardRef, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FondsBudgetairesService } from '../../../services/fonds-budgetaires.service';
+import { DELAI_VALIDATION_MS } from '../../../directives/validation-saisie.directive';
 
 /**
  * Liste déroulante « Fonds budgétaire » avec recherche + option « Autre » (champ de
@@ -32,6 +33,15 @@ export class FondsBudgetaireSelectComponent implements ControlValueAccessor, OnI
   modeAutre = false;
   autreTexte = '';
   disabled = false;
+  /** Code surligné dans la liste (navigation au clavier). */
+  indexSurligne = 0;
+  /** Mode Autre : le masque a retiré des caractères (affiche le format attendu). */
+  aideMasque = false;
+  private minuterie?: ReturnType<typeof setTimeout>;
+
+  @ViewChild('declencheur') private declencheur?: ElementRef<HTMLButtonElement>;
+  @ViewChild('champRecherche') private champRecherche?: ElementRef<HTMLInputElement>;
+  @ViewChild('liste') private liste?: ElementRef<HTMLUListElement>;
 
   private codesCharges = false;
   private onChange: (v: string | null) => void = () => {};
@@ -80,16 +90,86 @@ export class FondsBudgetaireSelectComponent implements ControlValueAccessor, OnI
 
   toggleOuvert(): void {
     if (this.disabled) return;
-    this.ouvert = !this.ouvert;
-    if (this.ouvert) this.recherche = '';
+    this.ouvert ? this.fermer(false) : this.ouvrir();
+  }
+
+  /** Ouvre la liste, place le curseur dans la recherche et surligne la valeur actuelle. */
+  private ouvrir(): void {
+    this.ouvert = true;
+    this.recherche = '';
+    const i = this.valeur ? this.codes.indexOf(this.valeur) : -1;
+    this.indexSurligne = i >= 0 ? i : 0;
+    setTimeout(() => {
+      this.champRecherche?.nativeElement.focus();
+      this.defilerVersSurligne();
+    });
+  }
+
+  private fermer(refocus: boolean): void {
+    this.ouvert = false;
+    this.onTouched();
+    if (refocus) setTimeout(() => this.declencheur?.nativeElement.focus());
+  }
+
+  /** Bouton fermé : ↓, Entrée ou Espace ouvrent la liste. */
+  onDeclencheurKeydown(e: KeyboardEvent): void {
+    if (this.disabled || this.ouvert) return;
+    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.ouvrir();
+    }
+  }
+
+  /** Recherche : le premier code correspondant est surligné (le code exact s'il existe). */
+  onRecherche(val: string): void {
+    this.recherche = val;
+    const q = (val || '').trim().toLowerCase();
+    const exact = this.resultatsFiltres.findIndex(c => c.toLowerCase() === q);
+    this.indexSurligne = exact >= 0 ? exact : 0;
+    this.defilerVersSurligne();
+  }
+
+  onRechercheKeydown(e: KeyboardEvent): void {
+    const n = this.resultatsFiltres.length;
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (n) { this.indexSurligne = (this.indexSurligne + 1) % n; this.defilerVersSurligne(); }
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (n) { this.indexSurligne = (this.indexSurligne - 1 + n) % n; this.defilerVersSurligne(); }
+        break;
+      case 'Enter':
+        // Ne jamais soumettre le formulaire parent depuis ce champ.
+        e.preventDefault();
+        if (n) this.choisir(this.resultatsFiltres[Math.min(this.indexSurligne, n - 1)]);
+        break;
+      case 'Escape':
+        e.preventDefault();
+        e.stopPropagation();
+        this.fermer(true);
+        break;
+      case 'Tab':
+        this.ouvert = false;
+        this.onTouched();
+        break;
+    }
+  }
+
+  private defilerVersSurligne(): void {
+    setTimeout(() => {
+      const el = this.liste?.nativeElement.children[this.indexSurligne] as HTMLElement | undefined;
+      el?.scrollIntoView({ block: 'nearest' });
+    });
   }
 
   choisir(code: string): void {
     this.valeur   = code;
     this.modeAutre = false;
-    this.ouvert    = false;
     this.onChange(code);
-    this.onTouched();
+    // Focus rendu au bouton : Tab passe ensuite au champ suivant.
+    this.fermer(true);
   }
 
   choisirAutre(): void {
@@ -105,6 +185,13 @@ export class FondsBudgetaireSelectComponent implements ControlValueAccessor, OnI
     this.autreTexte = formate;
     this.valeur     = formate || null;
     this.onChange(this.valeur);
+    // Caractères retirés par le masque : on explique le format attendu.
+    const sansTiret = (s: string) => (s || '').toUpperCase().replace(/-/g, '');
+    if (sansTiret(formate) !== sansTiret(val)) this.aideMasque = true;
+    // Après une pause de frappe, le champ est marqué « touché » : une erreur de format
+    // s'affiche sans attendre la sortie du champ (même règle que ValidationSaisieDirective).
+    clearTimeout(this.minuterie);
+    if (this.valeur) this.minuterie = setTimeout(() => this.onTouched(), DELAI_VALIDATION_MS);
   }
 
   /** Même règle que l'ancienne directive appFondsBudgetaireMask (auto-majuscules + tiret
@@ -131,6 +218,8 @@ export class FondsBudgetaireSelectComponent implements ControlValueAccessor, OnI
   }
 
   onAutreBlur(): void {
+    clearTimeout(this.minuterie);
+    this.aideMasque = false;
     this.onTouched();
   }
 

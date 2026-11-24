@@ -104,11 +104,11 @@
           <div class="col-md-6">
             <label class="form-label required">{{ 'form-suggestion.categorie-usager' | translate }}</label>
             <select formControlName="statut" class="form-select"
-                    [class.is-invalid]="submitted && f['statut'].invalid">
+                    [class.is-invalid]="voirErreur('statut')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let s of statutsUsager" [value]="s.valeur">{{ s.cle | translate }}</option>
             </select>
-            <div *ngIf="submitted && f['statut'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('statut')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
@@ -116,9 +116,9 @@
           <div class="col-md-6">
             <label class="form-label required">{{ 'form-suggestion.faculte' | translate }}</label>
             <input type="text" formControlName="usager_faculte" class="form-control"
-                   [class.is-invalid]="submitted && f['usager_faculte'].invalid"
+                   [class.is-invalid]="voirErreur('usager_faculte')"
                    [placeholder]="'form-suggestion.faculte-placeholder' | translate">
-            <div *ngIf="submitted && f['usager_faculte'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('usager_faculte')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
@@ -140,9 +140,9 @@
           <div class="col-md-6">
             <label class="form-label required">{{ 'forms-usager.titre-document' | translate }}</label>
             <input type="text" formControlName="titre_document" class="form-control"
-                   [class.is-invalid]="submitted && f['titre_document'].invalid"
+                   [class.is-invalid]="voirErreur('titre_document')"
                    [placeholder]="'forms-usager.titre-placeholder' | translate">
-            <div *ngIf="submitted && f['titre_document'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('titre_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
@@ -157,9 +157,9 @@
           <div class="col-md-4">
             <label class="form-label required">{{ 'form-suggestion.auteur-autrice' | translate }}</label>
             <input type="text" formControlName="auteur" class="form-control"
-                   [class.is-invalid]="submitted && f['auteur'].invalid"
+                   [class.is-invalid]="voirErreur('auteur')"
                    [placeholder]="'form-suggestion.auteur-placeholder' | translate">
-            <div *ngIf="submitted && f['auteur'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('auteur')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.auteur-required' | translate }}
             </div>
           </div>
@@ -173,10 +173,10 @@
           <div class="col-md-4">
             <label class="form-label">{{ 'forms-usager.isbn-issn' | translate }}</label>
             <input type="text" formControlName="isbn_issn" class="form-control"
-                   [class.is-invalid]="submitted && f['isbn_issn'].invalid"
+                   [class.is-invalid]="voirErreur('isbn_issn')"
                    [placeholder]="'forms-usager.isbn-placeholder' | translate"
                    (input)="stripDashes($event)">
-            <div *ngIf="submitted && f['isbn_issn'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('isbn_issn')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'forms-usager.isbn-issn-invalid' | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.isbn-issn-hint' | translate }}</small>
@@ -186,11 +186,11 @@
           <div class="col-md-6">
             <label class="form-label required">{{ 'form-suggestion.type-document' | translate }}</label>
             <select formControlName="type_document" class="form-select"
-                    [class.is-invalid]="submitted && f['type_document'].invalid">
+                    [class.is-invalid]="voirErreur('type_document')">
               <option value="">{{ 'forms-usager.selectionner' | translate }}</option>
               <option *ngFor="let t of typesDocument" [value]="t.valeur">{{ t.cle | translate }}</option>
             </select>
-            <div *ngIf="submitted && f['type_document'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('type_document')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.champ-obligatoire' | translate }}
             </div>
           </div>
@@ -214,9 +214,9 @@
             <!-- Obligatoire tant que la date de publication est vide (l'une des deux suffit) -->
             <label class="form-label" [class.required]="!form.get('date_publication')?.value">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
-                   [class.is-invalid]="(submitted && f['source_information'].invalid) || (submitted && form.hasError('anneeOuSourceRequis'))"
+                   [class.is-invalid]="(voirErreur('source_information')) || (submitted && form.hasError('anneeOuSourceRequis'))"
                    placeholder="https://...">
-            <div *ngIf="submitted && f['source_information'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('source_information')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.source-invalid' | translate }}
             </div>
             <small class="form-text">{{ 'forms-usager.source-info-hint' | translate }}</small>
@@ -232,9 +232,9 @@
           <div class="col-12">
             <label class="form-label" for="sg-courriel-tierce">{{ 'form-suggestion.courriel-tierce' | translate }}</label>
             <input type="email" id="sg-courriel-tierce" formControlName="courriel_tierce_personne" class="form-control"
-                   [class.is-invalid]="submitted && f['courriel_tierce_personne'].invalid"
+                   [class.is-invalid]="voirErreur('courriel_tierce_personne')"
                    [placeholder]="'form-suggestion.courriel-tierce-placeholder' | translate">
-            <div *ngIf="submitted && f['courriel_tierce_personne'].invalid" class="invalid-feedback">
+            <div *ngIf="voirErreur('courriel_tierce_personne')" class="invalid-feedback">
               <i class="fas fa-exclamation-triangle me-1"></i>{{ 'form-suggestion.courriel-tierce-invalide' | translate }}
             </div>
           </div>

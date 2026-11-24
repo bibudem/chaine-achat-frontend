@@ -47,6 +47,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FondsBudgetaireMaskDirective, IsbnMaskDirective, EmailMaskDirective } from './directives/input-mask.directive';
+import { ValidationSaisieDirective } from './directives/validation-saisie.directive';
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
 import {ListBoxModule} from "@syncfusion/ej2-angular-dropdowns";
@@ -138,6 +139,7 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     FondsBudgetaireMaskDirective,
     IsbnMaskDirective,
     EmailMaskDirective,
+    ValidationSaisieDirective,
     StatutDecisionComponent
   ],
     imports: [
