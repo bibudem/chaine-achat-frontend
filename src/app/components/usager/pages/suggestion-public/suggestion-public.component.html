@@ -281,14 +281,16 @@
 
           <!-- Ligne 3 : date de publication OU source d'information (l'une des deux suffit) -->
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.date-publication' | translate }}</label>
+            <!-- Obligatoire tant que la source d'information est vide (l'une des deux suffit) -->
+            <label class="form-label" [class.required]="!form.get('source_information')?.value">{{ 'forms-usager.date-publication' | translate }}</label>
             <input type="text" formControlName="date_publication" class="form-control"
                    [class.is-invalid]="submitted && form.hasError('anneeOuSourceRequis')"
                    [placeholder]="'forms-usager.date-placeholder' | translate">
           </div>
 
           <div class="col-md-6">
-            <label class="form-label required">{{ 'forms-usager.source-info' | translate }}</label>
+            <!-- Obligatoire tant que la date de publication est vide (l'une des deux suffit) -->
+            <label class="form-label" [class.required]="!form.get('date_publication')?.value">{{ 'forms-usager.source-info' | translate }}</label>
             <input type="url" formControlName="source_information" class="form-control"
                    [class.is-invalid]="(submitted && f['source_information'].invalid) || (submitted && form.hasError('anneeOuSourceRequis'))"
                    placeholder="https://...">

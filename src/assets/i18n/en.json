@@ -1550,7 +1550,7 @@
     "acceptee-titre": "Public suggestion triaged.",
     "acceptee-texte": "Fill in the missing fields (priority, library, subject librarian, ISBN…). It stays a draft until the status is « Soumettre aux ACQ »: you can save it and resume later from the team history. The original requester will be notified of the Acquisitions decision.",
     "suivi-tri-lecture-seule": "Reserved for the triage team (read only).",
-    "titre": "Purchase suggestion - User",
+    "titre": "Purchase suggestion – User",
     "sous-titre": "Suggest a document you would like the libraries to acquire",
     "notice-titre": "Please note",
     "notice-1": "Before completing this form, check in",

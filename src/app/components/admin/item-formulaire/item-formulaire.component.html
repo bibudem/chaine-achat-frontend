@@ -162,7 +162,9 @@
           <div class="col-md-2"
                *ngIf="!selectedFormulaireType || isNouvelAchatUnique() || isModificationCCOL() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite()">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.date-publication' | translate }}</label>
+              <!-- Suggestion d'achat : obligatoire tant que la source d'information est vide -->
+              <label class="form-label">{{ 'item-formulaire.date-publication' | translate }}
+                <span class="text-danger" *ngIf="isSuggestionAchat() && !itemForm.get('source_information')?.value">*</span></label>
               <input type="text" class="form-control" formControlName="date_publication"
                      [placeholder]="'item-formulaire.date-publication-placeholder' | translate">
             </div>
@@ -284,7 +286,9 @@
           </div>
           <div class="col-md">
             <div class="mb-3">
-              <label class="form-label">{{ 'item-formulaire.source-info' | translate }} <span class="text-danger">*</span></label>
+              <!-- Suggestion d'achat : facultative dès que la date de publication est remplie -->
+              <label class="form-label">{{ 'item-formulaire.source-info' | translate }}
+                <span class="text-danger" *ngIf="!isSuggestionAchat() || !itemForm.get('date_publication')?.value">*</span></label>
               <input type="text" class="form-control" formControlName="source_information"
                      [class.is-invalid]="isInvalid('source_information')">
               <div class="invalid-feedback" *ngIf="hasError('source_information', 'required')">{{ 'item-formulaire.source-info-required' | translate }}</div>
