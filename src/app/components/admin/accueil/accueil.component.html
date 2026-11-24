@@ -160,7 +160,7 @@
       </div>
     </div>
 
-    <div class="sc sc--green">
+    <div class="sc sc--green sc--clickable" (click)="navigateToTraitees()">
       <div class="sc__top">
         <span class="sc__val">{{ isLoadingDashboard ? '—' : formatNumber(totals.total_traitees) }}</span>
         <span class="sc__badge" *ngIf="!isLoadingDashboard && !isLoadingTotalItems">{{ calculatePercentage(totals.total_traitees, totalItemsSysteme || 0) }}{{ 'accueil.du-total' | translate }}</span>

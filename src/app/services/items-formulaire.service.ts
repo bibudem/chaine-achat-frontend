@@ -225,6 +225,8 @@ export class ItemFormulaireService {
     /** Ne renvoyer que les items créés par CET import en lot (tbl_items.import_log_id) —
      *  voir import.component.ts, bouton "Voir les items importés". */
     import_log_id?: string;
+    /** Demandes traitées par les ACQ (tuile verte du tableau de bord). */
+    traitees?: boolean;
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -247,6 +249,7 @@ export class ItemFormulaireService {
     if (opts.creation_notice_dtdm != null) p = p.set('creation_notice_dtdm', String(opts.creation_notice_dtdm));
     if (opts.annee)                p = p.set('annee',                opts.annee);
     if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);
+    if (opts.traitees)             p = p.set('traitees',             'true');
     if (opts.sort)                 p = p.set('sort',                 opts.sort);
     if (opts.order)                p = p.set('order',                opts.order);
 

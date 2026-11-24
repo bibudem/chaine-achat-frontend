@@ -741,6 +741,7 @@
     "titre": "Request management",
     "sous-titre": "List of registered items",
     "filtre-import": "Filtered list: items from import",
+    "filtre-traitees": "Filtered list: requests processed by ACQ",
     "creer": "Create an item",
     "creer-nouvel": "Create a new item",
     "recherche-placeholder": "Title, ISBN, requester, #ID...",

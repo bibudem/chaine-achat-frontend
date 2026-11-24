@@ -59,6 +59,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
    *  transmis en query param (import_log_id), pas de contrôle dédié dans la barre de
    *  filtres (voir import.component.ts, voirItemsImportes()). */
   selectedImportLogId     = '';
+  /** Filtre « Demandes traitées » (tuile verte du tableau de bord) : items soumis aux ACQ
+   *  dont le statut ET le suivi ACQ ont dépassé leurs valeurs par défaut — même règle que
+   *  le compteur (models/home.js, total_traitees). Query param traitees=true, bandeau dédié. */
+  selectedTraitees        = false;
 
   favoris:          FavoriFilter[] = [];
   showFavorisPanel  = false;
@@ -86,6 +90,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedTypeMonographie:   this.selectedTypeMonographie,
       selectedAnnee:          this.selectedAnnee,
       selectedPriorite:       this.selectedPriorite,
+      selectedTraitees:       this.selectedTraitees,
       currentPage:            this.currentPage,
       sortColumn:             this.sortColumn,
       sortDirection:          this.sortDirection,
@@ -109,6 +114,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedTypeMonographie   = s.selectedTypeMonographie   ?? '';
       this.selectedAnnee          = s.selectedAnnee          ?? '';
       this.selectedPriorite       = s.selectedPriorite       ?? '';
+      this.selectedTraitees       = s.selectedTraitees       === true;
       this.currentPage            = s.currentPage            ?? 1;
       this.sortColumn             = s.sortColumn             ?? 'defaut';
       this.sortDirection          = s.sortDirection          ?? 'desc';
@@ -131,7 +137,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.filtreTypeMonographieVisible ? this.selectedTypeMonographie : '',
       this.selectedAnnee,
       this.selectedPriorite,
-      this.selectedImportLogId
+      this.selectedImportLogId,
+      this.selectedTraitees ? 'traitees' : ''
     ].filter(v => !!v).length;
   }
 
@@ -208,7 +215,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     const prioriteParam     = this.route.snapshot.queryParamMap.get('priorite_demande');
     const searchParam       = this.route.snapshot.queryParamMap.get('search');
     const importLogIdParam  = this.route.snapshot.queryParamMap.get('import_log_id');
-    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam || importLogIdParam) {
+    const traiteesParam     = this.route.snapshot.queryParamMap.get('traitees') === 'true';
+    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam || importLogIdParam || traiteesParam) {
       this.searchTerm             = searchParam       ?? '';
       this.selectedBibliotheque   = bibliothequeParam ?? '';
       this.selectedStatutBib      = '';
@@ -222,7 +230,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedSuiviAcq       = suiviAcqParam     ?? '';
       this.selectedPriorite       = prioriteParam     ?? '';
       this.selectedImportLogId    = importLogIdParam  ?? '';
+      this.selectedTraitees       = traiteesParam;
       this.currentPage            = 1;
+      // Tri par défaut = « non traitées d'abord » : pour la liste des traitées, plus récentes
+      // modifiées en premier (commande complétée qu'on veut revérifier).
+      if (traiteesParam) { this.sortColumn = 'date_modification'; this.sortDirection = 'desc'; }
     }
 
     this.subs.add(
@@ -280,6 +292,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       annee:                 this.selectedAnnee          || undefined,
       priorite_demande:      this.selectedPriorite       || undefined,
       import_log_id:         this.selectedImportLogId    || undefined,
+      traitees:              this.selectedTraitees       || undefined,
       sort:                  this.sortColumn,
       order:                 this.sortDirection
     }).subscribe({
@@ -374,6 +387,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
     this.selectedImportLogId    = '';
+    this.selectedTraitees       = false;
     this.sortColumn             = 'defaut';
     this.sortDirection          = 'desc';
     this.currentPage            = 1;
@@ -386,6 +400,13 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   clearImportFilter(): void {
     this.selectedImportLogId = '';
     this.currentPage         = 1;
+    this.loadItems();
+  }
+
+  /** Retire uniquement le filtre « Demandes traitées » (bandeau dédié). */
+  clearTraiteesFilter(): void {
+    this.selectedTraitees = false;
+    this.currentPage      = 1;
     this.loadItems();
   }
 
