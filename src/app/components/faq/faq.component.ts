@@ -144,7 +144,7 @@ export class FaqComponent {
       question: 'Comment traiter un item (choix de notice) ?',
       answerHtml: `Cliquez sur <strong>Traiter</strong> à côté de l'item. La fiche présente les informations de la demande (éditeur, ISBN, format, note de la bibliothèque…) en lecture seule, puis l'onglet <strong>TDM – Choix de notice</strong>, le seul modifiable :
         <ul ${UL}>
-          <li><strong>TDM : OCN</strong></li>
+          <li><strong>TDM : Numéro OCLC</strong></li>
           <li><strong>TDM : Note interne</strong></li>
           <li><strong>Suivi Catalogage</strong> : choisissez <strong>Complété</strong> une fois le travail terminé</li>
         </ul>

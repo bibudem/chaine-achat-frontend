@@ -168,7 +168,7 @@ case "Suggestion d'achat - Usager": return `${base} badge-type--suggest`;
         ? [{ label: 'ACQ — Création de notice TDM', value: i.creation_notice_dtdm ? 'Oui' : 'Non' }]
         : []),
       ...(bordereauConcerne && i.bordereau_imprime ? [{ label: 'ACQ — Bordereau imprimé', value: i.bordereau_imprime }] : []),
-      ...(i.note_dtdm ? [{ label: 'TDM — OCN', value: i.note_dtdm }] : []),
+      ...(i.note_dtdm ? [{ label: 'TDM — Numéro OCLC', value: i.note_dtdm }] : []),
       ...(i.note_interne_dtdm ? [{ label: 'TDM — Note interne', value: i.note_interne_dtdm }] : []),
       ...(i.catalogue ? [{ label: 'TDM — Suivi Catalogage', value: i.catalogue }] : []),
     ];

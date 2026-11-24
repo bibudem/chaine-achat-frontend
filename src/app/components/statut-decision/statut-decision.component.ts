@@ -761,7 +761,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         ? [{ label: 'ACQ — Création de notice TDM', value: creationNoticeForm ? 'Oui' : 'Non' }]
         : []),
       ...(bordereauForm ? [{ label: 'ACQ — Bordereau imprimé', value: bordereauForm }] : []),
-      ...(noteDtdmForm  ? [{ label: 'TDM — OCN', value: noteDtdmForm }] : []),
+      ...(noteDtdmForm  ? [{ label: 'TDM — Numéro OCLC', value: noteDtdmForm }] : []),
       ...(noteInterneForm ? [{ label: 'TDM — Note interne', value: noteInterneForm }] : []),
       ...(catalogueForm ? [{ label: 'TDM — Suivi Catalogage', value: catalogueForm }] : []),
     ];
