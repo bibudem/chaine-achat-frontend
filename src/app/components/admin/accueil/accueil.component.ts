@@ -306,10 +306,10 @@ export class AccueilComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Carte « Demandes traitées » → liste des items traités par les ACQ (même règle que le
-   *  compteur total_traitees, models/home.js) — pour revérifier une commande complétée. */
+  /** Carte « Demandes traitées » → liste des items avec le filtre Statut ACQ = Complétée
+   *  réellement sélectionné dans la barre — pour revérifier une commande complétée. */
   navigateToTraitees(): void {
-    this.router.navigate(['/items'], { queryParams: { traitees: 'true' } });
+    this.router.navigate(['/items'], { queryParams: { statut_acq: 'Complétée' } });
   }
 
   private loadTotalEnAttente(): void {
