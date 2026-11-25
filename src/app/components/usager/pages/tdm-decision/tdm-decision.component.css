@@ -62,9 +62,5 @@
 
 /* ── Champs TDM ── */
 .ts-decision { border-top: 1px solid #e2e8f0; padding-top: .8rem; }
-.ts-tdm-fields {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: .9rem;
-}
-.ts-tdm-fields__col .form-label { font-size: var(--typo-label); font-weight: 600; color: #374151; }
+.ts-decision .tdm-champs .form-label { font-size: var(--typo-label); font-weight: 600; color: #374151; }
 .ts-decision__actions { margin-top: 1rem; display: flex; justify-content: flex-end; }

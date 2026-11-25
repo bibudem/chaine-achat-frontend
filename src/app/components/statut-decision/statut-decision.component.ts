@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -28,6 +29,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   successMessage: string | null = null;
   errorMessage: string | null = null;
   emailSent = false;
+  /** Envoi des courriels en cours (après l'enregistrement). */
+  envoiEnCours = false;
+  /** Adresses pour lesquelles l'envoi a échoué. */
+  echecsEnvoi: string[] = [];
   options = new ListeChoixOptions();
   /** Onglet demandé — « tri » (TechDoc Tri), « acq » (Décision ACQ) ou « tdm » (TDM – Choix de
    *  notice), piloté par ?tab= (voir item-detail.component.html, boutons de la barre
@@ -166,6 +171,8 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       this.item                = null;
       this.errorMessage        = null;
       this.successMessage      = null;
+      this.emailSent           = false;
+      this.echecsEnvoi         = [];
       this.itemExisteDansItems = false;
       this.form.reset({
         statut_acq: '', suivi_acq: '', note_acq: '', creation_notice_dtdm: null,
@@ -584,7 +591,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       : specificDataBase;
 
     const request$ = this.itemExisteDansItems
-      ? this.http.put<{ success: boolean; message?: string }>(
+      ? this.http.put<{ success: boolean; message?: string; data?: { item_id?: number } }>(
           `${environment.apiUrl}/items/save/${this.itemId}`,
           {
             item_id: this.itemId, statut_acq, suivi_acq, note_acq, creation_notice_dtdm,
@@ -597,7 +604,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
           },
           this.httpOptions
         )
-      : this.http.post<{ success: boolean; message?: string }>(
+      : this.http.post<{ success: boolean; message?: string; data?: { item_id?: number } }>(
           `${environment.apiUrl}/items/add`,
           { ...this.buildItemPayload(suivi_acq, note_acq), creation_notice_dtdm, categorie_document, format_support, note_dtdm, note_interne_dtdm, catalogue, lien_plateforme, acq_responsable_nom, description_plateforme, statut_acq, reponse_id: this.reponseId, ...(specificData ? { specificData } : {}) },
           this.httpOptions
@@ -607,18 +614,29 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.submitting = false;
         if (response.success) {
+          // Item créé à l'enregistrement : son numéro sert de référence dans le courriel.
+          if (!this.itemId && response.data?.item_id) this.itemId = response.data.item_id;
           this.successMessage = 'Décision enregistrée avec succès !';
-          if (sendEmail && this.hasNotifEmail) {
-            this.notifyN8nDecision(suivi_acq, note_acq);
-            this.emailSent = true;
-          }
           // Synchroniser tbl_reponses pour que les notifications header disparaissent
           if (this.reponseId) {
             this.reponsesService.updateReponseStatut(this.reponseId, { statut_acq, suivi_acq })
               .subscribe({ error: err => console.warn('[statut-decision] sync reponse statut:', err) });
           }
           this.reponsesService.triggerPendingRefresh();
-          setTimeout(() => this.router.navigate(['/items']), 2000);
+
+          if (sendEmail && this.hasNotifEmail) {
+            // Retour à la liste seulement si tous les courriels sont partis ; sinon l'échec
+            // reste affiché pour que la personne puisse aviser l'usager autrement.
+            this.envoiEnCours = true;
+            this.notifyN8nDecision(suivi_acq, note_acq).subscribe(echecs => {
+              this.envoiEnCours = false;
+              this.echecsEnvoi  = echecs;
+              this.emailSent    = echecs.length < this.destinatairesChoisis.length;
+              if (!echecs.length) setTimeout(() => this.router.navigate(['/items']), 2000);
+            });
+          } else {
+            setTimeout(() => this.router.navigate(['/items']), 2000);
+          }
         } else {
           this.errorMessage = response.message || "Erreur lors de l'enregistrement.";
         }
@@ -684,17 +702,20 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     }
   }
 
-  get hasNotifEmail(): boolean {
-    return this.notifTargets.some(t => t.selected);
+  get destinatairesChoisis() {
+    return this.notifTargets.filter(t => t.selected);
   }
 
-  private notifyN8nDecision(suivi_acq: string, note_acq: string | null): void {
-    const selected = this.notifTargets.filter(t => t.selected);
-    // Suggestion publique acceptée au tri : l'équipe de tri reçoit aussi la confirmation de fin
-    // de traitement — une seule fois, avec le courriel au demandeur (cible 'saisie').
-    // Suggestion publique triée (acceptée ou refusée — avis) : copie du suivi final à l'équipe de tri.
+  get hasNotifEmail(): boolean {
+    return this.destinatairesChoisis.length > 0;
+  }
+
+  /** Un appel au webhook n8n par destinataire coché ; émet la liste des adresses en échec. */
+  private notifyN8nDecision(suivi_acq: string, note_acq: string | null): Observable<string[]> {
+    // Suggestion publique triée (acceptée ou refusée — avis) : copie du suivi final à l'équipe
+    // de tri, une seule fois, avec le courriel au demandeur (cible 'saisie').
     const suggestionTriee = this.item?.tri_statut === 'accepte' || this.item?.tri_statut === 'refuse';
-    selected.forEach(target => {
+    const envois = this.destinatairesChoisis.map(target => {
       const payload = {
         reponse_id:          this.reponseId ?? this.item?.reponse_id ?? null,
         // Numéro de référence affiché dans le courriel (numéro de l'item).
@@ -713,10 +734,18 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
         // production) et ses adresses — même rôle que app_url envoyé par le backend.
         app_url:             window.location.origin
       };
-      this.http
-        .post(`${environment.n8nWebhookUrl}/statut-decision`, payload, this.httpOptions)
-        .subscribe({ error: err => console.warn(`[n8n/statut-decision/${target.key}]`, err) });
+      return this.http
+        .post(`${environment.n8nWebhookUrl}/statut-decision`, payload,
+              { headers: this.httpOptions.headers, responseType: 'text' })
+        .pipe(
+          map(() => null),
+          catchError(err => {
+            console.warn(`[n8n/statut-decision/${target.key}]`, err);
+            return of(target.email);
+          })
+        );
     });
+    return forkJoin(envois).pipe(map(res => res.filter((e): e is string => !!e)));
   }
 
   // ═══════════════════════════════════════════════════════════

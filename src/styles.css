@@ -240,3 +240,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: .8rem;
   color: #6c757d;
 }
+
+/* Champs TDM (Décision ACQ, Modifier l'item, File TDM) : hauteur et retrait du texte
+   identiques pour le champ et la liste ; note lisible sur plusieurs lignes. */
+.tdm-champs input.form-control,
+.tdm-champs .form-select {
+  height: 2.875rem;
+  padding-left: 1rem;
+  font-size: .875rem;
+}
+.tdm-champs textarea.form-control {
+  min-height: 6.5rem;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  resize: vertical;
+}

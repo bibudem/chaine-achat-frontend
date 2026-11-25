@@ -245,146 +245,85 @@
   color:          #166534;
 }
 
-/* ── Aperçu courriel ────────────────────────────────────────── */
-.sd-email-preview {
-  border:         1px solid #bae6fd;
-  border-radius:  10px;
-  overflow:       hidden;
+/* ── Courriel à l'usager ────────────────────────────────────── */
+.sd-courriel {
+  border:        1px solid #dfe3e8;
+  border-radius: 8px;
+  background:    #fff;
 }
-.sd-email-preview__header {
-  background:     #e0f2fe;
-  padding:        .6rem 1rem;
-  font-size:      .75rem;
-  font-weight:    700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color:          #0369a1;
+.sd-courriel__entete {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             1rem;
+  flex-wrap:       wrap;
+  padding:         .75rem 1.25rem;
+  border-bottom:   1px solid #dfe3e8;
+  background:      #f8f9fb;
+  border-radius:   8px 8px 0 0;
 }
-.sd-email-preview__body {
-  background:  #f0f9ff;
-  padding:     .85rem 1rem;
-  display:     flex;
-  flex-direction: column;
-  gap:         .55rem;
-}
-.sd-email-preview__row {
-  display:   flex;
-  gap:       .75rem;
-  align-items: flex-start;
-}
-.sd-email-preview__key {
-  flex-shrink:    0;
-  min-width:      170px;
-  font-size:      .72rem;
-  font-weight:    700;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  color:          #0369a1;
-  padding-top:    2px;
-}
-.sd-email-preview__value {
-  font-size:   .875rem;
+.sd-courriel__titre {
+  margin:      0;
+  font-size:   .95rem;
+  font-weight: 600;
   color:       #1E2631;
-  line-height: 1.5;
-  white-space: pre-wrap;
 }
-.sd-email-preview__notice {
-  background:  #e0f2fe;
-  border-top:  1px solid #bae6fd;
-  padding:     .55rem 1rem;
-  font-size:   .78rem;
-  color:       #0369a1;
-  line-height: 1.5;
-}
+.sd-courriel__compte { font-size: .8rem; color: #607386; }
 
-/* ── Panel notifications ────────────────────────────────────── */
-.sd-notif-panel {
-  border:         1px solid #eaedf0;
-  border-radius:  10px;
-  overflow:       hidden;
+.sd-courriel__corps {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
-.sd-notif-panel__header {
-  background:     #f8f9fb;
-  border-bottom:  1px solid #eaedf0;
-  padding:        .65rem 1rem;
-  font-size:      .78rem;
+.sd-courriel__bloc { padding: 1rem 1.25rem; }
+.sd-courriel__bloc + .sd-courriel__bloc { border-left: 1px solid #eef0f3; }
+@media (max-width: 640px) {
+  .sd-courriel__bloc + .sd-courriel__bloc { border-left: 0; border-top: 1px solid #eef0f3; }
+}
+.sd-courriel__sous-titre {
+  margin:         0 0 .6rem;
+  font-size:      .72rem;
   font-weight:    700;
   text-transform: uppercase;
   letter-spacing: .05em;
   color:          #607386;
 }
-.sd-notif-empty {
-  padding:    1rem;
-  font-size:  .85rem;
-  color:      #9DABB9;
-}
-.sd-notif-list {
-  display: flex;
-  flex-direction: column;
-}
-.sd-notif-target {
-  display:        flex;
-  align-items:    center;
-  gap:            .85rem;
-  padding:        .85rem 1rem;
-  border-bottom:  1px solid #f0f2f5;
-  cursor:         pointer;
-  transition:     background .12s;
-  background:     #fff;
-  user-select:    none;
-}
-.sd-notif-target:last-child { border-bottom: none; }
-.sd-notif-target:hover { background: #f8f9fb; }
-.sd-notif-target--selected { background: #f0fdf4; }
-.sd-notif-target--selected:hover { background: #dcfce7; }
+.sd-courriel__vide { margin: 0; font-size: .85rem; color: #6c757d; }
 
-.sd-notif-checkbox { display: none; }
+.sd-courriel__dest {
+  padding:       .55rem 0 .55rem 1.75rem;
+  margin:        0;
+  border-bottom: 1px solid #f0f2f5;
+}
+.sd-courriel__dest:last-child { border-bottom: 0; }
+.sd-courriel__dest .form-check-input { margin-left: -1.75rem; margin-top: .2rem; cursor: pointer; }
+.sd-courriel__dest .form-check-label { display: flex; flex-direction: column; cursor: pointer; }
+.sd-courriel__role    { font-size: .85rem; font-weight: 600; color: #1E2631; }
+.sd-courriel__adresse { font-size: .85rem; color: #0057AC; word-break: break-all; }
+.sd-courriel__desc    { font-size: .75rem; color: #6c757d; }
 
-.sd-notif-target__icon {
-  width:          34px;
-  height:         34px;
-  border-radius:  8px;
-  background:     #f0f2f5;
-  display:        flex;
-  align-items:    center;
-  justify-content:center;
-  font-size:      .9rem;
-  color:          #607386;
-  flex-shrink:    0;
-  transition:     background .12s, color .12s;
+.sd-courriel__apercu {
+  display:               grid;
+  grid-template-columns: max-content 1fr;
+  gap:                   .45rem 1rem;
+  margin:                0 0 .75rem;
 }
-.sd-notif-target--selected .sd-notif-target__icon {
-  background: #dcfce7;
-  color:      #16a34a;
-}
+.sd-courriel__apercu dt { font-size: .8rem; font-weight: 600; color: #607386; }
+.sd-courriel__apercu dd { margin: 0; font-size: .875rem; color: #1E2631; }
+.sd-courriel__note      { white-space: pre-wrap; }
+.sd-courriel__manquant  { color: #9DABB9 !important; font-style: italic; }
+.sd-courriel__aide      { margin: 0; font-size: .78rem; color: #6c757d; }
 
-.sd-notif-target__body { flex: 1; min-width: 0; }
-.sd-notif-target__label {
-  font-size:   .82rem;
-  font-weight: 600;
-  color:       #1E2631;
-  line-height: 1.3;
+.sd-courriel__badge {
+  display:       inline-block;
+  min-width:     1.35rem;
+  margin-left:   .4rem;
+  padding:       0 .35rem;
+  border-radius: 999px;
+  background:    rgba(255, 255, 255, .25);
+  font-size:     .75rem;
+  line-height:   1.35rem;
+  text-align:    center;
 }
-.sd-notif-target__email {
-  font-size:  .78rem;
-  color:      #2380D1;
-  font-family: monospace;
-  margin:     .1rem 0;
-  word-break: break-all;
-}
-.sd-notif-target__desc {
-  font-size: .72rem;
-  color:     #9DABB9;
-  line-height: 1.3;
-}
-
-.sd-notif-target__check {
-  font-size:  1rem;
-  color:      #d1d5db;
-  flex-shrink: 0;
-  transition: color .12s;
-}
-.sd-notif-target--selected .sd-notif-target__check { color: #16a34a; }
 
 /* ── Bandeau confirmation courriel envoyé ───────────────────── */
 .sd-confirm-email {
@@ -411,10 +350,19 @@
   color:          #15803d;
   margin-bottom:  .15rem;
 }
-.sd-confirm-email__sub {
-  font-size:      .8rem;
-  color:          #166534;
+.sd-confirm-email__liste {
+  margin:     .2rem 0 0;
+  padding:    0;
+  list-style: none;
+  font-size:  .8rem;
+  color:      #166534;
 }
+.sd-confirm-email--attente { align-items: center; background: #f8f9fb; border-color: #dfe3e8; }
+.sd-confirm-email--attente .sd-confirm-email__icon, .sd-confirm-email--attente .sd-confirm-email__title { color: #607386; }
+.sd-confirm-email--echec { background: #fff7ed; border-color: #fed7aa; }
+.sd-confirm-email--echec .sd-confirm-email__icon, .sd-confirm-email--echec .sd-confirm-email__title,
+.sd-confirm-email--echec .sd-confirm-email__liste { color: #9a3412; }
+.sd-confirm-email__lien { display: inline-block; margin-top: .5rem; font-size: .8rem; }
 
 /* ── Icône confirmation courriel envoyé ─────────────────────── */
 .confirmation-icon--email {

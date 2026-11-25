@@ -71,21 +71,22 @@
           <p *ngIf="!item.creation_notice_dtdm" class="text-muted fst-italic small mb-2">
             {{ 'tdm-decision.suivi-interne-seulement' | translate }}
           </p>
-          <div class="ts-tdm-fields">
-            <div class="ts-tdm-fields__col" *ngIf="item.creation_notice_dtdm">
+          <!-- Champs courts sur une ligne (même hauteur), note pleine largeur dessous -->
+          <div class="row g-3 tdm-champs">
+            <div class="col-md-6" *ngIf="item.creation_notice_dtdm">
               <label class="form-label" for="note_dtdm">{{ 'item-formulaire.note-dtdm' | translate }}</label>
-              <textarea id="note_dtdm" class="form-control" rows="2" [(ngModel)]="note_dtdm" [disabled]="submitting"></textarea>
+              <input id="note_dtdm" type="text" class="form-control" [(ngModel)]="note_dtdm" [disabled]="submitting">
             </div>
-            <div class="ts-tdm-fields__col">
-              <label class="form-label" for="note_interne_dtdm">{{ 'item-formulaire.note-interne-dtdm' | translate }}</label>
-              <textarea id="note_interne_dtdm" class="form-control" rows="4" [(ngModel)]="note_interne_dtdm" [disabled]="submitting"></textarea>
-            </div>
-            <div class="ts-tdm-fields__col">
+            <div class="col-md-6">
               <label class="form-label" for="catalogue">{{ 'item-formulaire.suivi-catalogage' | translate }}</label>
               <select id="catalogue" class="form-select" [(ngModel)]="catalogue" [disabled]="submitting">
                 <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
                 <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
               </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="note_interne_dtdm">{{ 'item-formulaire.note-interne-dtdm' | translate }}</label>
+              <textarea id="note_interne_dtdm" class="form-control" rows="4" [(ngModel)]="note_interne_dtdm" [disabled]="submitting"></textarea>
             </div>
           </div>
 

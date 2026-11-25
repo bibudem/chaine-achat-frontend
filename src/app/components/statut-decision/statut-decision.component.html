@@ -362,93 +362,82 @@
               <p *ngIf="form.get('creation_notice_dtdm')?.value !== true" class="text-muted fst-italic small mb-3">
                 {{ 'tdm-decision.suivi-interne-seulement' | translate }}
               </p>
-              <div class="row g-3 mb-4">
-                <div class="col-md-4" *ngIf="form.get('creation_notice_dtdm')?.value === true">
+              <!-- Champs courts sur une ligne (même hauteur), note pleine largeur dessous -->
+              <div class="row g-3 mb-4 tdm-champs">
+                <div class="col-md-6" *ngIf="form.get('creation_notice_dtdm')?.value === true">
                   <label for="note_dtdm" class="form-label fw-semibold">
                     {{ 'item-formulaire.note-dtdm' | translate }}
                   </label>
-                  <textarea id="note_dtdm" formControlName="note_dtdm" rows="2"
-                            class="form-control"></textarea>
+                  <input id="note_dtdm" type="text" formControlName="note_dtdm" class="form-control">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
+                  <label for="catalogue" class="form-label fw-semibold">
+                    {{ 'item-formulaire.suivi-catalogage' | translate }}
+                  </label>
+                  <select id="catalogue" formControlName="catalogue" class="form-select">
+                    <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
+                    <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
+                  </select>
+                </div>
+                <div class="col-12">
                   <label for="note_interne_dtdm" class="form-label fw-semibold">
                     {{ 'item-formulaire.note-interne-dtdm' | translate }}
                   </label>
                   <textarea id="note_interne_dtdm" formControlName="note_interne_dtdm" rows="4"
                             class="form-control"></textarea>
                 </div>
-                <div class="col-md-4">
-                  <label for="catalogue" class="form-label fw-semibold">
-                    {{ 'item-formulaire.suivi-catalogage' | translate }}
-                  </label>
-                  <select id="catalogue" formControlName="catalogue" class="form-select form-select-lg">
-                    <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
-                    <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
-                  </select>
-                </div>
               </div>
             </div><!-- /tab-pane tdm -->
 
             </div><!-- /tab-content -->
 
-            <!-- Aperçu + Notifications côte à côte (onglet Décision ACQ) -->
-            <div class="row g-3 align-items-stretch" *ngIf="ongletActif === 'acq'">
-              <div class="col-md-6"
-                   *ngIf="notifTargets.length > 0 && form.get('suivi_acq')?.value">
-                <div class="sd-email-preview h-100">
-                  <div class="sd-email-preview__header">
-                    <i class="bi bi-eye me-2"></i>Contenu inclus dans le courriel
-                  </div>
-                  <div class="sd-email-preview__body">
-                    <div class="sd-email-preview__row">
-                      <span class="sd-email-preview__key">Statut</span>
-                      <span class="sd-email-preview__value fw-semibold">{{ form.get('suivi_acq')?.value }}</span>
-                    </div>
-                    <div class="sd-email-preview__row" *ngIf="form.get('note_acq')?.value">
-                      <span class="sd-email-preview__key">Note</span>
-                      <span class="sd-email-preview__value fst-italic">{{ form.get('note_acq')?.value }}</span>
-                    </div>
-                    <div class="sd-email-preview__row" *ngIf="!form.get('note_acq')?.value">
-                      <span class="sd-email-preview__key">Note</span>
-                      <span class="sd-email-preview__value" style="opacity:.45">Aucune note ajoutée</span>
-                    </div>
-                  </div>
-                  <div class="sd-email-preview__notice">
-                    <i class="bi bi-info-circle-fill me-2"></i>
-                    Le statut et la note seront visibles par l'usager.
-                  </div>
-                </div>
-              </div>
-              <div [class.col-md-6]="notifTargets.length > 0 && form.get('suivi_acq')?.value"
-                   [class.col-12]="!(notifTargets.length > 0 && form.get('suivi_acq')?.value)">
-                <div class="sd-notif-panel h-100">
-                  <div class="sd-notif-panel__header">
-                    <i class="bi bi-send-fill me-2"></i>Notifications à envoyer
-                  </div>
-                  <div class="sd-notif-empty" *ngIf="notifTargets.length === 0">
-                    <i class="bi bi-envelope-slash me-2"></i>
-                    Aucun courriel de notification disponible pour cette demande.
-                  </div>
-                  <div class="sd-notif-list" *ngIf="notifTargets.length > 0">
-                    <label *ngFor="let t of notifTargets"
-                           class="sd-notif-target"
-                           [class.sd-notif-target--selected]="t.selected">
-                      <input type="checkbox" class="sd-notif-checkbox" [(ngModel)]="t.selected">
-                      <div class="sd-notif-target__icon"><i class="bi {{ t.icon }}"></i></div>
-                      <div class="sd-notif-target__body">
-                        <div class="sd-notif-target__label">{{ t.label }}</div>
-                        <div class="sd-notif-target__email">{{ t.email }}</div>
-                        <div class="sd-notif-target__desc">{{ t.description }}</div>
-                      </div>
-                      <div class="sd-notif-target__check">
-                        <i class="bi" [class.bi-check-circle-fill]="t.selected"
-                           [class.bi-circle]="!t.selected"></i>
-                      </div>
+            <!-- Courriel à l'usager (onglet Décision ACQ) : destinataires à gauche, contenu
+                 transmis à droite. Envoyé seulement par « Enregistrer et envoyer ». -->
+            <section class="sd-courriel" *ngIf="ongletActif === 'acq'" aria-labelledby="sd-courriel-titre">
+              <header class="sd-courriel__entete">
+                <h3 class="sd-courriel__titre" id="sd-courriel-titre">
+                  <i class="bi bi-envelope me-2" aria-hidden="true"></i>{{ 'acq-decision.courriel-titre' | translate }}
+                </h3>
+                <span class="sd-courriel__compte" *ngIf="notifTargets.length > 0">
+                  {{ 'acq-decision.courriel-selection' | translate: { n: destinatairesChoisis.length, total: notifTargets.length } }}
+                </span>
+              </header>
+
+              <div class="sd-courriel__corps">
+                <div class="sd-courriel__bloc">
+                  <h4 class="sd-courriel__sous-titre">{{ 'acq-decision.courriel-destinataires' | translate }}</h4>
+                  <p class="sd-courriel__vide" *ngIf="notifTargets.length === 0">
+                    {{ 'acq-decision.courriel-aucun-destinataire' | translate }}
+                  </p>
+                  <div class="form-check sd-courriel__dest" *ngFor="let t of notifTargets">
+                    <input class="form-check-input" type="checkbox" [id]="'sd-dest-' + t.key"
+                           [(ngModel)]="t.selected" [ngModelOptions]="{ standalone: true }">
+                    <label class="form-check-label" [for]="'sd-dest-' + t.key">
+                      <span class="sd-courriel__role">{{ t.label }}</span>
+                      <span class="sd-courriel__adresse">{{ t.email }}</span>
+                      <span class="sd-courriel__desc">{{ t.description }}</span>
                     </label>
                   </div>
                 </div>
+
+                <div class="sd-courriel__bloc">
+                  <h4 class="sd-courriel__sous-titre">{{ 'acq-decision.courriel-contenu' | translate }}</h4>
+                  <dl class="sd-courriel__apercu">
+                    <dt>{{ 'acq-decision.courriel-suivi' | translate }}</dt>
+                    <dd [class.sd-courriel__manquant]="!form.get('suivi_acq')?.value">
+                      {{ form.get('suivi_acq')?.value || ('acq-decision.courriel-suivi-a-choisir' | translate) }}
+                    </dd>
+                    <dt>{{ 'acq-decision.courriel-note' | translate }}</dt>
+                    <dd [class.sd-courriel__manquant]="!form.get('note_acq')?.value" class="sd-courriel__note">
+                      {{ form.get('note_acq')?.value || ('acq-decision.courriel-aucune-note' | translate) }}
+                    </dd>
+                  </dl>
+                  <p class="sd-courriel__aide">
+                    <i class="bi bi-info-circle me-1" aria-hidden="true"></i>{{ 'acq-decision.courriel-aide' | translate }}
+                  </p>
+                </div>
               </div>
-            </div>
+            </section>
 
           </div><!-- /p-4 -->
 
@@ -468,10 +457,11 @@
             </button>
             <button type="button" class="btn acq-btn-primary" *ngIf="ongletActif === 'acq'"
                     [disabled]="submitting || form.invalid || !hasNotifEmail"
-                    [title]="!hasNotifEmail ? 'Aucun courriel usager enregistré pour cette demande' : ''"
+                    [title]="!hasNotifEmail ? (notifTargets.length ? ('acq-decision.courriel-cocher' | translate) : ('acq-decision.courriel-aucun-destinataire' | translate)) : ''"
                     (click)="submitForm(true)">
               <span *ngIf="!submitting">
                 <i class="bi bi-envelope-check me-2"></i>{{ 'acq-decision.enregistrer-courriel' | translate }}
+                <span class="sd-courriel__badge" *ngIf="destinatairesChoisis.length">{{ destinatairesChoisis.length }}</span>
               </span>
               <span *ngIf="submitting" class="d-flex align-items-center gap-2">
                 <span class="spinner-border spinner-border-sm" role="status"></span>
@@ -490,23 +480,37 @@
               <i class="bi" [class.bi-envelope-check-fill]="emailSent" [class.bi-check-lg]="!emailSent"></i>
             </div>
             <h2 class="confirmation-title">{{ 'acq-decision.confirmation-titre' | translate }}</h2>
-            <p class="confirmation-message">{{ 'acq-decision.confirmation-message' | translate }}</p>
+            <p class="confirmation-message" *ngIf="!envoiEnCours && !echecsEnvoi.length">
+              {{ 'acq-decision.confirmation-message' | translate }}
+            </p>
 
-            <div class="sd-confirm-email" *ngIf="emailSent">
+            <div class="sd-confirm-email sd-confirm-email--attente" *ngIf="envoiEnCours" role="status">
+              <span class="spinner-border spinner-border-sm sd-confirm-email__icon"></span>
+              <div class="sd-confirm-email__title">{{ 'acq-decision.courriel-envoi-en-cours' | translate }}</div>
+            </div>
+
+            <div class="sd-confirm-email" *ngIf="emailSent && !envoiEnCours">
               <i class="bi bi-send-check-fill sd-confirm-email__icon"></i>
               <div>
-                <div class="sd-confirm-email__title">
-                  Courriel{{ notifTargets.length > 1 ? 's' : '' }} envoyé{{ notifTargets.length > 1 ? 's' : '' }}
-                </div>
-                <div class="sd-confirm-email__sub">
-                  <ng-container *ngFor="let t of notifTargets; let last = last">
-                    <ng-container *ngIf="t.selected">
-                      <strong>{{ t.email }}</strong>
-                      <span class="text-muted"> ({{ t.label }})</span>
-                      <span *ngIf="!last"> · </span>
-                    </ng-container>
+                <div class="sd-confirm-email__title">{{ 'acq-decision.courriel-envoye' | translate }}</div>
+                <ul class="sd-confirm-email__liste">
+                  <ng-container *ngFor="let t of destinatairesChoisis">
+                    <li *ngIf="!echecsEnvoi.includes(t.email)">
+                      <strong>{{ t.email }}</strong> <span class="text-muted">({{ t.label }})</span>
+                    </li>
                   </ng-container>
-                </div>
+                </ul>
+              </div>
+            </div>
+
+            <div class="sd-confirm-email sd-confirm-email--echec" *ngIf="echecsEnvoi.length && !envoiEnCours" role="alert">
+              <i class="bi bi-exclamation-triangle-fill sd-confirm-email__icon"></i>
+              <div>
+                <div class="sd-confirm-email__title">{{ 'acq-decision.courriel-echec' | translate }}</div>
+                <ul class="sd-confirm-email__liste">
+                  <li *ngFor="let e of echecsEnvoi"><strong>{{ e }}</strong></li>
+                </ul>
+                <a routerLink="/items" class="sd-confirm-email__lien">{{ 'acq-decision.retour-liste' | translate }}</a>
               </div>
             </div>
 
