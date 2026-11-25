@@ -251,31 +251,37 @@ export class AccueilComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
-  navigateTo(path: string): void {
-    this.router.navigate([path], { queryParams: { annee: this.anneeQueryParam } });
+  /** Tous les liens vers /items passent par ici : la liste repart de ces filtres seulement,
+   *  sans reprendre ceux restés en session (le chiffre cliqué = le nombre de résultats). */
+  private ouvrirListe(queryParams: Record<string, string | undefined> = {}): void {
+    this.router.navigate(['/items'], { queryParams, state: { depuisTableauDeBord: true } });
+  }
+
+  /** « Voir tout » de Répartition par type : l'année sélectionnée. */
+  navigateToToutesAnnee(): void {
+    this.ouvrirListe({ annee: this.anneeQueryParam });
   }
 
   /** « Répartition par type » (byType) reflète l'année sélectionnée sur le tableau de
    *  bord — les liens vers la liste des items doivent porter le même filtre, sinon le
    *  nombre affiché ici ne correspond plus à ce qu'on voit en arrivant sur /items. */
   navigateToType(formulaire_type: string): void {
-    this.router.navigate(['/items'], { queryParams: { formulaire_type, annee: this.anneeQueryParam } });
+    this.ouvrirListe({ formulaire_type, annee: this.anneeQueryParam });
   }
 
-  /** Carte « Demandes urgentes » → liste des items, priorité Urgent ET encore en attente ACQ
-   *  (mêmes valeurs par défaut que « Demandes en attente » — voir total_urgentes_attente dans
-   *  models/home.js). Pas d'année transmise : toujours toutes années, comme la carte. */
+  /** Carte « Demandes urgentes » → mêmes conditions que total_urgentes_attente
+   *  (models/home.js) : soumise aux ACQ, Urgent, statut/suivi ACQ par défaut. Toutes années. */
   navigateToUrgentesEnAttente(): void {
-    this.router.navigate(['/items'], {
-      queryParams: { priorite_demande: 'Urgent', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    this.ouvrirListe({
+      statut_bibliotheque: 'Soumettre aux ACQ', priorite_demande: 'Urgent',
+      statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
     });
   }
 
-  /** « Top 5 demandeurs » (activité, suit l'année sélectionnée comme Répartition par type) →
-   *  liste des items, avec le nom du demandeur dans la recherche libre (même champ que
-   *  demandeur/titre/isbn/éditeur/id sur /items). */
+  /** « Top 5 demandeurs » → filtre sur le demandeur exact (pas la recherche libre, qui
+   *  trouverait aussi le nom dans un titre ou un autre demandeur). */
   navigateToDemandeur(demandeur: string): void {
-    this.router.navigate(['/items'], { queryParams: { search: demandeur, annee: this.anneeQueryParam } });
+    this.ouvrirListe({ demandeur, annee: this.anneeQueryParam });
   }
 
   /** Catalogue « Types de formulaire » → formulaire de création, type pré-sélectionné (voir
@@ -294,22 +300,20 @@ export class AccueilComponent implements OnInit, OnDestroy {
   /** « Par bibliothèque » (libraryStats) reflète aussi l'année sélectionnée — même raison
    *  que navigateToType. */
   navigateToBibliotheque(bibliotheque: string): void {
-    this.router.navigate(['/items'], { queryParams: { bibliotheque, annee: this.anneeQueryParam } });
+    this.ouvrirListe({ bibliotheque, annee: this.anneeQueryParam });
   }
 
-  /** Carte « Demandes en attente » → liste des items, avec les filtres Statut ACQ/Suivi ACQ
-   *  réellement sélectionnés dans la barre (pas un drapeau caché) — mêmes valeurs par défaut
-   *  que la cloche de notifications (voir loadTotalEnAttente). */
+  /** Carte « Demandes en attente » → mêmes conditions que la cloche de notifications
+   *  (ReponsesModel.getPending) : soumise aux ACQ, statut/suivi ACQ par défaut. */
   navigateToEnAttente(): void {
-    this.router.navigate(['/items'], {
-      queryParams: { statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT }
+    this.ouvrirListe({
+      statut_bibliotheque: 'Soumettre aux ACQ', statut_acq: ACQ_STATUT_DEFAUT, suivi_acq: ACQ_SUIVI_DEFAUT
     });
   }
 
-  /** Carte « Demandes traitées » → liste des items avec le filtre Statut ACQ = Complétée
-   *  réellement sélectionné dans la barre — pour revérifier une commande complétée. */
+  /** Carte « Demandes traitées » → Statut ACQ = Complétée (total_traitees, models/home.js). */
   navigateToTraitees(): void {
-    this.router.navigate(['/items'], { queryParams: { statut_acq: 'Complétée' } });
+    this.ouvrirListe({ statut_acq: 'Complétée' });
   }
 
   private loadTotalEnAttente(): void {
@@ -323,7 +327,7 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   /** Carte « Total demandes » → liste des items, sans filtre. */
   navigateToItemsListe(): void {
-    this.router.navigate(['/items']);
+    this.ouvrirListe();
   }
 
   private loadTotalItemsSysteme(): void {

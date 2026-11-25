@@ -187,6 +187,17 @@
 
   </div>
 
+  <!-- Filtres sans contrôle dans la barre (liens du tableau de bord) -->
+  <div class="il-pastilles mb-3" *ngIf="filtresSansControle.length">
+    <span class="il-pastille" *ngFor="let f of filtresSansControle">
+      {{ f.libelle | translate }} : <strong>{{ f.valeur }}</strong>
+      <button type="button" class="il-pastille__retirer" (click)="retirerFiltre(f.cle)"
+              [attr.aria-label]="('items.retirer-filtre' | translate) + ' ' + f.valeur">
+        <i class="bi bi-x"></i>
+      </button>
+    </span>
+  </div>
+
   <!-- Chargement -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">

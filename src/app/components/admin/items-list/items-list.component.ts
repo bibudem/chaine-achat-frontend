@@ -24,6 +24,8 @@ interface FavoriFilter {
   selectedSuiviAcq: string;
   selectedAnnee: string;
   selectedPriorite: string;
+  selectedStatutBib?: string;
+  selectedDemandeur?: string;
 }
 
 @Component({
@@ -59,6 +61,9 @@ export class ItemsListComponent implements OnInit, OnDestroy {
    *  transmis en query param (import_log_id), pas de contrôle dédié dans la barre de
    *  filtres (voir import.component.ts, voirItemsImportes()). */
   selectedImportLogId     = '';
+  /** Demandeur exact (lien « Top demandeurs » du tableau de bord). Comme Statut bibliothèque
+   *  et Année, sans contrôle dans la barre : affiché en pastille amovible sous la barre. */
+  selectedDemandeur       = '';
 
   favoris:          FavoriFilter[] = [];
   showFavorisPanel  = false;
@@ -86,6 +91,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedTypeMonographie:   this.selectedTypeMonographie,
       selectedAnnee:          this.selectedAnnee,
       selectedPriorite:       this.selectedPriorite,
+      selectedDemandeur:      this.selectedDemandeur,
       currentPage:            this.currentPage,
       sortColumn:             this.sortColumn,
       sortDirection:          this.sortDirection,
@@ -109,6 +115,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedTypeMonographie   = s.selectedTypeMonographie   ?? '';
       this.selectedAnnee          = s.selectedAnnee          ?? '';
       this.selectedPriorite       = s.selectedPriorite       ?? '';
+      this.selectedDemandeur      = s.selectedDemandeur      ?? '';
       this.currentPage            = s.currentPage            ?? 1;
       this.sortColumn             = s.sortColumn             ?? 'defaut';
       this.sortDirection          = s.sortDirection          ?? 'desc';
@@ -131,8 +138,27 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.filtreTypeMonographieVisible ? this.selectedTypeMonographie : '',
       this.selectedAnnee,
       this.selectedPriorite,
+      this.selectedStatutBib,
+      this.selectedDemandeur,
       this.selectedImportLogId
     ].filter(v => !!v).length;
+  }
+
+  /** Filtres sans contrôle dans la barre (posés par un lien du tableau de bord ou un
+   *  favori) : affichés en pastilles amovibles pour que la liste reste explicable. */
+  get filtresSansControle(): { cle: 'statutBib' | 'annee' | 'demandeur'; libelle: string; valeur: string }[] {
+    const f: { cle: 'statutBib' | 'annee' | 'demandeur'; libelle: string; valeur: string }[] = [];
+    if (this.selectedStatutBib) f.push({ cle: 'statutBib', libelle: 'items.filtre-statut-bib', valeur: this.selectedStatutBib });
+    if (this.selectedAnnee)     f.push({ cle: 'annee',     libelle: 'items.filtre-annee',      valeur: this.selectedAnnee });
+    if (this.selectedDemandeur) f.push({ cle: 'demandeur', libelle: 'items.filtre-demandeur',  valeur: this.selectedDemandeur });
+    return f;
+  }
+
+  retirerFiltre(cle: 'statutBib' | 'annee' | 'demandeur'): void {
+    if (cle === 'statutBib') this.selectedStatutBib = '';
+    if (cle === 'annee')     this.selectedAnnee     = '';
+    if (cle === 'demandeur') this.selectedDemandeur = '';
+    this.onFilterChange();
   }
 
   currentPage  = 1;
@@ -208,10 +234,20 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     const prioriteParam     = this.route.snapshot.queryParamMap.get('priorite_demande');
     const searchParam       = this.route.snapshot.queryParamMap.get('search');
     const importLogIdParam  = this.route.snapshot.queryParamMap.get('import_log_id');
-    if (typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam || prioriteParam || searchParam || importLogIdParam) {
+    const statutBibParam    = this.route.snapshot.queryParamMap.get('statut_bibliotheque');
+    const demandeurParam    = this.route.snapshot.queryParamMap.get('demandeur');
+    // Lien du tableau de bord sans paramètre (« Total demandes ») : liste sans filtre.
+    const depuisTableauDeBord = !!history.state?.depuisTableauDeBord;
+    // Consommé une seule fois : un retour arrière ne réinitialise pas les filtres modifiés.
+    if (depuisTableauDeBord) history.replaceState({ ...history.state, depuisTableauDeBord: false }, '');
+    if (depuisTableauDeBord || typeParam || anneeParam || statutAcqParam || suiviAcqParam || bibliothequeParam
+        || prioriteParam || searchParam || importLogIdParam || statutBibParam || demandeurParam) {
       this.searchTerm             = searchParam       ?? '';
       this.selectedBibliotheque   = bibliothequeParam ?? '';
-      this.selectedStatutBib      = '';
+      this.selectedStatutBib      = statutBibParam    ?? '';
+      this.selectedDemandeur      = demandeurParam    ?? '';
+      this.sortColumn             = 'defaut';
+      this.sortDirection          = 'desc';
       this.selectedFormulaireType = typeParam         ?? '';
       this.selectedFonds          = [];
       this.selectedPrecision      = '';
@@ -271,9 +307,11 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       offset,
       search:                this.searchTerm             || undefined,
       bibliotheque:          this.selectedBibliotheque   || undefined,
-      statut:                this.selectedStatutBib || this.selectedStatutAcq || undefined,
+      // statut = Statut ACQ (controllers/items.js : statut_acq ou ancien statut_bibliotheque
+      // de même valeur) ; statut_bibliotheque = filtre exact distinct.
+      statut:                this.selectedStatutAcq      || undefined,
       statut_bibliotheque:   this.selectedStatutBib      || undefined,
-      statut_acq:            this.selectedStatutAcq      || undefined,
+      demandeur:             this.selectedDemandeur      || undefined,
       suivi_acq:             this.selectedSuiviAcq       || undefined,
       formulaire_type:       this.selectedFormulaireType || undefined,
       fonds_budgetaire:      this.selectedFonds.join(',') || undefined,
@@ -376,6 +414,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedTypeMonographie   = '';
     this.selectedAnnee          = '';
     this.selectedPriorite       = '';
+    this.selectedDemandeur      = '';
     this.selectedImportLogId    = '';
     this.sortColumn             = 'defaut';
     this.sortDirection          = 'desc';
@@ -451,6 +490,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedSuiviAcq:       this.selectedSuiviAcq,
       selectedAnnee:          this.selectedAnnee,
       selectedPriorite:       this.selectedPriorite,
+      selectedStatutBib:      this.selectedStatutBib,
+      selectedDemandeur:      this.selectedDemandeur,
     });
     this.saveFavorisToStorage();
     this.nouveauFavoriNom = '';
@@ -469,6 +510,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedSuiviAcq       = f.selectedSuiviAcq;
     this.selectedAnnee          = f.selectedAnnee ?? '';
     this.selectedPriorite       = f.selectedPriorite ?? '';
+    this.selectedStatutBib      = f.selectedStatutBib ?? '';
+    this.selectedDemandeur      = f.selectedDemandeur ?? '';
     this.currentPage            = 1;
     this.loadItems();
     this.showFavorisPanel = false;

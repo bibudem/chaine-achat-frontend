@@ -422,3 +422,17 @@
 }
 
 /* ── Badges sémantiques — définis globalement dans css_udem.css ── */
+
+/* Pastilles : filtres posés par un lien du tableau de bord */
+.il-pastilles { display: flex; flex-wrap: wrap; gap: .4rem; }
+.il-pastille {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .15rem .25rem .15rem .6rem;
+  border: 1px solid #CCE2F3; border-radius: 999px;
+  background: #F2F8FC; color: #0B113A; font-size: .8rem;
+}
+.il-pastille__retirer {
+  border: 0; background: transparent; color: #607386;
+  padding: 0 .2rem; line-height: 1; border-radius: 50%;
+}
+.il-pastille__retirer:hover, .il-pastille__retirer:focus-visible { color: #B72600; }

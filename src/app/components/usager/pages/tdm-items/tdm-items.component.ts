@@ -61,9 +61,12 @@ export class TdmItemsComponent implements OnInit {
     this.itemService.getAll({
       creation_notice_dtdm: true,
       search: this.recherche.trim() || undefined,
-      priorite_demande: this.statutFiltre === 'urgentes' ? 'Urgent' : undefined,
-      statut_acq: this.statutFiltre ? ACQ_STATUT_DEFAUT : undefined,
-      suivi_acq:  this.statutFiltre ? ACQ_SUIVI_DEFAUT  : undefined,
+      // « En attente » : même règle que les tuiles du tableau de bord admin (soumise aux
+      // ACQ, statut/suivi ACQ par défaut ou vides — voir controllers/items.js).
+      priorite_demande:    this.statutFiltre === 'urgentes' ? 'Urgent' : undefined,
+      statut_bibliotheque: this.statutFiltre ? 'Soumettre aux ACQ' : undefined,
+      statut:              this.statutFiltre ? ACQ_STATUT_DEFAUT  : undefined,
+      suivi_acq:           this.statutFiltre ? ACQ_SUIVI_DEFAUT   : undefined,
       limit:  this.LIMITE,
       offset: this.offset,
     }).subscribe({

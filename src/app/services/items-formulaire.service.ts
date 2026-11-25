@@ -204,9 +204,9 @@ export class ItemFormulaireService {
     offset?: number;
     search?: string;
     bibliotheque?: string;
+    /** Statut ACQ (controllers/items.js : statut_acq, ou ancien statut_bibliotheque de même valeur). */
     statut?: string;
     statut_bibliotheque?: string;
-    statut_acq?: string;
     suivi_acq?: string;
     formulaire_type?: string;
     /** Un ou plusieurs fonds, séparés par des virgules. */
@@ -225,6 +225,8 @@ export class ItemFormulaireService {
     /** Ne renvoyer que les items créés par CET import en lot (tbl_items.import_log_id) —
      *  voir import.component.ts, bouton "Voir les items importés". */
     import_log_id?: string;
+    /** Demandeur exact. */
+    demandeur?: string;
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -236,7 +238,6 @@ export class ItemFormulaireService {
     if (opts.bibliotheque)         p = p.set('bibliotheque',         opts.bibliotheque);
     if (opts.statut)               p = p.set('statut',               opts.statut);
     if (opts.statut_bibliotheque)  p = p.set('statut_bibliotheque',  opts.statut_bibliotheque);
-    if (opts.statut_acq)           p = p.set('statut_acq',           opts.statut_acq);
     if (opts.suivi_acq)            p = p.set('suivi_acq',            opts.suivi_acq);
     if (opts.formulaire_type)      p = p.set('formulaire_type',      opts.formulaire_type);
     if (opts.fonds_budgetaire)     p = p.set('fonds_budgetaire',     opts.fonds_budgetaire);
@@ -246,7 +247,9 @@ export class ItemFormulaireService {
     if (opts.type_monographie)     p = p.set('type_monographie',     opts.type_monographie);
     if (opts.creation_notice_dtdm != null) p = p.set('creation_notice_dtdm', String(opts.creation_notice_dtdm));
     if (opts.annee)                p = p.set('annee',                opts.annee);
-    if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);    if (opts.sort)                 p = p.set('sort',                 opts.sort);
+    if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);
+    if (opts.demandeur)            p = p.set('demandeur',            opts.demandeur);
+    if (opts.sort)                p = p.set('sort',                 opts.sort);
     if (opts.order)                p = p.set('order',                opts.order);
 
     return this.http
