@@ -80,7 +80,7 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     groupe:      'TDM',
     label:       'TDM',
     subtitle:    'Traitement documentaire et métadonnées',
-    description: 'Mêmes accès que les Services des acquisitions, sauf Import et Registres',
+    description: 'Mêmes accès que les Services des acquisitions, sauf modification/suppression des items, Import et Registres',
     icon:        'bi-journal-bookmark-fill',
   },
   {
@@ -170,12 +170,16 @@ export class AuthService {
    *  tri seulement — le SuperAdmin hérite de tous les accès ; lecture seule pour l'Admin. */
   get canSuiviTri(): boolean    { return this.isTechDoc || this.isSuperAdmin; }
 
-  /** Espace de gestion : l'Admin (et le SuperAdmin) et le TDM, qui a les mêmes accès sauf
-   *  Processus/Import et Registres (réponses, imports), réservés à isAdmin. */
+  /** Espace de gestion : l'Admin (et le SuperAdmin) et le TDM, qui a les mêmes accès sauf la
+   *  modification/suppression des items (canEdit), Processus/Import et Registres (isAdmin). */
   get isGestion(): boolean      { return this.isAdmin || this.isTdm; }
 
-  /** Création / modification / suppression des items. */
-  get canEdit(): boolean        { return this.isGestion; }
+  /** Création d'un item : Admin et TDM. */
+  get canCreer(): boolean       { return this.isGestion; }
+
+  /** Modification / suppression d'un item : Admin seulement (le TDM passe par la décision
+   *  ACQ et l'onglet TDM – Choix de notice). */
+  get canEdit(): boolean        { return this.isAdmin; }
 
   /** Accès à la page de décision ACQ/TDM (/statut-decision). */
   get canAccessDecision(): boolean { return this.isGestion; }

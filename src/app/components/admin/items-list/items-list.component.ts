@@ -29,6 +29,7 @@ interface FavoriFilter {
   selectedNoteDtdm?: FiltreTdm;
   selectedNoteInterneDtdm?: FiltreTdm;
   selectedCatalogue?: FiltreTdm;
+  selectedCreationNotice?: '' | 'oui' | 'non';
 }
 
 /** Champs TDM (Numéro OCLC, Note interne, Suivi Catalogage) : vide ou rempli. */
@@ -74,6 +75,8 @@ export class ItemsListComponent implements OnInit, OnDestroy {
   selectedNoteDtdm: FiltreTdm        = '';
   selectedNoteInterneDtdm: FiltreTdm = '';
   selectedCatalogue: FiltreTdm       = '';
+  /** Création de notice TDM (tbl_items.creation_notice_dtdm). */
+  selectedCreationNotice: '' | 'oui' | 'non' = '';
   tdmOuvert = false;
 
   favoris:          FavoriFilter[] = [];
@@ -106,16 +109,18 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedNoteDtdm:        this.selectedNoteDtdm,
       selectedNoteInterneDtdm: this.selectedNoteInterneDtdm,
       selectedCatalogue:       this.selectedCatalogue,
+      selectedCreationNotice:  this.selectedCreationNotice,
       currentPage:            this.currentPage,
       sortColumn:             this.sortColumn,
       sortDirection:          this.sortDirection,
     }));
   }
 
-  private restoreFilterState(): void {
+  /** Retourne false s'il n'y avait aucun état en session. */
+  private restoreFilterState(): boolean {
     try {
       const stored = sessionStorage.getItem(this.FILTER_STATE_KEY);
-      if (!stored) return;
+      if (!stored) return false;
       const s = JSON.parse(stored);
       this.searchTerm             = s.searchTerm             ?? '';
       this.selectedBibliotheque   = s.selectedBibliotheque   ?? '';
@@ -133,10 +138,12 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedNoteDtdm        = s.selectedNoteDtdm        ?? '';
       this.selectedNoteInterneDtdm = s.selectedNoteInterneDtdm ?? '';
       this.selectedCatalogue       = s.selectedCatalogue       ?? '';
+      this.selectedCreationNotice  = s.selectedCreationNotice  ?? '';
       this.currentPage            = s.currentPage            ?? 1;
       this.sortColumn             = s.sortColumn             ?? 'defaut';
       this.sortDirection          = s.sortDirection          ?? 'desc';
     } catch { /* état corrompu, on ignore */ }
+    return true;
   }
 
   @HostListener('document:click')
@@ -160,13 +167,14 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedNoteDtdm,
       this.selectedNoteInterneDtdm,
       this.selectedCatalogue,
+      this.selectedCreationNotice,
       this.selectedImportLogId
     ].filter(v => !!v).length;
   }
 
   /** Nombre de filtres TDM actifs (libellé du menu « TDM »). */
   get tdmFiltresActifs(): number {
-    return [this.selectedNoteDtdm, this.selectedNoteInterneDtdm, this.selectedCatalogue].filter(v => !!v).length;
+    return [this.selectedCreationNotice, this.selectedNoteDtdm, this.selectedNoteInterneDtdm, this.selectedCatalogue].filter(v => !!v).length;
   }
 
   /** Filtres sans contrôle dans la barre (posés par un lien du tableau de bord ou un
@@ -244,7 +252,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     });
 
     this.lireDecisionParams();
-    this.restoreFilterState();
+    const etatRestaure = this.restoreFilterState();
 
     // Raccourcis depuis le tableau de bord admin (catalogue de types, Répartition par type,
     // carte Demandes en attente) — vue déterministe : on repart des autres filtres à vide
@@ -274,6 +282,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       this.selectedNoteDtdm        = '';
       this.selectedNoteInterneDtdm = '';
       this.selectedCatalogue       = '';
+      this.selectedCreationNotice  = '';
       this.sortColumn             = 'defaut';
       this.sortDirection          = 'desc';
       this.selectedFormulaireType = typeParam         ?? '';
@@ -290,6 +299,10 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       // Tri par défaut = « non traitées d'abord » : pour les demandes complétées (tuile
       // « Demandes traitées »), plus récentes modifiées en premier.
       if (statutAcqParam === 'Complétée') { this.sortColumn = 'date_modification'; this.sortDirection = 'desc'; }
+    } else if (!etatRestaure && this.authService.isTdm) {
+      // Profil TDM, première arrivée dans la session : items avec notice requise (filtre
+      // visible dans le menu TDM, modifiable).
+      this.selectedCreationNotice = 'oui';
     }
 
     this.subs.add(
@@ -343,6 +356,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       note_dtdm:             this.selectedNoteDtdm        || undefined,
       note_interne_dtdm:     this.selectedNoteInterneDtdm || undefined,
       catalogue:             this.selectedCatalogue       || undefined,
+      creation_notice_dtdm:  this.selectedCreationNotice ? this.selectedCreationNotice === 'oui' : undefined,
       suivi_acq:             this.selectedSuiviAcq       || undefined,
       formulaire_type:       this.selectedFormulaireType || undefined,
       fonds_budgetaire:      this.selectedFonds.join(',') || undefined,
@@ -449,6 +463,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedNoteDtdm        = '';
     this.selectedNoteInterneDtdm = '';
     this.selectedCatalogue       = '';
+    this.selectedCreationNotice  = '';
     this.selectedImportLogId    = '';
     this.sortColumn             = 'defaut';
     this.sortDirection          = 'desc';
@@ -529,6 +544,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
       selectedNoteDtdm:        this.selectedNoteDtdm,
       selectedNoteInterneDtdm: this.selectedNoteInterneDtdm,
       selectedCatalogue:       this.selectedCatalogue,
+      selectedCreationNotice:  this.selectedCreationNotice,
     });
     this.saveFavorisToStorage();
     this.nouveauFavoriNom = '';
@@ -552,6 +568,7 @@ export class ItemsListComponent implements OnInit, OnDestroy {
     this.selectedNoteDtdm        = f.selectedNoteDtdm        ?? '';
     this.selectedNoteInterneDtdm = f.selectedNoteInterneDtdm ?? '';
     this.selectedCatalogue       = f.selectedCatalogue       ?? '';
+    this.selectedCreationNotice  = f.selectedCreationNotice  ?? '';
     this.currentPage            = 1;
     this.loadItems();
     this.showFavorisPanel = false;

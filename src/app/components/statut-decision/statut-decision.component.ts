@@ -155,8 +155,11 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       const legacyIdParam  = Number(params.get('id'))         || null; // compat ancien lien
       const itemIdParam    = Number(params.get('item_id'))    || null; // import / reponse-created
 
+      // Onglet demandé dans l'URL ; sinon TDM – Choix de notice pour le profil TDM, Décision ACQ
+      // pour les autres.
       const tab = params.get('tab');
-      this.activeTab = tab === 'tdm' ? 'tdm' : tab === 'tri' ? 'tri' : 'acq';
+      this.activeTab = tab === 'tdm' || tab === 'tri' || tab === 'acq' ? tab
+                     : this.authService.isTdm ? 'tdm' : 'acq';
 
       this.reponseId           = null;
       this.itemId              = null;
@@ -537,8 +540,15 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return formulaireTypeIcon(this.formulaireType);
   }
 
+  /** Onglet TDM sur un item existant : les champs ACQ obligatoires (ex. Suivi ACQ, vide tant
+   *  que la demande n'est pas soumise) ne bloquent pas l'enregistrement des champs TDM ; vides,
+   *  ils sont ignorés par le backend. */
+  get peutEnregistrer(): boolean {
+    return this.form.valid || (this.ongletActif === 'tdm' && this.itemExisteDansItems);
+  }
+
   submitForm(sendEmail = false): void {
-    if (!this.form.valid || (!this.reponseId && !this.itemId)) {
+    if (!this.peutEnregistrer || (!this.reponseId && !this.itemId)) {
       this.form.markAllAsTouched();
       this.errorMessage = 'Veuillez remplir tous les champs requis.';
       return;

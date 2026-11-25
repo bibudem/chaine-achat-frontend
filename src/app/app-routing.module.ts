@@ -51,7 +51,7 @@ const routes: Routes = [
   { path: 'auth-popup', component: AuthPopupComponent },
   { path: '', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, StaffGuard] },
-  { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
+  { path: 'items/nouveau', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, GestionGuard] },
   { path: 'items/details/:id', component: ItemDetailComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'items/:id', component: ItemFormulaireComponent, canActivate: [AuthGuard, StaffGuard, EditGuard] },
   { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, StaffGuard] },

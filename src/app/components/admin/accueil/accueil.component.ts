@@ -286,9 +286,9 @@ export class AccueilComponent implements OnInit, OnDestroy {
 
   /** Catalogue « Types de formulaire » → formulaire de création, type pré-sélectionné (voir
    *  item-formulaire.component.ts, query param ?type=...). Contrairement à navigateToType
-   *  (liste filtrée, lecture seule), ceci crée un item — réservé à canEdit. */
+   *  (liste filtrée, lecture seule), ceci crée un item — réservé à canCreer. */
   navigateToNouveau(formulaire_type: string): void {
-    if (!this.authService.canEdit) return;
+    if (!this.authService.canCreer) return;
     this.router.navigate(['/items/nouveau'], { queryParams: { type: formulaire_type } });
   }
 

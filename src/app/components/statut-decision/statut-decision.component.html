@@ -456,7 +456,7 @@
           <!-- Onglet TechDoc Tri en lecture seule : rien à enregistrer. -->
           <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 py-3 px-4" *ngIf="ongletActif !== 'tri'">
             <button type="button" class="btn acq-btn-outline"
-                    [disabled]="submitting || form.invalid"
+                    [disabled]="submitting || !peutEnregistrer"
                     (click)="submitForm(false)">
               <span *ngIf="!submitting">
                 <i class="bi bi-floppy me-2"></i>{{ 'acq-decision.enregistrer' | translate }}

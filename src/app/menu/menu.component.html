@@ -20,7 +20,7 @@
     </li>
 
     <!-- Ajouter -->
-    <li *ngIf="authService.canEdit" class="nav-item" [class.active]="isAddItemRoute">
+    <li *ngIf="authService.canCreer" class="nav-item" [class.active]="isAddItemRoute">
       <a class="nav-link" routerLink="/items/nouveau" (click)="closeSidebar()">
         <i class="bi bi-file-earmark-plus menu-icon"></i>
         <span class="menu-title">{{ 'menu.ajouter' | translate }}</span>

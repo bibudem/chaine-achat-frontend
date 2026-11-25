@@ -216,12 +216,12 @@
             </div>
             <div *ngFor="let type of groupe.types"
                  class="catalog-row"
-                 [class.db-link-disabled]="!authService.canEdit"
-                 [attr.role]="authService.canEdit ? 'button' : null"
-                 [attr.tabindex]="authService.canEdit ? 0 : null"
+                 [class.db-link-disabled]="!authService.canCreer"
+                 [attr.role]="authService.canCreer ? 'button' : null"
+                 [attr.tabindex]="authService.canCreer ? 0 : null"
                  (click)="navigateToNouveau(type)"
                  (keydown.enter)="navigateToNouveau(type)"
-                 [title]="authService.canEdit ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
+                 [title]="authService.canCreer ? ('Nouveau · ' + formulaireTypeLabel(type)) : ''">
               <div class="catalog-row__icon" [ngClass]="'tc-' + getTypeColorKey(type) + '-bg'" aria-hidden="true">
                 <i [class]="getTypeIcon(type)"></i>
               </div>
