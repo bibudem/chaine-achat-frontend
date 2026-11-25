@@ -35,14 +35,12 @@
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tri'}">
           <i class="bi bi-funnel me-1"></i>{{ 'item-formulaire.onglet-techdoc-tri' | translate }}
         </button>
-        <!-- Décision ACQ / TDM — Choix de notice : Admin/SuperAdmin uniquement ici. Le TDM
-             traite ses items depuis le portail usager (/usager/tdm), pas depuis l'espace
-             système ; Employé/TechDoc n'ont de toute façon jamais eu ces boutons. -->
-        <button *ngIf="authService.isAdmin" class="btn btn-outline-success btn-sm"
+        <!-- Décision ACQ / TDM — Choix de notice : Admin, SuperAdmin et TDM (isGestion). -->
+        <button *ngIf="authService.isGestion" class="btn btn-outline-success btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}">
           <i class="bi bi-clipboard-check me-1"></i>{{ 'item-detail.decision-acq' | translate }}
         </button>
-        <button *ngIf="authService.isAdmin && item.creation_notice_dtdm != null"
+        <button *ngIf="authService.isGestion && item.creation_notice_dtdm != null"
                 class="btn btn-outline-secondary btn-sm"
                 [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id, tab: 'tdm'}">
           <i class="bi bi-journal-bookmark me-1"></i>{{ 'tdm-decision.onglet-choix-notice' | translate }}
@@ -835,26 +833,25 @@
                   </span>
                 </div>
               </div>
-              <ng-container *ngIf="item.creation_notice_dtdm">
-                <div class="col-md-3" *ngIf="item.note_dtdm">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
-                    <span class="itd-note">{{ item.note_dtdm }}</span>
-                  </div>
+              <!-- Note interne et Suivi Catalogage : affichés même si Création de notice = Non -->
+              <div class="col-md-3" *ngIf="item.creation_notice_dtdm && item.note_dtdm">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.note-dtdm' | translate }}</span>
+                  <span class="itd-note">{{ item.note_dtdm }}</span>
                 </div>
-                <div class="col-md-3" *ngIf="item.note_interne_dtdm">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.note-interne-dtdm' | translate }}</span>
-                    <span class="itd-note">{{ item.note_interne_dtdm }}</span>
-                  </div>
+              </div>
+              <div class="col-md-3" *ngIf="item.note_interne_dtdm">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.note-interne-dtdm' | translate }}</span>
+                  <span class="itd-note">{{ item.note_interne_dtdm }}</span>
                 </div>
-                <div class="col-md-3" *ngIf="item.catalogue">
-                  <div class="itd-field">
-                    <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
-                    <span class="itd-field__value">{{ item.catalogue }}</span>
-                  </div>
+              </div>
+              <div class="col-md-3" *ngIf="item.catalogue">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'item-detail.catalogue' | translate }}</span>
+                  <span class="itd-field__value">{{ item.catalogue }}</span>
                 </div>
-              </ng-container>
+              </div>
             </div>
           </div>
         </div>

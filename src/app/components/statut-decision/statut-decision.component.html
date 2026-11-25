@@ -91,10 +91,6 @@
           <div class="p-4">
 
             <!-- Alertes -->
-            <div *ngIf="readOnlyAcq" class="alert alert-info mb-4">
-              <i class="bi bi-lock me-2"></i>
-              {{ 'acq-decision.lecture-seule-tdm' | translate }}
-            </div>
             <div *ngIf="item && !itemExisteDansItems" class="alert alert-warning mb-4">
               <i class="bi bi-info-circle me-2"></i>
               <strong>{{ 'acq-decision.nouvelle-demande' | translate }}</strong>
@@ -359,46 +355,44 @@
 
             </div><!-- /tab-pane acq -->
 
-            <!-- ════════ ONGLET : TDM – CHOIX DE NOTICE — visible uniquement si Création de
+            <!-- ════════ ONGLET : TDM – CHOIX DE NOTICE — Note interne et Suivi Catalogage
+                 toujours disponibles (suivi interne) ; Numéro OCLC seulement si Création de
                  notice TDM = Oui ════════ -->
             <div class="tab-pane" [class.show]="ongletActif === 'tdm'" [class.active]="ongletActif === 'tdm'">
-              <ng-container *ngIf="form.get('creation_notice_dtdm')?.value === true; else aucuneNoticeTdm">
-                <div class="row g-3 mb-4">
-                  <div class="col-md-4">
-                    <label for="note_dtdm" class="form-label fw-semibold">
-                      {{ 'item-formulaire.note-dtdm' | translate }}
-                    </label>
-                    <textarea id="note_dtdm" formControlName="note_dtdm" rows="2"
-                              class="form-control"></textarea>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="note_interne_dtdm" class="form-label fw-semibold">
-                      {{ 'item-formulaire.note-interne-dtdm' | translate }}
-                    </label>
-                    <textarea id="note_interne_dtdm" formControlName="note_interne_dtdm" rows="2"
-                              class="form-control"></textarea>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="catalogue" class="form-label fw-semibold">
-                      {{ 'item-formulaire.suivi-catalogage' | translate }}
-                    </label>
-                    <select id="catalogue" formControlName="catalogue" class="form-select form-select-lg">
-                      <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
-                      <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
-                    </select>
-                  </div>
+              <p *ngIf="form.get('creation_notice_dtdm')?.value !== true" class="text-muted fst-italic small mb-3">
+                {{ 'tdm-decision.suivi-interne-seulement' | translate }}
+              </p>
+              <div class="row g-3 mb-4">
+                <div class="col-md-4" *ngIf="form.get('creation_notice_dtdm')?.value === true">
+                  <label for="note_dtdm" class="form-label fw-semibold">
+                    {{ 'item-formulaire.note-dtdm' | translate }}
+                  </label>
+                  <textarea id="note_dtdm" formControlName="note_dtdm" rows="2"
+                            class="form-control"></textarea>
                 </div>
-              </ng-container>
-              <ng-template #aucuneNoticeTdm>
-                <p class="text-muted fst-italic">{{ 'tdm-decision.aucune-notice' | translate }}</p>
-              </ng-template>
+                <div class="col-md-4">
+                  <label for="note_interne_dtdm" class="form-label fw-semibold">
+                    {{ 'item-formulaire.note-interne-dtdm' | translate }}
+                  </label>
+                  <textarea id="note_interne_dtdm" formControlName="note_interne_dtdm" rows="4"
+                            class="form-control"></textarea>
+                </div>
+                <div class="col-md-4">
+                  <label for="catalogue" class="form-label fw-semibold">
+                    {{ 'item-formulaire.suivi-catalogage' | translate }}
+                  </label>
+                  <select id="catalogue" formControlName="catalogue" class="form-select form-select-lg">
+                    <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
+                    <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
+                  </select>
+                </div>
+              </div>
             </div><!-- /tab-pane tdm -->
 
             </div><!-- /tab-content -->
 
-            <!-- Aperçu + Notifications côte à côte — la décision/notification ACQ ne concerne
-                 pas le TDM, qui n'a accès qu'en lecture à ces champs. -->
-            <div class="row g-3 align-items-stretch" *ngIf="!readOnlyAcq && ongletActif === 'acq'">
+            <!-- Aperçu + Notifications côte à côte (onglet Décision ACQ) -->
+            <div class="row g-3 align-items-stretch" *ngIf="ongletActif === 'acq'">
               <div class="col-md-6"
                    *ngIf="notifTargets.length > 0 && form.get('suivi_acq')?.value">
                 <div class="sd-email-preview h-100">
@@ -472,7 +466,7 @@
                 {{ 'acq-decision.enregistrement' | translate }}
               </span>
             </button>
-            <button type="button" class="btn acq-btn-primary" *ngIf="!readOnlyAcq && ongletActif === 'acq'"
+            <button type="button" class="btn acq-btn-primary" *ngIf="ongletActif === 'acq'"
                     [disabled]="submitting || form.invalid || !hasNotifEmail"
                     [title]="!hasNotifEmail ? 'Aucun courriel usager enregistré pour cette demande' : ''"
                     (click)="submitForm(true)">

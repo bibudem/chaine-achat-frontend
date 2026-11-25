@@ -80,7 +80,7 @@
     </li>
 
     <!-- Configuration (sous-menu collapse) -->
-    <li *ngIf="authService.isAdmin" class="nav-item" [class.active]="isConfigurationRoute">
+    <li *ngIf="authService.isGestion" class="nav-item" [class.active]="isConfigurationRoute">
       <a class="nav-link d-flex justify-content-between align-items-center"
          data-toggle="collapse" href="#configuration"
          aria-expanded="false" aria-controls="configuration">

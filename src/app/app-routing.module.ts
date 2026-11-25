@@ -27,6 +27,7 @@ import { PebTipasaNumeriqueComponent } from './components/usager/pages/peb-tipas
 import { UsagerProfilComponent } from './components/usager/usager-profil/usager-profil.component';
 import { StatutDecisionComponent } from './components/statut-decision/statut-decision.component';
 import { EditGuard } from './services/edit-guard.service';
+import { GestionGuard } from './services/gestion-guard.service';
 import { StaffGuard } from './services/staff-guard.service';
 import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
@@ -60,12 +61,12 @@ const routes: Routes = [
   { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, GestionGuard] },
   // Exclusif au SuperAdmin : pas d'AdminGuard ici, même si l'Admin peut accéder au reste de
-  // Configuration (voir authService.isAdmin / AdminGuard, qui incluent le SuperAdmin).
+  // Configuration (voir authService.isGestion / GestionGuard : Admin, SuperAdmin et TDM).
   { path: 'configuration/utilisateurs', component: UtilisateursComponent, canActivate: [AuthGuard, SuperAdminGuard] },
-  { path: 'configuration/fonds-budgetaires', component: FondsBudgetairesComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'configuration/bibliotheques', component: BibliothequesComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'configuration/fonds-budgetaires', component: FondsBudgetairesComponent, canActivate: [AuthGuard, GestionGuard] },
+  { path: 'configuration/bibliotheques', component: BibliothequesComponent, canActivate: [AuthGuard, GestionGuard] },
   // ── Nouvelle section usager ──
   {
     path: 'usager',

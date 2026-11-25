@@ -12,15 +12,6 @@ import { AuthService } from '../../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { courrielsPourEnvoi } from '../../lib/ValidateurCourriels';
 
-/** Champs ACQ affichés en lecture seule pour le profil TDM — seuls les champs de l'onglet
- *  « TDM – Choix de notice » (catalogue/note_dtdm/note_interne_dtdm, sous sa responsabilité)
- *  restent modifiables. */
-const CHAMPS_ACQ_LECTURE_SEULE_TDM = [
-  'statut_acq', 'suivi_acq', 'note_acq', 'creation_notice_dtdm',
-  'bordereau_imprime', 'categorie_document', 'format_support',
-  'lien_plateforme', 'acq_responsable_nom', 'description_plateforme',
-];
-
 @Component({
   selector: 'app-statut-decision',
   templateUrl: './statut-decision.component.html',
@@ -120,10 +111,6 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  /** Le profil TDM consulte cette page en lecture seule pour les champs ACQ — seuls
-   *  catalogue/note_dtdm restent modifiables (voir CHAMPS_ACQ_LECTURE_SEULE_TDM). */
-  get readOnlyAcq(): boolean { return this.authService.isTdm; }
-
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -156,14 +143,6 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       acq_responsable_nom:    [''],
       description_plateforme: [''],
     });
-
-    if (this.readOnlyAcq) {
-      // Désactiver (plutôt que masquer) : la valeur reste visible et lisible, seule la saisie
-      // est bloquée. form.get(k)?.value continue de lire la valeur d'un contrôle désactivé, et
-      // les contrôles désactivés sont ignorés par la validation — submitForm() n'est donc pas
-      // affecté (il lit toujours chaque champ individuellement).
-      CHAMPS_ACQ_LECTURE_SEULE_TDM.forEach(k => this.form.get(k)?.disable());
-    }
   }
 
   goBack(): void {

@@ -80,7 +80,7 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     groupe:      'TDM',
     label:       'TDM',
     subtitle:    'Traitement documentaire et métadonnées',
-    description: 'Tableau de bord, catalogage et note TDM (Suivi ACQ), rapports et recherche',
+    description: 'Mêmes accès que les Services des acquisitions, sauf Import et Registres',
     icon:        'bi-journal-bookmark-fill',
   },
   {
@@ -170,12 +170,15 @@ export class AuthService {
    *  tri seulement — le SuperAdmin hérite de tous les accès ; lecture seule pour l'Admin. */
   get canSuiviTri(): boolean    { return this.isTechDoc || this.isSuperAdmin; }
 
-  /** Seul l'Administrateur (et le SuperAdmin) peut créer / modifier / supprimer des items. */
-  get canEdit(): boolean        { return this.isAdmin; }
+  /** Espace de gestion : l'Admin (et le SuperAdmin) et le TDM, qui a les mêmes accès sauf
+   *  Processus/Import et Registres (réponses, imports), réservés à isAdmin. */
+  get isGestion(): boolean      { return this.isAdmin || this.isTdm; }
 
-  /** Accès à la page de décision ACQ/TDM (/statut-decision) : l'Administrateur (décision
-   *  ACQ complète) et le TDM (catalogage/note TDM — champs ACQ affichés en lecture seule). */
-  get canAccessDecision(): boolean { return this.isAdmin || this.isTdm; }
+  /** Création / modification / suppression des items. */
+  get canEdit(): boolean        { return this.isGestion; }
+
+  /** Accès à la page de décision ACQ/TDM (/statut-decision). */
+  get canAccessDecision(): boolean { return this.isGestion; }
 
   /* ── Aperçu « Voir comme » (Admin / SuperAdmin) ──
      Le rôle réel est mis de côté (roleReel) et 'role' prend le rôle simulé : menus, pages et
@@ -199,12 +202,14 @@ export class AuthService {
   get estEnApercu(): boolean { return !!sessionStorage.getItem('roleReel'); }
   get peutVoirComme(): boolean { return this.roleReel === 'Admin' || this.roleReel === 'SuperAdmin'; }
 
-  /** Affiche l'interface comme le rôle choisi (portail usager), sans changer de compte. */
+  /** Affiche l'interface comme le rôle choisi, sans changer de compte : le TDM dans l'Espace
+   *  de gestion (sa page d'arrivée), les autres dans le portail usager. */
   voirComme(role: UserRole): void {
     if (!this.peutVoirComme || !AuthService.ROLES_APERCU.some(r => r.role === role)) return;
     if (!this.estEnApercu) sessionStorage.setItem('roleReel', this.role as string);
     sessionStorage.setItem('role', role);
-    window.location.href = '/usager';   // rechargement : menus et gardes relisent le rôle
+    // Rechargement : menus et gardes relisent le rôle.
+    window.location.href = role === 'TDM' ? '/accueil' : '/usager';
   }
 
   /** Fin de l'aperçu : retour au rôle réel et à l'espace de gestion. */

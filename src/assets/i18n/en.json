@@ -745,6 +745,10 @@
     "filtre-annee": "Year",
     "filtre-demandeur": "Requester",
     "retirer-filtre": "Remove filter",
+    "filtre-tdm": "TDM",
+    "tdm-tous": "All",
+    "tdm-vide": "Empty",
+    "tdm-complete": "Completed",
     "creer": "Create an item",
     "creer-nouvel": "Create a new item",
     "recherche-placeholder": "Title, ISBN, requester, #ID...",
@@ -1109,7 +1113,6 @@
     "section-demande": "Request",
     "voir-tout": "See all",
     "section-decision": "ACQ: Request follow-up",
-    "lecture-seule-tdm": "ACQ fields are shown read-only. Only the \"TDM – Notice choice\" tab remains editable.",
     "nouvelle-demande": "New request",
     "nouvelle-demande-desc": "— The item will be created in acquisition management upon saving.",
     "suivi-acq": "ACQ: Request follow-up",
@@ -1194,7 +1197,7 @@
   },
   "tdm-decision": {
     "onglet-choix-notice": "TDM – Notice choice",
-    "aucune-notice": "No TDM notice required for this request."
+    "suivi-interne-seulement": "No notice required: internal follow-up fields only."
   },
   "tdm-items-page": {
     "titre": "My items to process",

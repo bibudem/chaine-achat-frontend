@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.translate.setDefaultLang('fr');
     this.translate.use(this.currentLang);
-    if (this.authService.isAdmin) {
+    if (this.authService.isGestion) {
       this.chargerPending();
       this.pollInterval = setInterval(() => this.chargerPending(), 60_000);
       this.refreshSub = this.reponsesService.pendingRefresh$.subscribe(

@@ -66,35 +66,35 @@
 
         <!-- Champs TDM -->
         <div class="ts-decision">
-          <ng-container *ngIf="item.creation_notice_dtdm; else aucuneNotice">
-            <div class="ts-tdm-fields">
-              <div class="ts-tdm-fields__col">
-                <label class="form-label" for="note_dtdm">{{ 'item-formulaire.note-dtdm' | translate }}</label>
-                <textarea id="note_dtdm" class="form-control" rows="2" [(ngModel)]="note_dtdm" [disabled]="submitting"></textarea>
-              </div>
-              <div class="ts-tdm-fields__col">
-                <label class="form-label" for="note_interne_dtdm">{{ 'item-formulaire.note-interne-dtdm' | translate }}</label>
-                <textarea id="note_interne_dtdm" class="form-control" rows="2" [(ngModel)]="note_interne_dtdm" [disabled]="submitting"></textarea>
-              </div>
-              <div class="ts-tdm-fields__col">
-                <label class="form-label" for="catalogue">{{ 'item-formulaire.suivi-catalogage' | translate }}</label>
-                <select id="catalogue" class="form-select" [(ngModel)]="catalogue" [disabled]="submitting">
-                  <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
-                  <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
-                </select>
-              </div>
+          <!-- Note interne et Suivi Catalogage toujours disponibles (suivi interne) ;
+               Numéro OCLC seulement si Création de notice TDM = Oui. -->
+          <p *ngIf="!item.creation_notice_dtdm" class="text-muted fst-italic small mb-2">
+            {{ 'tdm-decision.suivi-interne-seulement' | translate }}
+          </p>
+          <div class="ts-tdm-fields">
+            <div class="ts-tdm-fields__col" *ngIf="item.creation_notice_dtdm">
+              <label class="form-label" for="note_dtdm">{{ 'item-formulaire.note-dtdm' | translate }}</label>
+              <textarea id="note_dtdm" class="form-control" rows="2" [(ngModel)]="note_dtdm" [disabled]="submitting"></textarea>
             </div>
+            <div class="ts-tdm-fields__col">
+              <label class="form-label" for="note_interne_dtdm">{{ 'item-formulaire.note-interne-dtdm' | translate }}</label>
+              <textarea id="note_interne_dtdm" class="form-control" rows="4" [(ngModel)]="note_interne_dtdm" [disabled]="submitting"></textarea>
+            </div>
+            <div class="ts-tdm-fields__col">
+              <label class="form-label" for="catalogue">{{ 'item-formulaire.suivi-catalogage' | translate }}</label>
+              <select id="catalogue" class="form-select" [(ngModel)]="catalogue" [disabled]="submitting">
+                <option value="">{{ 'item-formulaire.suivi-catalogage-vide' | translate }}</option>
+                <option value="Complété">{{ 'item-formulaire.suivi-catalogage-complete' | translate }}</option>
+              </select>
+            </div>
+          </div>
 
-            <div class="ts-decision__actions">
-              <button type="button" class="btn btn-sm btn-success" [disabled]="submitting" (click)="enregistrer()">
-                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
-                {{ 'tdm-decision-page.btn-enregistrer' | translate }}
-              </button>
-            </div>
-          </ng-container>
-          <ng-template #aucuneNotice>
-            <p class="text-muted fst-italic mb-0">{{ 'tdm-decision.aucune-notice' | translate }}</p>
-          </ng-template>
+          <div class="ts-decision__actions">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="submitting" (click)="enregistrer()">
+              <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+              {{ 'tdm-decision-page.btn-enregistrer' | translate }}
+            </button>
+          </div>
         </div>
       </article>
     </ng-container>

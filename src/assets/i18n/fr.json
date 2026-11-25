@@ -655,6 +655,10 @@
     "filtre-annee": "Année",
     "filtre-demandeur": "Demandeur",
     "retirer-filtre": "Retirer le filtre",
+    "filtre-tdm": "TDM",
+    "tdm-tous": "Tous",
+    "tdm-vide": "Vide",
+    "tdm-complete": "Complété",
     "creer": "Créer un item",
     "creer-nouvel": "Créer un nouvel item",
     "recherche-placeholder": "Titre, ISBN, demandeur, #ID...",
@@ -1021,7 +1025,6 @@
     "section-demande": "Demande",
     "voir-tout": "Voir tout",
     "section-decision": "ACQ : Suivi de la demande",
-    "lecture-seule-tdm": "Les champs ACQ sont affichés en lecture seule. Seul l'onglet « TDM – Choix de notice » reste modifiable.",
     "nouvelle-demande": "Nouvelle demande",
     "nouvelle-demande-desc": "— L'item sera créé dans la gestion des acquisitions lors de l'enregistrement.",
     "suivi-acq": "ACQ : Suivi de la demande",
@@ -1106,7 +1109,7 @@
   },
   "tdm-decision": {
     "onglet-choix-notice": "TDM – Choix de notice",
-    "aucune-notice": "Aucune notice TDM requise pour cette demande."
+    "suivi-interne-seulement": "Aucune notice requise : champs de suivi interne seulement."
   },
   "tdm-items-page": {
     "titre": "Mes items à traiter",

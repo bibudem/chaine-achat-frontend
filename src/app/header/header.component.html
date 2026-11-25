@@ -37,8 +37,8 @@
         </div>
       </li>-->
 
-      <!-- Cloche notifications (admin seulement) -->
-      <li class="nav-item nav-item--notif d-flex align-items-center" *ngIf="authService.isAdmin"
+      <!-- Cloche notifications (Admin et TDM) -->
+      <li class="nav-item nav-item--notif d-flex align-items-center" *ngIf="authService.isGestion"
           [class.panel-open]="notifOpen">
         <button class="notif-btn" (click)="toggleNotif($event)"
                 [class.notif-btn--active]="notifOpen"

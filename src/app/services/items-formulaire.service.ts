@@ -227,6 +227,10 @@ export class ItemFormulaireService {
     import_log_id?: string;
     /** Demandeur exact. */
     demandeur?: string;
+    /** Champs TDM : 'vide' ou 'rempli'. */
+    note_dtdm?: 'vide' | 'rempli';
+    note_interne_dtdm?: 'vide' | 'rempli';
+    catalogue?: 'vide' | 'rempli';
     sort?: string;
     order?: 'asc' | 'desc';
   } = {}): Observable<ApiResponse<Item[]>> {
@@ -249,6 +253,9 @@ export class ItemFormulaireService {
     if (opts.annee)                p = p.set('annee',                opts.annee);
     if (opts.import_log_id)        p = p.set('import_log_id',        opts.import_log_id);
     if (opts.demandeur)            p = p.set('demandeur',            opts.demandeur);
+    if (opts.note_dtdm)            p = p.set('note_dtdm',            opts.note_dtdm);
+    if (opts.note_interne_dtdm)    p = p.set('note_interne_dtdm',    opts.note_interne_dtdm);
+    if (opts.catalogue)            p = p.set('catalogue',            opts.catalogue);
     if (opts.sort)                p = p.set('sort',                 opts.sort);
     if (opts.order)                p = p.set('order',                opts.order);
 

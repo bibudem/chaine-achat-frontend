@@ -103,6 +103,41 @@
       </div>
     </div>
 
+    <!-- Champs TDM : vide ou complété -->
+    <div class="il-ms" (click)="$event.stopPropagation()">
+      <button type="button" class="filterbar__select il-ms__trigger"
+              [class.il-ms__trigger--actif]="tdmFiltresActifs"
+              (click)="tdmOuvert = !tdmOuvert; fondsOuvert = false; showFavorisPanel = false">
+        {{ 'items.filtre-tdm' | translate }}<ng-container *ngIf="tdmFiltresActifs"> ({{ tdmFiltresActifs }})</ng-container>
+      </button>
+      <div class="il-ms__menu il-tdm" *ngIf="tdmOuvert">
+        <label class="il-tdm__champ">
+          <span>{{ 'item-formulaire.note-dtdm' | translate }}</span>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedNoteDtdm" (change)="onFilterChange()">
+            <option value="">{{ 'items.tdm-tous' | translate }}</option>
+            <option value="vide">{{ 'items.tdm-vide' | translate }}</option>
+            <option value="rempli">{{ 'items.tdm-complete' | translate }}</option>
+          </select>
+        </label>
+        <label class="il-tdm__champ">
+          <span>{{ 'item-formulaire.note-interne-dtdm' | translate }}</span>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedNoteInterneDtdm" (change)="onFilterChange()">
+            <option value="">{{ 'items.tdm-tous' | translate }}</option>
+            <option value="vide">{{ 'items.tdm-vide' | translate }}</option>
+            <option value="rempli">{{ 'items.tdm-complete' | translate }}</option>
+          </select>
+        </label>
+        <label class="il-tdm__champ">
+          <span>{{ 'item-formulaire.suivi-catalogage' | translate }}</span>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedCatalogue" (change)="onFilterChange()">
+            <option value="">{{ 'items.tdm-tous' | translate }}</option>
+            <option value="vide">{{ 'items.tdm-vide' | translate }}</option>
+            <option value="rempli">{{ 'items.tdm-complete' | translate }}</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
     <select class="filterbar__select" [(ngModel)]="selectedStatutAcq" (change)="onFilterChange()">
       <option value="">{{ 'items.statut-acq-placeholder' | translate }}</option>
       <option *ngFor="let s of options.dircolAcqStatutOptions" [value]="s">{{ s }}</option>
@@ -267,6 +302,9 @@
                   <td class="col-titre">
                     <div class="fw-semibold">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
                     <div class="small text-muted" *ngIf="getInfoDocument(item) as info">{{ info }}</div>
+                    <div class="small text-muted" *ngIf="item.catalogue">
+                      <i class="bi bi-journal-check me-1"></i>{{ 'item-formulaire.suivi-catalogage' | translate }} : {{ item.catalogue }}
+                    </div>
                     <div class="small il-titre-precision" *ngIf="item.precision_demande"
                          [title]="'items.col-precision' | translate">
                       <i class="bi bi-tag me-1"></i>{{ item.precision_demande }}
@@ -321,9 +359,7 @@
                       <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <!-- Décision ACQ : Admin/SuperAdmin uniquement — le TDM traite ses items
-                           depuis le portail usager (/usager/tdm), pas depuis l'espace système. -->
-                      <button *ngIf="authService.isAdmin" class="item-action-btn item-action-btn--decision"
+                      <button *ngIf="authService.isGestion" class="item-action-btn item-action-btn--decision"
                               [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                         <i class="bi bi-clipboard-check"></i>
                       </button>
@@ -359,7 +395,7 @@
                   <button class="item-action-btn item-action-btn--view" (click)="viewItem(item.item_id)" [title]="'items.consulter' | translate">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button *ngIf="authService.isAdmin" class="item-action-btn item-action-btn--decision"
+                  <button *ngIf="authService.isGestion" class="item-action-btn item-action-btn--decision"
                           [routerLink]="['/statut-decision']" [queryParams]="{item_id: item.item_id}" [title]="'items.decision-acq' | translate">
                     <i class="bi bi-clipboard-check"></i>
                   </button>
@@ -373,6 +409,9 @@
               </div>
               <div class="item-card__title">{{ item.titre_document || ('items.sans-titre' | translate) }}</div>
               <div class="small text-muted" *ngIf="getInfoDocument(item) as info">{{ info }}</div>
+              <div class="small text-muted" *ngIf="item.catalogue">
+                <i class="bi bi-journal-check me-1"></i>{{ 'item-formulaire.suivi-catalogage' | translate }} : {{ item.catalogue }}
+              </div>
               <div class="item-card__body">
                 <div class="item-card__row" *ngIf="item.precision_demande">
                   <span class="item-card__label">{{ 'items.col-precision' | translate }}</span>

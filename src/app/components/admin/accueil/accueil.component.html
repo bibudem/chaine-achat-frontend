@@ -30,7 +30,7 @@
             <span class="info-chip__val">{{ 'accueil.mis-a-jour-le' | translate }} {{ acqConfig.majDate }}</span>
           </div>
         </div>
-        <button *ngIf="authService.isAdmin" class="info-chip__edit-btn" (click)="startEdit('repartition')" [title]="'accueil.modifier' | translate">
+        <button *ngIf="authService.isGestion" class="info-chip__edit-btn" (click)="startEdit('repartition')" [title]="'accueil.modifier' | translate">
           <i class="bi bi-pencil"></i>
         </button>
         <div *ngIf="editingCard === 'repartition'" class="info-chip__dropdown">
@@ -99,7 +99,7 @@
             <p class="text-muted small fst-italic mb-0">{{ 'accueil.aucun-taux' | translate }}</p>
           </ng-template>
 
-          <a *ngIf="authService.isAdmin" routerLink="/configuration/taux-change" class="info-chip__manage-link">
+          <a *ngIf="authService.isGestion" routerLink="/configuration/taux-change" class="info-chip__manage-link">
             <i class="bi bi-sliders2 me-1"></i>{{ 'accueil.gerer-taux' | translate }}
           </a>
         </div>

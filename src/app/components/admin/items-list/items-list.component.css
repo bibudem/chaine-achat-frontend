@@ -436,3 +436,7 @@
   padding: 0 .2rem; line-height: 1; border-radius: 50%;
 }
 .il-pastille__retirer:hover, .il-pastille__retirer:focus-visible { color: #B72600; }
+
+/* Menu « TDM » : filtres vide / complété */
+.il-tdm { min-width: 240px; padding: .5rem .6rem; display: flex; flex-direction: column; gap: .45rem; }
+.il-tdm__champ { display: flex; flex-direction: column; gap: .15rem; margin: 0; font-size: .78rem; color: #607386; font-weight: 600; }

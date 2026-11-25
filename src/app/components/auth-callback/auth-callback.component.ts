@@ -42,13 +42,11 @@ export class AuthCallbackComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/login'], { queryParams: { error: 'auth_failed' } }), 1500);
         return;
       }
-      // La communauté UdeM (Usager) n'a accès qu'au formulaire public. L'équipe TechDoc, le
-      // personnel des bibliothèques (Employé) et le TDM travaillent d'abord dans le portail de
-      // dépôt des demandes (/usager — « Mon activité » + file TDM pour ce dernier) — ils
-      // gardent un accès à l'interface admin via le lien "Espace gestion" du menu, mais n'y
-      // atterrissent pas par défaut, contrairement à Admin.
+      // La communauté UdeM (Usager) n'a accès qu'au formulaire public. L'équipe TechDoc et le
+      // personnel des bibliothèques (Employé) arrivent dans le portail de dépôt des demandes
+      // (/usager) ; l'Admin et le TDM, sur le Tableau de bord.
       const dest = this.authService.isUsager  ? '/suggestion-public'
-                 : (this.authService.isTechDoc || this.authService.isEmploye || this.authService.isTdm)
+                 : (this.authService.isTechDoc || this.authService.isEmploye)
                    && this.authService.redirectUrl === '/accueil' ? '/usager'
                  : this.authService.redirectUrl;
       this.authService.redirectUrl = '/accueil';

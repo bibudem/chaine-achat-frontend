@@ -91,7 +91,7 @@ export class UsagerHomeComponent implements OnInit {
   private readonly DESCRIPTIONS_PROFIL: Record<string, string> = {
     SuperAdmin: "Accès complet : gestion des comptes et des accès, en plus de tout ce que voit le Service des acquisitions.",
     Admin:      "Vous consultez l'espace usager avec votre accès Service des acquisitions — tableau de bord et gestion des demandes dans Espace de gestion.",
-    TDM:        'Vous traitez ici les items qui vous sont routés (création de notice) — catalogage et suivi ACQ.',
+    TDM:        "Vous consultez l'espace usager avec votre accès TDM — tableau de bord et gestion des demandes dans Espace de gestion.",
     TechDocTri: "Équipe de tri : traitez les suggestions soumises par la communauté UdeM et consultez l'historique de l'équipe.",
     Employe:    'Personnel des bibliothèques : soumettez vos demandes d\'acquisition et suivez leur traitement.',
     Usager:     "Communauté UdeM : soumettez une suggestion d'achat et suivez son traitement.",
@@ -107,16 +107,6 @@ export class UsagerHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.chargerTauxEtRepartition();
-
-    // Profil TDM : le combo (voir .uh-combo au template) montre « Mes demandes » (sans
-    // compteur, comme pour TechDoc) + « Total à trier » restreint à l'équipe (creation_notice_
-    // dtdm) — pas le tableau de bord générique « Mes demandes » ci-dessous, dont la
-    // répartition par statut ne concerne que ses propres soumissions.
-    if (this.authService.isTdm) {
-      this.loadingDemandes = false;
-      this.chargerTotalTdm();
-      return;
-    }
 
     const email = sessionStorage.getItem('courrielAdmin') ?? '';
     if (!email) { this.loadingDemandes = false; return; }
