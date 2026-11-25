@@ -66,6 +66,7 @@ import { UsagerHomeComponent } from './components/usager/usager-home/usager-home
 import { ItemDetailComponent } from './components/admin/item-detail/item-detail.component';
 import { ImportComponent } from './components/admin/import/import.component';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
+import { CourrielsComponent } from './components/admin/courriels/courriels.component';
 import { NouvelAchatComponent } from './components/usager/pages/nouvel-achat/nouvel-achat.component';
 import { ModificationCcolComponent } from './components/usager/pages/modification-ccol/modification-ccol.component';
 import { RequeteAccessibiliteComponent } from './components/usager/pages/requete-accessibilite/requete-accessibilite.component';
@@ -115,6 +116,7 @@ import { BibliothequesComponent } from './components/configuration/bibliotheques
     ItemDetailComponent,
     ImportComponent,
     ImportLogsComponent,
+    CourrielsComponent,
     TauxDevisesComponent,
     UtilisateursComponent,
     FondsBudgetairesComponent,

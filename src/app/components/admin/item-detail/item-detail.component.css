@@ -413,3 +413,16 @@ a:hover { text-decoration: underline; }
 
   .itd-topbar__actions .btn { font-size: .78rem; padding: .3rem .6rem; }
 }
+
+/* ── Courriels envoyés ── */
+.itd-courriels { font-size: .82rem; }
+.itd-courriels th { font-size: .72rem; font-weight: 600; color: #607386; text-transform: uppercase; letter-spacing: .03em; }
+.itd-courriels__dest { word-break: break-all; }
+.itd-courriels__detail { font-size: .72rem; color: #607386; }
+.itd-courriels__statut {
+  display: inline-flex; align-items: center; padding: .1rem .5rem;
+  border-radius: 999px; font-size: .72rem; font-weight: 600; white-space: nowrap;
+}
+.itd-courriels__statut--envoye   { background: #ecfdf5; color: #047857; }
+.itd-courriels__statut--echec    { background: #fef2f2; color: #b91c1c; }
+.itd-courriels__statut--transmis { background: #f1f5f9; color: #475569; }

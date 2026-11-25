@@ -1,0 +1,139 @@
+<div class="ilog-page container-fluid p-4 mt-5 bg-white">
+
+  <!-- En-tête -->
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h2 class="h4 mb-0">Courriels envoyés</h2>
+      <p class="text-muted small mt-1 mb-0">Journal des courriels envoyés par l'application et leur statut d'envoi</p>
+    </div>
+    <span class="badge bg-secondary fs-6" *ngIf="!loading">
+      {{ total }} courriel{{ total > 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <!-- Filtres -->
+  <div class="ilog-filters">
+    <input type="text" class="ilog-filters__input crl-recherche" [(ngModel)]="recherche"
+           (keyup.enter)="appliquerRecherche()" (blur)="appliquerRecherche()"
+           placeholder="Destinataire, titre, #ID ou expéditeur" aria-label="Rechercher">
+
+    <select class="ilog-filters__select" [(ngModel)]="filtreType" (change)="appliquer()" aria-label="Type d'envoi">
+      <option value="">Type d'envoi</option>
+      <option *ngFor="let t of types" [value]="t.valeur">{{ t.libelle }}</option>
+    </select>
+
+    <select class="ilog-filters__select" [(ngModel)]="filtreStatut" (change)="appliquer()" aria-label="Statut">
+      <option value="">Statut</option>
+      <option value="envoye">{{ statuts.envoye.libelle }}</option>
+      <option value="echec">{{ statuts.echec.libelle }}</option>
+      <option value="transmis">{{ statuts.transmis.libelle }}</option>
+    </select>
+
+    <div class="ilog-filters__dategroup">
+      <input type="date" class="ilog-filters__date" [(ngModel)]="du" (change)="appliquer()" title="Du" aria-label="Du">
+      <span class="ilog-filters__date-sep">–</span>
+      <input type="date" class="ilog-filters__date" [(ngModel)]="au" (change)="appliquer()" title="Au" aria-label="Au">
+    </div>
+
+    <button class="ilog-filters__reset" [class.ilog-filters__reset--active]="filtresActifs"
+            (click)="reinitialiser()" title="Réinitialiser les filtres">
+      <i class="bi bi-x-circle"></i><span>Réinitialiser</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted small">Chargement du journal…</p>
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && courriels.length === 0" class="ilog-empty">
+    <i class="bi bi-envelope"></i>
+    <p>Aucun courriel {{ filtresActifs ? 'pour ces filtres' : 'enregistré' }}</p>
+  </div>
+
+  <!-- Tableau -->
+  <div *ngIf="!loading && courriels.length > 0" class="ilog-table-wrap">
+    <table class="table ilog-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Demande</th>
+          <th>Type d'envoi</th>
+          <th>Destinataire</th>
+          <th>Déclenché par</th>
+          <th>Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let c of courriels">
+          <tr [class.ilog-row--echec]="c.statut === 'echec'">
+            <td class="ilog-td--date">{{ formatDate(c.date_creation) }}</td>
+            <td class="crl-demande">
+              <a *ngIf="c.item_id; else sansItem" [routerLink]="['/items/details', c.item_id]">#{{ c.item_id }}</a>
+              <ng-template #sansItem><span class="text-muted">Réponse #{{ c.reponse_id || '—' }}</span></ng-template>
+              <div class="crl-titre" *ngIf="c.titre_document" [title]="c.titre_document">{{ c.titre_document }}</div>
+            </td>
+            <td>{{ libelleType(c.type_envoi) }}</td>
+            <td class="crl-dest">
+              <div>{{ c.destinataire || '—' }}</div>
+              <div class="crl-role" *ngIf="c.role_destinataire">{{ c.role_destinataire }}</div>
+            </td>
+            <td>{{ c.declenche_par_nom || c.declenche_par || 'Automatique' }}</td>
+            <td>
+              <span class="crl-statut" [ngClass]="'crl-statut--' + c.statut" [title]="c.erreur || ''">
+                <i class="bi me-1" [ngClass]="statuts[c.statut].icone"></i>{{ statuts[c.statut].libelle }}
+              </span>
+            </td>
+            <td class="text-end">
+              <button *ngIf="aDetail(c)" type="button" class="ilog-action-btn ilog-action-btn--primary"
+                      (click)="basculer(c)" [attr.aria-expanded]="ouvert === c.courriel_id"
+                      [title]="ouvert === c.courriel_id ? 'Masquer le détail' : 'Voir le détail'">
+                <i class="bi" [ngClass]="ouvert === c.courriel_id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="ouvert === c.courriel_id" class="crl-detail">
+            <td colspan="7">
+              <dl class="crl-detail__liste">
+                <ng-container *ngIf="c.contenu?.suivi_acq as suivi">
+                  <dt>Suivi de la demande</dt><dd>{{ suivi }}</dd>
+                </ng-container>
+                <ng-container *ngIf="c.contenu?.note_acq as note">
+                  <dt>Note</dt><dd class="crl-pre">{{ note }}</dd>
+                </ng-container>
+                <ng-container *ngIf="c.erreur">
+                  <dt>Erreur</dt><dd class="text-danger crl-pre">{{ c.erreur }}</dd>
+                </ng-container>
+                <ng-container *ngIf="c.date_maj">
+                  <dt>Dernier statut</dt><dd>{{ formatDate(c.date_maj) }}</dd>
+                </ng-container>
+              </dl>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="ilog-pagination">
+    <button class="ilog-pg-btn" [disabled]="page === 1" (click)="allerPage(page - 1)" aria-label="Page précédente">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <button *ngFor="let p of pages" class="ilog-pg-btn" [class.ilog-pg-btn--active]="p === page" (click)="allerPage(p)">{{ p }}</button>
+    <button class="ilog-pg-btn" [disabled]="page === totalPages" (click)="allerPage(page + 1)" aria-label="Page suivante">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+
+  <p class="crl-note">
+    <i class="bi bi-info-circle me-1"></i>
+    « Transmis à n8n » : n8n a reçu la demande, mais n'a pas encore renvoyé le statut d'envoi
+    (ou aucun courriel n'était prévu, ex. boîte non configurée).
+  </p>
+</div>

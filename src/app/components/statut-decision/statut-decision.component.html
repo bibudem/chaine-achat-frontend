@@ -393,7 +393,7 @@
 
             <!-- Courriel à l'usager (onglet Décision ACQ) : destinataires à gauche, contenu
                  transmis à droite. Envoyé seulement par « Enregistrer et envoyer ». -->
-            <section class="sd-courriel" *ngIf="ongletActif === 'acq'" aria-labelledby="sd-courriel-titre">
+            <section class="sd-courriel" *ngIf="ongletActif === 'acq' && peutEnvoyerCourriel" aria-labelledby="sd-courriel-titre">
               <header class="sd-courriel__entete">
                 <h3 class="sd-courriel__titre" id="sd-courriel-titre">
                   <i class="bi bi-envelope me-2" aria-hidden="true"></i>{{ 'acq-decision.courriel-titre' | translate }}
@@ -455,7 +455,7 @@
                 {{ 'acq-decision.enregistrement' | translate }}
               </span>
             </button>
-            <button type="button" class="btn acq-btn-primary" *ngIf="ongletActif === 'acq'"
+            <button type="button" class="btn acq-btn-primary" *ngIf="ongletActif === 'acq' && peutEnvoyerCourriel"
                     [disabled]="submitting || form.invalid || !hasNotifEmail"
                     [title]="!hasNotifEmail ? (notifTargets.length ? ('acq-decision.courriel-cocher' | translate) : ('acq-decision.courriel-aucun-destinataire' | translate)) : ''"
                     (click)="submitForm(true)">
@@ -480,9 +480,6 @@
               <i class="bi" [class.bi-envelope-check-fill]="emailSent" [class.bi-check-lg]="!emailSent"></i>
             </div>
             <h2 class="confirmation-title">{{ 'acq-decision.confirmation-titre' | translate }}</h2>
-            <p class="confirmation-message" *ngIf="!envoiEnCours && !echecsEnvoi.length">
-              {{ 'acq-decision.confirmation-message' | translate }}
-            </p>
 
             <div class="sd-confirm-email sd-confirm-email--attente" *ngIf="envoiEnCours" role="status">
               <span class="spinner-border spinner-border-sm sd-confirm-email__icon"></span>
@@ -510,7 +507,6 @@
                 <ul class="sd-confirm-email__liste">
                   <li *ngFor="let e of echecsEnvoi"><strong>{{ e }}</strong></li>
                 </ul>
-                <a routerLink="/items" class="sd-confirm-email__lien">{{ 'acq-decision.retour-liste' | translate }}</a>
               </div>
             </div>
 
@@ -527,6 +523,15 @@
                 </div>
                 <div class="confirmation-detail__value">{{ form.get('suivi_acq')?.value }}</div>
               </div>
+            </div>
+
+            <div class="sd-confirm-actions" *ngIf="!envoiEnCours">
+              <button type="button" class="btn acq-btn-outline" (click)="revenirDecision()" *ngIf="itemId">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>{{ 'acq-decision.revenir-decision' | translate }}
+              </button>
+              <a routerLink="/items" class="btn acq-btn-primary">
+                <i class="bi bi-list-ul me-2"></i>{{ 'acq-decision.retour-liste' | translate }}
+              </a>
             </div>
           </div>
         </div>

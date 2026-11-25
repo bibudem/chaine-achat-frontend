@@ -80,7 +80,7 @@ export const SIMULATED_PROFILES: SimulatedProfile[] = [
     groupe:      'TDM',
     label:       'TDM',
     subtitle:    'Traitement documentaire et métadonnées',
-    description: 'Mêmes accès que les Services des acquisitions, sauf modification/suppression des items, Import et Registres',
+    description: 'Mêmes accès que les Services des acquisitions, sauf modification/suppression des items, courriels aux usagers, Import et Registres',
     icon:        'bi-journal-bookmark-fill',
   },
   {

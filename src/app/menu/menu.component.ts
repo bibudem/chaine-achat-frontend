@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
     this.isAddItemRoute = url === '/items/nouveau';
 
     // Outils : /reponses et /import-logs
-    this.isOutilsRoute  = url.startsWith('/reponses') || url.startsWith('/import-logs');
+    this.isOutilsRoute  = url.startsWith('/reponses') || url.startsWith('/import-logs') || url.startsWith('/courriels');
 
     // Configuration : /configuration/...
     this.isConfigurationRoute = url.startsWith('/configuration');

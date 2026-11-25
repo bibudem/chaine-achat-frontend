@@ -31,6 +31,7 @@ import { GestionGuard } from './services/gestion-guard.service';
 import { StaffGuard } from './services/staff-guard.service';
 import { DecisionGuard } from './services/decision-guard.service';
 import { ImportLogsComponent } from './components/admin/import-logs/import-logs.component';
+import { CourrielsComponent } from './components/admin/courriels/courriels.component';
 import { SuggestionEmbedComponent } from './components/public/suggestion-embed/suggestion-embed.component';
 import { AuthPopupComponent } from './components/auth-popup/auth-popup.component';
 import { TriSuggestionsComponent } from './components/usager/pages/tri-suggestions/tri-suggestions.component';
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'suivis-bibliotheques', component: SuivisBibliothequesComponent, canActivate: [AuthGuard, StaffGuard] },
   { path: 'import',       component: ImportComponent,     canActivate: [AuthGuard, AdminGuard] },
   { path: 'import-logs', component: ImportLogsComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'courriels', component: CourrielsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'reponses', component: ReponsesListComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'configuration/taux-change', component: TauxDevisesComponent, canActivate: [AuthGuard, GestionGuard] },
   // Exclusif au SuperAdmin : pas d'AdminGuard ici, même si l'Admin peut accéder au reste de

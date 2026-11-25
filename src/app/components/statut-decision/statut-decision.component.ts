@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription, forkJoin, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ListeChoixOptions, formulaireTypeLabel, formulaireTypeIcon } from '../../lib/ListeChoixOptions';
@@ -119,7 +119,6 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
     private location: Location,
     private http: HttpClient,
     private itemService: ItemFormulaireService,
@@ -244,6 +243,20 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
+  }
+
+  /** Depuis l'écran de confirmation : réaffiche la décision avec les valeurs enregistrées
+   *  (ex. pour corriger la note ou envoyer un autre courriel). */
+  revenirDecision(): void {
+    if (!this.itemId) return;
+    this.successMessage      = null;
+    this.errorMessage        = null;
+    this.emailSent           = false;
+    this.echecsEnvoi         = [];
+    this.itemExisteDansItems = true;
+    this.activeTab           = 'acq';
+    this.loadingItem         = true;
+    this.chargerItemDirectement(this.itemId);
   }
 
   private chargerItemDirectement(id: number): void {
@@ -624,18 +637,15 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
           }
           this.reponsesService.triggerPendingRefresh();
 
-          if (sendEmail && this.hasNotifEmail) {
-            // Retour à la liste seulement si tous les courriels sont partis ; sinon l'échec
-            // reste affiché pour que la personne puisse aviser l'usager autrement.
+          // Pas de redirection automatique : l'écran de confirmation propose de revenir à la
+          // décision ou à la liste (voir revenirDecision).
+          if (sendEmail && this.peutEnvoyerCourriel && this.hasNotifEmail) {
             this.envoiEnCours = true;
-            this.notifyN8nDecision(suivi_acq, note_acq).subscribe(echecs => {
+            this.envoyerCourrielDecision(suivi_acq, note_acq).subscribe(echecs => {
               this.envoiEnCours = false;
               this.echecsEnvoi  = echecs;
               this.emailSent    = echecs.length < this.destinatairesChoisis.length;
-              if (!echecs.length) setTimeout(() => this.router.navigate(['/items']), 2000);
             });
-          } else {
-            setTimeout(() => this.router.navigate(['/items']), 2000);
           }
         } else {
           this.errorMessage = response.message || "Erreur lors de l'enregistrement.";
@@ -702,6 +712,10 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Envoi du courriel à l'usager : Admin et SuperAdmin seulement (le TDM enregistre sans
+   *  courriel). Même règle côté backend (POST /courriels/decision). */
+  get peutEnvoyerCourriel(): boolean { return this.authService.isAdmin; }
+
   get destinatairesChoisis() {
     return this.notifTargets.filter(t => t.selected);
   }
@@ -710,42 +724,40 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
     return this.destinatairesChoisis.length > 0;
   }
 
-  /** Un appel au webhook n8n par destinataire coché ; émet la liste des adresses en échec. */
-  private notifyN8nDecision(suivi_acq: string, note_acq: string | null): Observable<string[]> {
+  /** Envoi par le backend (POST /courriels/decision), qui journalise chaque courriel puis
+   *  appelle n8n — un appel par destinataire coché. Émet la liste des adresses en échec. */
+  private envoyerCourrielDecision(suivi_acq: string, note_acq: string | null): Observable<string[]> {
+    const choisis = this.destinatairesChoisis;
     // Suggestion publique triée (acceptée ou refusée — avis) : copie du suivi final à l'équipe
-    // de tri, une seule fois, avec le courriel au demandeur (cible 'saisie').
+    // de tri, avec le courriel au demandeur (cible 'saisie').
     const suggestionTriee = this.item?.tri_statut === 'accepte' || this.item?.tri_statut === 'refuse';
-    const envois = this.destinatairesChoisis.map(target => {
-      const payload = {
-        reponse_id:          this.reponseId ?? this.item?.reponse_id ?? null,
-        // Numéro de référence affiché dans le courriel (numéro de l'item).
-        item_id:             this.itemId,
-        suivi_acq,
-        note_acq,
+    const corps = {
+      reponse_id:        this.reponseId ?? this.item?.reponse_id ?? null,
+      // Numéro de référence affiché dans le courriel (numéro de l'item).
+      item_id:           this.itemId,
+      suivi_acq,
+      note_acq,
+      titre_document:    this.item?.titre_document,
+      type_formulaire:   this.item?.formulaire_type,
+      aviser_equipe_tri: suggestionTriee,
+      tri_par:           this.item?.tri_par || null,
+      destinataires:     choisis.map(t => ({
+        key: t.key, label: t.label, nom: t.nom || null,
         // Saisie « a@x; b@y » → « a@x, b@y » pour le nœud courriel n8n.
-        usager_courriel:     courrielsPourEnvoi(target.email),
-        usager_nom:          target.nom || null,
-        titre_document:      this.item?.titre_document,
-        type_formulaire:     this.item?.formulaire_type,
-        notif_role:          target.label,
-        aviser_equipe_tri:   suggestionTriee && target.key === 'saisie',
-        tri_par:             this.item?.tri_par || null,
-        // Adresse de l'application : le workflow n8n en déduit l'environnement (local ou
-        // production) et ses adresses — même rôle que app_url envoyé par le backend.
-        app_url:             window.location.origin
-      };
-      return this.http
-        .post(`${environment.n8nWebhookUrl}/statut-decision`, payload,
-              { headers: this.httpOptions.headers, responseType: 'text' })
-        .pipe(
-          map(() => null),
-          catchError(err => {
-            console.warn(`[n8n/statut-decision/${target.key}]`, err);
-            return of(target.email);
-          })
-        );
-    });
-    return forkJoin(envois).pipe(map(res => res.filter((e): e is string => !!e)));
+        email: courrielsPourEnvoi(t.email),
+      })),
+    };
+    return this.http
+      .post<{ resultats: { email: string; ok: boolean }[] }>(
+        `${environment.apiUrl}/courriels/decision`, corps, this.httpOptions)
+      .pipe(
+        map(res => (res.resultats || []).filter(r => !r.ok)
+          .map(r => choisis.find(t => courrielsPourEnvoi(t.email) === r.email)?.email || r.email)),
+        catchError(err => {
+          console.warn('[courriels/decision]', err);
+          return of(choisis.map(t => t.email));
+        })
+      );
   }
 
   // ═══════════════════════════════════════════════════════════

@@ -1,0 +1,40 @@
+.crl-recherche { min-width: 260px; }
+
+.crl-demande a { font-weight: 600; }
+.crl-titre {
+  max-width:     260px;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+  font-size:     .75rem;
+  color:         #607386;
+}
+.crl-dest { word-break: break-all; }
+.crl-role { font-size: .72rem; color: #607386; }
+
+.crl-statut {
+  display:       inline-flex;
+  align-items:   center;
+  padding:       .15rem .55rem;
+  border-radius: 999px;
+  font-size:     .75rem;
+  font-weight:   600;
+  white-space:   nowrap;
+}
+.crl-statut--envoye   { background: #ecfdf5; color: #047857; }
+.crl-statut--echec    { background: #fef2f2; color: #b91c1c; }
+.crl-statut--transmis { background: #f1f5f9; color: #475569; }
+
+.crl-detail td { background: #f8fafc; }
+.crl-detail__liste {
+  display:               grid;
+  grid-template-columns: max-content 1fr;
+  gap:                   .35rem 1rem;
+  margin:                0;
+  font-size:             .8rem;
+}
+.crl-detail__liste dt { font-weight: 600; color: #607386; }
+.crl-detail__liste dd { margin: 0; }
+.crl-pre { white-space: pre-wrap; }
+
+.crl-note { margin: 1rem 0 0; font-size: .75rem; color: #6c757d; }

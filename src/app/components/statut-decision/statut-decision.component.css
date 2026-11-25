@@ -362,7 +362,6 @@
 .sd-confirm-email--echec { background: #fff7ed; border-color: #fed7aa; }
 .sd-confirm-email--echec .sd-confirm-email__icon, .sd-confirm-email--echec .sd-confirm-email__title,
 .sd-confirm-email--echec .sd-confirm-email__liste { color: #9a3412; }
-.sd-confirm-email__lien { display: inline-block; margin-top: .5rem; font-size: .8rem; }
 
 /* ── Icône confirmation courriel envoyé ─────────────────────── */
 .confirmation-icon--email {
@@ -458,3 +457,11 @@
 /* Pastille du type de formulaire (charte d'accessibilité : teinte claire, icône foncée) */
 .sd-type-pastille { display: inline-flex; align-items: center; justify-content: center;
   width: 1.6em; height: 1.6em; border-radius: 50%; color: var(--form-texte); font-size: .85em; }
+
+.sd-confirm-actions {
+  display:         flex;
+  justify-content: center;
+  flex-wrap:       wrap;
+  gap:             .75rem;
+  margin-top:      1.5rem;
+}

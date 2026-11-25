@@ -866,6 +866,39 @@
           </div>
         </div>
 
+        <!-- ── Section : Courriels envoyés (Admin, SuperAdmin) ── -->
+        <div class="itd-card" *ngIf="authService.isAdmin">
+          <div class="itd-card__header">
+            <i class="bi bi-envelope me-2"></i>Courriels envoyés
+          </div>
+          <div class="itd-card__body">
+            <p class="text-muted small mb-0" *ngIf="courriels.length === 0">Aucun courriel enregistré pour cette demande.</p>
+            <table class="table table-sm itd-courriels mb-0" *ngIf="courriels.length > 0">
+              <thead>
+                <tr><th>Date</th><th>Type d'envoi</th><th>Destinataire</th><th>Statut</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of courriels">
+                  <td class="text-nowrap">{{ formatDateCourriel(c.date_creation) }}</td>
+                  <td>
+                    {{ libelleTypeCourriel(c.type_envoi) }}
+                    <div class="itd-courriels__detail" *ngIf="c.contenu?.suivi_acq as suivi">{{ suivi }}</div>
+                  </td>
+                  <td class="itd-courriels__dest">
+                    {{ c.destinataire || '—' }}
+                    <div class="itd-courriels__detail" *ngIf="c.role_destinataire">{{ c.role_destinataire }}</div>
+                  </td>
+                  <td>
+                    <span class="itd-courriels__statut" [ngClass]="'itd-courriels__statut--' + c.statut" [title]="c.erreur || ''">
+                      <i class="bi me-1" [ngClass]="statutsCourriel[c.statut].icone"></i>{{ statutsCourriel[c.statut].libelle }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>

@@ -75,6 +75,11 @@
               {{ 'menu.import-logs' | translate }}
             </a>
           </li>
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.isAdmin">
+            <a class="nav-link" routerLink="/courriels" (click)="closeSidebar()">
+              {{ 'menu.courriels' | translate }}
+            </a>
+          </li>
         </ul>
       </div>
     </li>

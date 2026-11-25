@@ -4,6 +4,7 @@ import { Item, ItemFormulaireService, ApiResponse } from '../../../services/item
 import { DialogService } from '../../../services/dialog.service';
 import { Location } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
+import { Courriel, CourrielsService, STATUTS_COURRIEL, libelleTypeCourriel } from '../../../services/courriels.service';
 import { formulaireTypeLabel } from '../../../lib/ListeChoixOptions';
 import { ouvrirFenetreImpression, ecrireImpressionBordereau, RangeeImpression } from '../../../lib/PrintBordereau';
 
@@ -20,18 +21,36 @@ export class ItemDetailComponent implements OnInit {
   itemId: number | null = null;
   loading = false;
 
+  /** Courriels envoyés pour cette demande (Admin, SuperAdmin) — voir Registres → Courriels. */
+  courriels: Courriel[] = [];
+  readonly libelleTypeCourriel = libelleTypeCourriel;
+  readonly statutsCourriel = STATUTS_COURRIEL;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private itemService: ItemFormulaireService,
     private dialogService: DialogService,
     private location: Location,
-    public authService: AuthService
+    public authService: AuthService,
+    private courrielsService: CourrielsService
   ) {}
 
   ngOnInit(): void {
     this.itemId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.itemId) this.loadItem();
+    if (this.itemId && this.authService.isAdmin) {
+      this.courrielsService.parItem(this.itemId).subscribe({
+        next: res => this.courriels = res.data || [],
+        error: () => this.courriels = []
+      });
+    }
+  }
+
+  formatDateCourriel(d: string): string {
+    return new Date(d).toLocaleString('fr-CA', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
   }
 
   loadItem(): void {
