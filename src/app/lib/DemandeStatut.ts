@@ -15,13 +15,17 @@ export interface DemandeStatutSource {
 }
 
 /**
- * - 'traitee' : soumise aux ACQ et déjà traitée (suivi_acq renseigné).
- * - 'soumise' : soumise aux ACQ, en attente de leur décision.
+ * - 'traitee' : soumise aux ACQ et réellement traitée (suivi_acq renseigné, autre que les
+ *               valeurs par défaut du formulaire de décision).
+ * - 'soumise' : soumise aux ACQ, en attente de leur décision (y compris valeurs par défaut,
+ *               voir estAcqEnAttenteDefaut) — même règle que le badge « ACQ en attente ».
  * - 'attente' : encore en traitement côté bibliothèque, pas encore envoyée aux ACQ.
+ * Sert aux compteurs de l'accueil, au filtre de statut et aux badges : chiffres et listes
+ * concordent.
  */
 export function demandeBadgeStatut(d: DemandeStatutSource): DemandeBadgeStatut {
   if (d.statut_bibliotheque !== 'Soumettre aux ACQ') return 'attente';
-  return d.suivi_acq ? 'traitee' : 'soumise';
+  return d.suivi_acq && !estAcqEnAttenteDefaut(d) ? 'traitee' : 'soumise';
 }
 
 // Valeurs pré-remplies par défaut sur le formulaire de décision ACQ (statut-decision) quand

@@ -33,6 +33,14 @@
 
     <!-- ══ FORMULAIRE ═══════════════════════════════════════ -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Demande d'un collègue, complétée en collaboration -->
+      <div *ngIf="auteurAutre" class="alert alert-info d-flex gap-2 align-items-start" role="status">
+        <i class="bi bi-people-fill mt-1" aria-hidden="true"></i>
+        <div>
+          <strong>{{ 'forms-usager.collab-titre' | translate: { nom: auteurAutre.nom } }}</strong>
+          <div class="small">{{ 'forms-usager.collab-texte' | translate }}</div>
+        </div>
+      </div>
 
       <!-- SECTION 1 — IDENTIFICATION -->
       <div class="form-section">
@@ -368,8 +376,11 @@
       <!-- ERREUR -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible mt-3" role="alert">
         <i class="fas fa-exclamation-circle me-2"></i>
-        {{ 'forms-usager.erreur-titre' | translate }} {{ 'forms-usager.erreur-contact' | translate }}
-        <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
+        <ng-container *ngIf="messageErreur; else erreurGenerique">{{ messageErreur }}</ng-container>
+        <ng-template #erreurGenerique>
+          {{ 'forms-usager.erreur-titre' | translate }} {{ 'forms-usager.erreur-contact' | translate }}
+          <a href="mailto:acq-mono@bib.umontreal.ca">acq-mono@bib.umontreal.ca</a>.
+        </ng-template>
         <button type="button" class="btn-close" (click)="error = false" [attr.aria-label]="'forms-usager.fermer' | translate"></button>
       </div>
 

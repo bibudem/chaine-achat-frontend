@@ -9,7 +9,8 @@
       <span class="up-nav__breadcrumb">
         <a routerLink="/usager" class="up-nav__crumb-link">Portail acquisitions</a>
         <i class="bi bi-chevron-right up-nav__sep"></i>
-        <span>{{ mesDemandesSeulement ? 'Mes demandes' : 'Toutes les demandes' }}</span>
+        <span *ngIf="mesDemandesSeulement">Mes demandes</span>
+        <span *ngIf="!mesDemandesSeulement">Demandes à compléter</span>
       </span>
     </div>
   </nav>
@@ -76,8 +77,8 @@
           <option value="">Toutes les bibliothèques</option>
           <option *ngFor="let b of bibliothequesDisponibles" [value]="b">{{ b }}</option>
         </select>
-        <span class="filterbar__sep"></span>
-        <select class="filterbar__select" [(ngModel)]="filtreStatut" (ngModelChange)="onFilterChange()">
+        <span class="filterbar__sep" *ngIf="mesDemandesSeulement"></span>
+        <select *ngIf="mesDemandesSeulement" class="filterbar__select" [(ngModel)]="filtreStatut" (ngModelChange)="onFilterChange()">
           <option value="">Tous les statuts</option>
           <option value="attente">Non envoyée aux ACQ</option>
           <option value="soumise">En attente ACQ</option>
@@ -93,6 +94,15 @@
 
         <!-- Bascule (gauche) + Réinitialiser / compteur / Exporter (droite) — même ligne -->
         <div class="up-filter-footer">
+          <!-- Demandes à compléter : demandes non envoyées de tout le personnel -->
+          <button *ngIf="mesDemandesSeulement" type="button" class="up-equipe-btn" (click)="ouvrirEquipe()"
+                  title="Demandes de l'équipe pas encore envoyées aux ACQ : les compléter et les soumettre">
+            <i class="bi bi-people"></i> Demandes à compléter
+          </button>
+          <button *ngIf="!mesDemandesSeulement" type="button" class="up-equipe-btn up-equipe-btn--actif" (click)="retourMesDemandes()">
+            <i class="bi bi-arrow-left"></i> Mes demandes
+          </button>
+
           <div class="filterbar__actions">
             <button [class.filterbar__reset--active]="filtreRecherche || filtreType || filtreBibliotheque || filtreStatut || filtreDateDebut || filtreDateFin"
                     class="filterbar__reset"
@@ -188,6 +198,10 @@
                   <span class="up-meta__date"><i class="bi bi-calendar3"></i> {{ formatDate(d.dateA) }}</span>
                   <span *ngIf="d.bibliotheque" class="up-meta__chip"><i class="bi bi-building"></i> {{ d.bibliotheque }}</span>
                   <span *ngIf="d.isbn_issn"    class="up-meta__chip">{{ d.isbn_issn }}</span>
+                  <!-- Complétée par un collègue -->
+                  <span *ngIf="modifieeParCollegue(d)" class="up-meta__date" title="Dernière modification">
+                    <i class="bi bi-people"></i> Modifiée par {{ d.modifie_par_nom }}, {{ formatDate(d.date_modification!) }}
+                  </span>
                   <span *ngIf="d.prix_cad"     class="up-meta__chip">{{ d.prix_cad | number:'1.2-2' }} {{ d.devise_originale || 'CAD' }}</span>
                   <span class="up-meta__statut"
                         [class.up-meta__statut--default]="!d.statut_bibliotheque">
@@ -288,6 +302,14 @@
                   <span class="up-type-label">{{ enteteDemande(d) }}</span>
                   <span class="up-badge" [ngClass]="badgeClassPublique(d)">{{ statutLabelPublique(d) }}</span>
                   <div class="up-card__actions">
+                    <!-- Demande non soumise : un collègue peut la compléter et la soumettre -->
+                    <a *ngIf="peutCompleter(d)"
+                       [routerLink]="routeFormulaire(d)"
+                       [queryParams]="{ id: d.id }"
+                       class="up-btn-edit-icon"
+                       title="Modifier / compléter cette demande">
+                      <i class="bi bi-pencil"></i>
+                    </a>
                     <button class="up-btn-detail-icon"
                             [class.active]="expandedId === d.id"
                             (click)="toggleDetails(d)"
@@ -305,6 +327,11 @@
                 <div class="up-card__meta">
                   <span class="up-meta__date"><i class="bi bi-calendar3"></i> {{ formatDate(d.dateA) }}</span>
                   <span *ngIf="d.bibliotheque" class="up-meta__chip"><i class="bi bi-building"></i> {{ d.bibliotheque }}</span>
+                  <span *ngIf="d.usager_nom" class="up-meta__chip" title="Saisie par"><i class="bi bi-person"></i> {{ d.usager_nom }}</span>
+                  <span *ngIf="d.modifie_par_nom && d.date_modification" class="up-meta__date"
+                        title="Dernière modification">
+                    <i class="bi bi-pencil-square"></i> {{ d.modifie_par_nom }}, {{ formatDate(d.date_modification) }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -338,7 +365,8 @@
         <ng-template #aucunResultatPublic>
           <div class="up-state" style="padding:2rem 1rem;">
             <i class="bi bi-funnel text-muted"></i>
-            <span>Aucune demande ne correspond aux filtres sélectionnés.</span>
+            <span *ngIf="filtreRecherche || filtreType || filtreBibliotheque || filtreDateDebut || filtreDateFin">Aucune demande ne correspond aux filtres sélectionnés.</span>
+            <span *ngIf="!(filtreRecherche || filtreType || filtreBibliotheque || filtreDateDebut || filtreDateFin)">Aucune demande à compléter pour le moment.</span>
           </div>
         </ng-template>
       </div>

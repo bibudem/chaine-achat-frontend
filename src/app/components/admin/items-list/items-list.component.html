@@ -342,7 +342,12 @@
                   <td class="col-fonds">
                     {{ item.fonds_budgetaire || '—' }}
                   </td>
-                  <td class="col-demandeur">{{ item.demandeur || '—' }}</td>
+                  <td class="col-demandeur">
+                    {{ item.demandeur || '—' }}
+                    <div class="il-qui" *ngIf="item.saisie_par_nom && item.saisie_par_nom !== item.demandeur" title="Saisie par">
+                      <i class="bi bi-person"></i> {{ item.saisie_par_nom }}
+                    </div>
+                  </td>
                   <td class="col-statut-bib">
                     <span *ngIf="item.statut_bibliotheque" class="badge" [ngClass]="getStatutBiblioBadgeClass(item.statut_bibliotheque)">
                       {{ getStatutBiblioLabel(item.statut_bibliotheque) }}
@@ -361,6 +366,9 @@
                   </td>
                   <td class="col-date">
                     <div>{{ formatDate(item.date_modification || item.date_creation) }}</div>
+                    <div class="il-qui" *ngIf="item.utilisateur_modification" title="Modifiée par">
+                      <i class="bi bi-pencil"></i> {{ item.utilisateur_modification }}
+                    </div>
                   </td>
                   <td class="col-actions text-center">
                     <div class="item-actions">
@@ -453,7 +461,7 @@
                 </div>
                 <div class="item-card__row">
                   <span class="item-card__label">{{ 'items.col-date' | translate }}</span>
-                  <span>{{ formatDate(item.date_modification || item.date_creation) }}</span>
+                  <span>{{ formatDate(item.date_modification || item.date_creation) }}<ng-container *ngIf="item.utilisateur_modification"> · {{ item.utilisateur_modification }}</ng-container></span>
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { ConfigService } from '../../../services/config.service';
 import { AuthService } from '../../../services/auth.service';
 import { ItemFormulaireService } from '../../../services/items-formulaire.service';
 import { demandeBadgeStatut } from '../../../lib/DemandeStatut';
+import { TYPE_SUGGESTION_ACHAT } from '../../../lib/EditionCollaborative';
 import { ListeChoixOptions, FORMULAIRE_TYPE_DESCRIPTIONS } from '../../../lib/ListeChoixOptions';
 
 export interface FormulaireCard {
@@ -36,6 +37,10 @@ export class UsagerHomeComponent implements OnInit {
   /** Profil TDM : total d'items routés vers l'équipe (tbl_items.creation_notice_dtdm = true),
    *  affiché dans la colonne « Total à trier » du combo (voir .uh-combo au template). */
   totalTdmAssignees: number | null = null;
+  /** Demandes de l'équipe non envoyées aux ACQ (bouton « Demandes à compléter »). */
+  nbACompleter = 0;
+  /** Total des demandes enregistrées dans le système (carré Système → Rechercher). */
+  totalSysteme: number | null = null;
 
   // Taux de change en vigueur aujourd'hui (lecture seule — gestion complète côté admin).
   tauxActuels: TauxPeriode | null = null;
@@ -108,6 +113,16 @@ export class UsagerHomeComponent implements OnInit {
   ngOnInit(): void {
     this.chargerTauxEtRepartition();
 
+    // Non bloquants : sans compteur, les carrés restent affichés.
+    this.itemService.getAll({ limit: 1 }).subscribe({
+      next: res => this.totalSysteme = res.total ?? 0,
+      error: () => {}
+    });
+    this.reponsesService.getAllPublic({ limit: 1, collaboration: true }).subscribe({
+      next: res => this.nbACompleter = res.total || 0,
+      error: () => {}
+    });
+
     const email = sessionStorage.getItem('courrielAdmin') ?? '';
     if (!email) { this.loadingDemandes = false; return; }
 
@@ -164,6 +179,18 @@ export class UsagerHomeComponent implements OnInit {
   get nbNonEnvoyees(): number { return this.demandes.filter(d => demandeBadgeStatut(d) === 'attente').length; }
   get nbEnAttenteAcq(): number { return this.demandes.filter(d => demandeBadgeStatut(d) === 'soumise').length; }
   get nbTraitees(): number     { return this.demandes.filter(d => demandeBadgeStatut(d) === 'traitee').length; }
+
+  /** Part d'un statut dans le total de mes demandes (0 à 100, arrondi). */
+  /** Parmi « À compléter » (équipe), mes propres demandes : même critère que la liste de
+   *  l'équipe (non envoyées, non refusées, hors suggestions d'achat). */
+  get nbMesACompleter(): number {
+    return this.demandes.filter(d => demandeBadgeStatut(d) === 'attente'
+      && d.statut_approbation !== 'refuse' && d.type_formulaire !== TYPE_SUGGESTION_ACHAT).length;
+  }
+
+  part(n: number): number {
+    return this.totalDemandes ? Math.round((n / this.totalDemandes) * 100) : 0;
+  }
 
   readonly GROUPE_COLLECTIONS = 'Développement des collections';
   readonly GROUPE_USAGERS     = 'Acquisitions pour les usagers';

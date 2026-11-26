@@ -169,6 +169,9 @@
         <div class="itd-sidebar__meta">
           <div class="itd-sidebar__label">{{ 'item-detail.cree-le' | translate }}</div>
           <div class="itd-sidebar__value">{{ item.date_creation | date:'yyyy-MM-dd' }}</div>
+          <div class="itd-sidebar__value text-muted small" *ngIf="item.saisie_par_nom">
+            {{ 'item-detail.par' | translate }} {{ item.saisie_par_nom }}
+          </div>
         </div>
         <div class="itd-sidebar__meta" *ngIf="item.date_modification">
           <div class="itd-sidebar__label">{{ 'item-detail.modifie-le' | translate }}</div>

@@ -72,6 +72,23 @@
               <div class="sd-requester__value">{{ item.bibliotheque }}</div>
             </div>
           </div>
+          <!-- Qui a saisi la demande (si ce n'est pas le demandeur) et dernière modification -->
+          <div class="sd-requester__item" *ngIf="item.saisie_par_nom && item.saisie_par_nom !== item.demandeur">
+            <i class="bi bi-person-badge sd-requester__icon"></i>
+            <div>
+              <div class="sd-requester__label">Saisie par</div>
+              <div class="sd-requester__value">{{ item.saisie_par_nom }}</div>
+            </div>
+          </div>
+          <div class="sd-requester__item" *ngIf="item.date_modification">
+            <i class="bi bi-pencil-square sd-requester__icon"></i>
+            <div>
+              <div class="sd-requester__label">Modifiée</div>
+              <div class="sd-requester__value">
+                {{ item.date_modification | date:'d MMM y' }}<ng-container *ngIf="item.utilisateur_modification"> · {{ item.utilisateur_modification }}</ng-container>
+              </div>
+            </div>
+          </div>
           <div class="d-flex gap-2 ms-auto">
             <button type="button" class="sd-requester__detail-btn"
                     (click)="imprimerBordereau()"

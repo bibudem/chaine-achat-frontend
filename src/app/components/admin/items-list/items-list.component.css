@@ -440,3 +440,14 @@
 /* Menu « TDM » : filtres vide / complété */
 .il-tdm { min-width: 240px; padding: .5rem .6rem; display: flex; flex-direction: column; gap: .45rem; }
 .il-tdm__champ { display: flex; flex-direction: column; gap: .15rem; margin: 0; font-size: .78rem; color: #607386; font-weight: 600; }
+
+/* Qui a saisi / modifié la demande : ligne discrète sous la cellule */
+.il-qui {
+  font-size: .72rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.il-qui i { font-size: .68rem; }

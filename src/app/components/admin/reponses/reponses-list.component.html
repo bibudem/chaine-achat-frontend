@@ -134,7 +134,14 @@
                 </div>
               </div>
             </td>
-            <td class="small fw-semibold">{{ reponse.usager_nom || '—' }}</td>
+            <td class="small fw-semibold">
+              {{ reponse.usager_nom || '—' }}
+              <!-- Modifiée par quelqu'un d'autre que l'auteur (collaboration) -->
+              <div class="rl-qui" *ngIf="reponse.modifie_par_nom && reponse.date_modification && (reponse.modifie_par_courriel || '').toLowerCase() !== (reponse.usager_courriel || '').toLowerCase()"
+                   title="Dernière modification">
+                <i class="bi bi-pencil"></i> {{ reponse.modifie_par_nom }}, {{ reponse.date_modification | date:'d MMM' }}
+              </div>
+            </td>
             <td class="small text-muted">{{ reponse.usager_courriel || '—' }}</td>
             <td class="small text-nowrap">{{ formatDate(reponse.dateA) }}</td>
             <td class="text-center">

@@ -4,10 +4,12 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReponsesService, DemandeUsager, DemandePublique } from '../../../services/reponses.service';
 import { AuthService } from '../../../services/auth.service';
-import { formulaireTypeIcon, formulaireTypeCouleur } from '../../../lib/ListeChoixOptions';
+import { formulaireTypeIcon, formulaireTypeCouleur, FORMULAIRE_TYPES_ORDRE } from '../../../lib/ListeChoixOptions';
+import { BibliothequesService } from '../../../services/bibliotheques.service';
 import { demandeBadgeStatut, estAcqEnAttenteDefaut } from '../../../lib/DemandeStatut';
 import { ouvrirFenetreImpression, ecrireDocumentImpression, RangeeImpression } from '../../../lib/PrintBordereau';
 import { FIELD_LABELS, FIELD_ORDER, construireLignesDetail } from '../../../lib/DemandeDetailFields';
+import { TYPE_SUGGESTION_ACHAT } from '../../../lib/EditionCollaborative';
 
 @Component({
   selector:    'app-usager-profil',
@@ -35,11 +37,12 @@ export class UsagerProfilComponent implements OnInit {
   filtreDateDebut    = '';
   filtreDateFin      = '';
 
-  // Décoché : affiche TOUTES les demandes du système (lecture seule, transparence — voir
-  // ReponsesModel.findAllPublic) au lieu de seulement celles de l'usager connecté. Même
-  // barre de filtres, même pagination — seules la source des données et les actions
-  // disponibles par ligne changent, pour une expérience cohérente.
+  // false : « Demandes à compléter » (bouton de la barre de filtres) — demandes
+  // non soumises aux ACQ de tout le personnel, qu'un collègue peut compléter et soumettre
+  // (ReponsesModel.findAllPublic, option collaboration). Même barre de filtres et pagination.
   mesDemandesSeulement = true;
+  /** Toutes les bibliothèques (filtre de la vue équipe), chargées à la première ouverture. */
+  private bibliothequesEquipe: string[] = [];
   demandesPubliques: DemandePublique[] = [];
   totalPublic     = 0;
   loadingPublic   = false;
@@ -57,10 +60,14 @@ export class UsagerProfilComponent implements OnInit {
   }
 
   get typesDisponibles(): string[] {
+    if (!this.mesDemandesSeulement) {
+      return FORMULAIRE_TYPES_ORDRE.filter(t => t !== TYPE_SUGGESTION_ACHAT);
+    }
     return [...new Set(this.demandes.map(d => d.type_formulaire))].sort();
   }
 
   get bibliothequesDisponibles(): string[] {
+    if (!this.mesDemandesSeulement) return this.bibliothequesEquipe;
     return [...new Set(this.demandes.map(d => d.bibliotheque).filter((b): b is string => !!b))].sort();
   }
 
@@ -101,7 +108,8 @@ export class UsagerProfilComponent implements OnInit {
   constructor(
     private reponsesService: ReponsesService,
     private route: ActivatedRoute,
-    public authService: AuthService
+    public authService: AuthService,
+    private bibliothequesService: BibliothequesService
   ) {}
 
   ngOnInit(): void {
@@ -128,13 +136,38 @@ export class UsagerProfilComponent implements OnInit {
     if (statutParam === 'attente' || statutParam === 'soumise' || statutParam === 'traitee') {
       this.filtreStatut = statutParam;
     }
+
+    // Retour après avoir complété la demande d'un collègue : elle n'est pas dans « Mes
+    // demandes », on revient donc sur « Toutes les demandes ».
+    // ?vue=equipe : bouton « Demandes à compléter » de la page d'accueil.
+    if (state?.toutes || this.route.snapshot.queryParamMap.get('vue') === 'equipe') this.ouvrirEquipe();
   }
 
-  // ── Bascule « Mes demandes » / « Toutes les demandes » ──────────────
-  onToggleMesDemandes(): void {
+  // ── « Mes demandes » / « Demandes à compléter » ──────────────
+  ouvrirEquipe(): void {
+    this.viderFiltres();
+    this.mesDemandesSeulement = false;
     this.currentPage = 1;
     this.errorMessage = '';
-    if (!this.mesDemandesSeulement) this.chargerPublique();
+    if (!this.bibliothequesEquipe.length) {
+      this.bibliothequesService.getAll().subscribe({
+        next: res => this.bibliothequesEquipe = (res.data || []).map(b => b.nom),
+        error: () => {}
+      });
+    }
+    this.chargerPublique();
+  }
+
+  retourMesDemandes(): void {
+    this.viderFiltres();
+    this.mesDemandesSeulement = true;
+    this.currentPage = 1;
+    this.errorMessage = '';
+  }
+
+  private viderFiltres(): void {
+    this.filtreRecherche = ''; this.filtreType = ''; this.filtreBibliotheque = '';
+    this.filtreStatut = ''; this.filtreDateDebut = ''; this.filtreDateFin = '';
   }
 
   chargerPublique(): void {
@@ -146,9 +179,9 @@ export class UsagerProfilComponent implements OnInit {
       search:           this.filtreRecherche    || undefined,
       type_formulaire:  this.filtreType         || undefined,
       bibliotheque:     this.filtreBibliotheque || undefined,
-      statut:           (this.filtreStatut || undefined) as 'attente' | 'soumise' | 'traitee' | undefined,
       dateDebut:        this.filtreDateDebut    || undefined,
       dateFin:          this.filtreDateFin      || undefined,
+      collaboration:    true,
     }).subscribe({
       next: (res) => { this.demandesPubliques = res.data; this.totalPublic = res.total; this.loadingPublic = false; },
       error: ()   => { this.errorMessage = 'Impossible de charger les demandes.'; this.loadingPublic = false; }
@@ -236,7 +269,7 @@ export class UsagerProfilComponent implements OnInit {
     return [d.type_formulaire, d.precision_demande, this.numeroDemande(d)].filter(Boolean).join(' - ');
   }
 
-  routeFormulaire(d: DemandeUsager): string {
+  routeFormulaire(d: { type_formulaire: string }): string {
     const map: Record<string, string> = {
       'Nouvel achat unique':          'nouvel-achat',
       'Modification et CCOL':         'modification-ccol',
@@ -267,6 +300,21 @@ export class UsagerProfilComponent implements OnInit {
   /** Supprimable seulement si aucun item n'a été créé. */
   peutSupprimer(d: DemandeUsager): boolean {
     return this.peutModifier(d) && !d.item_id;
+  }
+
+  /** Mes demandes : dernière modification faite par quelqu'un d'autre que moi. */
+  modifieeParCollegue(d: DemandeUsager): boolean {
+    return !!d.modifie_par_nom && !!d.date_modification
+        && (d.modifie_par_courriel || '').toLowerCase() !== this.email.toLowerCase();
+  }
+
+  /** « Toutes les demandes » : une demande non soumise aux ACQ peut être complétée par un
+   *  collègue (travail en collaboration), sauf une suggestion d'achat, réservée à son auteur. */
+  peutCompleter(d: DemandePublique): boolean {
+    return d.statut_bibliotheque !== 'Soumettre aux ACQ'
+        && d.statut_approbation !== 'refuse'
+        && !d.tri_statut
+        && d.type_formulaire !== TYPE_SUGGESTION_ACHAT;
   }
 
   // N'utilise que `id` — accepte aussi bien une demande personnelle (DemandeUsager) qu'une

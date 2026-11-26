@@ -9,6 +9,7 @@ import { BibliothequesService } from '../../../../services/bibliotheques.service
 import { ListeChoixOptions, STATUTS_BIBLIOTHEQUE } from '../../../../lib/ListeChoixOptions';
 import { convertirPrixCad, estDeviseConvertible } from '../../../../lib/ConversionDevise';
 import { IDENTIFIANT_MAX, nettoyerIdentifiant } from '../../../../lib/IdentifiantDocument';
+import { AuteurDemande, auteurSiAutre, messageServeur } from '../../../../lib/EditionCollaborative';
 
 @Component({
   selector: 'app-requete-accessibilite',
@@ -24,6 +25,13 @@ export class RequeteAccessibiliteComponent implements OnInit {
   showElectronique = false;
   showImprime      = true;
   editId:  number | null = null;
+  /** Date de dernière modification de la demande chargée : le serveur refuse l'enregistrement
+   *  si quelqu'un l'a modifiée entre-temps. */
+  private version: string | null | undefined = undefined;
+  /** Auteur de la demande quand ce n'est pas la personne connectée (demande d'un collègue). */
+  auteurAutre: AuteurDemande | null = null;
+  /** Message précis du serveur (droits, modification simultanée) ; sinon message générique. */
+  messageErreur = '';
   /** Taux de change vers CAD par devise — voir ConfigService.getTauxRates(). */
   tauxRates: TauxRates = { CAD: 1, USD: 1.368 };
 
@@ -157,6 +165,11 @@ export class RequeteAccessibiliteComponent implements OnInit {
   private loadDemande(id: number): void {
     this.reponsesService.getReponseById(id).subscribe({
       next: (row) => {
+        this.version     = row.date_modification ?? null;
+        this.auteurAutre = auteurSiAutre(row);
+        if (this.auteurAutre) {
+          this.form.patchValue({ nom: this.auteurAutre.nom, courriel: this.auteurAutre.courriel });
+        }
         const bd = row.reponses?.baseData ?? {};
         const sd = row.reponses?.specificData ?? {};
         const deviseConnue = this.devises.some(d => d.code === bd.devise_originale);
@@ -391,7 +404,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
     };
 
     const obs = this.editId
-      ? this.reponsesService.updateReponse(this.editId, payload)
+      ? this.reponsesService.updateReponse(this.editId, payload, this.version)
       : this.reponsesService.envoyerRequeteAccessibilite(payload);
 
     obs.subscribe({
@@ -404,7 +417,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
           this.naviguerApresSoumission(false);
         }
       },
-      error: () => { this.isLoading = false; this.error = true; }
+      error: (err) => { this.isLoading = false; this.error = true; this.messageErreur = messageServeur(err); }
     });
   }
 
@@ -412,7 +425,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
     const message = echecPieceJointe
       ? this.translate.instant('forms-usager.msg-soumise-pj-echec')
       : this.translate.instant('forms-usager.msg-soumise');
-    this.router.navigate(['/usager/profil'], { state: { message } });
+    this.router.navigate(['/usager/profil'], { state: { message, toutes: !!this.auteurAutre } });
   }
 
   onSave(): void {
@@ -463,7 +476,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
       },
     };
     const obs = this.editId
-      ? this.reponsesService.updateReponse(this.editId, payload)
+      ? this.reponsesService.updateReponse(this.editId, payload, this.version)
       : this.reponsesService.envoyerRequeteAccessibilite(payload);
     obs.subscribe({
       next: (res: any) => {
@@ -475,7 +488,7 @@ export class RequeteAccessibiliteComponent implements OnInit {
           this.naviguerApresEnregistrement(false);
         }
       },
-      error: () => { this.isLoading = false; this.error = true; }
+      error: (err) => { this.isLoading = false; this.error = true; this.messageErreur = messageServeur(err); }
     });
   }
 
@@ -483,6 +496,6 @@ export class RequeteAccessibiliteComponent implements OnInit {
     const message = echecPieceJointe
       ? this.translate.instant('forms-usager.msg-enregistree-pj-echec')
       : this.translate.instant('forms-usager.msg-enregistree');
-    this.router.navigate(['/usager/profil'], { state: { message } });
+    this.router.navigate(['/usager/profil'], { state: { message, toutes: !!this.auteurAutre } });
   }
 }

@@ -10,9 +10,6 @@
       <p class="uh-header__sub">
         Portail de gestion des acquisitions — Bibliothèques UdeM
       </p>
-      <p class="uh-header__profil" *ngIf="profilDescription">
-        <i class="bi bi-info-circle"></i>{{ profilDescription }}
-      </p>
     </div>
 
     <!-- ── Pastilles d'information (lecture seule, gestion côté admin) ── -->
@@ -71,107 +68,71 @@
       </div>
       </div>
     </div>
+
+    <!-- Profil : ligne pleine largeur sous l'en-tête -->
+    <p class="uh-header__profil" *ngIf="profilDescription">
+      <i class="bi bi-info-circle"></i>{{ profilDescription }}
+    </p>
   </div>
 
-  <!-- ── Mes demandes : tableau de bord unifié (accès + répartition par statut) — profils
-       sans accès au tri (Employe/Usager) ──────────── -->
-  <div class="uh-dashboard" *ngIf="!authService.canTrier">
-    <a routerLink="/usager/profil" class="uh-dashboard__header">
-      <span class="uh-dashboard__icon"><i class="bi bi-clock-history"></i></span>
-      <span class="uh-dashboard__text">
-        <span class="uh-dashboard__title">Mes demandes</span>
-        <span class="uh-dashboard__desc">
-          Consultez, modifiez et suivez le statut de toutes vos demandes d'acquisition soumises.
+  <!-- ── Mes demandes : même bloc pour tous les profils — mes demandes, demandes de l'équipe
+       à compléter, répartition par statut ──────────── -->
+  <div class="uh-dashboard">
+    <!-- Deux accès à la même page de recherche : mes demandes, ou celles de l'équipe à compléter -->
+    <div class="uh-dashboard__header">
+      <a routerLink="/usager/profil" class="uh-dashboard__lien">
+        <span class="uh-dashboard__icon"><i class="bi bi-clock-history"></i></span>
+        <span class="uh-dashboard__text">
+          <span class="uh-dashboard__title">Mes demandes</span>
+          <span class="uh-dashboard__desc">
+            Suivez vos demandes ou complétez celles de l'équipe.
+          </span>
         </span>
-      </span>
-      <span class="uh-dashboard__cta">
-        Accéder à mes demandes <i class="bi bi-arrow-right"></i>
-      </span>
-    </a>
+      </a>
+      <div class="uh-dashboard__actions">
+        <a routerLink="/usager/profil" [queryParams]="{ vue: 'equipe' }" class="uh-dashboard__cta uh-dashboard__cta--secondaire"
+           title="Demandes de l'équipe pas encore envoyées aux ACQ : les compléter et les soumettre">
+          <i class="bi bi-people"></i> Demandes à compléter
+        </a>
+        <a routerLink="/usager/profil" class="uh-dashboard__cta">
+          Accéder à mes demandes <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
 
+    <!-- Compteurs : mes demandes (total, traitées), celles de l'équipe à compléter, et toutes
+         les demandes du système (ouvre Rechercher). -->
     <div class="uh-dashboard__stats" *ngIf="!loadingDemandes && totalDemandes !== null">
-      <a routerLink="/usager/profil" class="uh-dstat" title="Voir toutes mes demandes">
-        <span class="uh-dstat__icon uh-dstat__icon--total"><i class="bi bi-inbox-fill"></i></span>
-        <span class="uh-dstat__body">
-          <span class="uh-dstat__value">{{ totalDemandes }}</span>
-          <span class="uh-dstat__label">Total mes demandes</span>
+      <a routerLink="/usager/profil" class="uh-dstat uh-dstat--total" title="Voir toutes mes demandes">
+        <span class="uh-dstat__entete"><span class="uh-dstat__label">Total</span><span class="uh-dstat__portee">Mes demandes</span></span>
+        <span class="uh-dstat__value">{{ totalDemandes }}</span>
+        <span class="uh-dstat__desc">{{ nbNonEnvoyees }} non envoyée{{ nbNonEnvoyees > 1 ? 's' : '' }} · {{ nbEnAttenteAcq }} en attente ACQ</span>
+        <span class="uh-dstat__barre uh-dstat__barre--repartition" aria-hidden="true">
+          <span *ngIf="nbNonEnvoyees" class="uh-dstat__seg--attente" [style.width.%]="part(nbNonEnvoyees)"></span>
+          <span *ngIf="nbEnAttenteAcq" class="uh-dstat__seg--soumise" [style.width.%]="part(nbEnAttenteAcq)"></span>
+          <span *ngIf="nbTraitees" class="uh-dstat__seg--traitee" [style.width.%]="part(nbTraitees)"></span>
         </span>
-        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
       </a>
-      <a routerLink="/usager/profil" [queryParams]="{ statut: 'attente' }" class="uh-dstat" title="Filtrer : non envoyées aux ACQ">
-        <span class="uh-dstat__icon uh-dstat__icon--attente"><i class="bi bi-pencil-square"></i></span>
-        <span class="uh-dstat__body">
-          <span class="uh-dstat__value">{{ nbNonEnvoyees }}</span>
-          <span class="uh-dstat__label">Non envoyées</span>
+      <a routerLink="/usager/profil" [queryParams]="{ vue: 'equipe' }" class="uh-dstat uh-dstat--equipe"
+         title="Demandes de l'équipe pas encore envoyées aux ACQ : les compléter et les soumettre">
+        <span class="uh-dstat__entete"><span class="uh-dstat__label">À compléter</span><span class="uh-dstat__portee uh-dstat__portee--equipe">Équipe</span></span>
+        <span class="uh-dstat__value">{{ nbACompleter }}</span>
+        <span class="uh-dstat__desc">
+          Non envoyées aux ACQ<ng-container *ngIf="nbMesACompleter">, dont {{ nbMesACompleter }} à vous</ng-container>
         </span>
-        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
       </a>
-      <a routerLink="/usager/profil" [queryParams]="{ statut: 'soumise' }" class="uh-dstat" title="Filtrer : en attente ACQ">
-        <span class="uh-dstat__icon uh-dstat__icon--soumise"><i class="bi bi-hourglass-split"></i></span>
-        <span class="uh-dstat__body">
-          <span class="uh-dstat__value">{{ nbEnAttenteAcq }}</span>
-          <span class="uh-dstat__label">En attente ACQ</span>
-        </span>
-        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      <a routerLink="/usager/profil" [queryParams]="{ statut: 'traitee' }" class="uh-dstat uh-dstat--traitee" title="Filtrer : traitées">
+        <span class="uh-dstat__entete"><span class="uh-dstat__label">Traitées</span><span class="uh-dstat__portee">Mes demandes</span></span>
+        <span class="uh-dstat__value">{{ nbTraitees }}</span>
+        <span class="uh-dstat__desc">{{ part(nbTraitees) }} % de mes demandes</span>
+        <span class="uh-dstat__barre" aria-hidden="true"><span [style.width.%]="part(nbTraitees)"></span></span>
       </a>
-      <a routerLink="/usager/profil" [queryParams]="{ statut: 'traitee' }" class="uh-dstat" title="Filtrer : traitées">
-        <span class="uh-dstat__icon uh-dstat__icon--traitee"><i class="bi bi-check-circle-fill"></i></span>
-        <span class="uh-dstat__body">
-          <span class="uh-dstat__value">{{ nbTraitees }}</span>
-          <span class="uh-dstat__label">Traitées</span>
-        </span>
-        <i class="bi bi-chevron-right uh-dstat__arrow"></i>
+      <a routerLink="/items" class="uh-dstat uh-dstat--systeme" title="Rechercher dans toutes les demandes du système">
+        <span class="uh-dstat__entete"><span class="uh-dstat__label">Système</span><span class="uh-dstat__portee">Toutes</span></span>
+        <span class="uh-dstat__value">{{ totalSysteme ?? '—' }}</span>
+        <span class="uh-dstat__desc">Demandes enregistrées · Rechercher <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </a>
     </div>
-  </div>
-
-  <!-- ── Mes demandes + Tri des suggestions (TechDoc/Admin/SuperAdmin), + file TDM pour
-       Admin/SuperAdmin : une seule rangée, même gabarit, sans répartition par statut (plus
-       compact), chaque accès avec sa propre couleur (thème du projet). Le TDM, lui, a le
-       tableau de bord « Mes demandes » ci-dessus (il ne se sert pas de « Total à trier »). -->
-  <div class="uh-combo" *ngIf="authService.canTrier">
-    <a routerLink="/usager/profil" class="uh-combo__col">
-      <span class="uh-combo__icon uh-combo__icon--demandes"><i class="bi bi-clock-history"></i></span>
-      <span class="uh-combo__text">
-        <span class="uh-combo__title">{{ 'usager-home.combo-demandes-titre' | translate }}</span>
-        <span class="uh-combo__desc">{{ 'usager-home.combo-demandes-desc' | translate }}</span>
-      </span>
-      <span class="uh-combo__cta uh-combo__cta--demandes">
-        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
-      </span>
-    </a>
-    <div class="uh-combo__sep-v"></div>
-
-    <a *ngIf="authService.canTrier" routerLink="/usager/tri" class="uh-combo__col">
-      <span class="uh-combo__icon uh-combo__icon--tri"><i class="bi bi-bell-fill"></i></span>
-      <span class="uh-combo__text">
-        <span class="uh-combo__title">
-          {{ 'usager-home.combo-tri-titre' | translate }}
-          <span class="uh-tri-badge" *ngIf="aTrier > 0">{{ aTrier > 99 ? '99+' : aTrier }}</span>
-        </span>
-        <span class="uh-combo__desc">{{ 'usager-home.combo-tri-desc' | translate }}</span>
-      </span>
-      <span class="uh-combo__cta uh-combo__cta--tri">
-        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
-      </span>
-    </a>
-
-    <!-- File TDM : total d'items routés vers l'équipe (creation_notice_dtdm) — même file que
-         tdm-items.component.ts / tdm-decision.component.ts (supervision Admin/SuperAdmin). -->
-    <div class="uh-combo__sep-v" *ngIf="authService.isAdmin"></div>
-    <a *ngIf="authService.isAdmin" routerLink="/usager/tdm" class="uh-combo__col">
-      <span class="uh-combo__icon uh-combo__icon--tri"><i class="bi bi-inbox-fill"></i></span>
-      <span class="uh-combo__text">
-        <span class="uh-combo__title">
-          {{ 'usager-home.combo-tdm-titre' | translate }}
-          <span class="uh-tri-badge" *ngIf="totalTdmAssignees">{{ (totalTdmAssignees || 0) > 99 ? '99+' : totalTdmAssignees }}</span>
-        </span>
-        <span class="uh-combo__desc">{{ 'usager-home.combo-tdm-desc' | translate }}</span>
-      </span>
-      <span class="uh-combo__cta uh-combo__cta--tri">
-        {{ 'usager-home.combo-cta-acceder' | translate }} <i class="bi bi-arrow-right"></i>
-      </span>
-    </a>
   </div>
 
   <!-- ── Corps : deux colonnes alignées ──────────────────────────── -->
@@ -185,6 +146,26 @@
            - ACQ - Répartition des fonds : fichier géré par les Admin, consultation seulement.
            Tous les profils du portail, comme le taux sécurisé. -->
       <nav class="uh-info-card uh-outils" *ngIf="voirTaux" [attr.aria-label]="'accueil.suivis-titre' | translate">
+        <!-- Files de traitement (TechDoc, Admin, SuperAdmin) : en tête de la carte de suivi -->
+        <a *ngIf="authService.canTrier" routerLink="/usager/tri" class="uh-outil">
+          <span class="uh-info-card__icon uh-outil__icon--tri" aria-hidden="true"><i class="bi bi-bell-fill"></i></span>
+          <span class="uh-outil__texte">
+            <span class="uh-outil__titre">{{ 'usager-home.combo-tri-titre' | translate }}</span>
+            <span class="uh-outil__meta">{{ 'usager-home.combo-tri-desc' | translate }}</span>
+          </span>
+          <span class="uh-tri-badge" *ngIf="aTrier > 0">{{ aTrier > 99 ? '99+' : aTrier }}</span>
+          <i class="bi bi-chevron-right uh-outil__fleche" aria-hidden="true"></i>
+        </a>
+        <a *ngIf="authService.isAdmin" routerLink="/usager/tdm" class="uh-outil">
+          <span class="uh-info-card__icon uh-outil__icon--tri" aria-hidden="true"><i class="bi bi-inbox-fill"></i></span>
+          <span class="uh-outil__texte">
+            <span class="uh-outil__titre">{{ 'usager-home.combo-tdm-titre' | translate }}</span>
+            <span class="uh-outil__meta">{{ 'usager-home.combo-tdm-desc' | translate }}</span>
+          </span>
+          <span class="uh-tri-badge" *ngIf="totalTdmAssignees">{{ (totalTdmAssignees || 0) > 99 ? '99+' : totalTdmAssignees }}</span>
+          <i class="bi bi-chevron-right uh-outil__fleche" aria-hidden="true"></i>
+        </a>
+
         <a routerLink="/suivis-bibliotheques" class="uh-outil">
           <span class="uh-info-card__icon" aria-hidden="true"><i class="bi bi-clipboard-data"></i></span>
           <span class="uh-outil__texte">
@@ -275,11 +256,7 @@
       <div class="uh-forms__card">
 
         <div class="uh-forms__header">
-          <span class="uh-forms__icon"><i class="bi bi-file-earmark-plus-fill"></i></span>
-          <div>
-            <h2 class="uh-forms__title">Soumettre une demande</h2>
-            <p class="uh-forms__sub">Choisissez le formulaire correspondant à votre besoin</p>
-          </div>
+          <h2 class="uh-forms__title">Soumettre une demande</h2>
         </div>
 
         <div class="uh-forms__list">

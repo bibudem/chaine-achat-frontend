@@ -551,3 +551,15 @@
 .up-type-icon--suggest { background: var(--form-suggest); color: var(--form-texte); }
 .up-type-icon--peb     { background: var(--form-peb);     color: var(--form-texte); }
 .up-type-icon--autre   { background: #f1f5f9;             color: #64748b; }
+
+/* Bascule « Demandes à compléter » / « Mes demandes » */
+.up-equipe-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .35rem .8rem;
+  border: 1px solid #CCE2F3; border-radius: 6px;
+  background: #F2F8FC; color: #0057AC;
+  font-size: var(--typo-texte); font-weight: 400;
+  cursor: pointer;
+}
+.up-equipe-btn:hover, .up-equipe-btn:focus-visible { background: #E5F0F8; border-color: #2380D1; }
+.up-equipe-btn--actif { background: #fff; color: #0B113A; border-color: #dfe3e8; }

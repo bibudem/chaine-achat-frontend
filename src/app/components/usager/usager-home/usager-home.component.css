@@ -6,7 +6,8 @@
 .uh-wrap {
   --uh-texte:   #0B113A;   /* titres                       */
   --uh-texte-2: #55657a;   /* texte secondaire — 5,8:1 sur blanc */
-  --uh-bordure: #d9dee5;
+  --uh-bordure: #e3e7ec;   /* contour des cartes          */
+  --uh-filet:   #eff2f5;   /* séparateurs internes         */
   --uh-fond-2:  #f6f8fa;   /* bandeaux, survol             */
   --uh-accent:  #00407F;   /* liens et boutons             */
   --uh-focus:   #0057AC;
@@ -202,7 +203,6 @@
   .uh-form-row       { padding: .8rem 1rem; gap: .75rem; }
   .uh-form-row__icon { width: 2rem; height: 2rem; font-size: 1rem; }
   .uh-form-row__desc { display: none; }
-  .uh-forms__sub     { font-size: var(--typo-label); }
   .uh-demandes-section        { flex-wrap: wrap; padding: 1.1rem 1.25rem; }
   .uh-demandes-section__desc  { display: none; }
   .uh-demandes-section__cta   { width: 100%; justify-content: center; }
@@ -319,102 +319,41 @@
   border-radius: 6px;
   padding: .5rem 1rem;
   font-size: .875rem;
-  font-weight: 600;
+  font-weight: 400;
   transition: background .15s;
 }
-.uh-dashboard__header:hover .uh-dashboard__cta { background: #00305f; }
+.uh-dashboard__cta { text-decoration: none; }
+.uh-dashboard__cta:hover, .uh-dashboard__cta:focus-visible { background: #00305f; color: #fff; text-decoration: none; }
 
-/* ── Mes demandes + Tri : section combinée (TechDoc/Admin/SuperAdmin) ──────────
-   Une seule rangée, deux colonnes côte à côte séparées par un filet vertical — plus
-   compact qu'une boîte par accès, couleurs à plat (pas de dégradé) reprises du thème
-   du projet (--secondary-blue / --acq-mid, voir css_udem.css). */
-.uh-combo {
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  background: #fff;
-  border: 1px solid var(--uh-bordure);
-  border-radius: 8px;
-  margin-bottom: 1.25rem;
-  overflow: hidden;
-  box-shadow: none;
-}
-
-.uh-combo__col {
-  box-sizing: border-box;
-  flex: 1 1 0;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  padding: 1rem 1.15rem;
-  text-decoration: none;
-  transition: background .15s;
-}
-.uh-combo__col:hover { text-decoration: none; background: var(--uh-fond-2); }
-
-.uh-combo__sep-v { width: 1px; background: var(--uh-bordure); flex-shrink: 0; }
-
-.uh-combo__icon {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.0625rem;
-  flex-shrink: 0;
-}
-.uh-combo__icon--demandes { background: var(--extra-light-blue, #E5F0F8); color: var(--secondary-blue, #00407F); }
-.uh-combo__icon--tri      { background: #fdecea; color: #b42318; }
-
-.uh-combo__text {
+/* En-tête Mes demandes : texte cliquable + deux boutons (Mes demandes / Demandes à compléter) */
+.uh-dashboard__header:hover { background: transparent; }
+.uh-dashboard__lien {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  gap: .1rem;
-}
-
-.uh-combo__title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--uh-texte);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: var(--typo-police);
-}
-
-.uh-combo__desc {
-  font-size: var(--typo-label);
-  color: var(--uh-texte-2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.uh-combo__cta {
-  flex-shrink: 0;
-  display: inline-flex;
   align-items: center;
-  gap: .3rem;
-  color: #fff;
-  border-radius: 6px;
-  padding: .45rem .9rem;
-  font-size: .875rem;
-  font-weight: 600;
-  background: var(--uh-accent);
-  transition: background .15s;
+  gap: 1.1rem;
+  text-decoration: none;
+  color: inherit;
 }
-.uh-combo__col:hover .uh-combo__cta { background: #00305f; }
-
-@media (max-width: 575px) {
-  .uh-combo { flex-direction: column; }
-  .uh-combo__sep-v { width: 100%; height: 1px; }
-  .uh-combo__col { padding: .75rem 1rem; }
-  .uh-combo__desc { display: none; }
+.uh-dashboard__lien:hover { text-decoration: none; }
+.uh-dashboard__lien:hover .uh-dashboard__title { text-decoration: underline; }
+.uh-dashboard__actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.uh-dashboard__cta--secondaire {
+  background: #fff;
+  color: var(--uh-accent);
+  border: 1px solid var(--uh-accent);
+}
+.uh-dashboard__cta--secondaire:hover,
+.uh-dashboard__cta--secondaire:focus-visible { background: #EBF3FB; color: var(--uh-accent); }
+@media (max-width: 640px) {
+  .uh-dashboard__header { flex-wrap: wrap; }
+  .uh-dashboard__actions { width: 100%; }
 }
 
 /* Rangée de statistiques — chips séparées par des filets, pas des cartes empilées */
@@ -438,51 +377,30 @@
 }
 .uh-dstat:last-child { border-right: none; }
 
-.uh-dstat__arrow {
-  margin-left: auto;
-  padding-left: .4rem;
-  font-size: 0.875rem;
-  color: var(--uh-texte-2);
-  opacity: 0;
-  transition: opacity .15s;
-}
-.uh-dstat:hover .uh-dstat__arrow,
-.uh-dstat:focus-visible .uh-dstat__arrow { opacity: 1; }
-.uh-dstat:hover { text-decoration: none; background: #eef4fa; }
+.uh-dstat:hover { text-decoration: none; background: #f7f9fc; }
+.uh-dstat:hover .uh-dstat__value { color: var(--uh-accent); }
 
-.uh-dstat__icon {
-  width: 2.1rem;
-  height: 2.1rem;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.0625rem;
-  flex-shrink: 0;
-}
-.uh-dstat__icon--total   { background: #EBF3FB; color: #00407F; }
-.uh-dstat__icon--attente { background: #fef3c7; color: #92400e; }
-.uh-dstat__icon--soumise { background: #dbeafe; color: #1e40af; }
-.uh-dstat__icon--traitee { background: #dcfce7; color: #166534; }
-.uh-dstat__icon--systeme { background: #ede9fe; color: #6d28d9; }
-
-.uh-dstat__body { display: flex; flex-direction: column; min-width: 0; }
-.uh-dstat__value {
-  font-size: var(--typo-texte-xl);
-  font-weight: 700;
-  color: #0B113A;
-  line-height: 1;
-}
+/* Libellé en petites capitales */
 .uh-dstat__label {
-  font-size: var(--typo-label);
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
   color: #607386;
-  margin-top: .15rem;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.uh-dstat--systeme { background: repeating-linear-gradient(135deg, #fbfcfe 0 10px, #f4f0fd 10px 20px); }
+.uh-dstat__value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0B113A;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  transition: color .15s;
+}
 
 @media (max-width: 700px) {
   .uh-dstat { flex-basis: 50%; border-right: none; }
@@ -636,27 +554,7 @@
 .uh-forms__header {
   display: flex;
   align-items: center;
-  gap: .55rem;
-  margin-bottom: .6rem;
-}
-
-.uh-forms__icon {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 6px;
-  background: #eef2f6;
-  color: var(--uh-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.875rem;
-  flex-shrink: 0;
-}
-
-.uh-forms__sub {
-  font-size: var(--typo-label);
-  color: var(--uh-texte-2);
-  margin: 0;
+  margin-bottom: .55rem;
 }
 
 .uh-forms__list {
@@ -779,8 +677,7 @@ a.uh-outil:hover .uh-outil__fleche { color: var(--uh-accent); }
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ACCESSIBILITÉ — focus clavier visible, animations réduites
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.uh-dashboard__header:focus-visible,
-.uh-combo__col:focus-visible,
+.uh-dashboard__lien:focus-visible,
 .uh-dstat:focus-visible,
 .uh-form-row:focus-visible,
 .info-chip__clickable:focus-visible {
@@ -798,3 +695,199 @@ a.uh-outil:hover .uh-outil__fleche { color: var(--uh-accent); }
 @media (prefers-reduced-motion: reduce) {
   .uh-wrap * { transition: none !important; }
 }
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   AFFINAGE — séparations discrètes : contour clair + ombre légère pour les cartes,
+   filets internes très clairs, séparateurs verticaux courts (plus de quadrillage).
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.uh-dashboard,
+.uh-info-card,
+.uh-forms__card {
+  border-color: var(--uh-bordure);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+}
+
+/* Compteurs : plus de grille, un filet court entre deux compteurs */
+.uh-dashboard__stats { border-top: 1px solid var(--uh-filet); background: transparent; }
+.uh-dstat { border-right: none; border-bottom: none; position: relative; }
+.uh-dstat + .uh-dstat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 22%; bottom: 22%;
+  width: 1px;
+  background: var(--uh-filet);
+}
+@media (max-width: 640px) {
+  .uh-dstat:nth-child(odd) { border-right: none; }
+  .uh-dstat:nth-child(odd)::before { display: none; }
+}
+
+/* Formulaires : un seul filet clair entre les lignes, groupes sans double trait */
+.uh-forms__list { border-top: 1px solid var(--uh-filet); }
+.uh-forms__group-label { border-bottom: none; background: transparent; padding-top: .7rem; }
+.uh-forms__group-label:not(.uh-forms__group-label--first) { border-top: 1px solid var(--uh-filet); }
+.uh-form-row { border-bottom: 1px solid var(--uh-filet); }
+.uh-form-row:last-child { border-bottom: none; }
+
+/* Outils, contacts, en-tête de page */
+.uh-outil + .uh-outil { border-top-color: var(--uh-filet); }
+.uh-contact { border-left-color: var(--uh-filet); }
+.uh-info-card__contact-lead { border-top-color: var(--uh-filet); }
+.uh-header { border-bottom-color: var(--uh-filet); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COMPACT — espacements resserrés et réguliers entre sections et dans les cartes.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.uh-wrap   { padding: 1.25rem 0 2.5rem; }
+.uh-header { padding-bottom: 1rem; margin-bottom: 1.1rem; }
+
+/* Mes demandes */
+.uh-dashboard          { margin-bottom: 1rem; }
+.uh-dashboard__header  { padding: .65rem 1.1rem; gap: .9rem; }
+.uh-dashboard__lien    { gap: .9rem; }
+.uh-dashboard__icon    { width: 2.2rem; height: 2.2rem; border-radius: 8px; }
+.uh-dashboard__cta     { padding: .4rem .9rem; }
+.uh-dstat              { padding: .5rem 1.1rem; }
+
+/* Corps : colonnes, cartes, formulaires */
+.uh-body             { gap: 1rem; }
+.uh-sidebar          { gap: 1rem; }
+.uh-info-card        { padding: .85rem 1.1rem; }
+.uh-forms__card      { padding: .85rem 1.1rem 0; }
+.uh-forms__list      { margin: 0 -1.1rem; }
+.uh-forms__group-label { padding: .55rem 1.1rem .3rem; }
+.uh-form-row         { padding: .6rem 1.1rem; }
+.uh-outils           { padding: .25rem; }
+.uh-outil            { padding: .5rem .6rem; }
+
+/* Files de traitement dans la carte de suivi : icône aux couleurs du tri, compteur à droite */
+.uh-outil__icon--tri { background: #fdecea; color: #b42318; }
+.uh-outil .uh-tri-badge { flex-shrink: 0; }
+
+/* Description du profil : ligne pleine largeur sous l'avatar, le titre et le taux */
+.uh-header { flex-wrap: wrap; }
+.uh-header__profil {
+  display: flex;
+  flex-basis: 100%;
+  margin: .1rem 0 0;
+  padding: .45rem .75rem;
+  line-height: 1.4;
+}
+
+/* Compteurs sans icône : libellé au-dessus, chiffre en dessous */
+.uh-dstat { flex-direction: column; align-items: flex-start; gap: .25rem; padding: .6rem 1.1rem .7rem; }
+
+/* Compteurs enrichis : chiffre + part du total, barre fine aux couleurs du statut ;
+   le total affiche la répartition des trois statuts. La pastille du libellé est retirée,
+   la barre portant la couleur. */
+.uh-dstat { gap: .35rem; padding: .7rem 1.1rem .8rem; }
+.uh-dstat__value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+
+.uh-dstat__barre {
+  display: flex;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: #eef1f5;
+  overflow: hidden;
+}
+.uh-dstat__barre > span { display: block; height: 100%; transition: width .4s ease; }
+.uh-dstat--attente .uh-dstat__barre > span,
+.uh-dstat__seg--attente { background: #f59e0b; }
+.uh-dstat--soumise .uh-dstat__barre > span,
+.uh-dstat__seg--soumise { background: #3b82f6; }
+.uh-dstat--traitee .uh-dstat__barre > span,
+.uh-dstat__seg--traitee { background: #22c55e; }
+.uh-dstat__barre--repartition { gap: 2px; background: #eef1f5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .uh-dstat__barre > span { transition: none; }
+}
+
+/* Compteurs : en-tête (libellé + portée « Mes demandes » / « Équipe »), chiffre, description
+   et barre. Le compteur de l'équipe est légèrement teinté pour le distinguer. */
+.uh-dstat { gap: .3rem; padding: .8rem 1.15rem .9rem; }
+.uh-dstat__entete { display: flex; align-items: center; justify-content: space-between; gap: .5rem; width: 100%; }
+.uh-dstat__portee {
+  font-size: .68rem;
+  font-weight: 500;
+  color: #607386;
+  background: #f1f4f8;
+  border-radius: 999px;
+  padding: .05rem .5rem;
+  white-space: nowrap;
+}
+.uh-dstat__portee--equipe { color: #1d4ed8; background: #eaf1fe; }
+.uh-dstat__value { font-size: 1.65rem; margin-top: .1rem; }
+.uh-dstat__desc  { font-size: .78rem; color: #607386; line-height: 1.3; }
+.uh-dstat__barre { margin-top: .25rem; }
+.uh-dstat--equipe { background: #f8fbff; }
+.uh-dstat--equipe .uh-dstat__value { color: var(--uh-accent); }
+.uh-dstat--equipe:hover { background: #eef5fd; }
+
+/* Couleur par compteur : fond teinté, liseré en haut, chiffre et étiquette de la même teinte */
+.uh-dstat {
+  --dstat-c:     #00407F;   /* couleur principale */
+  --dstat-fond:  #f5f8fc;   /* fond teinté        */
+  --dstat-fond2: #ebf2fa;   /* fond au survol     */
+  --dstat-pale:  #e3ecf6;   /* étiquette          */
+  background: var(--dstat-fond);
+  box-shadow: inset 0 3px 0 var(--dstat-c);
+}
+.uh-dstat:hover { background: var(--dstat-fond2); }
+.uh-dstat .uh-dstat__value,
+.uh-dstat:hover .uh-dstat__value { color: var(--dstat-c); }
+.uh-dstat .uh-dstat__portee { color: var(--dstat-c); background: var(--dstat-pale); }
+
+
+/* Les fonds teintés suffisent à séparer les compteurs : filet blanc fin entre eux */
+.uh-dstat + .uh-dstat::before { background: transparent; }
+.uh-dstat + .uh-dstat { border-left: 2px solid #fff; }
+.uh-dstat__barre { background: rgba(255, 255, 255, .7); }
+
+/* Palette des compteurs (couleurs de marque, css_udem.css) : bleu pour mes demandes (Total,
+   En attente ACQ, Traitées), orange pour l'équipe (À compléter, fond gris plus foncé) — chiffre et étiquette. Liseré
+   bleu et fond gris du thème communs aux quatre carrés. */
+.uh-dstat {
+  --dstat-c: var(--secondary-blue); --dstat-ligne: var(--light-blue);
+  --dstat-fond: var(--uh-fond-2); --dstat-fond2: #eef1f4; --dstat-pale: var(--extra-light-blue);
+  box-shadow: inset 0 3px 0 var(--dstat-ligne);
+}
+.uh-dstat--equipe {
+  --dstat-c: var(--warning-orange); --dstat-pale: var(--warning-light);
+  --dstat-fond: #eef1f4; --dstat-fond2: var(--light-gray);
+}
+/* Étiquette « Équipe » : texte orange foncé pour rester lisible en petit corps */
+.uh-dstat--equipe .uh-dstat__portee { color: var(--danger-red); }
+
+/* Barres de mes demandes : nuances de bleu ; non envoyées en gris de marque */
+.uh-dstat--soumise .uh-dstat__barre > span, .uh-dstat__seg--soumise { background: var(--light-blue); }
+.uh-dstat--traitee .uh-dstat__barre > span, .uh-dstat__seg--traitee { background: var(--secondary-blue); }
+.uh-dstat__seg--attente { background: var(--border-gray); }
+
+/* Carré Système (toutes les demandes → Rechercher) : gris ardoise, distinct des autres gris */
+.uh-dstat--systeme {
+  --dstat-c: var(--primary-blue); --dstat-pale: #dbe2ea;
+  --dstat-fond: #e8edf3; --dstat-fond2: #dde4ec;
+}
+.uh-dstat--systeme .uh-dstat__portee { color: var(--medium-gray); }
+.uh-dstat--systeme .uh-dstat__desc i { font-size: .75rem; vertical-align: -1px; }
+
+/* Description du profil : simple ligne d'aide grise, sans bandeau */
+.uh-header__profil {
+  background: transparent;
+  padding: 0;
+  margin: .15rem 0 0;
+  color: var(--uh-texte-2);
+  font-size: .78rem;
+  font-weight: 400;
+  gap: .35rem;
+}
+.uh-header__profil i { font-size: .78rem; color: var(--border-gray); }
+.uh-header__profil   { margin-top: -.45rem; color: var(--couleur-aide); }  /* gris le plus clair lisible (AA) */
+.uh-header__profil i { color: #b4c0cc; }
+
+/* En-tête sans filet du bas */
+.uh-header { border-bottom: none; padding-bottom: .25rem; }

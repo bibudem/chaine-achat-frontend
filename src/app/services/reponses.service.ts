@@ -28,6 +28,10 @@ export interface Reponse {
   type_formulaire: string;
   usager_nom: string;
   usager_courriel: string;
+  /** Dernière modification (auteur ou collègue). */
+  modifie_par_nom?: string | null;
+  modifie_par_courriel?: string | null;
+  date_modification?: string | null;
   usager_statut: string;
   reponses: any;
   dateA: string;
@@ -53,6 +57,10 @@ export interface Reponse {
 export interface DemandeUsager {
   id: number;
   type_formulaire: string;
+  /** Dernière modification, ex. par un collègue qui a complété la demande. */
+  modifie_par_nom?: string | null;
+  modifie_par_courriel?: string | null;
+  date_modification?: string | null;
   titre_document: string | null;
   dateA: string;
   statut_approbation: string | null;
@@ -89,6 +97,12 @@ export interface DemandePublique {
   suivi_acq: string | null;
   item_id: number | null;
   precision_demande: string | null;
+  /** Auteur et décision : une demande non soumise d'un collègue peut être complétée. */
+  usager_nom?: string | null;
+  statut_approbation?: string | null;
+  tri_statut?: string | null;
+  modifie_par_nom?: string | null;
+  date_modification?: string | null;
 }
 
 /** Décision de l'équipe TechDoc sur une suggestion publique. */
@@ -516,6 +530,8 @@ export class ReponsesService {
     dateDebut?: string; dateFin?: string;
     /** Même catégorisation que demandeBadgeStatut() — voir lib/DemandeStatut.ts. */
     statut?: 'attente' | 'soumise' | 'traitee';
+    /** Demandes non envoyées de l'équipe : seulement celles qu'un collègue peut compléter. */
+    collaboration?: boolean;
   } = {}): Observable<{ data: DemandePublique[]; total: number }> {
     const params: Record<string, string> = {
       limit:  String(opts.limit  ?? 25),
@@ -527,6 +543,7 @@ export class ReponsesService {
     if (opts.dateDebut)       params['dateDebut']        = opts.dateDebut;
     if (opts.dateFin)         params['dateFin']          = opts.dateFin;
     if (opts.statut)          params['statut']           = opts.statut;
+    if (opts.collaboration)   params['collaboration']    = '1';
 
     return this.http
       .get<{ data: DemandePublique[]; total: number }>(`${this.baseUrl}/public`, { params })
@@ -539,9 +556,12 @@ export class ReponsesService {
       .pipe(catchError(this.handleError('getReponseById')));
   }
 
-  updateReponse(id: number, reponses: any): Observable<{ success: boolean }> {
+  /** `version` = date de dernière modification de la demande chargée (null si jamais modifiée) :
+   *  le serveur refuse (409) si quelqu'un l'a modifiée entre-temps. Omise : pas de contrôle. */
+  updateReponse(id: number, reponses: any, version?: string | null): Observable<{ success: boolean }> {
+    const corps = version === undefined ? { reponses } : { reponses, version };
     return this.http
-      .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, { reponses })
+      .patch<{ success: boolean }>(`${this.baseUrl}/${id}`, corps)
       .pipe(catchError(this.handleError('updateReponse')));
   }
 
