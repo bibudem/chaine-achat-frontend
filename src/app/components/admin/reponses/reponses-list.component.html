@@ -122,6 +122,9 @@
                 <span class="badge-type" [ngClass]="getTypeBadgeClass(reponse.type_formulaire)">
                   {{ formulaireTypeLabel(reponse.type_formulaire) }}
                 </span>
+                <span *ngIf="reponse.tri_statut === 'a_trier'" class="rl-tri-attente">
+                  <i class="bi bi-hourglass-split"></i> {{ 'reponses.badge-tri-attente' | translate }}
+                </span>
                 <span *ngIf="reponse.tri_statut === 'refuse'" class="rl-tri-refuse" [title]="reponse.tri_commentaire || ''">
                   <i class="bi bi-x-octagon-fill"></i> {{ 'reponses.badge-tri-refusee' | translate }}
                 </span>
@@ -238,6 +241,17 @@
                   <span>
                     <strong>Demande annulée (non traitée)</strong> —
                     L'item associé à cette demande a été supprimé du registre des acquisitions.
+                  </span>
+                </div>
+
+                <!-- Suggestion publique pas encore triée par l'équipe TechDoc -->
+                <div *ngIf="expandedReponse.tri_statut === 'a_trier'"
+                     class="alert alert-warning d-flex align-items-center gap-2 mx-3 mb-2 py-2"
+                     role="status">
+                  <i class="bi bi-hourglass-split flex-shrink-0"></i>
+                  <span>
+                    <strong>{{ 'reponses.tri-attente-titre' | translate }}</strong>
+                    <div class="small mt-1">{{ 'reponses.tri-attente-texte' | translate }}</div>
                   </span>
                 </div>
 

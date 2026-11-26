@@ -41,10 +41,10 @@ export interface Reponse {
    *  ReponsesModel.findAll/findById (backend) et canSupprimer (reponses-list.component.ts). */
   item_existe?: boolean;
   item_statut_bibliotheque?: string | null;
-  /** Avis de l'équipe de tri (TechDoc) sur une suggestion publique — voir getTri/deciderTri.
-   *  'a_trier' n'arrive jamais ici (findAll, backend). Un refus n'arrête pas le circuit : la
-   *  décision finale revient aux ACQ, qui voient l'avis et son commentaire. */
-  tri_statut?: 'accepte' | 'refuse' | null;
+  /** Statut de tri d'une suggestion publique (TechDoc) — voir getTri/deciderTri. 'a_trier' :
+   *  pas encore triée. Un refus n'arrête pas le circuit : la décision finale revient aux ACQ,
+   *  qui voient l'avis et son commentaire. Null pour les autres formulaires. */
+  tri_statut?: 'a_trier' | 'accepte' | 'refuse' | null;
   tri_commentaire?: string | null;
   tri_par_nom?: string | null;
   tri_date?: string | null;

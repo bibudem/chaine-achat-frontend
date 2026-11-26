@@ -131,6 +131,15 @@
   overflow: hidden; text-overflow: ellipsis;
 }
 /* Suggestion publique refusée par l'équipe de tri (TechDoc) — historique, lecture seule */
+/* Suggestion publique pas encore triée (TechDoc) */
+.rl-tri-attente {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .7rem; font-weight: 600;
+  padding: .18rem .5rem; border-radius: 5px;
+  background: #fef3c7; color: #92400e;
+  white-space: nowrap;
+}
+
 .rl-tri-refuse {
   display: inline-flex; align-items: center; gap: .3rem;
   font-size: .7rem; font-weight: 600;
