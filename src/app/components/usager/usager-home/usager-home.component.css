@@ -891,3 +891,12 @@ a.uh-outil:hover .uh-outil__fleche { color: var(--uh-accent); }
 
 /* En-tête sans filet du bas */
 .uh-header { border-bottom: none; padding-bottom: .25rem; }
+
+/* Deux groupes de compteurs (mes demandes / bibliothèques), séparés par un espace blanc */
+.uh-dashboard__stats { column-gap: 6px; }
+.uh-dgroupe { flex: 1 1 300px; display: flex; min-width: 0; }
+.uh-dgroupe .uh-dstat { flex: 1 1 0; min-width: 0; }
+@media (max-width: 640px) {
+  .uh-dgroupe { flex-basis: 100%; }
+  .uh-dgroupe + .uh-dgroupe { margin-top: 6px; }
+}

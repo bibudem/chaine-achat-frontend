@@ -100,38 +100,42 @@
       </div>
     </div>
 
-    <!-- Compteurs : mes demandes (total, traitées), celles de l'équipe à compléter, et toutes
-         les demandes du système (ouvre Rechercher). -->
+    <!-- Compteurs groupés par portée : mes demandes (total, traitées), puis celles des
+         bibliothèques (à compléter, toutes les demandes → Rechercher). -->
     <div class="uh-dashboard__stats" *ngIf="!loadingDemandes && totalDemandes !== null">
-      <a routerLink="/usager/profil" class="uh-dstat uh-dstat--total" title="Voir toutes mes demandes">
-        <span class="uh-dstat__entete"><span class="uh-dstat__label">Total</span><span class="uh-dstat__portee">Mes demandes</span></span>
-        <span class="uh-dstat__value">{{ totalDemandes }}</span>
-        <span class="uh-dstat__desc">{{ nbNonEnvoyees }} non envoyée{{ nbNonEnvoyees > 1 ? 's' : '' }} · {{ nbEnAttenteAcq }} en attente ACQ</span>
-        <span class="uh-dstat__barre uh-dstat__barre--repartition" aria-hidden="true">
-          <span *ngIf="nbNonEnvoyees" class="uh-dstat__seg--attente" [style.width.%]="part(nbNonEnvoyees)"></span>
-          <span *ngIf="nbEnAttenteAcq" class="uh-dstat__seg--soumise" [style.width.%]="part(nbEnAttenteAcq)"></span>
-          <span *ngIf="nbTraitees" class="uh-dstat__seg--traitee" [style.width.%]="part(nbTraitees)"></span>
-        </span>
-      </a>
-      <a routerLink="/usager/profil" [queryParams]="{ vue: 'equipe' }" class="uh-dstat uh-dstat--equipe"
-         title="Demandes de l'équipe pas encore envoyées aux ACQ : les compléter et les soumettre">
-        <span class="uh-dstat__entete"><span class="uh-dstat__label">À compléter</span><span class="uh-dstat__portee uh-dstat__portee--equipe">Équipe</span></span>
-        <span class="uh-dstat__value">{{ nbACompleter }}</span>
-        <span class="uh-dstat__desc">
-          Non envoyées aux ACQ<ng-container *ngIf="nbMesACompleter">, dont {{ nbMesACompleter }} à vous</ng-container>
-        </span>
-      </a>
-      <a routerLink="/usager/profil" [queryParams]="{ statut: 'traitee' }" class="uh-dstat uh-dstat--traitee" title="Filtrer : traitées">
-        <span class="uh-dstat__entete"><span class="uh-dstat__label">Traitées</span><span class="uh-dstat__portee">Mes demandes</span></span>
-        <span class="uh-dstat__value">{{ nbTraitees }}</span>
-        <span class="uh-dstat__desc">{{ part(nbTraitees) }} % de mes demandes</span>
-        <span class="uh-dstat__barre" aria-hidden="true"><span [style.width.%]="part(nbTraitees)"></span></span>
-      </a>
-      <a routerLink="/items" class="uh-dstat uh-dstat--systeme" title="Rechercher dans toutes les demandes des bibliothèques">
-        <span class="uh-dstat__entete"><span class="uh-dstat__label">Toutes les demandes</span><span class="uh-dstat__portee">Bibliothèques</span></span>
-        <span class="uh-dstat__value">{{ totalSysteme ?? '—' }}</span>
-        <span class="uh-dstat__desc">Enregistrées · Rechercher <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
-      </a>
+      <div class="uh-dgroupe" role="group" aria-label="Mes demandes">
+        <a routerLink="/usager/profil" class="uh-dstat uh-dstat--total" title="Voir toutes mes demandes">
+          <span class="uh-dstat__entete"><span class="uh-dstat__label">Total</span><span class="uh-dstat__portee">Mes demandes</span></span>
+          <span class="uh-dstat__value">{{ totalDemandes }}</span>
+          <span class="uh-dstat__desc">{{ nbNonEnvoyees }} non envoyée{{ nbNonEnvoyees > 1 ? 's' : '' }} · {{ nbEnAttenteAcq }} en attente ACQ</span>
+          <span class="uh-dstat__barre uh-dstat__barre--repartition" aria-hidden="true">
+            <span *ngIf="nbNonEnvoyees" class="uh-dstat__seg--attente" [style.width.%]="part(nbNonEnvoyees)"></span>
+            <span *ngIf="nbEnAttenteAcq" class="uh-dstat__seg--soumise" [style.width.%]="part(nbEnAttenteAcq)"></span>
+            <span *ngIf="nbTraitees" class="uh-dstat__seg--traitee" [style.width.%]="part(nbTraitees)"></span>
+          </span>
+        </a>
+        <a routerLink="/usager/profil" [queryParams]="{ statut: 'traitee' }" class="uh-dstat uh-dstat--traitee" title="Filtrer : traitées">
+          <span class="uh-dstat__entete"><span class="uh-dstat__label">Traitées</span><span class="uh-dstat__portee">Mes demandes</span></span>
+          <span class="uh-dstat__value">{{ nbTraitees }}</span>
+          <span class="uh-dstat__desc">{{ part(nbTraitees) }} % de mes demandes</span>
+          <span class="uh-dstat__barre" aria-hidden="true"><span [style.width.%]="part(nbTraitees)"></span></span>
+        </a>
+      </div>
+      <div class="uh-dgroupe" role="group" aria-label="Bibliothèques">
+        <a routerLink="/usager/profil" [queryParams]="{ vue: 'equipe' }" class="uh-dstat uh-dstat--equipe"
+           title="Demandes des bibliothèques pas encore envoyées aux ACQ : les compléter et les soumettre">
+          <span class="uh-dstat__entete"><span class="uh-dstat__label">À compléter</span><span class="uh-dstat__portee uh-dstat__portee--equipe">Bibliothèques</span></span>
+          <span class="uh-dstat__value">{{ nbACompleter }}</span>
+          <span class="uh-dstat__desc">
+            Non envoyées aux ACQ<ng-container *ngIf="nbMesACompleter">, dont {{ nbMesACompleter }} à vous</ng-container>
+          </span>
+        </a>
+        <a routerLink="/items" class="uh-dstat uh-dstat--systeme" title="Rechercher dans toutes les demandes des bibliothèques">
+          <span class="uh-dstat__entete"><span class="uh-dstat__label">Toutes les demandes</span><span class="uh-dstat__portee">Bibliothèques</span></span>
+          <span class="uh-dstat__value">{{ totalSysteme ?? '—' }}</span>
+          <span class="uh-dstat__desc">Enregistrées · Rechercher <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
     </div>
   </div>
 
