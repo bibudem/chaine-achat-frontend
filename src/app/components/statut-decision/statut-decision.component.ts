@@ -740,7 +740,6 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       titre_document:    this.item?.titre_document,
       type_formulaire:   this.item?.formulaire_type,
       aviser_equipe_tri: suggestionTriee,
-      tri_par:           this.item?.tri_par || null,
       destinataires:     choisis.map(t => ({
         key: t.key, label: t.label, nom: t.nom || null,
         // Saisie « a@x; b@y » → « a@x, b@y » pour le nœud courriel n8n.
