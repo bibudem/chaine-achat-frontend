@@ -13,6 +13,7 @@ export interface Item {
   priorite_demande?: string;
   titre_document: string;
   sous_titre?: string;
+  contenu_autochtone?: boolean;
   isbn_issn?: string;
   editeur?: string;
   date_publication?: string;
@@ -57,6 +58,8 @@ export interface Item {
    *  (ex. import en lot). */
   reponse_id?:          number | null;
   saisie_par_nom?:      string | null;
+  /** Dernière modification de la demande avant sa soumission (repli de utilisateur_modification). */
+  reponse_modifie_par_nom?: string | null;
   saisie_par_courriel?: string | null;
 
   // Champs tbl_items — ressource électronique

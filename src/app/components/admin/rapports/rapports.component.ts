@@ -24,16 +24,17 @@ const CHAMPS_COMMUNS = new Set<string>([
 // Champs spécifiques à chaque type de formulaire (tables dédiées)
 const CHAMPS_PAR_TYPE: Record<string, string[]> = {
   'Modification et CCOL': [
-    'precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation'
+    'precision_demande', 'numero_oclc', 'date_debut_abonnement', 'usager_aviser_activation', 'contenu_autochtone'
   ],
   'Nouvel abonnement': [
-    'date_debut_abonnement', 'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie'
+    'date_debut_abonnement', 'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie',
+    'contenu_autochtone'
   ],
   'Nouvel achat unique': [
     'id_ressource', 'projets_speciaux', 'format_electronique', 'quantite',
     'reserve_cours_session', 'reserve_cours_enseignant',
     'reserve_cours', 'reserve_cours_sigle', 'bordereau_imprime',
-    'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie'
+    'usager_aviser_reservation', 'usager_aviser_activation', 'type_monographie', 'contenu_autochtone'
   ],
   'PEB Tipasa numérique': [
     'reference_tipasa', 'gobi_vu_format_numerique', 'gobi_version_moins_365_usd',
@@ -538,6 +539,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   formatCell(column: string, value: any): string {
     if (value === null || value === undefined || value === '') return '-';
     if (column === 'formulaire_type') return this.formulaireTypeLabel(value);
+    if (typeof value === 'boolean') return value ? 'Oui' : 'Non';
     // Date de publication : texte libre (AAAA ou AAAA-MM-JJ), affichée telle quelle.
     if (column.includes('date') && column !== 'date_publication') {
       const d = new Date(value);
@@ -561,6 +563,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private formatCellForExport(column: string, value: any): string {
     if (value === null || value === undefined || value === '') return '';
+    if (typeof value === 'boolean') return value ? 'Oui' : 'Non';
     if (column.includes('date') && column !== 'date_publication') {
       const d = new Date(value);
       if (!isNaN(d.getTime())) return d.toLocaleString('fr-CA', {

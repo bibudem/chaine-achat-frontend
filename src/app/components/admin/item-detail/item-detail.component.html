@@ -176,8 +176,8 @@
         <div class="itd-sidebar__meta" *ngIf="item.date_modification">
           <div class="itd-sidebar__label">{{ 'item-detail.modifie-le' | translate }}</div>
           <div class="itd-sidebar__value">{{ item.date_modification | date:'yyyy-MM-dd' }}</div>
-          <div class="itd-sidebar__value text-muted small" *ngIf="item.utilisateur_modification">
-            {{ 'item-detail.par' | translate }} {{ item.utilisateur_modification }}
+          <div class="itd-sidebar__value text-muted small" *ngIf="item.utilisateur_modification || item.reponse_modifie_par_nom">
+            {{ 'item-detail.par' | translate }} {{ item.utilisateur_modification || item.reponse_modifie_par_nom }}
           </div>
         </div>
 
@@ -204,6 +204,12 @@
                 <div class="itd-field">
                   <span class="itd-field__label">{{ 'item-detail.sous-titre' | translate }}</span>
                   <span class="itd-field__value">{{ item.sous_titre }}</span>
+                </div>
+              </div>
+              <div class="col-md-4" *ngIf="item.contenu_autochtone">
+                <div class="itd-field">
+                  <span class="itd-field__label">{{ 'forms-usager.contenu-autochtone' | translate }}</span>
+                  <span class="itd-field__value">{{ 'forms-usager.oui' | translate }}</span>
                 </div>
               </div>
 

@@ -233,6 +233,11 @@ export class ItemFormulaireComponent implements OnInit {
     return this.isNouvelAchatUnique() || this.isNouvelAbonnement() || this.isModificationCCOL();
   }
 
+  /** Contenu autochtone : Nouvel achat unique, Nouvel abonnement, Modification et CCOL. */
+  get gereContenuAutochtone(): boolean {
+    return this.isNouvelAchatUnique() || this.isNouvelAbonnement() || this.isModificationCCOL();
+  }
+
   get fondsRepartitionArray(): FormArray {
     return this.itemForm.get('fonds_repartition') as FormArray;
   }
@@ -350,6 +355,7 @@ export class ItemFormulaireComponent implements OnInit {
       priorite_demande: ['Urgent'],
       titre_document: ['', [Validators.required, Validators.maxLength(500)]],
       sous_titre: ['', Validators.maxLength(500)],
+      contenu_autochtone: [false],
       isbn_issn: ['', [Validators.required, Validators.maxLength(50)]],
       editeur: ['', [Validators.required, Validators.maxLength(300)]],
       date_publication: ['', Validators.maxLength(50)],
@@ -799,6 +805,7 @@ export class ItemFormulaireComponent implements OnInit {
       priorite_demande: formData.priorite_demande,
       titre_document: formData.titre_document,
       sous_titre: formData.sous_titre,
+      contenu_autochtone: this.gereContenuAutochtone ? !!formData.contenu_autochtone : false,
       isbn_issn: formData.isbn_issn,
       editeur: formData.editeur,
       date_publication: formData.date_publication,

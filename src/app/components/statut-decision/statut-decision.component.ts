@@ -348,6 +348,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
       usager_statut:                  r.usager_statut,
       titre_document:                 bd.titre_document    || flat.titre_document    || sd.titre_document || '—',
       sous_titre:                     f(bd.sous_titre,      'sous_titre'),
+      contenu_autochtone:             !!(bd.contenu_autochtone ?? flat.contenu_autochtone),
       editeur:                        f(bd.editeur,         'editeur'),
       isbn_issn:                      f(bd.isbn_issn,       'isbn_issn'),
       date_publication:               f(bd.date_publication,'date_publication'),
@@ -452,7 +453,7 @@ export class StatutDecisionComponent implements OnInit, OnDestroy {
 
     // Colonnes de tbl_items uniquement (baseData commun à tous les formulaires)
     const baseKeys = [
-      'formulaire_type', 'titre_document', 'sous_titre', 'demandeur',
+      'formulaire_type', 'titre_document', 'sous_titre', 'contenu_autochtone', 'demandeur',
       'editeur', 'isbn_issn', 'date_publication', 'categorie_document',
       'format_support', 'priorite_demande', 'bibliotheque',
       'localisation_emplacement', 'creation_notice_dtdm', 'catalogue', 'note_dtdm', 'note_interne_dtdm',

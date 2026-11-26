@@ -59,6 +59,7 @@
           <div *ngIf="item.editeur"><dt>{{ 'tdm-decision-page.champ-editeur' | translate }}</dt><dd>{{ item.editeur }}</dd></div>
           <div *ngIf="item.date_publication"><dt>{{ 'tdm-decision-page.champ-date-publication' | translate }}</dt><dd>{{ item.date_publication }}</dd></div>
           <div *ngIf="item.categorie_document"><dt>{{ 'tdm-decision-page.champ-categorie' | translate }}</dt><dd>{{ item.categorie_document }}</dd></div>
+          <div *ngIf="item.contenu_autochtone"><dt>{{ 'forms-usager.contenu-autochtone' | translate }}</dt><dd>{{ 'forms-usager.oui' | translate }}</dd></div>
           <div *ngIf="item.format_support"><dt>{{ 'tdm-decision-page.champ-format-support' | translate }}</dt><dd>{{ item.format_support }}</dd></div>
           <div *ngIf="item.date_creation"><dt>{{ 'tdm-decision-page.champ-recu-le' | translate }}</dt><dd>{{ item.date_creation | date:'d MMM y' }}</dd></div>
           <div *ngIf="item.note_commentaire" class="ts-fields__wide"><dt>{{ 'tdm-decision-page.champ-note-bibliotheque' | translate }}</dt><dd class="ts-pre">{{ item.note_commentaire }}</dd></div>

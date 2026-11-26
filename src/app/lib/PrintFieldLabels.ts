@@ -11,7 +11,7 @@
 // pour refléter une saisie non encore enregistrée) soit directement de l'item (item-detail,
 // lecture seule) — les inclure ici les ferait apparaître deux fois.
 export const PRINT_FIELD_LABELS: Record<string, string> = {
-  titre_document: 'Titre', sous_titre: 'Sous-titre', demandeur: 'Demandeur',
+  titre_document: 'Titre', sous_titre: 'Sous-titre', contenu_autochtone: 'Contenu autochtone', demandeur: 'Demandeur',
   bibliotheque: 'Bibliothèque', categorie_document: 'Catégorie', format_support: 'Type de traitement',
   priorite_demande: 'Priorité de la demande',
   auteur: 'Auteur(rice)', usager_statut: 'Statut usager', usager_faculte: 'Faculté / Département',

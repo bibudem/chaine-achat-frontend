@@ -127,10 +127,10 @@
         <span class="uh-dstat__desc">{{ part(nbTraitees) }} % de mes demandes</span>
         <span class="uh-dstat__barre" aria-hidden="true"><span [style.width.%]="part(nbTraitees)"></span></span>
       </a>
-      <a routerLink="/items" class="uh-dstat uh-dstat--systeme" title="Rechercher dans toutes les demandes du système">
-        <span class="uh-dstat__entete"><span class="uh-dstat__label">Système</span><span class="uh-dstat__portee">Toutes</span></span>
+      <a routerLink="/items" class="uh-dstat uh-dstat--systeme" title="Rechercher dans toutes les demandes des bibliothèques">
+        <span class="uh-dstat__entete"><span class="uh-dstat__label">Toutes les demandes</span><span class="uh-dstat__portee">Bibliothèques</span></span>
         <span class="uh-dstat__value">{{ totalSysteme ?? '—' }}</span>
-        <span class="uh-dstat__desc">Demandes enregistrées · Rechercher <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+        <span class="uh-dstat__desc">Enregistrées · Rechercher <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </a>
     </div>
   </div>

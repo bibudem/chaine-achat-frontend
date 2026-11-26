@@ -178,6 +178,15 @@
               <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">{{ 'item-formulaire.auteur-required' | translate }}</div>
             </div>
           </div>
+          <div class="col-12" *ngIf="gereContenuAutochtone">
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" formControlName="contenu_autochtone" id="contenuAutochtoneAdmin">
+                <label class="form-check-label" for="contenuAutochtoneAdmin">{{ 'forms-usager.contenu-autochtone' | translate }}</label>
+              </div>
+              <small class="text-muted">{{ 'forms-usager.contenu-autochtone-hint' | translate }}</small>
+            </div>
+          </div>
         </div>
 
         <!-- Rangée 3 : Classification -->

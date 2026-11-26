@@ -21,6 +21,7 @@ export interface ItemDetaille {
   titre?: string;
   titre_document?: string;
   sous_titre?: string;
+  contenu_autochtone?: boolean;
   editeur?: string;
   isbn_issn?: string;
   identifiant?: string;

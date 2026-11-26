@@ -54,6 +54,7 @@ export class ReponsesListComponent implements OnInit, OnDestroy {
   private readonly fieldLabels: Record<string, string> = {
     titre_document:           'Titre du document',
     sous_titre:               'Sous-titre',
+    contenu_autochtone:       'Contenu autochtone',
     editeur:                  'Éditeur',
     isbn_issn:                'ISBN / ISSN',
     date_publication:         'Date de publication',
