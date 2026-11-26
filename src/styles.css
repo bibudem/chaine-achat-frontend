@@ -256,3 +256,37 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   line-height: 1.5;
   resize: vertical;
 }
+
+/* Case à cocher avec libellé et aide (ex. Contenu autochtone) — indépendante de .form-check,
+   que le thème admin repositionne en absolu. */
+.champ-case {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: .625rem;
+  margin: 0;
+  cursor: pointer;
+}
+.champ-case__input {
+  flex-shrink: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: .15rem 0 0;
+  accent-color: var(--primary-blue, #0b113a);
+  cursor: pointer;
+}
+.champ-case__texte {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+}
+.champ-case__libelle {
+  font-size: .875rem;
+  font-weight: 500;
+  color: inherit;
+  line-height: 1.35;
+}
+.champ-case__aide {
+  font-size: .78rem;
+  color: var(--couleur-aide, #66788a);
+  line-height: 1.35;
+}

@@ -178,15 +178,6 @@
               <div class="invalid-feedback" *ngIf="hasError('auteur', 'required')">{{ 'item-formulaire.auteur-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-12" *ngIf="gereContenuAutochtone">
-            <div class="mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" formControlName="contenu_autochtone" id="contenuAutochtoneAdmin">
-                <label class="form-check-label" for="contenuAutochtoneAdmin">{{ 'forms-usager.contenu-autochtone' | translate }}</label>
-              </div>
-              <small class="text-muted">{{ 'forms-usager.contenu-autochtone-hint' | translate }}</small>
-            </div>
-          </div>
         </div>
 
         <!-- Rangée 3 : Classification -->
@@ -226,13 +217,24 @@
               <div class="invalid-feedback" *ngIf="hasError('format_support', 'required')">{{ 'item-formulaire.format-required' | translate }}</div>
             </div>
           </div>
-          <div class="col-md-3"
+          <div class="col-md-2"
                *ngIf="selectedFormulaireType && (isNouvelAchatUnique() || isPEBTipasaNumerique() || isSuggestionAchat() || isRequeteAccessibilite())">
             <div class="mb-3">
               <label class="form-label">{{ 'item-formulaire.priorite' | translate }}</label>
               <select class="form-select form-control" formControlName="priorite_demande">
                 <option *ngFor="let priorite of options.prioriteOptions" [value]="priorite.value">{{ priorite.label }}</option>
               </select>
+            </div>
+          </div>
+           <div class="col-md mt-4" *ngIf="gereContenuAutochtone">
+            <div class="mb-3">
+              <label class="champ-case" for="contenuAutochtoneAdmin">
+                <input type="checkbox" class="champ-case__input" formControlName="contenu_autochtone" id="contenuAutochtoneAdmin">
+                <span class="champ-case__texte">
+                  <span class="champ-case__libelle">{{ 'forms-usager.contenu-autochtone' | translate }}</span>
+                  <span class="champ-case__aide">{{ 'forms-usager.contenu-autochtone-hint' | translate }}</span>
+                </span>
+              </label>
             </div>
           </div>
         </div>

@@ -180,11 +180,13 @@
           </div>
           <!-- Contenu autochtone (facultatif) -->
           <div class="col-12">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" formControlName="contenu_autochtone" id="contenuAutochtoneCheck">
-              <label class="form-check-label" for="contenuAutochtoneCheck">{{ 'forms-usager.contenu-autochtone' | translate }}</label>
-            </div>
-            <small class="form-text">{{ 'forms-usager.contenu-autochtone-hint' | translate }}</small>
+            <label class="champ-case" for="contenuAutochtoneCheck">
+              <input type="checkbox" class="champ-case__input" formControlName="contenu_autochtone" id="contenuAutochtoneCheck">
+              <span class="champ-case__texte">
+                <span class="champ-case__libelle">{{ 'forms-usager.contenu-autochtone' | translate }}</span>
+                <span class="champ-case__aide">{{ 'forms-usager.contenu-autochtone-hint' | translate }}</span>
+              </span>
+            </label>
           </div>
         </div>
       </div>
