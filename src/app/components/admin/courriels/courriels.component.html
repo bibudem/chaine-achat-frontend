@@ -80,7 +80,10 @@
             </td>
             <td>{{ libelleType(c.type_envoi) }}</td>
             <td class="crl-dest">
-              <div>{{ c.destinataire || '—' }}</div>
+              <div class="crl-adresses" *ngIf="adresses(c).length; else sansAdresse">
+                <span *ngFor="let a of adresses(c); let dernier = last">{{ a }}{{ dernier ? '' : ',' }}</span>
+              </div>
+              <ng-template #sansAdresse><div>—</div></ng-template>
               <div class="crl-role" *ngIf="c.role_destinataire">{{ c.role_destinataire }}</div>
             </td>
             <td>{{ c.declenche_par_nom || c.declenche_par || 'Automatique' }}</td>
@@ -121,14 +124,21 @@
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="totalPages > 1" class="ilog-pagination">
-    <button class="ilog-pg-btn" [disabled]="page === 1" (click)="allerPage(page - 1)" aria-label="Page précédente">
-      <i class="bi bi-chevron-left"></i>
-    </button>
-    <button *ngFor="let p of pages" class="ilog-pg-btn" [class.ilog-pg-btn--active]="p === page" (click)="allerPage(p)">{{ p }}</button>
-    <button class="ilog-pg-btn" [disabled]="page === totalPages" (click)="allerPage(page + 1)" aria-label="Page suivante">
-      <i class="bi bi-chevron-right"></i>
-    </button>
+  <div *ngIf="!loading && total > 0" class="crl-pied">
+    <span class="crl-plage">{{ plage }}</span>
+    <div *ngIf="totalPages > 1" class="ilog-pagination">
+      <button class="ilog-pg-btn" [disabled]="page === 1" (click)="allerPage(page - 1)" aria-label="Page précédente">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <ng-container *ngFor="let p of pages">
+        <span *ngIf="p === null" class="crl-ellipse" aria-hidden="true">…</span>
+        <button *ngIf="p !== null" class="ilog-pg-btn" [class.ilog-pg-btn--active]="p === page"
+                [attr.aria-current]="p === page ? 'page' : null" (click)="allerPage(p)">{{ p }}</button>
+      </ng-container>
+      <button class="ilog-pg-btn" [disabled]="page === totalPages" (click)="allerPage(page + 1)" aria-label="Page suivante">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
   </div>
 
   <p class="crl-note">

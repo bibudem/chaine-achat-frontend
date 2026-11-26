@@ -9,7 +9,14 @@
   font-size:     .75rem;
   color:         #607386;
 }
-.crl-dest { word-break: break-all; }
+/* Plusieurs destinataires : retour à la ligne entre les adresses, jamais de coupure ni de
+   débordement de la colonne (le thème impose nowrap aux cellules). */
+.ilog-table tbody td.crl-dest {
+  white-space: normal;
+  min-width:   220px;
+  max-width:   420px;
+}
+.crl-adresses { display: flex; flex-wrap: wrap; column-gap: .3rem; overflow-wrap: anywhere; }
 .crl-role { font-size: .72rem; color: #607386; }
 
 .crl-statut {
@@ -38,3 +45,19 @@
 .crl-pre { white-space: pre-wrap; }
 
 .crl-note { margin: 1rem 0 0; font-size: .75rem; color: #6c757d; }
+
+/* Pied du tableau : plage affichée et pagination */
+.crl-pied {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  flex-wrap:       wrap;
+  gap:             .75rem;
+  margin-top:      1rem;
+}
+.crl-pied .ilog-pagination { margin: 0; }
+.crl-plage   { font-size: .8rem; color: #607386; }
+.crl-ellipse { padding: 0 .25rem; color: #94a3b8; align-self: center; }
+
+/* Écran étroit : défilement horizontal plutôt que colonnes coupées. */
+.ilog-table-wrap { overflow-x: auto; }

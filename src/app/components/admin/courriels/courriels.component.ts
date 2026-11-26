@@ -42,7 +42,13 @@ export class CourrielsComponent implements OnInit {
       q: this.recherche.trim(), type: this.filtreType, statut: this.filtreStatut,
       du: this.du, au: this.au, limit: this.limit, offset: (this.page - 1) * this.limit,
     }).subscribe({
-      next: res => { this.courriels = res.data || []; this.total = res.total || 0; this.loading = false; },
+      next: res => {
+        this.courriels = res.data || [];
+        this.total     = res.total || 0;
+        this.loading   = false;
+        // Page devenue vide (moins de résultats qu'avant) : retour à la dernière page.
+        if (!this.courriels.length && this.page > this.totalPages) this.allerPage(this.totalPages);
+      },
       error: () => {
         this.courriels = []; this.total = 0; this.loading = false;
         this.errorMessage = 'Impossible de charger le journal des courriels.';
@@ -82,10 +88,31 @@ export class CourrielsComponent implements OnInit {
 
   get totalPages(): number { return Math.ceil(this.total / this.limit) || 1; }
 
-  get pages(): number[] {
-    const r: number[] = [];
-    for (let i = Math.max(1, this.page - 2); i <= Math.min(this.totalPages, this.page + 2); i++) r.push(i);
+  /** Pages affichées : la première, la dernière et deux de chaque côté de la page courante ;
+   *  null = « … » entre deux plages. */
+  get pages(): (number | null)[] {
+    const n = this.totalPages;
+    const garder = new Set([1, n]);
+    for (let i = this.page - 2; i <= this.page + 2; i++) if (i >= 1 && i <= n) garder.add(i);
+    const triees = [...garder].sort((a, b) => a - b);
+    const r: (number | null)[] = [];
+    triees.forEach((p, i) => {
+      if (i > 0 && p - triees[i - 1] > 1) r.push(null);
+      r.push(p);
+    });
     return r;
+  }
+
+  /** « 26–50 sur 130 » */
+  get plage(): string {
+    if (!this.total) return '';
+    const debut = (this.page - 1) * this.limit + 1;
+    return `${debut}–${Math.min(this.page * this.limit, this.total)} sur ${this.total}`;
+  }
+
+  /** Destinataires multiples (« a@x, b@y ») affichés un par un, sans couper la colonne. */
+  adresses(c: Courriel): string[] {
+    return (c.destinataire || '').split(/\s*[,;]\s*/).filter(Boolean);
   }
 
   allerPage(p: number): void {
